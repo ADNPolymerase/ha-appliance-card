@@ -3585,8 +3585,8 @@ class ApplianceCard extends HTMLElement {
     // motion and its night vision.
     let camera = null;
     if (cap.camera) {
-      const { mode, night } = cameraReadOf(hass, cfg, st);
-      if (!cfg.state_show_raw || mode === "unav") stateLabel = t(hass, CAMERA_LABELS[mode]);
+      const { mode, night, what, spot, track, pan, tilt } = cameraReadOf(hass, cfg, st);
+      if (!cfg.state_show_raw || mode === "unav") stateLabel = t(hass, what ? `cam_${what}` : CAMERA_LABELS[mode]);
       color = CAMERA_COLORS[mode];
       const a = (st && st.attributes) || {};
       if (mode !== "unav") {
@@ -3622,8 +3622,12 @@ class ApplianceCard extends HTMLElement {
         if (night) {
           extraLines.push({ key: "cam_night", icon: "mdi:weather-night", label: t(hass, "cam_line_night"), value: "IR", entity: cfg.night_entity });
         }
+        if (spot) extraLines.push({ key: "cam_spotlight", icon: "mdi:spotlight-beam", label: t(hass, "cam_line_spotlight"), value: t(hass, "cam_v_lit"), entity: cfg.spotlight_entity });
+        if (cfg.tracking_entity && stateObj(hass, cfg.tracking_entity)) {
+          extraLines.push({ key: "cam_tracking", icon: "mdi:target-account", label: t(hass, "cam_line_tracking"), value: t(hass, track ? "cam_v_on" : "cam_v_off"), entity: cfg.tracking_entity });
+        }
       }
-      camera = { mode, night, layout: cameraLayoutOf(cfg, st), dark: cfg.illustration_color === "black" };
+      camera = { mode, night, spot, track, pan, tilt, layout: cameraLayoutOf(cfg, st), dark: cfg.illustration_color === "black" };
     }
 
     // A mailbox: empty, with mail in it, or a door open. Lines for the count,
@@ -4172,6 +4176,7 @@ class ApplianceCard extends HTMLElement {
       ...(cap.hrv ? hrvControls(hass, cfg) : []),
       ...(cap.screen ? screenControls(hass, cfg) : []),
       ...(cap.lamp ? lampControls(hass, cfg) : []),
+      ...(cap.camera ? cameraControls(hass, cfg) : []),
       ...(NT_TYPES.includes(applianceType) ? ntControls(hass, cfg, applianceType) : []),
     ]
       .map((a) => (a.key && a.key !== "toggle" ? { ...a, option: cfg[`${a.key}_option`] ?? a.option, value: cfg[`${a.key}_value`] ?? a.value } : a))

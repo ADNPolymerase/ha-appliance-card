@@ -75,6 +75,15 @@ const TYPE_AUTO_PATTERNS = {
     recording_entity: /^(?!switch\.)(?!.*(audio|capacity|oldest|mode|last)).*(record|enregistr|aufnahme|grabac)/i,
     night_entity: /night|nuit|infra.?red|(^|[._])ir([._]|$)|nacht|notte|noche|is_dark/i,
     privacy_entity: /privacy|confidential|privat|lens.?mask/i,
+    // Reolink, UniFi Protect and Frigate's own detections and controls.
+    person_entity: /^binary_sensor\..*(person|personne|human|people)/i,
+    vehicle_detection_entity: /^binary_sensor\..*(vehicle|vehicule|fahrzeug|vehiculo|veicolo|voertuig)/i,
+    animal_entity: /^binary_sensor\..*(animal|(^|[._])pet([._]|$)|tier)/i,
+    spotlight_entity: /^(light|switch)\..*(floodlight|spotlight|projecteur|scheinwerfer|foco|faro)/i,
+    siren_entity: /^(siren|switch)\..*(siren|sirene)(?!.*(event|evenement|on.?motion))/i,
+    tracking_entity: /^switch\..*(auto.?track|suivi.?auto|tracking)/i,
+    pan_entity: /^(number|sensor)\..*(pan.?position|position.?panoram|ptz.?pan)/i,
+    tilt_entity: /^(number|sensor)\..*(tilt.?position|position.?d.?inclinaison|ptz.?tilt)/i,
     battery_entity: /batter|akku/i,
     signal_entity: /signal|rssi|wifi/i,
     connectivity_entity: /connect|online/i,
@@ -402,6 +411,8 @@ const TYPE_AUTO_PATTERNS = {
   detector: {
     battery_entity: /batter/i,
     co_level_entity: /(^|[._])co([._]|$)|carbon.?monoxide|co.?level|co.?ppm/i,
+    // Zigbee2MQTT's tamper, Manipulation in French.
+    tamper_entity: /^binary_sensor\..*(tamper|manipulation|sabotage|manipulat)/i,
   },
   // PSN's and Xbox's now_playing, Nintendo's screen time.
   console: {
@@ -799,6 +810,8 @@ const TYPE_CAPS = {
   valve: { ntValve: true },
   // A wall drying rack (#124), read from its contact sensor.
   drying_rack: { readOnly: true },
+  // A kitchen robot, read from the plug it is on (HACF #170).
+  food_processor: { ntFood: true },
   speaker: { ntSpeaker: true },
   // A game console, on PlayStation Network, Xbox, the PS4 integration or a plug.
   console: { ntConsole: true },
@@ -927,6 +940,7 @@ const STATE_DOMAINS = {
   fingerbot: ["switch", "button", "input_boolean", "input_button", "script"],
   valve: ["valve", "switch", "binary_sensor", "input_boolean"],
   drying_rack: ["binary_sensor", "cover", "input_boolean", "switch", "sensor"],
+  food_processor: ["switch", "sensor", "input_boolean", "binary_sensor"],
   speaker: ["media_player"],
   console: ["media_player", "sensor", "switch", "binary_sensor", "device_tracker", "input_boolean"],
   streamer: ["media_player", "remote", "switch", "binary_sensor", "input_boolean", "sensor"],
@@ -1052,7 +1066,7 @@ function compactModeOf(v) {
 // thirty types in one list were hard to find one's way in.
 const TYPE_GROUPS = [
   ["laundry", ["washer", "dryer"]],
-  ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster", "pellet_grill"]],
+  ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster", "pellet_grill", "food_processor"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove"]],
   ["air", ["air_conditioner", "dehumidifier", "humidifier", "air_purifier", "fan", "diffuser", "hrv", "climate_sensor"]],
   ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "fingerbot", "valve", "drying_rack", "speaker", "console", "streamer", "cover"]],

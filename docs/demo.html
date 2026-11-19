@@ -149,12 +149,12 @@ function mkHass(states) {
 const PLUG_WATTS = { washer: 1900, dryer: 2000, dishwasher: 1800, oven: 2400, microwave: 900, kettle: 2200, coffee: 1200, cooker: 800,
   rice_cooker: 500, air_fryer: 1500, toaster: 900, iron: 2200, fridge: 70, water_heater: 2000, space_heater: 1500, towel_warmer: 600,
   dehumidifier: 250, air_purifier: 30, fan: 35, hood: 120, screen: 120, hair_dryer: 1200, printer_3d: 200, pool_pump: 750, robot: 24,
-  cooktop: 2600, pet_fountain: 2, water_pump: 800, floor_heating: 1200, spa: 2000, sauna: 6000, aquarium: 60, christmas_tree: 20, pellet_grill: 45,
+  cooktop: 2600, food_processor: 500, pet_fountain: 2, water_pump: 800, floor_heating: 1200, spa: 2000, sauna: 6000, aquarium: 60, christmas_tree: 20, pellet_grill: 45,
   humidifier: 25, filament_dryer: 60, mobility: 150, irrigation: 6, litter_box: 10, speaker: 8, console: 120, streamer: 6 };
 const PLUG_MAX = { washer: 2400, dryer: 2800, dishwasher: 2200, oven: 3500, microwave: 1300, kettle: 2400, coffee: 1500, cooker: 1200,
   rice_cooker: 800, air_fryer: 2000, toaster: 1200, iron: 2600, fridge: 200, water_heater: 3000, space_heater: 2000, towel_warmer: 1000,
   dehumidifier: 400, air_purifier: 80, fan: 80, hood: 300, screen: 250, hair_dryer: 2200, printer_3d: 400, pool_pump: 1500, robot: 60,
-  cooktop: 7200, pet_fountain: 5, water_pump: 1500, floor_heating: 2500, spa: 3000, sauna: 9000, aquarium: 150, christmas_tree: 50, pellet_grill: 400,
+  cooktop: 7200, food_processor: 1200, pet_fountain: 5, water_pump: 1500, floor_heating: 2500, spa: 3000, sauna: 9000, aquarium: 150, christmas_tree: 50, pellet_grill: 400,
   humidifier: 50, filament_dryer: 120, mobility: 600, irrigation: 15, litter_box: 40, speaker: 40, console: 250, streamer: 15 };
 const plugOnly = params.get("plug") === "1";
 // ?color= draws every card of the live gallery in one illustration colour.
@@ -1833,6 +1833,21 @@ Object.assign(EXTRA, {
   sb_meter: thsCard(L("Bedroom", "Chambre"), "switchbot_meter", 27.4, 47),
   sb_plus: thsCard(L("Kitchen", "Cuisine"), "switchbot_plus", 24.6, 63),
   sb_outdoor: thsCard(L("Garden", "Jardin"), "switchbot_outdoor", 6.8, 74),
+  tmx_person: camCard(L("Driveway", "All\u00e9e"), "idle", { camera_layout: "trackmix", motion_entity: "binary_sensor.tmx_motion", person_entity: "binary_sensor.tmx_person", spotlight_entity: "light.tmx_floodlight", tracking_entity: "switch.tmx_auto_track", pan_entity: "number.tmx_pan", siren_entity: "switch.tmx_siren" }, { brand: "Reolink", model_name: "TrackMix WiFi" },
+    [st("binary_sensor.tmx_motion", "on"), st("binary_sensor.tmx_person", "on"), st("light.tmx_floodlight", "on"), st("switch.tmx_auto_track", "on"), st("number.tmx_pan", 2600, { min: 0, max: 3600, step: 10 }), st("switch.tmx_siren", "off")]),
+  tmx_vehicle: camCard(L("Gate", "Portail"), "idle", { camera_layout: "trackmix", vehicle_detection_entity: "binary_sensor.tmx2_vehicle", night_entity: "switch.tmx2_ir", pan_entity: "number.tmx2_pan", tilt_entity: "number.tmx2_tilt" }, { brand: "Reolink" },
+    [st("binary_sensor.tmx2_vehicle", "on"), st("switch.tmx2_ir", "on"), st("number.tmx2_pan", 600, { min: 0, max: 3600, step: 10 }), st("number.tmx2_tilt", 80, { min: 0, max: 100, step: 1 })]),
+  tmx_siren: camCard(L("Garden", "Jardin"), "idle", { camera_layout: "trackmix", siren_entity: "switch.tmx3_siren", spotlight_entity: "light.tmx3_floodlight" }, { brand: "Reolink" },
+    [st("switch.tmx3_siren", "on"), st("light.tmx3_floodlight", "on")]),
+  det_door_tamper: detCard(L("Front door", "Porte d'entr\u00e9e"), "door", false, { tamper_entity: "binary_sensor.det_tamper" }, [st("binary_sensor.det_tamper", "on", { device_class: "tamper" })]),
+  fp_tm31: () => card({ name: L("Thermomix", "Thermomix"), appliance_type: "food_processor", food_layout: "tm31", state_entity: "switch.tm31_plug", power_entity: "sensor.tm31_power" },
+    [st("switch.tm31_plug", "on"), st("sensor.tm31_power", 380, { unit_of_measurement: "W", device_class: "power", min: 0, max: 1200, step: 10 })]),
+  fp_tm31_off: () => card({ name: L("Kitchen robot", "Robot cuiseur"), appliance_type: "food_processor", food_layout: "tm31", state_entity: "switch.tm31b_plug", power_entity: "sensor.tm31b_power" },
+    [st("switch.tm31b_plug", "off"), st("sensor.tm31b_power", 0, { unit_of_measurement: "W", device_class: "power", min: 0, max: 1200, step: 10 })]),
+  fp_tm6: () => card({ name: L("Thermomix", "Thermomix"), appliance_type: "food_processor", food_layout: "tm6", state_entity: "switch.tm6_plug", power_entity: "sensor.tm6_power" },
+    [st("switch.tm6_plug", "on"), st("sensor.tm6_power", 1050, { unit_of_measurement: "W", device_class: "power", min: 0, max: 1200, step: 10 })]),
+  fp_tm6_ready: () => card({ name: L("Kitchen robot", "Robot cuiseur"), appliance_type: "food_processor", food_layout: "tm6", state_entity: "switch.tm6b_plug", power_entity: "sensor.tm6b_power" },
+    [st("switch.tm6b_plug", "on"), st("sensor.tm6b_power", 1, { unit_of_measurement: "W", device_class: "power", min: 0, max: 1200, step: 10 })]),
   rack_box: () => card({ name: L("Laundry room", "Buanderie"), appliance_type: "drying_rack", rack_layout: "box", state_entity: "input_boolean.rack_contact", battery_entity: "sensor.rack_contact_battery" },
     [st("input_boolean.rack_contact", "on", { device_class: "opening" }), st("sensor.rack_contact_battery", 92, { unit_of_measurement: "%" })]),
   rack_box_closed: () => card({ name: L("Bathroom", "Salle de bain"), appliance_type: "drying_rack", rack_layout: "box", rack_color: "black", state_entity: "input_boolean.rack2" }, [st("input_boolean.rack2", "off", { device_class: "opening" })]),
@@ -1889,8 +1904,8 @@ function liveGallery() {
   const wrap = document.getElementById("wrap");
   wrap.innerHTML = `<header>
     <h1>HA Appliance Card</h1>
-    <p>${L("A Lovelace card for 70 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
-      "Une card Lovelace pour 70 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
+    <p>${L("A Lovelace card for 71 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
+      "Une card Lovelace pour 71 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
     <nav>${link("lang", "en", "English", !fr)}${link("lang", "fr", "Français", fr)}<span></span>${link("theme", "light", L("Light", "Clair"), !dark)}${link("theme", "dark", L("Dark", "Sombre"), dark)}<span></span>${link("plug", "0", L("Integrations", "Intégrations"), !plugOnly)}${link("plug", "1", L("Smart plug only", "Prise connectée seule"), plugOnly)}<span></span>${link("color", "", L("Own colours", "Couleurs d'origine"), !demoColor)}${[["white", "White", "Blanc"], ["grey", "Grey", "Gris"], ["black", "Black", "Noir"], ["red", "Red", "Rouge"]].map(([v, en, f]) => link("color", v, L(en, f), demoColor === v)).join("")}<span></span><a href="https://github.com/ADNPolymerase/ha-appliance-card">GitHub</a></nav>
     <p class="hint">${plugOnly
       ? L("Each card below has nothing but a smart plug: its switch and its power meter. Open “Change the values” and move the power, or press the power button.",
@@ -1904,9 +1919,11 @@ function liveGallery() {
     [L("Heating and climate", "Chauffage et climat"), [waterHeater, boiler, boilerWindow, boilerThermo, thSquare, thRound, thGlass, thValve, heatPump, pelletStove, spaceHeater, towelWarmer, towelPanel, airConditioner, dehumidifier, humidifier, humidifierNight, humidifierEmpty, humidifierLifted]],
     [L("CO\u2082 monitors", "Capteurs de CO\u2082"), [EXTRA.co2_eink, EXTRA.co2_box, EXTRA.co2_netatmo, EXTRA.co2_module]],
     [L("SwitchBot meters", "Thermom\u00e8tres SwitchBot"), [EXTRA.sb_co2, EXTRA.sb_co2_high, EXTRA.sb_pro, EXTRA.sb_meter, EXTRA.sb_plus, EXTRA.sb_outdoor]],
-    [L("Corner switches and buttons", "Interrupteurs et boutons dans les coins"), [EXTRA.corners4], "new"],
-    [L("Drying racks", "S\u00e9choirs muraux"), [EXTRA.rack_box, EXTRA.rack_box_closed, EXTRA.rack_accordion, EXTRA.rack_accordion_closed, EXTRA.rack_frame, EXTRA.rack_frame_closed], "new"],
-    [L("Shut-off valves", "Vannes d'arriv\u00e9e"), [EXTRA.vlv_aqara, EXTRA.vlv_aqara_closed, EXTRA.vlv_closing, EXTRA.vlv_tuya, EXTRA.vlv_gas, EXTRA.vlv_leak], "new"],
+    [L("Kitchen robots", "Robots cuiseurs"), [EXTRA.fp_tm31, EXTRA.fp_tm31_off, EXTRA.fp_tm6, EXTRA.fp_tm6_ready], "new"],
+    [L("TrackMix and door tamper", "TrackMix et contact arrach\u00e9"), [EXTRA.tmx_person, EXTRA.tmx_vehicle, EXTRA.tmx_siren, EXTRA.det_door_tamper], "new"],
+    [L("Corner switches and buttons", "Interrupteurs et boutons dans les coins"), [EXTRA.corners4]],
+    [L("Drying racks", "S\u00e9choirs muraux"), [EXTRA.rack_box, EXTRA.rack_box_closed, EXTRA.rack_accordion, EXTRA.rack_accordion_closed, EXTRA.rack_frame, EXTRA.rack_frame_closed]],
+    [L("Shut-off valves", "Vannes d'arriv\u00e9e"), [EXTRA.vlv_aqara, EXTRA.vlv_aqara_closed, EXTRA.vlv_closing, EXTRA.vlv_tuya, EXTRA.vlv_gas, EXTRA.vlv_leak]],
     [L("Finger bots", "Pousse-boutons"), [EXTRA.fb_plus, EXTRA.fb_charging, EXTRA.fb_held, EXTRA.fb_low, EXTRA.fb_switchbot, EXTRA.fb_switchbot_black, EXTRA.fb_classic]],
     [L("Shutters, blinds, pergolas and awnings", "Volets, stores, pergolas et stores bannes"), [EXTRA.cov_shutter, EXTRA.cov_shutter_closing, EXTRA.cov_shutter_closed, EXTRA.cov_blind, EXTRA.cov_venetian, EXTRA.cov_raffstore, EXTRA.cov_pergola, EXTRA.cov_awning]],
     [L("Air purifiers and fans", "Purificateurs et ventilateurs"), [purifier, boxPurifier, ringPurifier, fan, ceilingFan]],

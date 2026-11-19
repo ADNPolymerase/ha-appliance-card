@@ -15042,6 +15042,38 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('124 : un sechoir a filament n en est pas un', detect({ state_entity: 'switch.sechoir_filament' }, { 'switch.sechoir_filament': s('off') }) !== 'drying_rack', true);
 }
 
+// HACF #170: a TrackMix's AI and controls, a door contact pulled off, a Thermomix on its plug.
+{
+  const s = (state, a = {}) => ({ state: String(state), attributes: a });
+  const kindOf = (h) => (/\bnt-k-(\w+)/.exec(machineCls(h)) || [, null])[1];
+  const cam = (cfg, states) => render({ appliance_type: 'camera', state_entity: 'camera.c', camera_layout: 'trackmix', ...cfg }, { 'camera.c': s('idle', { brand: 'Reolink' }), ...states });
+  check('170 : une personne', stateLine(cam({ person_entity: 'binary_sensor.p' }, { 'binary_sensor.p': s('on') })), 'Person detected');
+  check('170 : un vehicule', stateLine(cam({ vehicle_detection_entity: 'binary_sensor.v' }, { 'binary_sensor.v': s('on') })), 'Vehicle detected');
+  check('170 : un animal', stateLine(cam({ animal_entity: 'binary_sensor.a' }, { 'binary_sensor.a': s('on') })), 'Animal detected');
+  check('170 : la personne passe avant le vehicule', stateLine(cam({ person_entity: 'binary_sensor.p', vehicle_detection_entity: 'binary_sensor.v' }, { 'binary_sensor.p': s('on'), 'binary_sensor.v': s('on') })), 'Person detected');
+  check('170 : sirene', stateLine(cam({ siren_entity: 'switch.s' }, { 'switch.s': s('on') })), 'Siren');
+  check('170 : sirene dessinee', /cam-m-siren/.test(machineCls(cam({ siren_entity: 'switch.s' }, { 'switch.s': s('on') }))), true);
+  const spot = cam({ spotlight_entity: 'light.f' }, { 'light.f': s('on') });
+  check('170 : projecteur allume, le cone', /cam-spot\b/.test(machineCls(spot)) && /Spotlight/.test(spot), true);
+  check('170 : boutons projecteur, sirene, suivi', (cam({ spotlight_entity: 'light.f', siren_entity: 'switch.s', tracking_entity: 'switch.t' }, { 'light.f': s('off'), 'switch.s': s('off'), 'switch.t': s('on') }).match(/mdi:(spotlight-beam|alarm-light|target-account)/g) || []).length >= 3, true);
+  const panOf = (v) => (/<g transform="translate\((-?[\d.]+) /.exec(cam({ pan_entity: 'number.p' }, { 'number.p': s(v, { min: 0, max: 3600 }) }).split('class="cam-spotcone"')[1] || '') || [])[1];
+  check('170 : la boule suit la position panoramique', [panOf(0), panOf(1800), panOf(3600)].join(' '), '-7.0 0.0 7.0');
+  check('170 : vehicle_entity reste a la borne', /cam-m-motion/.test(machineCls(render({ appliance_type: 'camera', state_entity: 'camera.c', vehicle_entity: 'binary_sensor.v' }, { 'camera.c': s('idle'), 'binary_sensor.v': s('on') }))), false);
+  const door = (tamper, open) => render({ appliance_type: 'detector', state_entity: 'binary_sensor.d', tamper_entity: 'binary_sensor.t' }, { 'binary_sensor.d': s(open ? 'on' : 'off', { device_class: 'door' }), 'binary_sensor.t': s(tamper ? 'on' : 'off') });
+  check('170 : contact arrache, l alarme', stateLine(door(true, false)), 'Tampered');
+  check('170 : arrache, la porte reste fermee', /rotate\(-24 81 26\)/.test(door(true, false)) && !/points="10 6 46 13/.test(door(true, false)), true);
+  check('170 : sans arrachement, la porte se lit', stateLine(door(false, true)), 'Open');
+  const fp = (layout, plug, w) => render({ appliance_type: 'food_processor', food_layout: layout, state_entity: 'switch.tm', power_entity: 'sensor.tm_w' }, { 'switch.tm': s(plug), 'sensor.tm_w': s(w, { unit_of_measurement: 'W' }) });
+  check('170 : Thermomix eteint', stateLine(fp('tm31', 'off', 0)), 'Off');
+  check('170 : pret', stateLine(fp('tm6', 'on', 1)), 'Ready');
+  check('170 : melange', stateLine(fp('tm31', 'on', 300)), 'Mixing');
+  check('170 : cuisson', stateLine(fp('tm6', 'on', 1000)), 'Cooking');
+  check('170 : seuil de cuisson choisi', stateLine(render({ appliance_type: 'food_processor', state_entity: 'switch.tm', power_entity: 'sensor.tm_w', heat_threshold: 1200 }, { 'switch.tm': s('on'), 'sensor.tm_w': s(1000, { unit_of_measurement: 'W' }) })), 'Mixing');
+  check('170 : TM31 et TM6', [kindOf(fp('tm31', 'on', 0)), kindOf(fp('tm6', 'on', 0))].join(' '), 'fp_tm31 fp_tm6');
+  check('170 : la cuisson fume', /nta-steam/.test(fp('tm6', 'on', 1000)), true);
+  check('170 : detecte par son nom', kindOf(render({ state_entity: 'switch.thermomix' }, { 'switch.thermomix': s('on') })) !== null && /fp_/.test(kindOf(render({ state_entity: 'switch.thermomix' }, { 'switch.thermomix': s('on') }))), true);
+}
+
 // Shutters, blinds, a pergola and an awning (#109): the position, the tilt,
 // the movement, their buttons, their colours and a pergola's light.
 {

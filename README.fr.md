@@ -22,7 +22,7 @@ Une card Lovelace qui dessine les appareils de la maison et les anime selon leur
 
 ## Fonctionnalités
 
-- **70 types d'appareils, plus de 170 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul, d'après l'entité et la marque et le modèle de son appareil, ou choisi avec `appliance_type`.
+- **71 types d'appareils, plus de 170 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul, d'après l'entité et la marque et le modèle de son appareil, ou choisi avec `appliance_type`.
 - **Toutes les intégrations** : chaque champ est une entité à choisir. Une simple prise connectée suffit, sa puissance dit si l'appareil chauffe, lave ou essore.
 - **L'état compris** : `Idle`, `RUNNING`, `En marche`… deviennent veille, en cours, pause, terminé, différé ou erreur, avec l'étape du cycle (lavage, rinçage, essorage…).
 - **Ce qui compte pour chaque appareil** : programme, temps restant, porte, alertes, niveaux, températures, énergie et coût, marche du jour.
@@ -269,6 +269,13 @@ Clique sur une famille pour voir ses appareils en marche. Les dessins sont montr
 </details>
 
 <details>
+<summary><b>Robots de cuisine</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-foodproc.fr.gif" alt="Robots de cuisine">
+
+</details>
+
+<details>
 <summary><b>Écrans et tablettes</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-screens.fr.gif" alt="Écrans et tablettes">
@@ -331,7 +338,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. Un dessin fait d'après un vrai produit (console, boîtier de streaming, imprimante, litière…) garde ses vraies couleurs tant qu'aucune couleur n'est choisie ; son écran, la tuile de l'appli et ses pneus gardent les leurs. Les scènes autour d'un appareil (fosse de relevage, jardin, toit) et la lumière des lampes ne changent pas. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 16 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`, `hu`, `zh-Hant`. `nb` et `nb-NO` donnent le norvégien. `zh` est le chinois simplifié ; `zh-Hant`, `zh-TW` et `zh-HK` donnent le chinois traditionnel. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `fingerbot` \| `valve` \| `drying_rack` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `fingerbot` \| `valve` \| `drying_rack` \| `food_processor` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `illustration_tap_action` | Un appui sur le dessin seul, le reste de la carte gardant `tap_action` : `toggle` (une lampe allumée en la touchant), `more-info`, `none`, ou n'importe quelle action de Home Assistant. Sans lui, le dessin fait comme la carte. Avec `toggle`, le dessin répond comme les boutons, selon `controls_activation` : un appui, deux appuis ou un appui long. |
 | `show_light_button` | `false` cache le bouton de la lumière en haut à gauche (four, hotte, imprimante 3D, pompe de piscine, diffuseur) ; la lumière reste visible sur le dessin. |
@@ -515,6 +522,8 @@ phase_entity: sensor.lavante_sechante_phase
 | `power_entity` / `power_on_threshold` / `no_power_threshold` / `no_power_after` | frigo | Sans problème, l'état lit *Refroidissement* au seuil ou au-dessus et *En veille* en dessous : réglez le seuil entre la consommation de votre frigo au repos et en froid (10 W pour un frigo qui descend à 6 W en pause). Rester sous `no_power_threshold` (1 W par défaut, quel que soit le seuil de froid) plus de `no_power_after` minutes (30 par défaut) signale *Aucune consommation*, en orange : une longue pause du compresseur ressemble à ça. Compté depuis le dernier changement de la mesure : recharger la page ne le remet pas à zéro. |
 | `plug_entity` | frigo | L'interrupteur de la prise connectée. Coupé, l'état passe tout de suite en *Débranché*. Débranché ou sans consommation, la lumière intérieure s'éteint. |
 | `kettle_layout` | bouilloire | `classic` (défaut, une bouilloire de la couleur de l'appareil) \| `steel` (une bouilloire en inox à poignée noire). |
+| `food_layout` | robot de cuisine | `tm6` (un Thermomix TM6 ou TM7, son écran tactile) \| `tm31` (un Thermomix TM31, son bouton et son écran LCD). Sans réglage, un nom qui dit TM31, TM21 ou TM3 donne `tm31`. |
+| `heat_threshold` | robot de cuisine | Puissance à partir de laquelle il cuit (600 W par défaut). En dessous, il mélange seulement. |
 | `coffee_layout` | machine à café | `silver` (défaut, une machine à grains de la couleur de l'appareil, réservoir sur le côté) \| `black` (noire à façade chromée et écran rond). |
 | `toaster_layout` | grille-pain | `two` (défaut, deux fentes) \| `four` (quatre fentes, deux leviers) \| `long` (une fente longue pour deux tranches bout à bout). |
 | `zone_power` | plaque de cuisson | Sur une prise seule, ce que consomme un foyer à pleine puissance (1500 W par défaut) : la mesure est répartie sur autant de foyers qu'il en faut, chacun avec un niveau de 1 à 9. |
@@ -1546,6 +1555,11 @@ disk2_entity: sensor.nas_drive_2_status
 | `recording_entity` | caméra | Un capteur d'enregistrement, pour les intégrations dont l'entité caméra ne dit pas *recording*. |
 | `night_entity` | caméra | Le mode infrarouge : la couronne de LED autour de l'objectif s'allume en rouge, et une ligne *Vision nocturne*. |
 | `privacy_entity` | caméra | Un interrupteur de confidentialité (Reolink, Tapo) : activé, la caméra est *Désactivée*, tête baissée ou volet fermé. L'attribut `monitoring` de Netatmo fait de même. Mettez-le aussi en `toggle_entity` pour avoir un bouton. |
+| `person_entity` / `vehicle_detection_entity` / `animal_entity` | caméra | Les détections IA de la caméra (Reolink, UniFi Protect, Frigate) : *Personne détectée*, *Véhicule détecté* ou *Animal détecté*, dans cet ordre, avec les ondes de mouvement. |
+| `spotlight_entity` | caméra | Le projecteur : allumé, un faisceau tombe de la caméra et une ligne *Projecteur*. Un bouton sur la carte. |
+| `siren_entity` | caméra | La sirène : activée, la carte dit *Sirène* en rouge et des ondes sonores partent de la caméra. Un bouton sur la carte. |
+| `tracking_entity` | caméra | Le suivi automatique (TrackMix) : une ligne *Suivi automatique* et un bouton. Sur une TrackMix, la boule suit le mouvement plus vite. |
+| `pan_entity` / `tilt_entity` | caméra | La position panoramique et inclinaison d'une TrackMix (un `number` ou un capteur, lu entre son `min` et son `max`) : la boule s'y tourne. |
 | `signal_entity` / `battery_entity` | caméra | Le signal Wi-Fi et la batterie, en lignes. Les attributs d'une caméra Arlo sont lus sans eux. |
 | `lamp_layout` | lampe | `bulb` (ampoule) \| `bedside` (chevet) \| `floor` (lampadaire arc) \| `floor_tree` (lampadaire à spots orientables le long du pied) \| `torch` (halogène sur pied, la lumière monte) \| `pendant` (suspension) \| `ceiling` (plafonnier, un dôme contre le plafond) \| `ceiling_panel` (panneau LED plat au plafond) \| `ceiling_ring` (anneau LED suspendu au plafond) \| `strip` (ruban LED sous une étagère) \| `strip_cove` (dans une corniche, éclairant le plafond) \| `strip_plinth` (sous le socle d'une cuisine, éclairant le sol) \| `strip_baseboard` (le long de la plinthe, éclairant le mur) \| `strip_slats` (derrière des tasseaux muraux) \| `spot` (spots encastrés) \| `spot_track` (spots sur rail, chacun orienté à sa façon) \| `spot_surface` (spots en saillie au plafond) \| `spot_updown` (applique cylindrique éclairant vers le haut et vers le bas) \| `panels` (panneaux façon Nanoleaf) \| `desk` (lampe de bureau) \| `wall` (applique sur un mur extérieur) \| `garden_spot` (projecteur sur piquet, éclairant un arbuste) \| `flood` (projecteur rectangulaire sur le mur de la maison, tourné vers le sol) \| `bollard` (petite borne de jardin le long d'une allée) \| `string` (guirlande façon Twinkly) \| `curtain` (rideau lumineux dans une fenêtre) \| `icicle` (stalactites sous une gouttière) \| `festoon` (grosses ampoules en festons) \| `squares` (carrés de pixels façon Twinkly Squares). Guirlande, rideau et stalactites scintillent une fois allumés, et avec un effet chaque ampoule prend sa teinte. Sans réglage, elle est lue dans le nom et le modèle : ruban, strip, WLED ou Govee donne un ruban, Nanoleaf ou panneau des panneaux, chevet une lampe de chevet, bureau une lampe de bureau, halogène une torchère, lampadaire ou arc un lampadaire (arbre, ou un lampadaire nommé avec 3 spots ou bras, un lampadaire à spots), spot ou GU10 des spots (rail ou track des spots sur rail, saillie ou surface des spots en saillie, haut/bas ou mur une applique haut/bas), suspension ou lustre une suspension, plafonnier ou plafond un plafonnier (anneau ou halo un anneau), panneau LED un panneau au plafond, projecteur, flood ou fluter un projecteur mural, applique, extérieur ou jardin une applique ; une ampoule sinon. |
 | `mailbox_layout` | boîte aux lettres | `through` (traversante, vue de côté, une porte sur chaque face) \| `through_3d` (la même boîte en vue 3/4 : la porte côté rue avec sa trappe, sa serrure et sa plaque, les lettres posées au fond quand elle s'ouvre, la porte côté maison à l'arrière) \| `classic` (boîte sur poteau, vue de face). Sans réglage, un `back_door_entity` en fait une traversante. |
@@ -1559,6 +1573,7 @@ disk2_entity: sensor.nas_drive_2_status
 | `detector_layout` | détecteur | `smoke` (un détecteur de fumée au plafond) \| `co` (un détecteur de CO au mur, son écran en ppm) \| `leak` (un capteur de fuite au sol) \| `door` (contact de porte ou de fenêtre, ouvert ou fermé ; une fenêtre quand la classe d'appareil ou le nom le dit) \| `vibration` (capteur de vibration) \| `glass` (détecteur de bris de vitre). Non renseigné, la classe d'appareil le choisit (`smoke`, `carbon_monoxide` ou `gas`, `moisture`, `door`, `window`, `opening`, `garage_door`, `vibration`), ou le nom. Allumé, c'est une alarme : la fumée monte au plafond, l'écran du CO passe au rouge, l'eau goutte dans une flaque. |
 | `detector_model` | détecteur | Le modèle dessiné pour un contact de porte (`sonoff`, `aqara`, `hue`), un capteur de vibration (`aqara`, `tuya`) ou un détecteur de bris de vitre (`ring`, `ajax`). Non renseigné, la marque dans le nom ou le modèle de l'appareil le choisit, sinon le premier. |
 | `battery_entity` | détecteur | La pile, en % ou en capteur de pile faible : une ligne, et le voyant passe à l'orange à 20 % ou moins. |
+| `tamper_entity` | détecteur | Le contact d'arrachement d'un capteur d'ouverture (Aqara, Ajax, Hue) : activé, la carte dit *Arraché* en rouge, le capteur pend de travers hors de son cadre, et une ligne. La porte garde son propre état. |
 | `test_entity` | détecteur | Un bouton, script ou interrupteur qui lance le test de l'alarme : un bouton *Test* sur la carte. |
 | `co_level_entity` | détecteur | Le taux de CO, sur l'écran du détecteur et en ligne. |
 | `co_entity` | détecteur | L'alarme CO d'un détecteur combiné fumée et CO (par exemple Nest Protect), un capteur binaire (ou un capteur, dont la valeur s'affiche sauf s'il dit une alarme) : une ligne *Alarme CO*, et le détecteur de fumée donne l'alarme CO quand il se déclenche, même capteur de fumée hors ligne. Il fait de la carte un détecteur de fumée, sauf si sa classe d'appareil ou `detector_layout` dit CO ou fuite : il est alors ignoré. |
@@ -1864,6 +1879,30 @@ state_entity: binary_sensor.sechoir_contact
 battery_entity: sensor.sechoir_contact_battery
 ```
 
+Un Thermomix sur une prise connectée est un `food_processor` : *Éteint*, *Prêt* sur quelques watts, *Mélange* quand sa lame tourne, *Cuisson* à partir de 600 W, la vapeur montant du bol.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: food_processor
+food_layout: tm6
+state_entity: switch.prise_thermomix
+power_entity: sensor.prise_thermomix_puissance
+```
+
+Une Reolink TrackMix avec ses détections IA, son projecteur, sa sirène et son suivi :
+
+```yaml
+type: custom:ha-appliance-card
+state_entity: camera.trackmix_fluent
+camera_layout: trackmix
+person_entity: binary_sensor.trackmix_personne
+vehicle_detection_entity: binary_sensor.trackmix_vehicule
+animal_entity: binary_sensor.trackmix_animal
+spotlight_entity: light.trackmix_projecteur
+siren_entity: siren.trackmix_sirene
+tracking_entity: switch.trackmix_suivi_auto
+```
+
 </details>
 
 ### L'hiver arrive
@@ -1935,6 +1974,7 @@ Chaque type connaît la puissance à laquelle il travaille, il n'y a donc pas de
 | fer à repasser | 10 W | *En chauffe*, puis *Prêt* quand le thermostat coupe ; plus il consomme, plus il y a de vapeur |
 | four, micro-ondes, bouilloire, friteuse, grille-pain, chauffe-eau | 50 W | *En cours*, *En chauffe*, *Cuisson* ou *Grillage* |
 | robot cuiseur, imprimante 3D | 20 W, 30 W | *En cours* |
+| robot de cuisine | 5 W | *Prêt* sur quelques watts, *Mélange*, puis *Cuisson* à partir de 600 W (`heat_threshold`) |
 | petit chauffage, déshumidificateur, pompe, plancher chauffant | 30 W | *Chauffage*, *Déshumidification* ou *Pompage* |
 | sèche-serviettes, pompe de piscine, spa, sauna | 10 W, 50 W, 50 W, 100 W | *Confort*, *Filtration* ou *Chauffage* |
 | humidificateur | 5 W | *Humidification* |

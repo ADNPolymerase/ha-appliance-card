@@ -210,6 +210,14 @@ const SECTIONS = [
   { field: "night_entity", types: ["camera"], labelKey: "section_night_vision", includeDomains: ["binary_sensor", "switch", "select", "sensor", "input_boolean"] },
   { field: "privacy_entity", types: ["camera"], labelKey: "section_privacy", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
   { field: "signal_entity", types: ["camera"], labelKey: "section_signal", includeDomains: ["sensor"] },
+  { field: "person_entity", types: ["camera"], labelKey: "cam_sec_person", includeDomains: ["binary_sensor", "sensor"] },
+  { field: "vehicle_detection_entity", types: ["camera"], labelKey: "cam_sec_vehicle", includeDomains: ["binary_sensor", "sensor"] },
+  { field: "animal_entity", types: ["camera"], labelKey: "cam_sec_animal", includeDomains: ["binary_sensor", "sensor"] },
+  { field: "spotlight_entity", types: ["camera"], labelKey: "cam_line_spotlight", includeDomains: ["light", "switch", "binary_sensor"] },
+  { field: "siren_entity", types: ["camera"], labelKey: "cam_siren", includeDomains: ["siren", "switch", "binary_sensor"] },
+  { field: "tracking_entity", types: ["camera"], labelKey: "cam_line_tracking", includeDomains: ["switch", "binary_sensor"] },
+  { field: "pan_entity", types: ["camera"], labelKey: "cam_sec_pan", includeDomains: ["number", "sensor"], when: (c) => cameraLayoutOf(c, null) === "trackmix" },
+  { field: "tilt_entity", types: ["camera"], labelKey: "cam_sec_tilt", includeDomains: ["number", "sensor"], when: (c) => cameraLayoutOf(c, null) === "trackmix" },
   { field: "ring_entity", types: ["camera"], labelKey: "section_ring", includeDomains: ["binary_sensor", "event", "input_boolean", "sensor"] },
   // A mailbox: the mail counter and its two doors.
   // The HACF drawings.
@@ -332,6 +340,7 @@ const SECTIONS = [
   { field: "touch_entity", types: ["fingerbot"], labelKey: "fb_touch", includeDomains: ["switch", "input_boolean", "binary_sensor"] },
   { field: "plug_entity", types: ["fingerbot"], labelKey: "section_plug", includeDomains: ["switch", "input_boolean", "binary_sensor"] },
   { field: "charging_entity", types: ["fingerbot"], labelKey: "section_tab_charging", includeDomains: ["binary_sensor", "sensor", "switch", "input_boolean"] },
+  { field: "tamper_entity", types: ["detector"], labelKey: "det_sec_tamper", includeDomains: ["binary_sensor", "sensor"] },
   { field: "test_entity", types: ["detector"], labelKey: "sec_test", includeDomains: ["button", "input_button", "script", "switch"] },
   // Optional readings on the older types.
   ...Object.entries(OPT_LINES).flatMap(([ty, list]) => list.flatMap((o) => [{ field: o.field, types: [ty], labelKey: o.label, includeDomains: o.domains }]
@@ -583,7 +592,8 @@ const SECTIONS = [
             : "")
         : "";
       // What a plug alone tells of a washer's steps and a hob's zones.
-      const plugRows = ["washer", "dishwasher", "dryer"].includes(c._type)
+      const plugRows = c._type === "food_processor" ? c._row("step_heat_threshold", "heat_threshold", { placeholder: String(FP_COOK_W) })
+        : ["washer", "dishwasher", "dryer"].includes(c._type)
         ? c._row("step_heat_threshold", "heat_threshold", { placeholder: String(c._type === "dryer" ? DRYER_HEAT_W : WASH_HEAT_W) })
           + (c._type === "washer" ? c._row("step_spin_threshold", "spin_threshold", { placeholder: String(WASH_SPIN_W) }) : "")
         : c._type === "cooktop" ? c._row("zone_power", "zone_power", { placeholder: String(ZONE_POWER_W) }) : "";
@@ -1456,7 +1466,7 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(CIRC_MODELS.map((v) => ({ value: v, label: v === "generic" ? t(hass, "circ_model_generic") : v === "dab" ? "DAB" : v[0].toUpperCase() + v.slice(1) }))),
         }) : "") : ""}
-        ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["pellet_grill", "grill_layout", GRILL_LAYOUTS, "pg"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"], ["streamer", "streamer_layout", STREAMER_LAYOUTS, "str"], ["climate_sensor", "climate_sensor_layout", THS_LAYOUTS, "ths"], ["cover", "cover_layout", COVER_LAYOUTS, "cov"], ["fingerbot", "fingerbot_layout", FINGERBOT_LAYOUTS, "fb"], ["valve", "valve_layout", VALVE_LAYOUTS, "vlv"], ["drying_rack", "rack_layout", RACK_LAYOUTS, "rack"]]
+        ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["pellet_grill", "grill_layout", GRILL_LAYOUTS, "pg"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"], ["streamer", "streamer_layout", STREAMER_LAYOUTS, "str"], ["climate_sensor", "climate_sensor_layout", THS_LAYOUTS, "ths"], ["cover", "cover_layout", COVER_LAYOUTS, "cov"], ["fingerbot", "fingerbot_layout", FINGERBOT_LAYOUTS, "fb"], ["valve", "valve_layout", VALVE_LAYOUTS, "vlv"], ["drying_rack", "rack_layout", RACK_LAYOUTS, "rack"], ["food_processor", "food_layout", FP_LAYOUTS, "fp"]]
           .filter(([ty]) => this._type === ty).map(([, f, list, p]) => this._row("section_screen_layout", f, { type: "select",
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(list.map((v) => ({ value: v, label: t(hass, `layout_${p}_${v}`) }))) })).join("")}
         ${this._type === "detector" && DETECTOR_MODELS[detectorLayoutOf(this._config, stateObj(hass, this._config.state_entity))] ? this._row("det_model", "detector_model", {

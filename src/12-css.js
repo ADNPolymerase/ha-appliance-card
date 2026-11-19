@@ -2128,6 +2128,15 @@ const ILLUSTRATION_CSS = {
         .cam-tmx-spot{fill:#f5f2e6;stroke:#8f8a78;stroke-width:.5}
         .cam-night .cam-tmx-spot,.cam-m-motion.cam-night .cam-tmx-spot{fill:#fff3c4;filter:drop-shadow(0 0 3px #ffe082)}
         .cam-tmx-pan{transform-box:fill-box;transform-origin:center}
+        .cam-spotcone{opacity:0}
+        .cam-spot .cam-spotcone{opacity:.7}
+        .cam-spot .cam-tmx-spot{fill:#fffbe6;filter:drop-shadow(0 0 4px #ffe082)}
+        .cam-m-motion.cam-track .cam-tmx-pan{animation-duration:2.2s}
+        .cam-siren-fx{opacity:0}
+        .cam-m-siren .cam-siren-fx{opacity:1}
+        .cam-siren-fx path{fill:none;stroke:#e53935;stroke-width:2.6;stroke-linecap:round;animation:cam-blink .5s steps(1) infinite}
+        .cam-siren-fx path:nth-child(2n){animation-delay:.25s}
+        .cam-m-siren .cam-led{fill:#e53935;animation:cam-blink .5s steps(1) infinite}
         .cam-m-motion .cam-tmx-pan{animation:cam-pan 3.2s ease-in-out infinite;animation-delay:var(--anim-offset,0s)}
         @keyframes cam-pan { 0%, 100% { transform: translateX(-5px); } 50% { transform: translateX(5px); } }
         .cam-dbring{fill:none;stroke:#4fc3f7;stroke-width:2.4;opacity:.45}

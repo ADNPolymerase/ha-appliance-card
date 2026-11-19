@@ -22,7 +22,7 @@ A Lovelace card that draws the appliances of your home and animates them from th
 
 ## Features
 
-- **70 appliance types, more than 170 models drawn**, animated while they work and still when they stop. The type is detected on its own, from the entity and from the maker and model of its device, or set with `appliance_type`.
+- **71 appliance types, more than 170 models drawn**, animated while they work and still when they stop. The type is detected on its own, from the entity and from the maker and model of its device, or set with `appliance_type`.
 - **Any integration**: every field is an entity you pick. A plain smart plug is enough, its power tells whether the appliance heats, washes or spins.
 - **State understood**: `Idle`, `RUNNING`, `wash`… become idle, running, paused, finished, delayed or error, with the step of the cycle (wash, rinse, spin…).
 - **What matters for each appliance**: program, time left, door, alerts, levels, temperatures, energy and cost, today's running time.
@@ -269,6 +269,13 @@ Click a family to see its appliances at work. The drawings are shown with `illus
 </details>
 
 <details>
+<summary><b>Kitchen robots</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-foodproc.gif" alt="Kitchen robots">
+
+</details>
+
+<details>
 <summary><b>Screens and tablets</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-screens.gif" alt="Screens and tablets">
@@ -331,7 +338,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. A drawing made after a real product (a console, a streaming box, a printer, a litter box…) is drawn in its real colours until a colour is chosen; its screen, app tile and tyres keep theirs. The scenes around a device (a sump's pit, a garden, a roof) and the lamps' light do not change. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 16 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`, `hu`, `zh-Hant`. `nb` and `nb-NO` give Norwegian. `zh` is Simplified Chinese; `zh-Hant`, `zh-TW` and `zh-HK` give Traditional Chinese. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `fingerbot` \| `valve` \| `drying_rack` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `fingerbot` \| `valve` \| `drying_rack` \| `food_processor` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `illustration_tap_action` | A tap on the drawing alone, the rest of the card keeping `tap_action`: `toggle` (a lamp lit by touching it), `more-info`, `none`, or any of Home Assistant's actions. Left out, the drawing does what the card does. With `toggle`, the drawing answers like the buttons, as `controls_activation` says: a tap, two taps or a long press. |
 | `show_light_button` | `false` hides the light button in the top left corner (oven, hood, 3D printer, pool pump, diffuser); the light still shows on the drawing. |
@@ -515,6 +522,8 @@ phase_entity: sensor.washer_dryer_program_phase
 | `power_entity` / `power_on_threshold` / `no_power_threshold` / `no_power_after` | fridge | With nothing wrong, the state reads *Cooling* at or above the threshold and *Standby* below it: set the threshold between your fridge's draw at rest and while cooling (10 W for one that rests at 6 W). Staying below `no_power_threshold` (default 1 W, whatever the cooling threshold) for more than `no_power_after` minutes (default 30) reads *No power draw*, in orange: a long compressor pause looks the same. Counted from the reading's last change, so a page reload does not restart it. |
 | `plug_entity` | fridge | The smart plug's switch. Off reads *Unplugged* at once. Unplugged or drawing nothing, the light inside goes out. |
 | `kettle_layout` | kettle | `classic` (default, a jug in the appliance's colour) \| `steel` (a stainless steel kettle with a black handle). |
+| `food_layout` | kitchen robot | `tm6` (a Thermomix TM6 or TM7, its touch screen) \| `tm31` (a Thermomix TM31, its dial and LCD). Left out, a name that says TM31, TM21 or TM3 picks `tm31`. |
+| `heat_threshold` | kitchen robot | Power from which it cooks (600 W by default). Below it, it only mixes. |
 | `coffee_layout` | coffee machine | `silver` (default, a bean-to-cup machine in the appliance's colour, its tank on the side) \| `black` (black with a chrome front and a round screen). |
 | `toaster_layout` | toaster | `two` (default, two slots) \| `four` (four slots, two levers) \| `long` (one long slot for two slices end to end). |
 | `zone_power` | cooktop | On a smart plug alone, what one zone draws at full power (1500 W by default): the meter is spread over as many zones as it takes, each with a level from 1 to 9. |
@@ -1544,6 +1553,11 @@ disk2_entity: sensor.nas_drive_2_status
 | `recording_entity` | camera | A recording sensor, for the integrations whose camera entity does not say *recording*. |
 | `night_entity` | camera | The infrared mode: the ring of LEDs around the lens glows red, and a *Night vision* line. |
 | `privacy_entity` | camera | A privacy switch (Reolink, Tapo): on, the camera is *Off*, its head bowed or its shutter closed. Netatmo's `monitoring` attribute does the same. Set it as `toggle_entity` too for a button. |
+| `person_entity` / `vehicle_detection_entity` / `animal_entity` | camera | The camera's AI detections (Reolink, UniFi Protect, Frigate): *Person detected*, *Vehicle detected* or *Animal detected*, in that order, with the motion waves. |
+| `spotlight_entity` | camera | The spotlight: lit, a beam falls from the camera and a *Spotlight* line. A button on the card. |
+| `siren_entity` | camera | The siren: on, the card reads *Siren* in red and sound waves leave the camera. A button on the card. |
+| `tracking_entity` | camera | Auto tracking (TrackMix): an *Auto tracking* line and a button. On a TrackMix the globe follows the motion faster. |
+| `pan_entity` / `tilt_entity` | camera | The pan and tilt position of a TrackMix (a `number` or a sensor, read between its `min` and `max`): the globe turns to it. |
 | `signal_entity` / `battery_entity` | camera | The Wi-Fi signal and the battery, as lines. An Arlo camera's own attributes are read without them. |
 | `lamp_layout` | lamp | `bulb` \| `bedside` \| `floor` (an arc floor lamp) \| `floor_tree` (a floor lamp with adjustable heads up its pole) \| `torch` (a halogen torchiere, its light going up) \| `pendant` \| `ceiling` (a flush dome on the ceiling) \| `ceiling_panel` (a flat LED panel in the ceiling) \| `ceiling_ring` (a LED ring hung from the ceiling) \| `strip` (a LED strip under a shelf) \| `strip_cove` (in a ceiling cove, lighting the ceiling) \| `strip_plinth` (under a kitchen plinth, lighting the floor) \| `strip_baseboard` (along the skirting board, lighting the wall) \| `strip_slats` (behind wooden wall slats) \| `spot` (recessed spots) \| `spot_track` (spots on a track, each aimed its own way) \| `spot_surface` (cans mounted on the ceiling) \| `spot_updown` (a cylinder on a wall, lighting up and down) \| `panels` (Nanoleaf-style panels) \| `desk` \| `wall` (a lantern on an outside wall) \| `garden_spot` (a spotlight on its spike, lighting a shrub) \| `flood` (a rectangular floodlight on the house wall, pointing down) \| `bollard` (a small garden post along a path) \| `string` (Twinkly-style string lights) \| `curtain` (a light curtain in a window) \| `icicle` (icicle lights under a gutter) \| `festoon` (big bulbs on swags) \| `squares` (pixel squares, Twinkly Squares style). String, curtain and icicle lights twinkle while on, and with an effect each bulb takes its own hue. Left out, it is read from the name and the model: strip, WLED or Govee makes a strip, Nanoleaf or panel panels, bedside a bedside lamp, desk a desk lamp, halogen or uplight a torchiere, floor or arc a floor lamp (a tree lamp, or a floor lamp named with 3 spots or arms, a tree floor lamp), spot or GU10 spots (on a track or rail track spots, surface or can surface spots, up/down or wall an up/down wall light), pendant or chandelier a pendant, ceiling or plafonnier a ceiling light (ring or halo a ring), LED panel a ceiling panel, Twinkly, fairy or string lights a string (curtain, icicle, festoon and Twinkly Squares their own shape), a garden spot or spike a garden spotlight, bollard or path light a garden post, flood, floodlight or Fluter a floodlight, wall, outdoor or garden a lantern; a bulb otherwise. |
 | `mailbox_layout` | mailbox | `through` (through the wall, seen from the side, a door on each face) \| `through_3d` (the same box in three-quarter view: the street door with its letter flap, lock and name plate, the letters lying inside when it opens, the house door at the back) \| `classic` (a box on its post, seen from the front). Left out, a `back_door_entity` makes it a through-the-wall box. |
@@ -1557,6 +1571,7 @@ disk2_entity: sensor.nas_drive_2_status
 | `detector_layout` | detector | `smoke` (a smoke detector on the ceiling) \| `co` (a CO alarm on the wall, its display in ppm) \| `leak` (a leak sensor on the floor) \| `door` (a door or window contact, open or closed; a window when the device class or the name says window) \| `vibration` (a vibration sensor) \| `glass` (a glass break sensor). Left out, the device class picks it (`smoke`, `carbon_monoxide` or `gas`, `moisture`, `door`, `window`, `opening`, `garage_door`, `vibration`), or the name. On is an alarm: the smoke rises to the ceiling, the CO display turns red, the water drips into a puddle. |
 | `detector_model` | detector | The model drawn for a door contact (`sonoff`, `aqara`, `hue`), a vibration sensor (`aqara`, `tuya`) or a glass break sensor (`ring`, `ajax`). Left out, the brand in the device's name or model picks it, else the first one. |
 | `battery_entity` | detector | The battery, in % or as a low-battery sensor: a line, and the light turns amber at 20 % or less. |
+| `tamper_entity` | detector | The tamper switch of a contact (Aqara, Ajax, Hue): on, the card reads *Tampered* in red, the sensor hangs askew off its frame, and a line. The door keeps its own state. |
 | `test_entity` | detector | A button, script or switch that runs the alarm test: a *Test* button on the card. |
 | `co_level_entity` | detector | The CO level, on the alarm's display and as a line. |
 | `co_entity` | detector | The CO alarm of a combined smoke and CO detector (e.g. Nest Protect), a binary sensor (or a sensor, whose own value is shown unless it says an alarm): a *CO alarm* line, and the smoke detector raises the CO alarm when it goes off, even with the smoke sensor offline. It makes the card a smoke detector unless its device class or `detector_layout` says CO or leak, where it is ignored. |
@@ -1862,6 +1877,30 @@ state_entity: binary_sensor.drying_rack_contact
 battery_entity: sensor.drying_rack_contact_battery
 ```
 
+A Thermomix on a smart plug is a `food_processor`: *Off*, *Ready* on a few watts, *Mixing* while its blade turns, *Cooking* from 600 W, the steam rising from its bowl.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: food_processor
+food_layout: tm6
+state_entity: switch.thermomix_plug
+power_entity: sensor.thermomix_plug_power
+```
+
+A Reolink TrackMix with its AI detections, spotlight, siren and tracking:
+
+```yaml
+type: custom:ha-appliance-card
+state_entity: camera.trackmix_fluent
+camera_layout: trackmix
+person_entity: binary_sensor.trackmix_person
+vehicle_detection_entity: binary_sensor.trackmix_vehicle
+animal_entity: binary_sensor.trackmix_animal
+spotlight_entity: light.trackmix_floodlight
+siren_entity: siren.trackmix_siren
+tracking_entity: switch.trackmix_auto_tracking
+```
+
 </details>
 
 ### Winter is coming
@@ -1933,6 +1972,7 @@ Each type knows the power it works at, so there is no threshold to set. Under it
 | iron | 10 W | *Heating*, then *Ready* when its thermostat cuts out; the more it draws, the more steam |
 | oven, microwave, kettle, air fryer, toaster, water heater | 50 W | *Running*, *Heating*, *Cooking* or *Toasting* |
 | cooker, 3D printer | 20 W, 30 W | *Running* |
+| kitchen robot | 5 W | *Ready* on a few watts, *Mixing*, then *Cooking* from 600 W (`heat_threshold`) |
 | space heater, dehumidifier, water pump, floor heating | 30 W | *Heating*, *Drying* or *Pumping* |
 | towel warmer, pool pump, spa, sauna | 10 W, 50 W, 50 W, 100 W | *Comfort*, *Filtering* or *Heating* |
 | humidifier | 5 W | *Humidifying* |

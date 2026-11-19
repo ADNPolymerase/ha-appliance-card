@@ -504,10 +504,10 @@ function hrvHtml(cls, h) {
 // infrared mode say more when the integration has them, a privacy switch (or
 // Netatmo's monitoring attribute) says it is off, and a connectivity sensor
 // that it is gone.
-const CAMERA_ONLY_FIELDS = ["camera_layout", "motion_entity", "recording_entity", "night_entity", "privacy_entity", "signal_entity", "ring_entity"];
+const CAMERA_ONLY_FIELDS = ["camera_layout", "motion_entity", "recording_entity", "night_entity", "privacy_entity", "signal_entity", "ring_entity", "spotlight_entity", "siren_entity", "person_entity", "vehicle_detection_entity", "animal_entity", "tracking_entity", "pan_entity", "tilt_entity"];
 const CAMERA_LAYOUTS = ["indoor", "tube", "outdoor", "dome", "doorbell", "trackmix"];
-const CAMERA_LABELS = { idle: "cam_idle", live: "cam_live", rec: "cam_rec", motion: "cam_motion", ring: "cam_ring", off: "cam_off", unav: "ev_offline" };
-const CAMERA_COLORS = { idle: "var(--secondary-text-color, #727272)", live: "#03a9f4", rec: "#f44336", motion: "#ff9800", ring: "#03a9f4",
+const CAMERA_LABELS = { idle: "cam_idle", live: "cam_live", rec: "cam_rec", motion: "cam_motion", ring: "cam_ring", siren: "cam_siren", off: "cam_off", unav: "ev_offline" };
+const CAMERA_COLORS = { idle: "var(--secondary-text-color, #727272)", live: "#03a9f4", rec: "#f44336", motion: "#ff9800", ring: "#03a9f4", siren: "#e53935",
   off: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)" };
 const CAMERA_ON = ["on", "true", "1", "yes", "detected", "recording", "motion", "home"];
 function camOn(hass, id) {
@@ -556,13 +556,39 @@ function cameraReadOf(hass, cfg, st) {
   let mode;
   if (!st || ["unavailable", "unknown", "none", ""].includes(raw) || /^offline/.test(raw) || gone) mode = "unav";
   else if (raw === "off" || a.monitoring === false || camOn(hass, cfg.privacy_entity)) mode = "off";
+  else if (camOn(hass, cfg.siren_entity)) mode = "siren";
   else if (camRinging(hass, cfg.ring_entity)) mode = "ring";
   else if (raw === "recording" || (camOn(hass, cfg.recording_entity) && !/record.?audio/i.test(cfg.recording_entity))) mode = "rec";
-  else if (raw === "motion" || camMoving(hass, cfg.motion_entity)) mode = "motion";
+  else if (raw === "motion" || camMoving(hass, cfg.motion_entity) || CAM_SMART.some((k) => camOn(hass, cfg[CAM_SMART_FIELDS[k]]))) mode = "motion";
   // Nest and Netatmo always say streaming: nobody is watching for all that.
   else if (raw === "streaming" && !/netatmo|google nest/i.test(String(a.brand || ""))) mode = "live";
   else mode = "idle";
-  return { mode, night: mode !== "off" && mode !== "unav" && camOn(hass, cfg.night_entity) };
+  const live = mode !== "off" && mode !== "unav";
+  // What its AI saw (Reolink, UniFi, Frigate): a person first, then a
+  // vehicle, then an animal.
+  const what = mode === "motion" ? CAM_SMART.find((k) => camOn(hass, cfg[CAM_SMART_FIELDS[k]])) || "" : "";
+  return { mode, what, night: live && camOn(hass, cfg.night_entity), spot: live && camOn(hass, cfg.spotlight_entity),
+    track: live && camOn(hass, cfg.tracking_entity), pan: camShare(hass, cfg.pan_entity), tilt: camShare(hass, cfg.tilt_entity) };
+}
+// The detections a camera's AI reports, in the order they say most.
+const CAM_SMART = ["person", "vehicle", "animal"];
+const CAM_SMART_FIELDS = { person: "person_entity", vehicle: "vehicle_detection_entity", animal: "animal_entity" };
+// A PTZ position as a share of its range: a number's min and max, else
+// degrees (0 to 360), else a percentage.
+function camShare(hass, id) {
+  const st = id ? stateObj(hass, id) : null;
+  const v = st ? numberOrNull(st.state) : null;
+  if (v === null) return null;
+  const a = st.attributes || {};
+  const lo = numberOrNull(a.min), hi = numberOrNull(a.max);
+  const [min, max] = lo !== null && hi !== null && hi > lo ? [lo, hi] : v > 100 ? [0, 360] : [0, 100];
+  return Math.max(0, Math.min(1, (v - min) / (max - min)));
+}
+// A camera's own buttons: its spotlight, its siren and its tracking.
+function cameraControls(hass, cfg) {
+  return [["spotlight", "mdi:spotlight-beam", "cam_line_spotlight"], ["siren", "mdi:alarm-light", "cam_siren"], ["tracking", "mdi:target-account", "cam_line_tracking"]]
+    .filter(([k]) => cfg[`${k}_entity`] && stateObj(hass, cfg[`${k}_entity`]) && !READ_ONLY_DOMAINS.includes(domainOf(cfg[`${k}_entity`])))
+    .map(([k, icon, label]) => ({ key: `cam_${k}`, entity: cfg[`${k}_entity`], icon, label: t(hass, label), on: camOn(hass, cfg[`${k}_entity`]) }));
 }
 // The shape: picked, or read from the name, the brand and the model. A
 // Netatmo indoor camera is its aluminium tube; the outdoor ones and the
@@ -588,6 +614,7 @@ const CAM_DEFS = `<defs>
 <radialGradient id="cam-g-sph" cx=".38" cy=".32" r=".75"><stop offset="0" style="stop-color:var(--ac-body-hi,#fff)"/><stop offset=".6" style="stop-color:var(--ac-body,#eef1f4)"/><stop offset="1" style="stop-color:var(--ac-body-lo,#c9d0d7)"/></radialGradient>
 <radialGradient id="cam-g-glass" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#3a4552"/><stop offset=".55" stop-color="#11161c"/><stop offset="1" stop-color="#05070a"/></radialGradient>
 <radialGradient id="cam-g-lens" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#4f6b8a"/><stop offset=".45" stop-color="#16263a"/><stop offset="1" stop-color="#020407"/></radialGradient>
+<linearGradient id="cam-g-cone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c4" stop-opacity=".85"/><stop offset="1" stop-color="#fff3c4" stop-opacity="0"/></linearGradient>
 <radialGradient id="cam-g-glow" r=".5"><stop offset="0" stop-color="#4fc3f7" stop-opacity=".95"/><stop offset="1" stop-color="#4fc3f7" stop-opacity="0"/></radialGradient>
 <radialGradient id="cam-g-smoke" cx=".4" cy=".25" r=".85"><stop offset="0" stop-color="#56606b" stop-opacity=".85"/><stop offset=".6" stop-color="#1c2228" stop-opacity=".9"/><stop offset="1" stop-color="#0b0e11" stop-opacity=".95"/></radialGradient>
 <linearGradient id="cam-g-al" x1="0" y1="0" x2="1" y2="0"><stop offset="0" class="cam-al0"/><stop offset=".32" class="cam-al1"/><stop offset=".7" class="cam-al2"/><stop offset="1" class="cam-al3"/></linearGradient>
@@ -695,7 +722,7 @@ ${camShadow(60, 21, 56, 3.5, .22)}
   // on top, the fixed white head, and under it the black globe that turns.
   // Its window holds the two light sensors, the wide and the telephoto
   // lenses side by side, and the two spotlights. On a motion the globe pans.
-  trackmix: () => `${camShadow(62, 112, 24, 3, .2)}
+  trackmix: (c) => `${camShadow(62, 112, 24, 3, .2)}
 <rect x="42" y="3" width="36" height="17" rx="2.5" fill="url(#cam-g-shv)" ${CAM_EDGE} stroke-width=".6"/>
 <path d="M45 5.5 H75" stroke="#fff" stroke-width="1.2" opacity=".7" stroke-linecap="round"/>
 <circle cx="48" cy="12" r="1.3" fill="rgba(0,0,0,.3)"/><circle cx="72" cy="12" r="1.3" fill="rgba(0,0,0,.3)"/>
@@ -703,14 +730,15 @@ ${camShadow(60, 21, 56, 3.5, .22)}
 <path d="M36 23 H84" stroke="#fff" stroke-width="1.6" opacity=".75" stroke-linecap="round"/>
 <path d="M34 27 V49" stroke="#fff" stroke-width="2" opacity=".45" stroke-linecap="round"/>
 <path d="M30 49 Q60 55 90 49 V51 Q60 57 30 51 Z" fill="#000" opacity=".12"/>
+<path class="cam-spotcone" d="M47 90 L73 90 L100 126 L20 126 Z" fill="url(#cam-g-cone)"/>
 <path d="M33 52 Q60 57.5 87 52 V76 A27 32 0 0 1 33 76 Z" fill="url(#cam-g-blk)" ${CAM_EDGE} stroke-width=".7"/>
 <path d="M36 58 V78 Q37 92 46 100" stroke="#fff" stroke-width="1.6" opacity=".16" fill="none" stroke-linecap="round"/>
-<g class="cam-tmx-pan"><rect x="43" y="57" width="34" height="36" rx="7" fill="url(#cam-g-dbglass)" stroke="#000" stroke-width=".6"/>
+<g transform="translate(${c && c.pan !== null && c.pan !== undefined ? ((c.pan - .5) * 14).toFixed(1) : 0} ${c && c.tilt !== null && c.tilt !== undefined ? ((c.tilt - .5) * 8).toFixed(1) : 0})"><g class="cam-tmx-pan"><rect x="43" y="57" width="34" height="36" rx="7" fill="url(#cam-g-dbglass)" stroke="#000" stroke-width=".6"/>
 <path d="M46 60 Q52 58 60 58" stroke="#fff" stroke-width="1" opacity=".2" fill="none" stroke-linecap="round"/>
 <rect x="49" y="60.5" width="22" height="6" rx="3" fill="#1b2128"/><circle cx="54.5" cy="63.5" r="1.6" fill="#3a4550"/><circle cx="65.5" cy="63.5" r="1.6" fill="#3a4550"/>
 <rect x="45.5" y="68.5" width="29" height="13" rx="2.5" fill="#12171c"/>
 <g class="cam-on">${camLens(53, 75, 4.2, 0)}${camLens(67, 75, 4.2, 0)}<circle class="cam-tmx-spot" cx="54" cy="87" r="3"/><circle class="cam-tmx-spot" cx="66" cy="87" r="3"/></g>
-<g class="cam-off"><circle cx="53" cy="75" r="5" fill="#2a3037"/><circle cx="67" cy="75" r="5" fill="#2a3037"/><circle cx="54" cy="87" r="2.6" fill="#2a3037"/><circle cx="66" cy="87" r="2.6" fill="#2a3037"/></g></g>
+<g class="cam-off"><circle cx="53" cy="75" r="5" fill="#2a3037"/><circle cx="67" cy="75" r="5" fill="#2a3037"/><circle cx="54" cy="87" r="2.6" fill="#2a3037"/><circle cx="66" cy="87" r="2.6" fill="#2a3037"/></g></g></g>
 <circle class="cam-led" cx="82" cy="58" r="1.2"/>
 ${camWaves(92, 76)}${CAM_REC}`,
   // A video doorbell on its wall: the lens at the top, the motion sensor, and
@@ -736,9 +764,11 @@ ${camWaves(80, 40)}${CAM_REC}`,
 };
 function cameraHtml(cls, c) {
   const layout = CAMERA_LAYOUTS.includes(c.layout) ? c.layout : "indoor";
-  const flags = ["cam", `cam-l-${layout}`, `cam-m-${c.mode || "unav"}`, c.night ? "cam-night" : "", c.dark ? "cam-dark" : ""].filter(Boolean).join(" ");
+  const flags = ["cam", `cam-l-${layout}`, `cam-m-${c.mode || "unav"}`, c.night ? "cam-night" : "", c.dark ? "cam-dark" : "", c.spot ? "cam-spot" : "", c.track ? "cam-track" : ""].filter(Boolean).join(" ");
+  // A siren calls on both sides of the camera, in red.
+  const siren = `<g class="cam-siren-fx"><path d="M14 30 Q6 44 14 58"/><path d="M8 24 Q-3 44 8 64"/><path d="M106 30 Q114 44 106 58"/><path d="M112 24 Q123 44 112 64"/></g>`;
   return `
-        <div class="machine ${cls} ${flags}"><svg class="cam-svg" viewBox="0 -8 120 135">${CAM_DEFS}${CAMERA_SVGS[layout]()}</svg></div>`;
+        <div class="machine ${cls} ${flags}"><svg class="cam-svg" viewBox="0 -8 120 135">${CAM_DEFS}${CAMERA_SVGS[layout](c)}${siren}</svg></div>`;
 }
 
 // A mailbox, read from a mail indicator or a counter, and from the contacts on
