@@ -226,6 +226,15 @@ function simulate(sim, domain, service, data) {
     if (service === "turn_on") { sim.set(id, "on"); return later(id, "off", 1600); }
     return flip(id);
   }
+  if (domain === "valve") {
+    // A motorised valve takes a few seconds to turn its handle a quarter.
+    const now = String((states[id] || {}).state || "closed");
+    const up = service === "open_valve" || (service === "toggle" && !["open", "opening"].includes(now));
+    clearTimeout(sim.valveTimer);
+    sim.set(id, up ? "opening" : "closing");
+    sim.valveTimer = setTimeout(() => sim.set(id, up ? "open" : "closed"), 3000);
+    return;
+  }
   if (domain === "cover") {
     // The cover travels a step a tick, as a real one would, and stops on stop.
     const tilt = /_tilt$/.test(service);
@@ -1824,14 +1833,14 @@ Object.assign(EXTRA, {
   sb_meter: thsCard(L("Bedroom", "Chambre"), "switchbot_meter", 27.4, 47),
   sb_plus: thsCard(L("Kitchen", "Cuisine"), "switchbot_plus", 24.6, 63),
   sb_outdoor: thsCard(L("Garden", "Jardin"), "switchbot_outdoor", 6.8, 74),
-  rack_box: () => card({ name: L("Laundry room", "Buanderie"), appliance_type: "drying_rack", rack_layout: "box", state_entity: "binary_sensor.rack_contact", battery_entity: "sensor.rack_contact_battery" },
-    [st("binary_sensor.rack_contact", "on", { device_class: "opening" }), st("sensor.rack_contact_battery", 92, { unit_of_measurement: "%" })]),
-  rack_box_closed: () => card({ name: L("Bathroom", "Salle de bain"), appliance_type: "drying_rack", rack_layout: "box", state_entity: "binary_sensor.rack2" }, [st("binary_sensor.rack2", "off", { device_class: "opening" })]),
-  rack_accordion: () => card({ name: L("Utility room", "Cellier"), appliance_type: "drying_rack", rack_layout: "accordion", state_entity: "binary_sensor.rack3" }, [st("binary_sensor.rack3", "on", { device_class: "opening" })]),
-  rack_accordion_closed: () => card({ name: L("Hallway", "Couloir"), appliance_type: "drying_rack", rack_layout: "accordion", state_entity: "binary_sensor.rack4" }, [st("binary_sensor.rack4", "off", { device_class: "opening" })]),
-  rack_frame: () => card({ name: L("Mudroom", "Entr\u00e9e"), appliance_type: "drying_rack", rack_layout: "frame", state_entity: "binary_sensor.rack5" }, [st("binary_sensor.rack5", "on", { device_class: "opening" })]),
-  rack_frame_closed: () => card({ name: L("Cellar", "Cave"), appliance_type: "drying_rack", rack_layout: "frame", state_entity: "binary_sensor.rack6", battery_entity: "sensor.rack6_battery" },
-    [st("binary_sensor.rack6", "off", { device_class: "opening" }), st("sensor.rack6_battery", 14, { unit_of_measurement: "%" })]),
+  rack_box: () => card({ name: L("Laundry room", "Buanderie"), appliance_type: "drying_rack", rack_layout: "box", state_entity: "input_boolean.rack_contact", battery_entity: "sensor.rack_contact_battery" },
+    [st("input_boolean.rack_contact", "on", { device_class: "opening" }), st("sensor.rack_contact_battery", 92, { unit_of_measurement: "%" })]),
+  rack_box_closed: () => card({ name: L("Bathroom", "Salle de bain"), appliance_type: "drying_rack", rack_layout: "box", state_entity: "input_boolean.rack2" }, [st("input_boolean.rack2", "off", { device_class: "opening" })]),
+  rack_accordion: () => card({ name: L("Utility room", "Cellier"), appliance_type: "drying_rack", rack_layout: "accordion", state_entity: "input_boolean.rack3" }, [st("input_boolean.rack3", "on", { device_class: "opening" })]),
+  rack_accordion_closed: () => card({ name: L("Hallway", "Couloir"), appliance_type: "drying_rack", rack_layout: "accordion", state_entity: "input_boolean.rack4" }, [st("input_boolean.rack4", "off", { device_class: "opening" })]),
+  rack_frame: () => card({ name: L("Mudroom", "Entr\u00e9e"), appliance_type: "drying_rack", rack_layout: "frame", state_entity: "input_boolean.rack5" }, [st("input_boolean.rack5", "on", { device_class: "opening" })]),
+  rack_frame_closed: () => card({ name: L("Cellar", "Cave"), appliance_type: "drying_rack", rack_layout: "frame", state_entity: "input_boolean.rack6", battery_entity: "sensor.rack6_battery" },
+    [st("input_boolean.rack6", "off", { device_class: "opening" }), st("sensor.rack6_battery", 14, { unit_of_measurement: "%" })]),
   corners4: () => card({ name: L("3D printer", "Imprimante 3D"), appliance_type: "printer_3d", state_entity: "sensor.p3d_state",
     corner_entities: ["switch.p3d_plug", { entity: "button.octoprint_connect", icon: "mdi:link-variant" }, "switch.p3d_light", "script.router_reboot"] },
     [st("sensor.p3d_state", "idle"), st("switch.p3d_plug", "on", { friendly_name: "Printer plug" }), st("button.octoprint_connect", "unknown", { friendly_name: "OctoPrint connect" }),
