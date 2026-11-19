@@ -1879,7 +1879,7 @@ state_entity: binary_sensor.sechoir_contact
 battery_entity: sensor.sechoir_contact_battery
 ```
 
-Un Thermomix sur une prise connectée est un `food_processor` : *Éteint*, *Prêt* sur quelques watts, *Mélange* quand sa lame tourne, *Cuisson* à partir de 600 W, la vapeur montant du bol.
+Un Thermomix sur une prise connectée est un `food_processor` : *Éteint*, *Prêt* sur quelques watts, *Mélange* quand sa lame tourne, *Cuisson* à partir de 600 W, la vapeur montant du bol. Son écran affiche la puissance mesurée par la prise, la seule chose qu'une prise connaît.
 
 ```yaml
 type: custom:ha-appliance-card

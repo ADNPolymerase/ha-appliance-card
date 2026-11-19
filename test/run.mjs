@@ -15072,6 +15072,10 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('170 : cuisson', stateLine(fp('tm6', 'on', 1000)), 'Cooking');
   check('170 : seuil de cuisson choisi', stateLine(render({ appliance_type: 'food_processor', state_entity: 'switch.tm', power_entity: 'sensor.tm_w', heat_threshold: 1200 }, { 'switch.tm': s('on'), 'sensor.tm_w': s(1000, { unit_of_measurement: 'W' }) })), 'Mixing');
   check('170 : TM31 et TM6', [kindOf(fp('tm31', 'on', 0)), kindOf(fp('tm6', 'on', 0))].join(' '), 'fp_tm31 fp_tm6');
+  const lcdOf = (h) => (/font-weight="700" text-anchor="middle" fill="#2[0-9a-f]{5}"[^>]*>([^<]*)</.exec(h) || [, null])[1];
+  check('170 : l ecran montre la puissance de la prise', [lcdOf(fp('tm31', 'on', 380)), lcdOf(fp('tm6', 'on', 1050)), lcdOf(fp('tm6', 'on', 1))].join('|'), '380 W|1050|1');
+  check('170 : eteint, ecran vide', lcdOf(fp('tm31', 'off', 0)), '');
+  check('170 : jamais d heure ni de degres', /\d\d:\d\d|\u00b0/.test(fp('tm6', 'on', 1050).split('<svg')[1] || ''), false);
   check('170 : la cuisson fume', /nta-steam/.test(fp('tm6', 'on', 1000)), true);
   check('170 : detecte par son nom', kindOf(render({ state_entity: 'switch.thermomix' }, { 'switch.thermomix': s('on') })) !== null && /fp_/.test(kindOf(render({ state_entity: 'switch.thermomix' }, { 'switch.thermomix': s('on') }))), true);
 }

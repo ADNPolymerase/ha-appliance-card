@@ -1877,7 +1877,7 @@ state_entity: binary_sensor.drying_rack_contact
 battery_entity: sensor.drying_rack_contact_battery
 ```
 
-A Thermomix on a smart plug is a `food_processor`: *Off*, *Ready* on a few watts, *Mixing* while its blade turns, *Cooking* from 600 W, the steam rising from its bowl.
+A Thermomix on a smart plug is a `food_processor`: *Off*, *Ready* on a few watts, *Mixing* while its blade turns, *Cooking* from 600 W, the steam rising from its bowl. Its screen shows the power the plug measures, the only thing a plug knows.
 
 ```yaml
 type: custom:ha-appliance-card

@@ -4634,10 +4634,10 @@ function fpBowl(g, x0, x1, y0, y1, taper) {
 // A screen digit has to read on a card, so the displays are drawn larger
 // than on the real robot, and say one value at a time.
 function fpReadout(c, ready) {
-  if (c.unav) return "";
-  if (c.heat) return "100\u00b0";
-  if (c.on) return "02:30";
-  return ready ? "00:00" : "";
+  // Read from its plug, the robot only knows the power it draws: that is
+  // what its screen shows, never a time or a temperature it cannot know.
+  if (c.unav || !(c.on || ready) || c.watts === null || c.watts === undefined) return "";
+  return `${Math.round(c.watts)} W`;
 }
 function ntFoodTm31(c) {
   const b = ntId(), st = ntId(), lid = ntId(), pn = ntId();
@@ -4656,7 +4656,7 @@ ${fpBowl(st, 34, 86, 22, 62, 7)}
 <path d="M31 116 V64 Q60 50 89 64 V116 Z" fill="url(#${b})" stroke="#cfd3d7" stroke-width=".6"/>
 <path d="M34 110 Q34 78 60 75 Q86 78 86 110 Q86 112.6 83.4 112.6 H36.6 Q34 112.6 34 110 Z" fill="url(#${pn})" stroke="#b9bfc5" stroke-width=".6"/>
 <rect x="37" y="78.5" width="46" height="18" rx="2.2" fill="${lit ? "#bfe0a2" : "#a7b0a6"}" stroke="#6f7c6d" stroke-width=".7"/>
-<text x="60" y="92.2" font-size="12.5" font-weight="700" text-anchor="middle" fill="#25331f" ${NT_FONT}>${lcd}</text>
+<text x="60" y="92.2" font-size="${lcd.length > 5 ? 10.5 : 12.5}" font-weight="700" text-anchor="middle" fill="#25331f" ${NT_FONT}>${lcd}</text>
 ${keys(40, 1)}${keys(80, -1)}
 <circle cx="60" cy="104.6" r="5" fill="#eef0f2" stroke="#8f979e" stroke-width=".7"/><rect x="59.1" y="99.8" width="1.8" height="6" rx=".9" fill="#41474d" transform="rotate(${c.on ? 55 : -20} 60 104.6)"/>
 <text x="60" y="111.2" font-size="2.4" text-anchor="middle" fill="#8a9097" ${NT_FONT}>Thermomix</text>
@@ -4692,7 +4692,7 @@ ${ntShadow(60, 118, 46)}
 ${led(24, 64)}${led(91.6, 64)}
 <rect x="31.6" y="81" width="55" height="25.6" rx="3.2" fill="url(#${fr})"/><rect x="32.6" y="82" width="53" height="23.6" rx="2.5" fill="#000" opacity=".25"/><rect x="33.2" y="82.6" width="51.8" height="22.4" rx="2.2" fill="${on ? `url(#${sc})` : "#2e373c"}"/><path d="M34.5 84 H83.5" stroke="#fff" stroke-width=".6" opacity="${on ? .9 : .15}"/>
 ${ring(46.5, 10.4, big)}${ring(68.8, 5, smalls[0])}${ring(79.2, 5, smalls[1])}
-<text x="46.5" y="${c.heat ? 96.4 : 96}" font-size="${c.heat ? 7.6 : 6.6}" font-weight="700" text-anchor="middle" fill="#263238" ${NT_FONT}>${val}</text>
+<text x="46.5" y="95.4" font-size="${val.length > 4 ? 6.6 : 7.6}" font-weight="700" text-anchor="middle" fill="#263238" ${NT_FONT}>${val.replace(/ W$/, "")}</text>${val ? `<text x="46.5" y="100.6" font-size="3.4" font-weight="700" text-anchor="middle" fill="#607d8b" ${NT_FONT}>W</text>` : ""}
 <circle cx="92.6" cy="93.8" r="6.2" fill="url(#${fr})" stroke="#8f979e" stroke-width=".6"/><circle cx="92.6" cy="93.8" r="4.3" fill="none" stroke="#fff" stroke-width=".9" opacity=".85"/>
 <text x="26.2" y="94.6" font-size="2" font-weight="700" text-anchor="middle" fill="#9aa1a8" ${NT_FONT}>VORWERK</text><text x="94.5" y="75" font-size="2.5" text-anchor="middle" fill="#7a8188" ${NT_FONT}>thermomix</text>
 </g>
@@ -5207,7 +5207,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const heatW = numberOrNull(cfg.heat_threshold) || FP_COOK_W;
     const heat = !!running && watts !== null && watts >= heatW;
     const ready = !running && !!st && NT_ON.includes(raw);
-    const draw = { kind: `fp_${fpLayoutOf(cfg, st)}`, on: !!running, heat, ready };
+    const draw = { kind: `fp_${fpLayoutOf(cfg, st)}`, on: !!running, heat, ready, watts };
     if (heat) return out("heat", "fp_cooking", NT_COLORS.heat, draw);
     if (running) return out("run", "fp_mixing", NT_COLORS.run, draw);
     return ready ? out("on", "fp_ready", NT_COLORS.idle, draw) : out("off", "fp_off", NT_COLORS.off, draw);

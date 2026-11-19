@@ -6835,7 +6835,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const heatW = numberOrNull(cfg.heat_threshold) || FP_COOK_W;
     const heat = !!running && watts !== null && watts >= heatW;
     const ready = !running && !!st && NT_ON.includes(raw);
-    const draw = { kind: `fp_${fpLayoutOf(cfg, st)}`, on: !!running, heat, ready };
+    const draw = { kind: `fp_${fpLayoutOf(cfg, st)}`, on: !!running, heat, ready, watts };
     if (heat) return out("heat", "fp_cooking", NT_COLORS.heat, draw);
     if (running) return out("run", "fp_mixing", NT_COLORS.run, draw);
     return ready ? out("on", "fp_ready", NT_COLORS.idle, draw) : out("off", "fp_off", NT_COLORS.off, draw);
