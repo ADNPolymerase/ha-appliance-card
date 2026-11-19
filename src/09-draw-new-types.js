@@ -4631,54 +4631,72 @@ function fpBowl(g, x0, x1, y0, y1, taper) {
   return `<path d="M${x0} ${y0} L${x1} ${y0} L${x1 - taper} ${y1} L${x0 + taper} ${y1} Z" fill="url(#${g})" stroke="#7d868f" stroke-width=".6"/>
 <path d="M${x0 + 4} ${y0 + 3} L${x0 + taper + 3} ${y1 - 2}" stroke="#fff" stroke-width="1.6" opacity=".55" stroke-linecap="round"/><path d="M${x1 - 7} ${y0 + 3} L${x1 - taper - 5} ${y1 - 2}" stroke="#fff" stroke-width="1" opacity=".3" stroke-linecap="round"/>`;
 }
+// A screen digit has to read on a card, so the displays are drawn larger
+// than on the real robot, and say one value at a time.
+function fpReadout(c, ready) {
+  if (c.unav) return "";
+  if (c.heat) return "100\u00b0";
+  if (c.on) return "02:30";
+  return ready ? "00:00" : "";
+}
 function ntFoodTm31(c) {
-  const b = ntId(), st = ntId(), lid = ntId();
-  const lcd = c.unav ? "" : c.heat ? "100\u00b0" : c.on ? "Sp 4" : c.ready ? "00:00" : "";
-  return `<defs>${ntV(b, "#ffffff", "#e3e6e9")}<linearGradient id="${st}" x1="0" x2="1"><stop offset="0" stop-color="#8d969e"/><stop offset=".35" stop-color="#eef1f3"/><stop offset=".7" stop-color="#b6bec5"/><stop offset="1" stop-color="#7d868f"/></linearGradient>${ntV(lid, "#5d646b", "#33383d")}</defs>
-${ntShadow(60, 118, 44)}
+  const b = ntId(), st = ntId(), lid = ntId(), pn = ntId();
+  const lcd = fpReadout(c, c.ready);
+  const lit = !!lcd;
+  // The keys: an arc of small round buttons each side of the display.
+  const keys = (x0, dir) => [0, 1, 2, 3].map((i) => `<circle cx="${(x0 + dir * i * 3.6).toFixed(1)}" cy="${(103 + i * i * .35).toFixed(1)}" r="1.25" fill="#5a6168"/>`).join("") + [0, 1, 2].map((i) => `<circle cx="${(x0 + dir * (1.8 + i * 3.6)).toFixed(1)}" cy="${(108.5 + i * .6).toFixed(1)}" r="1.15" fill="#5a6168"/>`).join("");
+  return `<defs>${ntV(b, "#ffffff", "#e2e5e8")}<linearGradient id="${st}" x1="0" x2="1"><stop offset="0" stop-color="#7f8891"/><stop offset=".32" stop-color="#f1f3f5"/><stop offset=".68" stop-color="#b3bbc2"/><stop offset="1" stop-color="#78818a"/></linearGradient>${ntV(lid, "#5b6168", "#383d42")}${ntV(pn, "#f4f5f6", "#d8dcdf")}</defs>
+${ntShadow(60, 118, 46)}
 <g class="${c.on && !c.heat ? "nta-vib" : ""}">
-<path d="M17 112 L27 54 Q28 48 33 48 L34 48 L24 112 Z" fill="#4c5258"/>
-<path d="M24 112 L34 48 H86 Q91 48 92 54 L101 110 Q102 116 96 116 H24 Q18 116 17 112 Z" fill="url(#${b})" stroke="#c9ced3" stroke-width=".7"/>
-<path d="M36 51 H84" stroke="#fff" stroke-width="1.4" opacity=".9"/>
-<path d="M30 113 Q60 66 96 113 Z" fill="#eceef0" stroke="#c4c9ce" stroke-width=".6"/>
-<rect x="49" y="86" width="22" height="8" rx="1.4" fill="${c.unav ? "#9aa59c" : lcd ? "#b9d3b5" : "#9aa59c"}" stroke="#7d8a7b" stroke-width=".5"/>
-<text x="60" y="92.3" font-size="5.4" font-weight="700" text-anchor="middle" fill="#2e3b2d" ${NT_FONT}>${lcd}</text>
-${[0, 1, 2, 3, 4, 5].map((i) => `<circle cx="${38 + i * 3.1}" cy="${104 - Math.abs(i - 2.5) * 1.6}" r="1.1" fill="#4c5258"/>`).join("")}
-${[0, 1, 2, 3].map((i) => `<circle cx="${41 + i * 3.2}" cy="${98 - Math.abs(i - 1.5) * 1.4}" r="1" fill="#4c5258"/>`).join("")}
-<rect x="55" y="97" width="4" height="2" rx="1" fill="#4c5258"/><rect x="61" y="97" width="4" height="2" rx="1" fill="#4c5258"/>
-<circle cx="80" cy="99" r="4.6" fill="#f3f4f5" stroke="#9aa2a9" stroke-width=".6"/><rect x="79.2" y="95" width="1.6" height="6" rx=".8" fill="#4c5258" transform="rotate(${c.on ? 50 : 0} 80 99)"/>
-${[0, 1].map((i) => `<circle cx="${88 + i * 3}" cy="${104 + i * 1.2}" r="1" fill="#4c5258"/>`).join("")}
-<text x="38" y="110" font-size="3" fill="#8a9097" ${NT_FONT}>Thermomix</text>
-${fpBowl(st, 35, 85, 22, 50, 6)}
-<path d="M55 24 Q52 36 56 50 H63 Q60 37 63 24 Z" fill="#4c5258" stroke="#2c3135" stroke-width=".5"/><path d="M57 27 Q55 37 58 47" stroke="#fff" stroke-width=".7" opacity=".3" fill="none"/>
-<ellipse cx="60" cy="21.5" rx="28" ry="4.6" fill="url(#${lid})" stroke="#2c3135" stroke-width=".6"/><path d="M33 21 Q60 26 87 21" stroke="#6f767d" stroke-width=".8" fill="none"/>
-<path d="M53 18.5 V10 Q60 8 67 10 V18.5 Q60 20.5 53 18.5 Z" fill="rgba(220,235,245,.55)" stroke="#9fb0bd" stroke-width=".6"/><ellipse cx="60" cy="10" rx="7" ry="1.6" fill="rgba(255,255,255,.6)" stroke="#9fb0bd" stroke-width=".5"/>
+<path d="M22 116 L27 34 Q28 27 35 27 H85 Q92 27 93 34 L98 116 Z" fill="url(#${b})" stroke="#c4c9ce" stroke-width=".7"/>
+<path d="M22 116 L27 34 Q27.5 30 30 28.5 L31 116 Z" fill="#4c5258"/><path d="M98 116 L93 34 Q92.5 30 90 28.5 L89 116 Z" fill="#5d646b"/>
+<path d="M33 31 H87" stroke="#fff" stroke-width="1.4" opacity=".9" stroke-linecap="round"/>
+${fpBowl(st, 34, 86, 22, 64, 7)}
+<path d="M54 26 Q50 42 55 62 H63 Q59 43 62 26 Z" fill="#41474d" stroke="#24282c" stroke-width=".5"/><path d="M56 30 Q54 43 57 58" stroke="#fff" stroke-width=".7" opacity=".3" fill="none"/>
+<path d="M31 116 V66 Q60 52 89 66 V116 Z" fill="url(#${b})" stroke="#cfd3d7" stroke-width=".6"/>
+<path d="M33 116 Q33 84 60 81 Q87 84 87 116 Z" fill="url(#${pn})" stroke="#b9bfc5" stroke-width=".6"/>
+<rect x="43" y="84" width="34" height="13" rx="2" fill="${lit ? "#bfe0a2" : "#a7b0a6"}" stroke="#6f7c6d" stroke-width=".6"/>
+<text x="60" y="94.2" font-size="9" font-weight="700" text-anchor="middle" fill="#25331f" ${NT_FONT}>${lcd}</text>
+${keys(38, 1)}${keys(82, -1)}
+<circle cx="60" cy="106" r="5.4" fill="#eef0f2" stroke="#8f979e" stroke-width=".7"/><rect x="59.1" y="101" width="1.8" height="6.4" rx=".9" fill="#41474d" transform="rotate(${c.on ? 55 : -20} 60 106)"/>
+<text x="60" y="114.4" font-size="2.6" text-anchor="middle" fill="#8a9097" ${NT_FONT}>Thermomix</text>
+<path d="M30 22.5 Q60 28.5 90 22.5 L88 19 Q60 14.5 32 19 Z" fill="url(#${lid})" stroke="#24282c" stroke-width=".6"/>
+<path d="M27 21.5 L33 20.5 M93 21.5 L87 20.5" stroke="#383d42" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M53 18 V11 Q60 9.6 67 11 V18 Q60 19.4 53 18 Z" fill="rgba(222,236,246,.6)" stroke="#9cadbb" stroke-width=".6"/><ellipse cx="60" cy="11" rx="7" ry="1.5" fill="rgba(255,255,255,.7)" stroke="#9cadbb" stroke-width=".5"/>
 </g>
-${c.heat ? fpSteam(60, 8) : ""}`;
+${c.heat ? fpSteam(60, 9) : ""}`;
 }
 function ntFoodTm6(c) {
-  const b = ntId(), st = ntId(), lid = ntId(), sc = ntId();
+  const b = ntId(), st = ntId(), lid = ntId(), sc = ntId(), fr = ntId();
   const lit = c.on || c.ready;
-  const led = (x, y) => [0, 1, 2].map((r) => [0, 1, 2].map((k) => `<circle cx="${x + k * 2.2}" cy="${y + r * 2.2}" r=".75" fill="${c.unav ? "#d6dbe0" : lit ? "#4cd964" : "#d6dbe0"}" ${lit ? 'class="nta-glow"' : ""}/>`).join("")).join("");
-  const screen = c.unav || !(c.on || c.ready) ? "#2f3a3f" : `url(#${sc})`;
-  const txt = c.unav ? "" : c.heat ? "100\u00b0C" : c.on ? "\u21bb 4" : c.ready ? "00:00" : "";
-  return `<defs>${ntV(b, "#ffffff", "#e4e7ea")}<linearGradient id="${st}" x1="0" x2="1"><stop offset="0" stop-color="#8d969e"/><stop offset=".35" stop-color="#eef1f3"/><stop offset=".7" stop-color="#b6bec5"/><stop offset="1" stop-color="#7d868f"/></linearGradient>${ntV(lid, "#4d545b", "#2b3035")}${ntV(sc, "#eaf6f3", "#c9e4de")}</defs>
-${ntShadow(60, 118, 44)}
+  const val = fpReadout(c, c.ready);
+  const led = (x, y) => [0, 1, 2].map((r) => [0, 1, 2].map((k) => `<circle cx="${x + k * 2.2}" cy="${y + r * 2.2}" r=".75" fill="${lit && !c.unav ? "#4cd964" : "#d6dbe0"}"/>`).join("")).join("");
+  const on = lit && !c.unav;
+  // Its screen: three round dials, the time, the temperature and the speed.
+  // The one that matters is drawn large so its value reads; the others
+  // stay as small rings.
+  const big = c.heat ? 1 : c.on ? 2 : 0;
+  const ring = (x, r, k) => `<circle cx="${x}" cy="93.5" r="${r}" fill="${on ? "#ffffff" : "#3a4449"}" stroke="${on ? (k === big && c.on ? (c.heat ? "#ef6c00" : "#43a047") : "#c3cad0") : "#4d585e"}" stroke-width="${k === big ? 1.2 : .7}"/>`;
+  const smalls = [0, 1, 2].filter((k) => k !== big);
+  return `<defs>${ntV(b, "#ffffff", "#e3e6e9")}<linearGradient id="${st}" x1="0" x2="1"><stop offset="0" stop-color="#7f8891"/><stop offset=".32" stop-color="#f1f3f5"/><stop offset=".68" stop-color="#b3bbc2"/><stop offset="1" stop-color="#78818a"/></linearGradient>${ntV(lid, "#4b5259", "#2a2f34")}${ntV(sc, "#fbfcfc", "#e6ebee")}${ntV(fr, "#d9dde1", "#a9b0b6")}</defs>
+${ntShadow(60, 118, 46)}
 <g class="${c.on && !c.heat ? "nta-vib" : ""}">
-<path d="M60 6 C93 6 104 22 104 52 V100 Q104 116 88 116 H32 Q16 116 16 100 V52 C16 22 27 6 60 6 Z" fill="url(#${b})" stroke="#c9ced3" stroke-width=".7"/>
-<path d="M27 26 C31 14 44 9 60 9" stroke="#fff" stroke-width="2" fill="none" opacity=".9" stroke-linecap="round"/>
-<path d="M33 30 Q33 76 60 78 Q87 76 87 30" fill="#d9dde1" opacity=".6"/>
-${fpBowl(st, 36, 84, 28, 72, 4)}
-<path d="M55 30 Q51 50 56 72 H64 Q60 51 64 30 Z" fill="#41474d" stroke="#25292d" stroke-width=".5"/><path d="M57 34 Q55 50 58 68" stroke="#fff" stroke-width=".7" opacity=".3" fill="none"/>
-<ellipse cx="60" cy="27" rx="28" ry="5" fill="url(#${lid})" stroke="#25292d" stroke-width=".6"/><path d="M33 27 L30 30 M87 27 L90 30" stroke="#2b3035" stroke-width="2.4" stroke-linecap="round"/>
-<path d="M52 24.5 V16 Q60 14 68 16 V24.5 Q60 26.5 52 24.5 Z" fill="#3b4147" stroke="#25292d" stroke-width=".5"/><ellipse cx="60" cy="16" rx="8" ry="1.8" fill="#596067"/>
-${led(22, 70)}${led(91.6, 70)}
-<rect x="37" y="84" width="44" height="22" rx="3" fill="#cfd4d9" stroke="#9aa2a9" stroke-width=".6"/><rect x="39" y="86" width="40" height="18" rx="1.6" fill="${screen}"/>
-<text x="59" y="97.6" font-size="5" font-weight="500" text-anchor="middle" fill="#2c4a44" ${NT_FONT}>${txt}</text>
-<circle cx="91" cy="95" r="5.4" fill="#dfe3e6" stroke="#9aa2a9" stroke-width=".6"/><circle cx="91" cy="95" r="3.6" fill="none" stroke="#fff" stroke-width=".8" opacity=".8"/>
-<text x="22" y="92" font-size="3.2" font-weight="700" fill="#b0473c" ${NT_FONT}>VORWERK</text><text x="86" y="84" font-size="3.2" fill="#6f767d" ${NT_FONT}>thermomix</text>
+<path d="M18 40 Q18 22 34 22 H86 Q102 22 102 40 V100 Q102 116 86 116 H34 Q18 116 18 100 Z" fill="url(#${b})" stroke="#c4c9ce" stroke-width=".7"/>
+<path d="M24 34 Q26 25 36 25 H60" stroke="#fff" stroke-width="2" fill="none" opacity=".9" stroke-linecap="round"/>
+<path d="M32 30 Q32 72 60 74 Q88 72 88 30 Z" fill="#c9ced3"/><path d="M34 31 Q35 69 60 71 Q85 69 86 31" fill="none" stroke="#b3b9bf" stroke-width=".6"/>
+${fpBowl(st, 37, 83, 26, 70, 5)}
+<path d="M55 30 Q51 49 56 70 H64 Q60 50 64 30 Z" fill="#3a4046" stroke="#22262a" stroke-width=".5"/><path d="M57 34 Q55 49 58 66" stroke="#fff" stroke-width=".7" opacity=".3" fill="none"/>
+<path d="M31 25.5 Q60 31.5 89 25.5 L87 22 Q60 17.5 33 22 Z" fill="url(#${lid})" stroke="#22262a" stroke-width=".6"/>
+<path d="M26 34 Q24 27 31 24.5 L33 26 Q29 28.5 30.5 34 Z M94 34 Q96 27 89 24.5 L87 26 Q91 28.5 89.5 34 Z" fill="#2f3439" stroke="#1d2125" stroke-width=".5"/>
+<path d="M53 22 V12 Q60 10.6 67 12 V22 Q60 23.4 53 22 Z" fill="#3a4046" stroke="#22262a" stroke-width=".5"/><ellipse cx="60" cy="12" rx="7" ry="1.6" fill="#5b636a"/>
+${led(24, 64)}${led(91.6, 64)}
+<rect x="33" y="80" width="52" height="27" rx="3.4" fill="url(#${fr})" stroke="#8f979e" stroke-width=".6"/><rect x="35.4" y="82.4" width="47.2" height="22.2" rx="1.8" fill="${on ? `url(#${sc})` : "#2e373c"}"/>
+${ring(48.5, 10.6, big)}${ring(70.5, 4.6, smalls[0])}${ring(79.2, 4.6, smalls[1])}
+<text x="48.5" y="${c.heat ? 96.4 : 96}" font-size="${c.heat ? 7.6 : 6.6}" font-weight="700" text-anchor="middle" fill="#263238" ${NT_FONT}>${val}</text>
+<circle cx="94" cy="93.5" r="6" fill="#e3e6e9" stroke="#8f979e" stroke-width=".6"/><circle cx="94" cy="93.5" r="4.1" fill="none" stroke="#fff" stroke-width=".9" opacity=".85"/>
+<text x="25.6" y="94.4" font-size="2.4" font-weight="700" text-anchor="middle" fill="#9aa1a8" ${NT_FONT}>VORWERK</text><text x="94.5" y="75" font-size="2.5" text-anchor="middle" fill="#7a8188" ${NT_FONT}>thermomix</text>
 </g>
-${c.heat ? fpSteam(60, 14) : ""}`;
+${c.heat ? fpSteam(60, 10) : ""}`;
 }
 const NT_DRAW = { fp_tm31: ntFoodTm31, fp_tm6: ntFoodTm6, rack_box: ntRackBox, rack_accordion: ntRackAccordion, rack_frame: ntRackFrame, vlv_aqara: ntValveAqara, vlv_tuya: ntValveTuya,  fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_switchbot_co2: (c) => ntSbPro(c, true), ths_switchbot_pro: (c) => ntSbPro(c, false), ths_switchbot_meter: (c) => ntSbMeter(c, false), ths_switchbot_plus: (c) => ntSbMeter(c, true), ths_switchbot_outdoor: ntSbOutdoor, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, det_door: ntDetDoor, det_vibration: ntDetVibration, det_glass: ntDetGlass, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 // The card's colour on a drawing made after a real product: its shell, the

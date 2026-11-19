@@ -2138,6 +2138,10 @@ const ILLUSTRATION_CSS = {
         .cam-siren-fx path:nth-child(2n){animation-delay:.25s}
         .cam-m-siren .cam-led{fill:#e53935;animation:cam-blink .5s steps(1) infinite}
         .cam-m-motion .cam-tmx-pan{animation:cam-pan 3.2s ease-in-out infinite;animation-delay:var(--anim-offset,0s)}
+        .cam-tmx-beam{transform-box:fill-box;transform-origin:50% 0}
+        .cam-m-motion .cam-tmx-beam{animation:cam-beam 3.2s ease-in-out infinite;animation-delay:var(--anim-offset,0s)}
+        .cam-m-motion.cam-track .cam-tmx-beam{animation-duration:2.2s}
+        @keyframes cam-beam { 0%, 100% { transform: translateX(-5px) skewX(-18deg); } 50% { transform: translateX(5px) skewX(18deg); } }
         @keyframes cam-pan { 0%, 100% { transform: translateX(-5px); } 50% { transform: translateX(5px); } }
         .cam-dbring{fill:none;stroke:#4fc3f7;stroke-width:2.4;opacity:.45}
         .cam-m-ring .cam-dbring{opacity:1;stroke:#29b6f6;animation:cam-dbpulse 1s ease-in-out infinite;animation-delay:var(--anim-offset,0s)}

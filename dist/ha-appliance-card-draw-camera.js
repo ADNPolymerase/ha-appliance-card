@@ -126,7 +126,7 @@ ${camShadow(60, 21, 56, 3.5, .22)}
 <path d="M36 23 H84" stroke="#fff" stroke-width="1.6" opacity=".75" stroke-linecap="round"/>
 <path d="M34 27 V49" stroke="#fff" stroke-width="2" opacity=".45" stroke-linecap="round"/>
 <path d="M30 49 Q60 55 90 49 V51 Q60 57 30 51 Z" fill="#000" opacity=".12"/>
-<path class="cam-spotcone" d="M47 90 L73 90 L100 126 L20 126 Z" fill="url(#cam-g-cone)"/>
+<g transform="translate(${c && c.pan !== null && c.pan !== undefined ? ((c.pan - .5) * 14).toFixed(1) : 0} ${c && c.tilt !== null && c.tilt !== undefined ? ((c.tilt - .5) * 8).toFixed(1) : 0})"><path class="cam-spotcone cam-tmx-beam" d="M47 90 L73 90 L100 126 L20 126 Z" fill="url(#cam-g-cone)"/></g>
 <path d="M33 52 Q60 57.5 87 52 V76 A27 32 0 0 1 33 76 Z" fill="url(#cam-g-blk)" ${CAM_EDGE} stroke-width=".7"/>
 <path d="M36 58 V78 Q37 92 46 100" stroke="#fff" stroke-width="1.6" opacity=".16" fill="none" stroke-linecap="round"/>
 <g transform="translate(${c && c.pan !== null && c.pan !== undefined ? ((c.pan - .5) * 14).toFixed(1) : 0} ${c && c.tilt !== null && c.tilt !== undefined ? ((c.tilt - .5) * 8).toFixed(1) : 0})"><g class="cam-tmx-pan"><rect x="43" y="57" width="34" height="36" rx="7" fill="url(#cam-g-dbglass)" stroke="#000" stroke-width=".6"/>
@@ -214,6 +214,10 @@ css: () => `
         .cam-siren-fx path:nth-child(2n){animation-delay:.25s}
         .cam-m-siren .cam-led{fill:#e53935;animation:cam-blink .5s steps(1) infinite}
         .cam-m-motion .cam-tmx-pan{animation:cam-pan 3.2s ease-in-out infinite;animation-delay:var(--anim-offset,0s)}
+        .cam-tmx-beam{transform-box:fill-box;transform-origin:50% 0}
+        .cam-m-motion .cam-tmx-beam{animation:cam-beam 3.2s ease-in-out infinite;animation-delay:var(--anim-offset,0s)}
+        .cam-m-motion.cam-track .cam-tmx-beam{animation-duration:2.2s}
+        @keyframes cam-beam { 0%, 100% { transform: translateX(-5px) skewX(-18deg); } 50% { transform: translateX(5px) skewX(18deg); } }
         @keyframes cam-pan { 0%, 100% { transform: translateX(-5px); } 50% { transform: translateX(5px); } }
         .cam-dbring{fill:none;stroke:#4fc3f7;stroke-width:2.4;opacity:.45}
         .cam-m-ring .cam-dbring{opacity:1;stroke:#29b6f6;animation:cam-dbpulse 1s ease-in-out infinite;animation-delay:var(--anim-offset,0s)}
