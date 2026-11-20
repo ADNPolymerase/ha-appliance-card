@@ -2065,7 +2065,7 @@ ${round(side, `url(#${sd})`, 9)}<polygon points="${side}" fill="url(#${m})"/>
 ${round(face, `url(#${fa})`, 9)}<polygon points="${face}" fill="url(#${m})"/>
 ${round("23.5 33.5 98.7 28.8 88.2 93.4 7.9 88.4", "#0b0c0e", 6)}
 <polygon points="28.8 39.3 88.1 35.7 79.5 88.1 14.3 86.8" fill="${lit ? `url(#${sc})` : "#141518"}" stroke="${lit ? "#8a6e98" : "#141518"}" stroke-width="1.4" stroke-linejoin="round"/>
-<g ${NT_FONT} text-anchor="middle" transform="matrix(.988 -.06 -.302 .99 28.8 39.3)">
+<g ${NT_FONT} text-anchor="middle" transform="translate(51.6 62.5) rotate(-3.4) translate(-30 -24)">
 ${big ? `<text x="30" y="15" font-size="3.8" fill="#ffffff" opacity="${lit ? .85 : .2}">${esc(String(c.day || "").slice(0, 26))}</text>
 <text x="30" y="37" font-size="${ntFit(big, 56, 26).toFixed(2)}" font-weight="200" letter-spacing="-.4" fill="#ffffff" opacity="${lit ? 1 : .22}">${big}</text>` : `<text x="30" y="20" font-size="${ntFit(title, 50, 6.6).toFixed(2)}" font-weight="500" fill="#ffffff">${title}</text>
 <text x="30" y="27" font-size="3.8" fill="#ffffff" opacity=".8">${artist}</text>
