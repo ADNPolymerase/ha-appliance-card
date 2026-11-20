@@ -2048,28 +2048,32 @@ ${c.muted ? spkMute(84, 30) : ""}`;
 // screen leaning back, the time on it, or what is playing.
 function ntSpkClock(c) {
   const p = spkPal("clock", c.color);
-  const fa = ntId(), sd = ntId(), m = ntId(), sc = ntId(), gl = ntId();
+  const fa = ntId(), sd = ntId(), m = ntId(), sc = ntId(), tp = ntId();
   const lit = c.st !== "off";
   const title = esc(String(c.title || "").slice(0, 16));
   const artist = esc(String(c.artist || "").slice(0, 20));
   const big = c.st === "playing" || c.st === "paused" ? "" : esc(c.clock || "");
-  return `<defs>${ntV(fa, p[3], p[1])}${ntV(sd, p[2], p[4])}${spkMesh(m, .09)}<linearGradient id="${sc}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b98a9f"/><stop offset=".55" stop-color="#7f6a98"/><stop offset="1" stop-color="#5e5486"/></linearGradient>${ntBlur(gl, 1.2)}</defs>
-${spkNotes(98, 14)}
-${ntFoot("12 101 92 101 113 96 104 90", .3)}
-<path d="M85.6 28.6 Q88.6 27 90.4 29.8 L111.2 91.6 Q112.4 95.6 108.4 96.2 L91 98.8 Z" fill="url(#${sd})"/>
-<path d="M85.6 28.6 Q88.6 27 90.4 29.8 L111.2 91.6 Q112.4 95.6 108.4 96.2 L91 98.8 Z" fill="url(#${m})"/>
-<path d="M88.4 29.2 L109.6 92" stroke="#fff" stroke-width=".8" opacity=".25" stroke-linecap="round"/>
-<path d="M20 35 Q16 35.6 16 40 L11 94 Q10.6 99 15 99 L87 99 Q92 99 91.6 94 L88 32 Q87.6 27.4 83 28 Z" fill="url(#${fa})"/>
-<path d="M20 35 Q16 35.6 16 40 L11 94 Q10.6 99 15 99 L87 99 Q92 99 91.6 94 L88 32 Q87.6 27.4 83 28 Z" fill="url(#${m})"/>
-<path d="M24 39.4 L80.6 32.6 Q84 32.2 84.2 35.6 L86.6 86.6 Q86.8 90 83.4 90.2 L19.6 93.2 Q16.2 93.4 16.6 90 L20.6 43 Q20.9 39.8 24 39.4 Z" fill="#0b0c0e"/>
-<path d="M27.4 43.6 L78.6 37.6 L80.8 84.6 L23.4 87.4 Z" fill="${lit ? `url(#${sc})` : "#141518"}"/>
-<circle cx="25" cy="41.8" r=".6" fill="#2a2c30"/><circle cx="81.4" cy="35.4" r=".6" fill="#2a2c30"/>
-<g transform="rotate(-5.6 52 62)" ${NT_FONT} text-anchor="middle">
-${big ? `<text x="52" y="69" font-size="${ntFit(big, 48, 21).toFixed(2)}" font-weight="300" fill="#ffffff" opacity="${lit ? 1 : .22}">${big}</text>` : `<text x="52" y="60" font-size="${ntFit(title, 46, 7.4).toFixed(2)}" font-weight="500" fill="#ffffff">${title}</text>
-<text x="52" y="68" font-size="4" fill="#ffffff" opacity=".8">${artist}</text>
-<rect x="34" y="73" width="36" height="1.2" rx=".6" fill="#ffffff" opacity=".3"/><rect x="34" y="73" width="${c.st === "playing" ? 22 : 14}" height="1.2" rx=".6" fill="#ffffff"/>`}
+  // Seen from the front and a little to the right: the face almost upright,
+  // leaning back a touch; its side a long triangle, from the rounded ridge
+  // at the top down the sloping back to the foot behind.
+  return `<defs>${ntV(fa, p[3], p[1])}<linearGradient id="${sd}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${p[1]}"/><stop offset="1" stop-color="${p[2]}"/></linearGradient>${ntV(tp, p[3], p[0])}${spkMesh(m, .05)}<linearGradient id="${sc}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b98a9f"/><stop offset=".55" stop-color="#7f6a98"/><stop offset="1" stop-color="#5e5486"/></linearGradient></defs>
+${spkNotes(100, 14)}
+${ntFoot("9 99 91 99 114 93 102 90", .3)}
+<path d="M85 40 Q89 38.6 91 42 L113 89 Q114.4 93 110.4 93.6 L90.4 98.6 Z" fill="url(#${sd})"/>
+<path d="M85 40 Q89 38.6 91 42 L113 89 Q114.4 93 110.4 93.6 L90.4 98.6 Z" fill="url(#${m})"/>
+<path d="M88.4 40.6 L111.4 89.6" stroke="#fff" stroke-width=".9" opacity=".22" stroke-linecap="round"/>
+<path d="M15 40 Q12.4 40 12.2 42.6 L10 95 Q9.8 98.6 13.4 98.6 L87 98.6 Q90.6 98.6 90.4 95 L88.2 42.6 Q88 40 85.4 40 Z" fill="url(#${fa})"/>
+<path d="M15 40 Q12.4 40 12.2 42.6 L10 95 Q9.8 98.6 13.4 98.6 L87 98.6 Q90.6 98.6 90.4 95 L88.2 42.6 Q88 40 85.4 40 Z" fill="url(#${m})"/>
+<path d="M15.4 40 H85.4 Q87.6 40 88.4 39.6 Q86 37.6 82.6 37.6 H17 Q13.6 37.6 12.6 40.6 Q13.6 40 15.4 40 Z" fill="url(#${tp})"/>
+<rect x="15.2" y="44" width="70" height="49.6" rx="3.6" fill="#0b0c0e"/>
+<rect x="19.4" y="47.8" width="61.6" height="42" rx="1" fill="${lit ? `url(#${sc})` : "#141518"}"/>
+<circle cx="18.6" cy="46" r=".6" fill="#2a2c30"/><circle cx="82.4" cy="46" r=".6" fill="#2a2c30"/>
+<g ${NT_FONT} text-anchor="middle">
+${big ? `<text x="50" y="76" font-size="${ntFit(big, 52, 22).toFixed(2)}" font-weight="300" fill="#ffffff" opacity="${lit ? 1 : .22}">${big}</text>` : `<text x="50" y="66" font-size="${ntFit(title, 52, 7.4).toFixed(2)}" font-weight="500" fill="#ffffff">${title}</text>
+<text x="50" y="74" font-size="4" fill="#ffffff" opacity=".8">${artist}</text>
+<rect x="32" y="80" width="36" height="1.2" rx=".6" fill="#ffffff" opacity=".3"/><rect x="32" y="80" width="${c.st === "playing" ? 22 : 14}" height="1.2" rx=".6" fill="#ffffff"/>`}
 </g>
-${c.st === "paused" ? spkPause(52, 50, "#ffffff") : ""}${c.muted ? spkMute(92, 20) : ""}`;
+${c.st === "paused" ? spkPause(50, 56, "#ffffff") : ""}${c.muted ? spkMute(92, 20) : ""}`;
 }
 // A mesh of fabric, for the speakers dressed in it.
 const spkMesh = (id, op = .35) => `<pattern id="${id}" width="3" height="3" patternUnits="userSpaceOnUse"><path d="M0 3 L3 0 M-1 1 L1 -1 M2 4 L4 2" stroke="#000" stroke-width=".5" opacity="${op}"/></pattern>`;
