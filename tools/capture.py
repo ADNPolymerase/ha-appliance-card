@@ -246,7 +246,8 @@ def gifs(only=None):
                 # Uncropped on purpose: every frame has to be cut to the same
                 # box. Cropping each one to its own content makes the grid
                 # jitter as a wisp of steam grows past the edge and shrinks.
-                im = shoot(url, str(tmp), window=(cols * (card_w + 12) + 200, 1400), crop=False, scale=GIF_SCALE)
+                rows = -(-len(types.split(",")) // cols)
+                im = shoot(url, str(tmp), window=(cols * (card_w + 12) + 200, max(1400, rows * 320 + 300)), crop=False, scale=GIF_SCALE)
                 if box is None:
                     b = ImageChops.difference(im, Image.new("RGB", im.size, im.getpixel((2, 2)))).getbbox()
                     if b is None:

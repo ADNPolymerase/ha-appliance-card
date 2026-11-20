@@ -6170,6 +6170,11 @@ function doorStyleOf(cfg) {
   if (/sliding|patio|schuif|schiebe|coulissant|baie.?vitree|corredera|scorrevole|skjut|skyve|skyde|przesuw|posuvn|toloajto/.test(hay)) return "sliding_glass";
   return "";
 }
+// The seconds since a contact changed, while its door is still moving; 0 after.
+function doorTransOf(st) {
+  const since = st && st.last_changed ? (Date.now() - Date.parse(st.last_changed)) / 1000 : NaN;
+  return since >= 0 && since < DOOR_TRANS_S ? Math.max(.001, since) : 0;
+}
 // The window: picked, else read in the name; one sash when nothing says otherwise.
 function windowStyleOf(cfg) {
   if (WINDOW_STYLES.includes(cfg.window_style)) return cfg.window_style;
@@ -6515,6 +6520,11 @@ const ntFlake = (x, y, r, color, w = .8) =>
   `<path d="M${x} ${y - r}v${2 * r}M${x - r} ${y}h${2 * r}M${x - r * .7} ${y - r * .7}l${r * 1.4} ${r * 1.4}M${x + r * .7} ${y - r * .7}l${-r * 1.4} ${r * 1.4}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
 // A puff of smoke: three soft blobs, light grey.
 const ntPuff = (x, y, r, cls, f) => `<g class="${cls}" filter="url(#${f})"><circle cx="${x}" cy="${y}" r="${r}" fill="#cfd8dc" opacity=".8"/><circle cx="${(x + r * .8).toFixed(1)}" cy="${(y - r * .5).toFixed(1)}" r="${(r * .75).toFixed(1)}" fill="#eceff1" opacity=".85"/><circle cx="${(x - r * .7).toFixed(1)}" cy="${(y - r * .3).toFixed(1)}" r="${(r * .6).toFixed(1)}" fill="#b0bec5" opacity=".75"/></g>`;
+// A door and window contact (Sonoff SNZB-04P): the sensor on the frame, its
+// magnet on the door's edge. Open, the door swings in, the magnet leaves the
+// sensor and its light blinks blue.
+// How long a door takes to swing, slide or rise after its contact changed.
+const DOOR_TRANS_S = 1.4;
 // The colours each speaker comes in, the first one its own when none is set:
 // [highlight, body, shade, top, detail]. A colour a model is not sold in
 // falls back to its first.
@@ -6961,7 +6971,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const vib = layout === "door" ? onOf(cfg.vibration_entity) : null, gb = layout === "door" ? onOf(cfg.glass_break_entity) : null;
     if (vib !== null) lines.push({ key: "det_vib", icon: "mdi:vibrate", label: t(hass, "layout_det_vibration"), value: t(hass, vib ? "det_line_detected" : "det_line_clear"), entity: cfg.vibration_entity, caution: vib });
     if (gb !== null) lines.push({ key: "det_gb", icon: gb ? "mdi:image-broken-variant" : "mdi:window-closed-variant", label: t(hass, "layout_det_glass"), value: t(hass, gb ? "det_line_detected" : "det_line_clear"), entity: cfg.glass_break_entity, caution: gb });
-    const draw = { kind, window: win, style: layout === "door" ? doorStyleOf(cfg) : "", wstyle: win ? windowStyleOf(cfg) : "", frame: layout === "door" ? frameColorOf(cfg, win ? "" : doorStyleOf(cfg)) : "", model: detectorModelOf(cfg, st, layout), vib: !!vib, cracked: !!gb, on: alarm || detCo || tamper || !!vib || !!gb, smoke: alarm, co: detCo, low, tamper, lcd: cv !== null ? `${Math.round(cv)} ppm` : alarm ? "ALARM" : "OK" };
+    const draw = { kind, window: win, style: layout === "door" ? doorStyleOf(cfg) : "", wstyle: win ? windowStyleOf(cfg) : "", frame: layout === "door" ? frameColorOf(cfg, win ? "" : doorStyleOf(cfg)) : "", model: detectorModelOf(cfg, st, layout), trans: layout === "door" ? doorTransOf(st) : 0, vib: !!vib, cracked: !!gb, on: alarm || detCo || tamper || !!vib || !!gb, smoke: alarm, co: detCo, low, tamper, lcd: cv !== null ? `${Math.round(cv)} ppm` : alarm ? "ALARM" : "OK" };
     if (detCo) return out("alarm", alarm ? "det_smoke_co" : "det_co", NT_COLORS.alarm, draw);
     if (tamper) return out("alarm", "det_tampered", NT_COLORS.alarm, draw);
     if (gb) return out("alarm", "det_glass_break", NT_COLORS.alarm, draw);
@@ -8908,7 +8918,7 @@ function requestDrawing(key) {
   drawState[key] = "loading";
   import(assetUrl(`ha-appliance-card-draw-${key}.js`))
     .then((m) => {
-      if (!drawDeps) drawDeps = { BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, numberOrNull, shdBlur, t, thsColor, zoneColumns };
+      if (!drawDeps) drawDeps = { BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, numberOrNull, shdBlur, t, thsColor, zoneColumns };
       drawn[key] = m.default(drawDeps);
       drawState[key] = "ready";
       for (const fn of Array.from(langListeners)) {

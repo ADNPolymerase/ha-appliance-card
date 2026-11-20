@@ -1,6 +1,6 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
 // The robot drawing and its CSS, loaded by the card the first time it shows one.
-export default function defineDrawing({ BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, numberOrNull, shdBlur, t, thsColor, zoneColumns }) {
+export default function defineDrawing({ BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, numberOrNull, shdBlur, t, thsColor, zoneColumns }) {
 // The small screen and the air lines the dehumidifier and the two heaters
 // share. Warm air rises; the air a dehumidifier or a fan blows goes the other
 // way along the same lines.
@@ -1451,78 +1451,97 @@ ${detLed(c, 60, 86, 2)}
 <path class="nta-drip ntd${d}" d="M${x} 78 q-2.6 3.8 0 5.4 q2.6 -1.6 0 -5.4 Z" fill="#4fc3f7" stroke="#0288d1" stroke-width=".3"/>`).join("")}</g>
 ${ntWaves(60, 66, "#e53935", 36)}</g>`;
 }
-// A door and window contact (Sonoff SNZB-04P): the sensor on the frame, its
-// magnet on the door's edge. Open, the door swings in, the magnet leaves the
-// sensor and its light blinks blue.
 function ntDetDoor(c) {
   const wd = ntId(), fr = ntId(), bd = ntId(), dk = ntId();
   // A pulled-off sensor is an alarm, not an open door.
   const open = !!c.smoke;
-  const gw = ntId(), ex = ntId(), sk = ntId(), al = ntId(), cl = ntId(), pk = ntId();
+  const gw = ntId(), ex = ntId(), sk = ntId(), al = ntId(), cl = ntId(), pk = ntId(), gc = ntId();
   const style = c.window ? "" : c.style || "";
-  let mx = open ? 39 : 62;
-  let leaf = "";
   const anth = c.frame === "anthracite";
   const sf = anth ? "#4a5259" : "#f3f5f7", ss = anth ? "#262c31" : "#b7c0c8", sg = anth ? "#1e2327" : "#b0bcc6";
+  const F = open ? 1 : 0;
+  const n2 = (v) => +v.toFixed(2);
+  // Just after a change (c.trans, the seconds gone by) the leaf swings, slides
+  // or rises once, from where it was to where it is, the magnet with it.
+  const swing = c.trans ? `dur="${DOOR_TRANS_S}s" begin="0s" fill="freeze" data-swing="${c.trans.toFixed(2)}" calcMode="spline" keyTimes="0;1" keySplines=".45 0 .25 1"` : "";
+  const anim = (attr, from, to) => (c.trans ? `<animate attributeName="${attr}" values="${from};${to}" ${swing}/>` : "");
+  const animT = (from, to) => (c.trans ? `<animateTransform attributeName="transform" type="translate" values="${from};${to}" ${swing}/>` : "");
+  const move = (dxOpen, dyOpen, inner, clip = "") => {
+    const at = (f) => `${n2(dxOpen * f)} ${n2(dyOpen * f)}`;
+    return `<g${clip ? ` clip-path="url(#${clip})"` : ""}><g transform="translate(${at(F)})">${animT(at(1 - F), at(F))}${inner}</g></g>`;
+  };
+  // What only a shut leaf shows (its handle, the light on its glass) fades.
+  const shut = (inner) => (inner ? `<g opacity="${1 - F}">${anim("opacity", F, 1 - F)}${inner}</g>` : "");
+  // A leaf hinged at hx, w wide, from y to y + h, turned in by f (0 shut, 1
+  // open): every point of its face is carried onto the leaf seen at an angle.
+  const leafOf = (hx, w, y, h) => {
+    const P = (px, py, f) => {
+      const u = (px - hx) / w, top = y + h * .066 * u, bot = y + h - h * .066 * u;
+      const ox = hx + w * .58 * u, oy = top + (py - y) / h * (bot - top);
+      return `${n2(px + (ox - px) * f)} ${n2(py + (oy - py) * f)}`;
+    };
+    const pts = (list, f) => list.map(([px, py]) => P(px, py, f)).join(" ");
+    const R = (x0, y0, x1, y1, attrs) => {
+      const list = [[x0, y0], [x1, y0], [x1, y1], [x0, y1]];
+      return `<polygon points="${pts(list, F)}" ${attrs}>${anim("points", pts(list, 1 - F), pts(list, F))}</polygon>`;
+    };
+    const L = (x0, y0, x1, y1, attrs) => `<path d="M${P(x0, y0, F)} L${P(x1, y1, F)}" ${attrs}>${anim("d", `M${P(x0, y0, 1 - F)} L${P(x1, y1, 1 - F)}`, `M${P(x0, y0, F)} L${P(x1, y1, F)}`)}</path>`;
+    return { R, L };
+  };
   const hdl = (x, y, h = 12) => `<rect x="${x}" y="${y}" width="3" height="${h}" rx="1.5" fill="#c9ccd0" stroke="#8e949a" stroke-width=".4"/>`;
   const shine = (x, y, w) => `<path d="M${x} ${y + 12} L${x + w * .5} ${y + 6} M${x} ${y + 24} L${x + w} ${y + 10}" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".55"/>`;
   // A sash seen flat: its frame round its glass.
   const sash = (x, y, w, h) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${sf}" stroke="${ss}" stroke-width=".7"/><rect x="${x + 5}" y="${y + 5}" width="${w - 10}" height="${h - 10}" fill="url(#${gw})" stroke="${sg}" stroke-width=".5"/>`;
-  // The same sash turned in on its hinge at x, the room dark behind it.
-  const swung = (x, y, w, h, behind = dk) => {
-    const e = +(x + w * .58).toFixed(1), d = +(h * .066).toFixed(1);
-    return `<rect x="${e}" y="${y + d}" width="${+(x + w - e).toFixed(1)}" height="${+(h - 2 * d).toFixed(1)}" fill="url(#${behind})"/>
-<polygon points="${x} ${y} ${e} ${y + d} ${e} ${y + h - d} ${x} ${y + h}" fill="${sf}" stroke="${ss}" stroke-width=".7"/><polygon points="${x + 5} ${y + 8} ${e - 5} ${y + d + 6} ${e - 5} ${y + h - d - 6} ${x + 5} ${y + h - 8}" fill="url(#${gw})" stroke="${sg}" stroke-width=".5"/>`;
+  // A sash that turns on its hinge at x, the garden behind it.
+  const turning = (x, y, w, h, extra = "") => {
+    const { R } = leafOf(x, w, y, h);
+    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${sk})"/>${R(x, y, x + w, y + h, `fill="${sf}" stroke="${ss}" stroke-width=".7"`)}${R(x + 5, y + 5, x + w - 5, y + h - 5, `fill="url(#${gw})" stroke="${sg}" stroke-width=".5"`)}${shut(extra)}`;
   };
   const ws = c.window ? c.wstyle || "casement" : "";
   let stripY = 2, stripH = 114;
+  // Where the magnet goes when it opens: across, or up with a garage door.
+  let mdx = -23, mdy = 0, mclip = "";
+  let leaf = "";
   if (ws === "double") {
     // Two sashes; the right one opens, the left one stays shut.
-    leaf = sash(10, 6, 31, 106) + shine(16, 12, 14) + (open ? swung(41, 6, 31, 106)
-      : sash(41, 6, 31, 106) + shine(47, 12, 14) + hdl(66, 76));
-    if (open) mx = 52;
+    leaf = sash(10, 6, 31, 106) + shine(16, 12, 14) + turning(41, 6, 31, 106, shine(47, 12, 14) + hdl(66, 76));
+    mdx = -10;
   } else if (ws === "sliding") {
     // Two panes on their rails; the front one runs left over the other and the
     // garden shows through.
-    const dx = open ? -26 : 0;
-    mx = 62 + dx;
+    mdx = -26;
     leaf = `<rect x="10" y="8" width="62" height="102" fill="url(#${sk})"/>${sash(10, 8, 34, 102)}${hdl(12.5, 52, 14)}
-<g transform="translate(${dx} 0)">${sash(38, 8, 34, 102)}${shine(44, 14, 18)}</g>
+${move(-26, 0, sash(38, 8, 34, 102) + shine(44, 14, 18))}
 <rect x="8" y="4" width="66" height="4" fill="${sf}" stroke="${ss}" stroke-width=".5"/><rect x="8" y="110" width="66" height="4" fill="${sf}" stroke="${ss}" stroke-width=".5"/>`;
   } else if (ws === "small") {
     // A small window set in the wall, the contact on its frame.
-    stripY = 22; stripH = 76;
+    stripY = 22; stripH = 76; mdx = -16;
     leaf = `<rect x="4" y="2" width="90" height="114" fill="#e9e3d8"/><rect x="4" y="2" width="90" height="114" fill="url(#${dk})" opacity=".06"/>
-<rect x="24" y="22" width="48" height="76" fill="${sf}" stroke="${ss}" stroke-width=".5"/>`
-      + (open ? swung(26, 26, 46, 68) : sash(26, 26, 46, 68) + shine(32, 30, 20) + hdl(65, 76, 10));
-    if (open) mx = 46;
+<rect x="24" y="22" width="48" height="76" fill="${sf}" stroke="${ss}" stroke-width=".5"/>${turning(26, 26, 46, 68, shine(32, 30, 20) + hdl(65, 76, 10))}`;
   } else if (ws) {
     // One sash.
-    leaf = open ? swung(10, 6, 62, 106) : sash(10, 6, 62, 106) + shine(22, 12, 28) + hdl(62, 56);
+    leaf = turning(10, 6, 62, 106, shine(22, 12, 28) + hdl(62, 56));
   } else if (style === "garage") {
     // A sectional garage door, four smooth panels; open, it has gone up into
     // the ceiling with the magnet, one panel still showing at the top.
     const pf = anth ? `url(#${ex})` : `url(#${bd})`, ps = anth ? "#1d2226" : "#b7c0c8";
-    const grooves = (ys) => ys.map((y) => `<path d="M11 ${y} H71" stroke="${ps}" stroke-width=".8" opacity=".8"/><path d="M11 ${y + 1} H71" stroke="#fff" stroke-width=".5" opacity="${anth ? .12 : .6}"/>`).join("");
-    leaf = open
-      ? `<rect x="10" y="6" width="62" height="106" fill="url(#${dk})"/><rect x="10" y="98" width="62" height="14" fill="#2c3237"/><rect x="10" y="6" width="62" height="16" fill="${pf}" stroke="${ps}" stroke-width=".7"/>${grooves([20])}`
-      : `<rect x="10" y="6" width="62" height="106" fill="${pf}" stroke="${ps}" stroke-width=".7"/>${grooves([32.5, 59, 85.5])}`;
-    if (open) mx = 200;
+    const grooves = [32.5, 59, 85.5].map((y) => `<path d="M11 ${y} H71" stroke="${ps}" stroke-width=".8" opacity=".8"/><path d="M11 ${y + 1} H71" stroke="#fff" stroke-width=".5" opacity="${anth ? .12 : .6}"/>`).join("");
+    leaf = `<rect x="10" y="6" width="62" height="106" fill="url(#${dk})"/><rect x="10" y="98" width="62" height="14" fill="#2c3237"/>
+${move(0, -90, `<rect x="10" y="6" width="62" height="106" fill="${pf}" stroke="${ps}" stroke-width=".7"/>${grooves}`, gc)}`;
+    mdx = 0; mdy = -90; mclip = gc;
   } else if (style === "pocket") {
     // A pocket door: one big pane that slides into the wall on its left.
-    const dx = open ? -46 : 0;
-    mx = 62 + dx;
+    mdx = -46;
     const pf = c.frame ? sf : `url(#${al})`, ps = c.frame ? ss : "#3e454c";
     leaf = `<rect x="10" y="8" width="62" height="104" fill="url(#${sk})"/>
-<g clip-path="url(#${pk})"><g transform="translate(${dx} 0)"><rect x="10" y="8" width="62" height="101" fill="${pf}" stroke="${ps}" stroke-width=".6"/>
-<rect x="14" y="12" width="54" height="93" fill="url(#${gw})" stroke="${ps}" stroke-width=".4"/>${shine(20, 22, 24)}<rect x="65" y="48" width="3" height="22" rx="1.2" fill="#2b3035"/></g></g>
+${move(-46, 0, `<rect x="10" y="8" width="62" height="101" fill="${pf}" stroke="${ps}" stroke-width=".6"/>
+<rect x="14" y="12" width="54" height="93" fill="url(#${gw})" stroke="${ps}" stroke-width=".4"/>${shine(20, 22, 24)}<rect x="65" y="48" width="3" height="22" rx="1.2" fill="#2b3035"/>`, pk)}
 <rect x="2" y="2" width="8" height="114" fill="#e9e3d8" stroke="#cfc6b6" stroke-width=".5"/><rect x="2" y="4" width="72" height="4" fill="${c.frame ? sf : "#7b838b"}"/><rect x="2" y="109" width="72" height="4" fill="${c.frame ? sf : "#7b838b"}"/>`;
   } else if (style.startsWith("sliding")) {
     // A sliding door does not swing: its panel runs left on a rail and the
     // opening shows behind it, daylight for the patio door, the room for the barn door.
     const glass = style === "sliding_glass";
-    const dx = open ? (glass ? -28 : -30) : 0;
-    mx = 62 + dx;
+    mdx = glass ? -28 : -30;
     const pane = (x) => `<rect x="${x}" y="8" width="32" height="101" fill="url(#${al})" stroke="#3e454c" stroke-width=".6"/>
 <rect x="${x + 3.5}" y="11.5" width="25" height="94" fill="url(#${gw})" stroke="#4a5158" stroke-width=".4"/>
 <path d="M${x + 7} 30 L${x + 17} 22 M${x + 7} 42 L${x + 24} 28" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".5"/>`;
@@ -1536,33 +1555,25 @@ ${[1, 2, 3, 4, 5].map((i) => `<path d="M${(10 + i * 62 / 6).toFixed(1)} 10 V114"
 <rect x="63" y="48" width="2.6" height="30" rx="1.2" fill="#2b2f33"/>`;
     leaf = `<rect x="10" y="8" width="62" height="104" fill="url(#${glass ? sk : dk})"/>
 ${glass ? `${pane(10)}<rect x="8" y="4" width="66" height="4" fill="#7b838b"/><rect x="8" y="109" width="66" height="4" fill="#7b838b"/>` : `<rect x="0" y="2" width="76" height="3" rx="1" fill="#2b2f33"/>`}
-<g clip-path="url(#${cl})"><g transform="translate(${dx} 0)">${moving}</g></g>`;
-  } else if (style && style !== "wood") {
+${move(mdx, 0, moving, cl)}`;
+  } else {
     // A swinging door drawn flat, then turned in: every point of its face is
-    // carried onto the leaf seen at an angle, as the wooden door's panels are.
-    const P = (x, y) => {
-      if (!open) return `${x} ${y}`;
-      const u = (x - 10) / 62, top = 6 + 7 * u, bot = 112 - 7 * u;
-      return `${+(10 + 36 * u).toFixed(2)} ${+(top + (y - 6) / 106 * (bot - top)).toFixed(2)}`;
-    };
-    const R = (x0, y0, x1, y1, a) => `<polygon points="${P(x0, y0)} ${P(x1, y0)} ${P(x1, y1)} ${P(x0, y1)}" ${a}/>`;
-    const L = (x0, y0, x1, y1, a) => `<path d="M${P(x0, y0)} L${P(x1, y1)}" ${a}/>`;
+    // carried onto the leaf seen at an angle. An entrance door lets the
+    // daylight in, an inside door shows the room.
+    const { R, L } = leafOf(10, 62, 6, 106);
     const ext = style.startsWith("external");
-    leaf = R(10, 6, 72, 112, ext ? `fill="url(#${ex})" stroke="#1d2226" stroke-width=".7"` : `fill="url(#${wd})" stroke="#8a6440" stroke-width=".7"`);
+    const lite = `stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".5"`;
+    leaf = `<rect x="10" y="6" width="62" height="106" fill="url(#${ext ? sk : dk})"/>`
+      + R(10, 6, 72, 112, ext ? `fill="url(#${ex})" stroke="#1d2226" stroke-width=".7"` : `fill="url(#${wd})" stroke="#8a6440" stroke-width=".7"`);
     if (style === "glass_top") {
       // The wooden door with its top panel glazed, the bottom one still wood.
-      leaf += R(17, 16, 65, 54, `fill="url(#${gw})" stroke="#9a7350" stroke-width=".9"`)
-        + L(22, 30, 34, 22, `stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".5"`)
-        + L(22, 42, 44, 26, `stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".5"`)
-        + R(17, 62, 65, 102, `fill="none" stroke="#9a7350" stroke-width=".9" opacity=".75"`)
-        + R(62, 60, 66, 64, `fill="#c9ccd0" stroke="#8e949a" stroke-width=".5"`);
+      leaf += R(17, 16, 65, 54, `fill="url(#${gw})" stroke="#9a7350" stroke-width=".9"`) + L(22, 30, 34, 22, lite) + L(22, 42, 44, 26, lite)
+        + R(17, 62, 65, 102, `fill="none" stroke="#9a7350" stroke-width=".9" opacity=".75"`) + R(62, 60, 66, 64, `fill="#c9ccd0" stroke="#8e949a" stroke-width=".5"`);
     } else if (style === "glass") {
       // An interior door: a wooden frame round one tall pane of satin glass, a lever.
-      leaf += R(18, 14, 64, 104, `fill="url(#${gw})" stroke="#9a7350" stroke-width=".6"`)
-        + L(24, 32, 40, 22, `stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".5"`)
-        + L(24, 48, 54, 28, `stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".5"`)
+      leaf += R(18, 14, 64, 104, `fill="url(#${gw})" stroke="#9a7350" stroke-width=".6"`) + L(24, 32, 40, 22, lite) + L(24, 48, 54, 28, lite)
         + R(57, 60.6, 66, 63.4, `fill="#c9ccd0" stroke="#8e949a" stroke-width=".4"`);
-    } else {
+    } else if (ext) {
       // An entrance door in anthracite, seen from inside where the contact is:
       // a lever and its lock, the back of the letter box, maybe a frosted strip.
       if (style === "external_glass") leaf += R(24, 16, 38, 100, `fill="url(#${gw})" stroke="#15191c" stroke-width=".8"`)
@@ -1573,56 +1584,49 @@ ${glass ? `${pane(10)}<rect x="8" y="4" width="66" height="4" fill="#7b838b"/><r
         + R(62.5, 56, 65.5, 74, `fill="#c9ccd0" stroke="#8e949a" stroke-width=".4"`)
         + R(55, 59.4, 64.5, 62.4, `fill="#d5d9dd" stroke="#8e949a" stroke-width=".4"`)
         + R(63.3, 68, 64.7, 71.5, `fill="#5d656d"`);
+    } else {
+      // The wooden door: two panels and its knob.
+      leaf += R(17, 16, 65, 54, `fill="none" stroke="#9a7350" stroke-width=".9" opacity=".75"`) + R(17, 62, 65, 102, `fill="none" stroke="#9a7350" stroke-width=".9" opacity=".75"`)
+        + R(62, 60, 66, 64, `fill="#c9ccd0" stroke="#8e949a" stroke-width=".5"`);
     }
-    // Open, an entrance door lets the daylight in; an inside door shows the room.
-    if (open) leaf += `<rect x="46" y="13" width="26" height="92" fill="url(#${ext ? sk : dk})"/>`;
-  } else leaf = (open
-    ? `<polygon points="10 6 46 13 46 105 10 112" fill="url(#${wd})" stroke="#8a6440" stroke-width=".7"/>
-<polygon points="16 18 40 22 40 54 16 54" fill="none" stroke="#9a7350" stroke-width=".8" opacity=".7"/><polygon points="16 64 40 64 40 97 16 101" fill="none" stroke="#9a7350" stroke-width=".8" opacity=".7"/>
-<rect x="46" y="13" width="26" height="92" fill="url(#${dk})"/>`
-    : `<rect x="10" y="6" width="62" height="106" fill="url(#${wd})" stroke="#8a6440" stroke-width=".7"/>
-<rect x="17" y="16" width="48" height="38" rx="1.5" fill="none" stroke="#9a7350" stroke-width=".9" opacity=".75"/><rect x="17" y="62" width="48" height="40" rx="1.5" fill="none" stroke="#9a7350" stroke-width=".9" opacity=".75"/>
-<circle cx="64" cy="62" r="2.2" fill="#c9ccd0" stroke="#8e949a" stroke-width=".5"/>`);
+  }
+  // Each model: its magnet, drawn at the shut position, then its body.
+  const parts = {
+    // Sonoff SNZB-04P: a tall body, its light at the top, a pairing slot.
+    sonoff: [`<rect x="62" y="33" width="8" height="24" rx="2" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".5"/>`, `<rect x="74" y="26" width="14" height="38" rx="3" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".6"/>
+<path d="M76 29 Q81 27.6 86 29" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+<circle class="${open ? "nta-blinkfast" : ""}" cx="81" cy="33" r="1.2" fill="${open ? "#29b6f6" : "#cfd6dc"}"/>
+<rect x="78.4" y="58" width="5.2" height="2" rx="1" fill="#d5dbe0"/>`],
+    // Aqara: a slim stick and a small magnet, the light hidden under the shell.
+    aqara: [`<rect x="63" y="38" width="6" height="14" rx="1.6" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".5"/>`, `<rect x="76" y="30" width="10" height="30" rx="2.4" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".6"/>
+<path d="M77.6 32.4 Q81 31.4 84.4 32.4" stroke="#fff" stroke-width="1" fill="none" stroke-linecap="round"/>
+<circle class="${open ? "nta-blinkfast" : ""}" cx="81" cy="35" r=".9" fill="${open ? "#29b6f6" : "#e3e7eb"}"/>`],
+    // Philips Hue Secure: a softer, rounder body with its name on it.
+    hue: [`<rect x="62" y="34" width="9" height="22" rx="4" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".5"/>`, `<rect x="73.5" y="25" width="15" height="40" rx="6.5" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".6"/>
+<path d="M76 29 Q81 27 86 29" stroke="#fff" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+<text x="81" y="58" font-size="4" font-weight="700" text-anchor="middle" fill="#b9c1c8" ${NT_FONT}>hue</text>
+<circle class="${open ? "nta-blinkfast" : ""}" cx="81" cy="33" r="1" fill="${open ? "#29b6f6" : "#dfe4e8"}"/>`],
+    // Third Reality 3RDS17BZ: a wide, short block with one big rounded corner,
+    // a narrow magnet as tall as it, a short mark on each where they meet.
+    thirdreality: [`<rect x="63" y="33" width="6" height="24" rx="1.2" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".5"/>
+<path d="M67.6 42 V48" stroke="#c3cbd2" stroke-width=".7" stroke-linecap="round"/>`, `<path d="M74.5 33 H82 A7 7 0 0 1 89 40 V55.5 A1.5 1.5 0 0 1 87.5 57 H74.5 A1.5 1.5 0 0 1 73 55.5 V34.5 A1.5 1.5 0 0 1 74.5 33 Z" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".6"/>
+<path d="M75 35 H81.5" stroke="#fff" stroke-width="1" stroke-linecap="round"/>
+<path d="M74.8 42 V48" stroke="#c3cbd2" stroke-width=".7" stroke-linecap="round"/>`],
+    // IKEA PARASOLL: a long slim stick, rounded at both ends, its light a
+    // short slot near the top; the magnet a slimmer stick with the same slot.
+    ikea: [`<rect x="62" y="27" width="8" height="36" rx="4" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".5"/>
+<path d="M64.6 35 H67.4" stroke="#d5dbe0" stroke-width="1" stroke-linecap="round"/>`, `<rect x="75" y="25" width="12" height="42" rx="5.5" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".6"/>
+<path class="${open ? "nta-blinkfast" : ""}" d="M78.6 34 H83.4" stroke="${open ? "#29b6f6" : "#b9c1c8"}" stroke-width="1.2" stroke-linecap="round"/>`],
+}[c.model] || ["", ""];
   return `<defs>${ntV(wd, "#d8b48a", "#b48759")}${anth ? ntV(fr, "#5a626a", "#3a4148") : c.frame || c.window ? ntV(fr, "#ffffff", "#e3e7ea") : ntV(fr, "#fbf8f2", "#e8e1d4")}${ntV(bd, "#ffffff", "#dfe4e8")}
-${ntV(ex, "#4d555d", "#2b3136")}${ntV(al, "#7d858d", "#5b636b")}<clipPath id="${cl}"><rect x="0" y="0" width="120" height="120"/></clipPath><clipPath id="${pk}"><rect x="10" y="0" width="110" height="120"/></clipPath>
+${ntV(ex, "#4d555d", "#2b3136")}${ntV(al, "#7d858d", "#5b636b")}<clipPath id="${cl}"><rect x="0" y="0" width="120" height="120"/></clipPath><clipPath id="${pk}"><rect x="10" y="0" width="110" height="120"/></clipPath><clipPath id="${gc}"><rect x="10" y="6" width="62" height="106"/></clipPath>
 <linearGradient id="${sk}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8eefa"/><stop offset=".58" stop-color="#b5dcf0"/><stop offset=".59" stop-color="#93c47f"/><stop offset="1" stop-color="#6a9f58"/></linearGradient>
 <linearGradient id="${dk}" x1="0" x2="1"><stop offset="0" stop-color="#1f252b"/><stop offset="1" stop-color="#3a434b"/></linearGradient>
 <linearGradient id="${gw}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d4ecf8"/><stop offset="1" stop-color="#8fc7e6"/></linearGradient></defs>
 <g class="${c.vib ? "nta-vib" : ""}">${leaf}${c.cracked ? `<g stroke="#fff" stroke-width=".9" stroke-linecap="round" fill="none" opacity=".95"><path d="M36 46 L26 34 M36 46 L48 36 M36 46 L52 52 M36 46 L44 62 M36 46 L28 60 M36 46 L22 48"/><path d="M30 39 L34 37 M44 39 L46 43 M47 54 L44 57 M31 55 L27 53" stroke-width=".6"/></g><circle cx="36" cy="46" r="1.6" fill="#fff"/>` : ""}</g>
 ${c.vib ? [0, 1, 2].map((i) => `<path class="nta-beacon ntd${i + 1}" d="M${6 - i * 3} ${44 - i * 3} q-${2 + i} ${8 + i * 3} 0 ${16 + i * 6}" fill="none" stroke="#ef6c00" stroke-width="1.6" stroke-linecap="round"/>`).join("") : ""}
 <rect x="72" y="${stripY}" width="18" height="${stripH}" fill="url(#${fr})" stroke="${anth ? "#22282d" : c.frame || c.window ? "#c5ccd2" : "#cfc6b6"}" stroke-width=".6"/>
-<g${c.tamper ? ` transform="rotate(-24 81 26)"` : ""}${mx > 120 ? ` clip-path="url(#${cl})"` : ""}>${{
-    // Sonoff SNZB-04P: a tall body, its light at the top, a pairing slot.
-    sonoff: `<rect x="${mx}" y="33" width="8" height="24" rx="2" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".5"/>
-<rect x="74" y="26" width="14" height="38" rx="3" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".6"/>
-<path d="M76 29 Q81 27.6 86 29" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-<circle class="${open ? "nta-blinkfast" : ""}" cx="81" cy="33" r="1.2" fill="${open ? "#29b6f6" : "#cfd6dc"}"/>
-<rect x="78.4" y="58" width="5.2" height="2" rx="1" fill="#d5dbe0"/>`,
-    // Aqara: a slim stick and a small magnet, the light hidden under the shell.
-    aqara: `<rect x="${mx + 1}" y="38" width="6" height="14" rx="1.6" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".5"/>
-<rect x="76" y="30" width="10" height="30" rx="2.4" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".6"/>
-<path d="M77.6 32.4 Q81 31.4 84.4 32.4" stroke="#fff" stroke-width="1" fill="none" stroke-linecap="round"/>
-<circle class="${open ? "nta-blinkfast" : ""}" cx="81" cy="35" r=".9" fill="${open ? "#29b6f6" : "#e3e7eb"}"/>`,
-    // Philips Hue Secure: a softer, rounder body with its name on it.
-    hue: `<rect x="${mx}" y="34" width="9" height="22" rx="4" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".5"/>
-<rect x="73.5" y="25" width="15" height="40" rx="6.5" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".6"/>
-<path d="M76 29 Q81 27 86 29" stroke="#fff" stroke-width="1.3" fill="none" stroke-linecap="round"/>
-<text x="81" y="58" font-size="4" font-weight="700" text-anchor="middle" fill="#b9c1c8" ${NT_FONT}>hue</text>
-<circle class="${open ? "nta-blinkfast" : ""}" cx="81" cy="33" r="1" fill="${open ? "#29b6f6" : "#dfe4e8"}"/>`,
-    // Third Reality 3RDS17BZ: a wide, short block with one big rounded corner,
-    // a narrow magnet as tall as it, a short mark on each where they meet.
-    thirdreality: `<rect x="${mx + 1}" y="33" width="6" height="24" rx="1.2" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".5"/>
-<path d="M${mx + 5.6} 42 V48" stroke="#c3cbd2" stroke-width=".7" stroke-linecap="round"/>
-<path d="M74.5 33 H82 A7 7 0 0 1 89 40 V55.5 A1.5 1.5 0 0 1 87.5 57 H74.5 A1.5 1.5 0 0 1 73 55.5 V34.5 A1.5 1.5 0 0 1 74.5 33 Z" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".6"/>
-<path d="M75 35 H81.5" stroke="#fff" stroke-width="1" stroke-linecap="round"/>
-<path d="M74.8 42 V48" stroke="#c3cbd2" stroke-width=".7" stroke-linecap="round"/>`,
-    // IKEA PARASOLL: a long slim stick, rounded at both ends, its light a
-    // short slot near the top; the magnet a slimmer stick with the same slot.
-    ikea: `<rect x="${mx}" y="27" width="8" height="36" rx="4" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".5"/>
-<path d="M${mx + 2.6} 35 H${mx + 5.4}" stroke="#d5dbe0" stroke-width="1" stroke-linecap="round"/>
-<rect x="75" y="25" width="12" height="42" rx="5.5" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".6"/>
-<path class="${open ? "nta-blinkfast" : ""}" d="M78.6 34 H83.4" stroke="${open ? "#29b6f6" : "#b9c1c8"}" stroke-width="1.2" stroke-linecap="round"/>`,
-  }[c.model] || ""}</g>
+<g${c.tamper ? ` transform="rotate(-24 81 26)"` : ""}>${move(mdx, mdy, parts[0], mclip)}${parts[1]}</g>
 ${c.tamper ? `<path d="M86 36 l5 -4 M88 42 l6 -1 M85 48 l5 3" stroke="#e53935" stroke-width="1.4" stroke-linecap="round"/>` : ""}
 ${open ? ntWaves(81, 46, "#ef6c00", 20) : ""}`;
 }
