@@ -2029,7 +2029,7 @@ function ntSpkWiim(c) {
   const ink = light ? "#5d646b" : "#d9dde1";
   return `<defs>${ntV(f, p[0], p[2])}<linearGradient id="${tp}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p[1]}"/><stop offset="1" stop-color="${p[3]}"/></linearGradient><radialGradient id="${k}" cx=".38" cy=".3" r=".85"><stop offset="0" stop-color="${light ? "#f6f7f8" : "#8a9096"}"/><stop offset=".6" stop-color="${p[1]}"/><stop offset="1" stop-color="${p[2]}"/></radialGradient>${ntBlur(sh, 2.4)}</defs>
 ${spkNotes(94, 18)}
-<ellipse cx="60" cy="98" rx="50" ry="4" fill="#000" opacity=".22" filter="url(#${sh})"/>
+${ntFoot("10 95 110 95 113 99 7 99", .28)}
 <path d="M26 40 H94 Q102 40 104 47 L111 66 H9 L16 47 Q18 40 26 40 Z" fill="url(#${tp})"/>
 <path d="M17 45 Q19 41.6 26 41.6 H94 Q101 41.6 103 45" stroke="#fff" stroke-width=".8" fill="none" opacity="${light ? .8 : .25}"/>
 <text x="0" y="0" transform="matrix(1 0 0 .42 60 56)" font-size="11" font-weight="300" letter-spacing="2" text-anchor="middle" fill="${light ? "#a5abb1" : "#8d9399"}" ${NT_FONT}>WiiM</text>
@@ -3308,8 +3308,8 @@ function ntGasFireplace(c) {
 <linearGradient id="${fl2}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#90caf9"/><stop offset=".25" stop-color="#ffe082"/><stop offset="1" stop-color="#fff8e1" stop-opacity=".35"/></linearGradient>
 <radialGradient id="${ac}" cx=".5" cy="0" r=".9"><stop offset="0" stop-color="#ffe0b2" stop-opacity=".75"/><stop offset="1" stop-color="#ffe0b2" stop-opacity="0"/></radialGradient>
 ${ntBlur(gl, 3)}<clipPath id="${cp}"><rect x="20" y="46" width="80" height="48" rx="1.5"/></clipPath></defs>
-${ntShadow(60, 110, 50)}
-${flame ? `<ellipse class="nta-glow" cx="60" cy="106" rx="44" ry="4" fill="#ffb74d" opacity=".45" filter="url(#${gl})"/>` : ""}
+${ntFoot("8 108 112 108 115 111 5 111", .3)}
+${flame ? `<polygon class="nta-glow" points="12 108 108 108 116 113 4 113" fill="#ffb74d" opacity=".45" filter="url(#${gl})"/>` : ""}
 <g class="nt-run">${air}</g>
 <rect x="2" y="24" width="116" height="8" rx="1.5" fill="url(#${mt})"/><path d="M3 24.6 H117" stroke="#fff" stroke-width=".8" opacity=".7"/>
 <rect x="8" y="32" width="104" height="76" rx="1.5" fill="url(#${sur})"/>

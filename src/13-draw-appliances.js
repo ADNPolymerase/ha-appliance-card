@@ -846,7 +846,7 @@ function ntMiniPc() {
 <linearGradient id="mpc-front" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#46547f"/><stop offset="1" stop-color="#323e63"/></linearGradient>
 <linearGradient id="mpc-side" x1="0" x2="1"><stop offset="0" stop-color="#2c3758"/><stop offset="1" stop-color="#222b47"/></linearGradient>
 <pattern id="mpc-dots" width="2" height="2" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".35" fill="#1c2440" opacity=".7"/></pattern></defs>
-<ellipse cx="50" cy="90" rx="42" ry="5" fill="#000" opacity=".16"/>
+<filter id="mpc-sh" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="1.5"/></filter><polygon points="9 86 68 86 91 74 92 77 70 90 10 90" fill="#000" opacity=".26" filter="url(#mpc-sh)"/>
 <path d="M10 55 Q10 53 12 52 L30 42 Q32 41 34 41 L86 41 Q89 41 88 43 L70 53 Q68 54 66 54 L12 54 Z" fill="url(#mpc-top)"/>
 <path d="M10 55 Q10 53 12 52 L30 42 Q32 41 34 41 L86 41 Q89 41 88 43 L70 53 Q68 54 66 54 L12 54 Z" fill="url(#mpc-dots)"/>
 <path d="M68 54 L88 43 Q90 42 90 45 V73 Q90 75 88 76 L70 86 Q68 87 68 85 Z" fill="url(#mpc-side)"/>${vents}
