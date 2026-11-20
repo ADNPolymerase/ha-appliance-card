@@ -158,14 +158,16 @@ const HD_LABELS = { off: "ac_off", cool: "hd_cool", hot: "hd_hot", on: "screen_o
 // A network device. Its name says which drawing it gets when none is chosen:
 // a NAS by its maker or its system, a switch by its name, a rack by its own.
 // A Nintendo Switch is a console, not a switch.
-const NET_LAYOUTS = ["switch", "server", "nas", "rack", "router"];
+const NET_LAYOUTS = ["switch", "server", "nas", "rack", "router", "mini_pc"];
 const NET_NAS_RE = /(^|[\s._-])(nas|synology|diskstation|qnap|ugreen|unraid|truenas|freenas|openmediavault|omv|asustor|terramaster|ds\d{3})/;
 const NET_SWITCH_RE = /(?<!nintendo.?)switch|(^|[\s._-])(usw|edgeswitch|poe)([\s._-]|$)/;
 const NET_RACK_RE = /(^|[\s._-])(rack|baie|homelab)([\s._-]|$)/;
+// A mini PC (#129): a small box on a desk, Beelink, NUC and the like.
+const NET_MINIPC_RE = /(^|[\s._-])(mini.?pc|beelink|nuc|minisforum|geekom|gmktec|mele|chuwi|asrock.?deskmini|mac.?mini)([\s._-]|\d|$)/;
 const NET_SERVER_RE = /(^|[\s._-])(server|serveur|servidor|serwer|proxmox|pve|esxi|unifi)([\s._-]|\d|$)/;
 // A router or the box an ISP lends: by its name, its maker's, or the ISP's.
 const NET_ROUTER_RE = /(^|[\s._-])(router|routeur|ruter|udm|bbox|livebox|freebox|fritz.?box|modem|archer|keenetic|openwrt|mikrotik|omada|gl.?inet|asuswrt|rt.?a[xc]\d+|deco.?[mxpse]\d+)([\s._-]|\d|$)/;
-const NET_NAME_RE = new RegExp([NET_NAS_RE, NET_SWITCH_RE, NET_RACK_RE, NET_SERVER_RE, NET_ROUTER_RE].map((r) => `(${r.source})`).join("|"));
+const NET_NAME_RE = new RegExp([NET_NAS_RE, NET_SWITCH_RE, NET_RACK_RE, NET_SERVER_RE, NET_ROUTER_RE, NET_MINIPC_RE].map((r) => `(${r.source})`).join("|"));
 // The switches drawn: one row of eight, then two rows of eight, twelve and
 // sixteen, numbered like the real ones, odd on top and even below.
 const SWITCH_PORTS = [8, 16, 24, 32];
@@ -189,6 +191,7 @@ function netLayoutOf(cfg, st) {
   if (NET_LAYOUTS.includes(cfg.network_layout)) return cfg.network_layout;
   const name = stripAccents(`${(cfg.state_entity || "").split(".")[1] || ""} ${stHay(st)} ${cfg.name || ""}`.toLowerCase());
   if (NET_RACK_RE.test(name)) return "rack";
+  if (NET_MINIPC_RE.test(name)) return "mini_pc";
   if (NET_NAS_RE.test(name)) return "nas";
   if (NET_ROUTER_RE.test(name) || cfg.clients_entity || cfg.wan_entity || cfg.wifi_entity) return "router";
   if (NET_SWITCH_RE.test(name) || cfg.ports_entity || cfg.poe_entity || cfg.switch_ports) return "switch";

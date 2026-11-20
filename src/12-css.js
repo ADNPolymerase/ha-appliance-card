@@ -1874,6 +1874,15 @@ const ILLUSTRATION_CSS = {
         .nt-nowifi .nt-wl { background: #3d434a; box-shadow: none; }
         @keyframes nt-wave { 0% { opacity: 0; } 30% { opacity: 0.9; } 100% { opacity: 0; } }
         .machine.nt-unav { opacity: 0.45; filter: grayscale(1); }
+        .nt-l-mini_pc .nt-pwring { opacity: .35; }
+        .nt-on .nt-pwring, .nt-busy .nt-pwring { opacity: 1; filter: drop-shadow(0 0 2px #ff5252); }
+        .nt-on .nt-act, .nt-busy .nt-act { fill: #4fc3f7; }
+        .nt-busy .nt-act { animation: nt-flick 0.35s infinite; animation-delay: var(--anim-offset, 0s); }
+        .nt-alert .nt-act { fill: #f44336; animation: nt-blink 1s steps(1) infinite; animation-delay: var(--anim-offset, 0s); }
+        .nt-l-mini_pc .nt-heatg { opacity: 0; }
+        .nt-busy .nt-heatg, .nt-alert .nt-heatg { opacity: 1; }
+        .nt-busy .nt-heat, .nt-alert .nt-heat { animation: nt-rise 1.6s ease-in infinite; animation-delay: var(--anim-offset, 0s); }
+        @keyframes nt-rise { 0% { opacity: 0; transform: translateY(4px); } 30% { opacity: .9; } 100% { opacity: 0; transform: translateY(-6px); } }
         @keyframes nt-blink { 50% { opacity: 0.15; } }
         @keyframes nt-flick { 0%, 100% { opacity: 1; } 30% { opacity: 0.1; } 55% { opacity: 1; } 70% { opacity: 0.2; } }
         @keyframes nt-breathe { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.8; } }

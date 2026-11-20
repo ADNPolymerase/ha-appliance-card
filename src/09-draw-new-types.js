@@ -52,7 +52,7 @@ const FB_CHARGE_W = 0.5;
 // A finger bot by its name: Fingerbot, Adaprox, SwitchBot's Bot.
 const FINGERBOT_NAME_RE = /finger.?bot|adaprox|switch.?bot.?bot|(^|[._\s])bot([._\s]|$)|button.?push(er)?|knopfdrucker|pousse.?bouton|appuie.?bouton/;
 const GRILL_LAYOUTS = ["timberline", "drum", "cart", "vertical"];
-const SPEAKER_LAYOUTS = ["smart", "homepod_mini", "sonos_one", "sonos_era100", "sonos_era300", "sonos_move", "soundbar", "bose_wave", "bose_500", "bose_soundlink", "bose_soundbar", "bookshelf", "echo_dot", "nest_mini", "sonos_five", "sonos_play", "sonos_roam", "sonos_ray", "sonos_amp", "sonos_port", "bose_ultra", "bose_portable", "bose_amp", "echo_dot_max", "focal_bird", "focal_od6", "denon_avr"];
+const SPEAKER_LAYOUTS = ["smart", "homepod_mini", "sonos_one", "sonos_era100", "sonos_era300", "sonos_move", "soundbar", "bose_wave", "bose_500", "bose_soundlink", "bose_soundbar", "bookshelf", "echo_dot", "nest_mini", "sonos_five", "sonos_play", "sonos_roam", "sonos_ray", "sonos_amp", "sonos_port", "bose_ultra", "bose_portable", "bose_amp", "echo_dot_max", "focal_bird", "focal_od6", "denon_avr", "avr", "wiim_amp", "smart_clock"];
 // Streaming boxes (#97). The app a box is in: its colour and its mark, read
 // from the app's name or its package. A launcher is the home screen.
 const STR_APPS = [
@@ -443,7 +443,11 @@ function speakerLayoutOf(cfg, st) {
   // whose name also says Ultra.
   // Focal and Denon (HACF #172): the Bird on its tripod, the 100 OD6 on its
   // wall bracket, an AV receiver.
-  if (/(^|[^a-z])avr|avc.?x|receiver|ampli.?(tuner|av|home)|home.?cinema/.test(hay) || (/(^|[^a-z])(denon|marantz)([^a-z]|$)/.test(hay) && !/denon.?home|heos/.test(hay))) return "denon_avr";
+  if (/lenovo.?smart.?clock|smart.?clock|lenovo.?clock/.test(hay)) return "smart_clock";
+  if (/(^|[^a-z])wiim([^a-z]|$)/.test(hay)) return "wiim_amp";
+  if (/(^|[^a-z])(denon|marantz)([^a-z]|$)/.test(hay) && !/denon.?home|heos/.test(hay)) return "denon_avr";
+  // Any other AV receiver (#129): its maker, its series, or what it is.
+  if (/(^|[^a-z])(avr|yamaha(?!.*(musiccast|soundbar|wx|sr.?b))|onkyo|pioneer|integra|anthem|arcam|rx.?[va]\d|tx.?nr|vsx|str.?d[nh])|avc.?x|receiver|ampli.?(tuner|av|home)|home.?cinema/.test(hay)) return "avr";
   if (/focal/.test(hay) && /od.?\d|outdoor|exterieur|jardin|garden|terrasse/.test(hay)) return "focal_od6";
   if (/(little.?|super.?|power.?)?bird([^a-z]|$)|focal/.test(hay)) return "focal_bird";
   if (/bose/.test(hay) && /lifestyle.?ultra/.test(hay)) return "bose_ultra";
@@ -2431,6 +2435,8 @@ const SPK_PALETTES = {
     blue: ["#86a6bf", "#41637f", "#213d53", "#2d4a62", "#5b7c96"] },
   wave: { black: ["#5e636a", "#3a3e44", "#1f2226", "#4a4f55", "#15171a"], silver: ["#eef0f2", "#c9cdd1", "#959ca3", "#dfe2e5", "#6f767d"] },
   focal: { white: ["#ffffff", "#eef0f1", "#cfd4d8", "#f7f8f9", "#aab1b7"], black: ["#4a4f55", "#2a2d31", "#141619", "#3a3e43", "#0c0d0f"] },
+  wiim: { black: ["#5f6469", "#45494e", "#2c2f33", "#6e7379", "#1b1d20"], silver: ["#e3e5e7", "#c3c7cb", "#8f959b", "#eef0f1", "#6d7379"] },
+  clock: { silver: ["#c9c9c7", "#a9a9a7", "#7d7d7b", "#d7d7d5", "#5d5d5b"], blue: ["#5f7590", "#465b75", "#2e3e52", "#6d83a0", "#1f2b3a"] },
   denon: { black: ["#3a3f45", "#202327", "#0f1113", "#2a2e33", "#4d545b"], silver: ["#e9ebed", "#c7ccd0", "#959ca3", "#dadde0", "#7b8288"] },
   flex: { black: ["#4b4f55", "#2b2e32", "#151719", "#36393e", "#0f1012"], white: ["#f6f4ee", "#dedbd2", "#b5b1a6", "#ebe8e0", "#8f8b80"],
     blue: ["#8fb1d1", "#4a72a0", "#2b4b71", "#5a82ae", "#1e3550"] },
@@ -2778,7 +2784,7 @@ ${spkNotes(96, 24)}
 ${spkBoxShadow(4, 96, 100, 12)}
 ${ntRoundBox(4, 46, 100, 50, 12, 2, `url(#${f})`, `url(#${sd})`, `url(#${tp})`, "#060708")}
 ${Array.from({ length: 14 }, (_, i) => `<path d="M${18 + i * 6} 40 L${12 + i * 6} 45" stroke="#000" stroke-width="1.2" opacity=".35"/>`).join("")}
-<text x="9" y="53.6" font-size="3.6" font-weight="700" fill="${c.color === "silver" ? "#4a5056" : "#e9ecef"}" ${NT_FONT}>DENON</text>
+${c.generic ? "" : `<text x="9" y="53.6" font-size="3.6" font-weight="700" fill="${c.color === "silver" ? "#4a5056" : "#e9ecef"}" ${NT_FONT}>DENON</text>`}
 <rect x="29" y="51" width="50" height="22" rx="1.6" fill="#060708" stroke="#2b2f34" stroke-width=".6"/>
 <text x="54" y="63" font-size="${ntFit(src, 46, 8).toFixed(2)}" font-weight="700" text-anchor="middle" fill="#9fe3ff" class="${lit ? "nta-glow" : ""}" ${NT_FONT}>${src}</text>
 <text x="54" y="69.8" font-size="3.6" text-anchor="middle" fill="#6fc6ea" ${NT_FONT}>${snd}</text>
@@ -2787,6 +2793,61 @@ ${knob(17, 64, 7.4, null)}${knob(91, 64, 8.6, turn)}
 <circle cx="17" cy="82" r="2" fill="#1a1d20" stroke="#4a5056" stroke-width=".5"/><circle cx="17" cy="82" r=".9" fill="${c.st === "off" ? "#e53935" : "#7fd7ff"}"/>
 <rect x="10" y="96" width="9" height="3.4" rx="1" fill="#0b0c0e"/><rect x="88" y="96" width="9" height="3.4" rx="1" fill="#0b0c0e"/>
 ${c.muted ? spkMute(86, 26) : ""}`;
+}
+// Any other AV receiver (#129), Yamaha, Onkyo, Pioneer...: the same front
+// without a brand on it.
+const ntSpkAvr = (c) => ntSpkDenon({ ...c, generic: true });
+// A WiiM Amp (#129): a low square box, its top a wide flat lid with the
+// logo, a thin line of lights along its front and the big knob that plays
+// and pauses.
+function ntSpkWiim(c) {
+  const p = spkPal("wiim", c.color);
+  const f = ntId(), tp = ntId(), k = ntId(), sh = ntId();
+  const light = c.color === "silver";
+  const lit = c.st !== "off";
+  const ink = light ? "#5d646b" : "#d9dde1";
+  return `<defs>${ntV(f, p[0], p[2])}<linearGradient id="${tp}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p[1]}"/><stop offset="1" stop-color="${p[3]}"/></linearGradient><radialGradient id="${k}" cx=".38" cy=".3" r=".85"><stop offset="0" stop-color="${light ? "#f6f7f8" : "#8a9096"}"/><stop offset=".6" stop-color="${p[1]}"/><stop offset="1" stop-color="${p[2]}"/></radialGradient>${ntBlur(sh, 2.4)}</defs>
+${spkNotes(94, 18)}
+<ellipse cx="60" cy="98" rx="50" ry="4" fill="#000" opacity=".22" filter="url(#${sh})"/>
+<path d="M26 40 H94 Q102 40 104 47 L111 66 H9 L16 47 Q18 40 26 40 Z" fill="url(#${tp})"/>
+<path d="M17 45 Q19 41.6 26 41.6 H94 Q101 41.6 103 45" stroke="#fff" stroke-width=".8" fill="none" opacity="${light ? .8 : .25}"/>
+<text x="0" y="0" transform="matrix(1 0 0 .42 60 56)" font-size="11" font-weight="300" letter-spacing="2" text-anchor="middle" fill="${light ? "#a5abb1" : "#8d9399"}" ${NT_FONT}>WiiM</text>
+<path d="M9 66 H111 V88 Q111 96 103 96 H17 Q9 96 9 88 Z" fill="url(#${f})"/>
+<path d="M9 66 H111" stroke="#fff" stroke-width=".7" opacity="${light ? .9 : .3}"/>
+<path d="M15 85 H86" stroke="${light ? "#aab0b5" : "#6b7076"}" stroke-width=".5"/>
+<rect x="15" y="80.6" width="5" height="1.4" rx=".7" fill="${lit ? "#ffffff" : ink}" opacity="${lit ? 1 : .5}"/>
+<text x="23" y="82.2" font-size="2.8" fill="${ink}" ${NT_FONT}>WiiM Amp</text>
+${[0, 1, 2, 3, 4, 5].map((i) => `<circle cx="${71 + i * 2.4}" cy="81.4" r=".45" fill="${lit && c.vol !== null && c.vol !== undefined && i < Math.round(c.vol * 6) ? "#ffffff" : ink}" opacity="${lit ? .9 : .4}"/>`).join("")}
+<circle cx="97" cy="80" r="10.6" fill="${p[2]}"/><circle cx="97" cy="80" r="9.4" fill="url(#${k})"/>
+<circle cx="97" cy="80" r="9.4" fill="none" stroke="#fff" stroke-width=".5" opacity="${light ? .8 : .25}"/>
+${c.st === "playing" ? `<path d="M94.8 76.6 V83.4 M99.2 76.6 V83.4" stroke="${ink}" stroke-width="1.3" stroke-linecap="round"/>` : `<path d="M95.2 76.4 L100.8 80 L95.2 83.6 Z" fill="none" stroke="${ink}" stroke-width="1" stroke-linejoin="round"/>`}
+${c.muted ? spkMute(84, 30) : ""}`;
+}
+// A Lenovo Smart Clock (#128): a little wedge dressed in grey fabric, its
+// screen leaning back, the time on it, or what is playing.
+function ntSpkClock(c) {
+  const p = spkPal("clock", c.color);
+  const fa = ntId(), sd = ntId(), m = ntId(), sc = ntId(), gl = ntId();
+  const lit = c.st !== "off";
+  const title = esc(String(c.title || "").slice(0, 16));
+  const artist = esc(String(c.artist || "").slice(0, 20));
+  const big = c.st === "playing" || c.st === "paused" ? "" : esc(c.clock || "");
+  return `<defs>${ntV(fa, p[3], p[1])}${ntV(sd, p[2], p[4])}${spkMesh(m, .22)}<linearGradient id="${sc}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b98a9f"/><stop offset=".55" stop-color="#7f6a98"/><stop offset="1" stop-color="#5e5486"/></linearGradient>${ntBlur(gl, 1.2)}</defs>
+${spkNotes(98, 14)}
+${ntFoot("12 101 92 101 108 92 98 88", .3)}
+<path d="M86 28 Q90 27 93 30 L104 42 Q106 44 106 47 L108 90 Q108 94 104 95 L91 98 Z" fill="url(#${sd})"/>
+<path d="M86 28 Q90 27 93 30 L104 42 Q106 44 106 47 L108 90 Q108 94 104 95 L91 98 Z" fill="url(#${m})"/>
+<path d="M20 35 Q16 35.6 16 40 L11 94 Q10.6 99 15 99 L87 99 Q92 99 91.6 94 L88 32 Q87.6 27.4 83 28 Z" fill="url(#${fa})"/>
+<path d="M20 35 Q16 35.6 16 40 L11 94 Q10.6 99 15 99 L87 99 Q92 99 91.6 94 L88 32 Q87.6 27.4 83 28 Z" fill="url(#${m})"/>
+<path d="M24 39.4 L80.6 32.6 Q84 32.2 84.2 35.6 L86.6 86.6 Q86.8 90 83.4 90.2 L19.6 93.2 Q16.2 93.4 16.6 90 L20.6 43 Q20.9 39.8 24 39.4 Z" fill="#0b0c0e"/>
+<path d="M27.4 43.6 L78.6 37.6 L80.8 84.6 L23.4 87.4 Z" fill="${lit ? `url(#${sc})` : "#141518"}"/>
+<circle cx="25" cy="41.8" r=".6" fill="#2a2c30"/><circle cx="81.4" cy="35.4" r=".6" fill="#2a2c30"/>
+<g transform="rotate(-5.6 52 62)" ${NT_FONT} text-anchor="middle">
+${big ? `<text x="52" y="69" font-size="${ntFit(big, 48, 21).toFixed(2)}" font-weight="300" fill="#ffffff" opacity="${lit ? 1 : .22}">${big}</text>` : `<text x="52" y="60" font-size="${ntFit(title, 46, 7.4).toFixed(2)}" font-weight="500" fill="#ffffff">${title}</text>
+<text x="52" y="68" font-size="4" fill="#ffffff" opacity=".8">${artist}</text>
+<rect x="34" y="73" width="36" height="1.2" rx=".6" fill="#ffffff" opacity=".3"/><rect x="34" y="73" width="${c.st === "playing" ? 22 : 14}" height="1.2" rx=".6" fill="#ffffff"/>`}
+</g>
+${c.st === "paused" ? spkPause(52, 50, "#ffffff") : ""}${c.muted ? spkMute(92, 20) : ""}`;
 }
 // A mesh of fabric, for the speakers dressed in it.
 const spkMesh = (id, op = .35) => `<pattern id="${id}" width="3" height="3" patternUnits="userSpaceOnUse"><path d="M0 3 L3 0 M-1 1 L1 -1 M2 4 L4 2" stroke="#000" stroke-width=".5" opacity="${op}"/></pattern>`;
@@ -4955,7 +5016,7 @@ ${ring(46.5, 10.4, big)}${ring(68.8, 5, smalls[0])}${ring(79.2, 5, smalls[1])}
 </g>
 ${c.heat ? fpSteam(60, 10) : ""}`;
 }
-const NT_DRAW = { fp_tm31: ntFoodTm31, fp_tm6: ntFoodTm6, rack_box: ntRackBox, rack_accordion: ntRackAccordion, rack_frame: ntRackFrame, vlv_aqara: ntValveAqara, vlv_tuya: ntValveTuya,  fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_switchbot_co2: (c) => ntSbPro(c, true), ths_switchbot_pro: (c) => ntSbPro(c, false), ths_switchbot_meter: (c) => ntSbMeter(c, false), ths_switchbot_plus: (c) => ntSbMeter(c, true), ths_switchbot_outdoor: ntSbOutdoor, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, det_door: ntDetDoor, det_vibration: ntDetVibration, det_glass: ntDetGlass, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, spk_focal_bird: ntSpkFocalBird, spk_focal_od6: ntSpkFocalOd6, spk_denon_avr: ntSpkDenon, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+const NT_DRAW = { fp_tm31: ntFoodTm31, fp_tm6: ntFoodTm6, rack_box: ntRackBox, rack_accordion: ntRackAccordion, rack_frame: ntRackFrame, vlv_aqara: ntValveAqara, vlv_tuya: ntValveTuya,  fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_switchbot_co2: (c) => ntSbPro(c, true), ths_switchbot_pro: (c) => ntSbPro(c, false), ths_switchbot_meter: (c) => ntSbMeter(c, false), ths_switchbot_plus: (c) => ntSbMeter(c, true), ths_switchbot_outdoor: ntSbOutdoor, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, det_door: ntDetDoor, det_vibration: ntDetVibration, det_glass: ntDetGlass, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, spk_focal_bird: ntSpkFocalBird, spk_focal_od6: ntSpkFocalOd6, spk_denon_avr: ntSpkDenon, spk_avr: ntSpkAvr, spk_wiim_amp: ntSpkWiim, spk_smart_clock: ntSpkClock, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 // The card's colour on a drawing made after a real product: its shell, the
 // greys, blacks and whites it is drawn in, takes the colour, lightest to
 // darkest as before; what has a colour of its own (a screen's glow, a
@@ -5729,7 +5790,8 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     // An AV receiver's sound mode (Denon, Marantz, Yamaha): a line and its display.
     if (!offish && a.sound_mode) lines.push({ key: "spk_sound_mode", icon: "mdi:surround-sound", label: t(hass, "spk_sound_mode"), value: String(a.sound_mode), entity: cfg.state_entity });
     const draw = { kind, on: playing, st: playing ? "playing" : paused ? "paused" : offish ? "off" : "idle", muted: !!a.is_volume_muted && !offish, color: speakerColorOf(cfg, st),
-      src: a.source || a.app_name || "", sound: a.sound_mode || "", vol: numberOrNull(a.volume_level) };
+      src: a.source || a.app_name || "", sound: a.sound_mode || "", vol: numberOrNull(a.volume_level),
+      title: a.media_title || "", artist: a.media_artist || "", clock: layout === "smart_clock" ? clockTime(new Date(), hass) : "" };
     if (playing) return out("playing", "spk_playing", NT_COLORS.run, draw);
     if (paused) return out("paused", "spk_paused", NT_COLORS.idle, draw);
     if (offish) return out("off", "spk_off", NT_COLORS.off, draw);

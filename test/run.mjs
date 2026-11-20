@@ -9908,6 +9908,9 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('reseau : NAS par defaut quand des disques sont donnes', /nt-l-nas/.test(draw({ disk1_entity: 'sensor.d1' }, { 'sensor.d1': s('normal') })), true);
   check('reseau : serveur sans autre indice', /nt-l-server/.test(draw({})), true);
   check('reseau : baie choisie', /nt-l-rack/.test(draw({ network_layout: 'rack' })), true);
+  check('reseau : mini PC choisi (#129)', /nt-l-mini_pc/.test(draw({ network_layout: 'mini_pc' })), true);
+  check('reseau : mini PC par son nom', /nt-l-mini_pc/.test(render({ appliance_type: 'network', state_entity: 'binary_sensor.beelink_ser5' }, { 'binary_sensor.beelink_ser5': s('on') })), true);
+  check('reseau : mini PC, son bouton rouge', /class="nt-pwring"/.test(draw({ network_layout: 'mini_pc' })), true);
   check('reseau : switch 8 ports par defaut', count(draw({ network_layout: 'switch' }), /class="nt-port/g), 8);
   for (const [total, drawn] of [[5, 8], [16, 16], [24, 24], [28, 32], [48, 32]])
     check(`reseau : ${total} ports dessines sur ${drawn}`, count(draw({ network_layout: 'switch', ports_total: total }), /class="nt-port/g), drawn);
@@ -15118,6 +15121,14 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('172 : Focal Bird par son nom', kindOf(spk('media_player.focal_bird_salon')), 'spk_focal_bird');
   check('172 : Focal 100 OD6 par son nom', kindOf(spk('media_player.focal_od6_terrasse')), 'spk_focal_od6');
   check('172 : un ampli Denon', kindOf(spk('media_player.denon_avr_x3800h')), 'spk_denon_avr');
+  check('129 : un ampli Yamaha, l ampli generique', kindOf(spk('media_player.yamaha_rx_v6a')), 'spk_avr');
+  check('129 : une enceinte Yamaha MusicCast reste une enceinte', kindOf(spk('media_player.yamaha_musiccast_20')) !== 'spk_avr', true);
+  check('129 : un receiver sans marque, l ampli generique', kindOf(spk('media_player.living_room_receiver')), 'spk_avr');
+  check('129 : l ampli generique sans le nom Denon', />DENON</.test(spk('media_player.yamaha_rx_v6a', { source: 'TV' })), false);
+  check('129 : un WiiM par son nom', kindOf(spk('media_player.wiim_amp_office')), 'spk_wiim_amp');
+  check('128 : un Lenovo Smart Clock par son nom', kindOf(spk('media_player.lenovo_smart_clock')), 'spk_smart_clock');
+  check('128 : au repos, l heure sur l ecran', /font-weight="300" fill="#ffffff" opacity="1">\d{1,2}[:.h ]\d{2}/.test(spk('media_player.lenovo_smart_clock', {}, 'idle')), true);
+  check('128 : en lecture, le titre a la place', />Morning Jazz</.test(spk('media_player.lenovo_smart_clock', { media_title: 'Morning Jazz' })), true);
   check('172 : une enceinte Denon Home reste une enceinte', kindOf(spk('media_player.denon_home_150')) !== 'spk_denon_avr', true);
   const avr = spk('media_player.denon_avr', { source: 'Blu-ray', sound_mode: 'Dolby Atmos', volume_level: .5 });
   check('172 : l ecran de l ampli dit la source', />Blu-ray</.test(avr), true);

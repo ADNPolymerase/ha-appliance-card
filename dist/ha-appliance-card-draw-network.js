@@ -71,6 +71,35 @@ function ntServer(disks, fanOff) {
           <div class="nt-floor" style="left:24px;width:48px;bottom:0"></div>`;
 }
 
+// A mini PC (#129), Beelink style: a low blue box in three-quarter view, its
+// top finely perforated, two USB ports, a jack and the red power button on a
+// black panel, vents along its side. Busy, its light flickers and warm air
+// leaves the vents.
+function ntMiniPc() {
+  const vents = Array.from({ length: 6 }, (_, i) => `<path d="M${72 + i * 2.6} ${57 - i * 1.3} V${74 - i * 1.3}" stroke="#141a2a" stroke-width="1.1" stroke-linecap="round"/>`).join("");
+  const heat = [0, 1, 2].map((i) => `<path class="nt-heat" d="M${76 + i * 5} ${50 - i * 2} q-2 -4 0 -8 q2 -4 0 -8" stroke="#ffb74d" stroke-width="1" fill="none" stroke-linecap="round" style="animation-delay:${(i * .4).toFixed(1)}s"/>`).join("");
+  return `<svg class="nt-svg" viewBox="0 0 96 108" style="position:absolute;left:0;top:0;width:96px;height:108px;overflow:visible">
+<defs><linearGradient id="mpc-top" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a6a99"/><stop offset="1" stop-color="#3f4c78"/></linearGradient>
+<linearGradient id="mpc-front" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#46547f"/><stop offset="1" stop-color="#323e63"/></linearGradient>
+<linearGradient id="mpc-side" x1="0" x2="1"><stop offset="0" stop-color="#2c3758"/><stop offset="1" stop-color="#222b47"/></linearGradient>
+<pattern id="mpc-dots" width="2" height="2" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".35" fill="#1c2440" opacity=".7"/></pattern></defs>
+<ellipse cx="50" cy="90" rx="42" ry="5" fill="#000" opacity=".16"/>
+<path d="M10 55 Q10 53 12 52 L30 42 Q32 41 34 41 L86 41 Q89 41 88 43 L70 53 Q68 54 66 54 L12 54 Z" fill="url(#mpc-top)"/>
+<path d="M10 55 Q10 53 12 52 L30 42 Q32 41 34 41 L86 41 Q89 41 88 43 L70 53 Q68 54 66 54 L12 54 Z" fill="url(#mpc-dots)"/>
+<path d="M68 54 L88 43 Q90 42 90 45 V73 Q90 75 88 76 L70 86 Q68 87 68 85 Z" fill="url(#mpc-side)"/>${vents}
+<rect x="10" y="54" width="58" height="33" rx="2.4" fill="url(#mpc-front)"/>
+<path d="M12 54.6 H66" stroke="#8a9bd0" stroke-width=".6" opacity=".6"/>
+<rect x="15" y="59" width="48" height="23" rx="2" fill="#0d0f13"/>
+<rect x="19" y="66.5" width="9" height="4.4" rx=".6" fill="#2a2d33"/><rect x="20" y="67.4" width="7" height="1.7" fill="#2f6fd6"/>
+<rect x="31" y="66.5" width="9" height="4.4" rx=".6" fill="#2a2d33"/><rect x="32" y="67.4" width="7" height="1.7" fill="#2f6fd6"/>
+<circle cx="45.5" cy="68.7" r="1.5" fill="#1e2126" stroke="#4a4f57" stroke-width=".4"/>
+<circle class="nt-pwring" cx="55" cy="70" r="5" fill="#c62828"/><circle cx="55" cy="70" r="4" fill="#e53935"/>
+<path d="M53.2 68 A2.6 2.6 0 1 0 56.8 68" stroke="#fff" stroke-width=".8" fill="none" stroke-linecap="round"/><path d="M55 66.6 V69.6" stroke="#fff" stroke-width=".8" stroke-linecap="round"/>
+<circle class="nt-act" cx="45.5" cy="62.6" r=".7" fill="#2a2d33"/>
+<g class="nt-heatg">${heat}</g>
+</svg>`;
+}
+
 // A rack behind its glass door: fans on top, a patch panel, a switch, a NAS
 // and a server.
 function ntRack(fanOff) {
@@ -127,6 +156,7 @@ function networkHtml(cls, n) {
     : layout === "server" ? ntServer(disks, n.fanOff)
       : layout === "rack" ? ntRack(n.fanOff)
         : layout === "router" ? ntRouter()
+          : layout === "mini_pc" ? ntMiniPc()
           : ntNas(n.bays || 2, disks);
   return `
         <div class="machine ${cls} nt nt-${n.mode || "off"} nt-l-${layout}${n.wifiOff ? " nt-nowifi" : ""}">${inner}
@@ -191,6 +221,15 @@ css: () => `
         .nt-nowifi .nt-wl { background: #3d434a; box-shadow: none; }
         @keyframes nt-wave { 0% { opacity: 0; } 30% { opacity: 0.9; } 100% { opacity: 0; } }
         .machine.nt-unav { opacity: 0.45; filter: grayscale(1); }
+        .nt-l-mini_pc .nt-pwring { opacity: .35; }
+        .nt-on .nt-pwring, .nt-busy .nt-pwring { opacity: 1; filter: drop-shadow(0 0 2px #ff5252); }
+        .nt-on .nt-act, .nt-busy .nt-act { fill: #4fc3f7; }
+        .nt-busy .nt-act { animation: nt-flick 0.35s infinite; animation-delay: var(--anim-offset, 0s); }
+        .nt-alert .nt-act { fill: #f44336; animation: nt-blink 1s steps(1) infinite; animation-delay: var(--anim-offset, 0s); }
+        .nt-l-mini_pc .nt-heatg { opacity: 0; }
+        .nt-busy .nt-heatg, .nt-alert .nt-heatg { opacity: 1; }
+        .nt-busy .nt-heat, .nt-alert .nt-heat { animation: nt-rise 1.6s ease-in infinite; animation-delay: var(--anim-offset, 0s); }
+        @keyframes nt-rise { 0% { opacity: 0; transform: translateY(4px); } 30% { opacity: .9; } 100% { opacity: 0; transform: translateY(-6px); } }
         @keyframes nt-blink { 50% { opacity: 0.15; } }
         @keyframes nt-flick { 0%, 100% { opacity: 1; } 30% { opacity: 0.1; } 55% { opacity: 1; } 70% { opacity: 0.2; } }
         @keyframes nt-breathe { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.8; } }
