@@ -2553,17 +2553,17 @@ function ntSpkFocalBird(c) {
   const light = c.color !== "black";
   return `<defs><radialGradient id="${b}" cx=".72" cy=".3" r=".85"><stop offset="0" stop-color="${p[0]}"/><stop offset=".55" stop-color="${p[1]}"/><stop offset="1" stop-color="${p[2]}"/></radialGradient>
 ${spkHoles(h, light ? "#79818a" : "#050607", 1.5, .45)}<linearGradient id="${g}" x1="0" x2="1"><stop offset="0" stop-color="${light ? "#dfe3e6" : "#3a3e43"}"/><stop offset="1" stop-color="${light ? "#c4cacf" : "#22252a"}"/></linearGradient></defs>
-${spkNotes(84, 14)}${ntWaves(28, 52, "var(--primary-color, #03a9f4)", 4)}
-${spkFootShadow(60, 113, 28, 3)}
-<path d="M60 84 L60 104 M60 104 L38 112 M60 104 L82 112 M60 104 L64 114" stroke="${p[light ? 2 : 0]}" stroke-width="2.6" stroke-linecap="round" fill="none"/>
-<path d="M60 84 L60 104" stroke="${p[3]}" stroke-width="1.4" stroke-linecap="round"/>
-${[[38, 112], [82, 112], [64, 114]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="3" ry="1.3" fill="${p[2]}"/>`).join("")}
-<ellipse cx="64" cy="50" rx="32" ry="37" fill="url(#${b})" stroke="${p[4]}" stroke-width=".6"/>
-<g transform="rotate(-10 52 50)"><rect x="32" y="16" width="36" height="66" rx="17" fill="url(#${g})" stroke="${light ? "#a7aeb4" : "#55595f"}" stroke-width="2.2"/>
-<rect x="34.4" y="18.4" width="31.2" height="61.2" rx="15" fill="url(#${h})"/>
-<path d="M38 26 Q44 20 52 20" stroke="#fff" stroke-width="1.4" fill="none" opacity=".55" stroke-linecap="round"/></g>
-<path d="M84 22 Q92 34 92 50" stroke="#fff" stroke-width="2.4" fill="none" opacity="${light ? .9 : .25}" stroke-linecap="round"/>
-${c.st === "paused" ? spkPause(50, 50, light ? "#5d6773" : "#fff") : ""}${c.muted ? spkMute(78, 18) : ""}`;
+${spkNotes(98, 10)}${ntWaves(88, 30, "var(--primary-color, #03a9f4)", 4)}
+${spkFootShadow(56, 113, 28, 3)}
+<path d="M50 92 L56 104 M56 104 L34 112 M56 104 L78 112 M56 104 L60 114" stroke="${p[light ? 2 : 0]}" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+<path d="M50 92 L56 104" stroke="${p[3]}" stroke-width="1.4" stroke-linecap="round"/>
+${[[34, 112], [78, 112], [60, 114]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="3" ry="1.3" fill="${p[2]}"/>`).join("")}
+<ellipse cx="57" cy="56" rx="33" ry="39" transform="rotate(-28 57 56)" fill="url(#${b})" stroke="${p[4]}" stroke-width=".6"/>
+<path d="M29 42 Q24 64 38 83" stroke="#fff" stroke-width="2.4" fill="none" opacity="${light ? .9 : .25}" stroke-linecap="round"/>
+<g transform="rotate(-24 66 46)"><rect x="47" y="14" width="38" height="66" rx="18" fill="url(#${g})" stroke="${light ? "#a7aeb4" : "#55595f"}" stroke-width="2.2"/>
+<rect x="49.4" y="16.4" width="33.2" height="61.2" rx="16" fill="url(#${h})"/>
+<path d="M54 24 Q60 18 68 18" stroke="#fff" stroke-width="1.4" fill="none" opacity=".55" stroke-linecap="round"/></g>
+${c.st === "paused" ? spkPause(66, 46, light ? "#5d6773" : "#fff") : ""}${c.muted ? spkMute(92, 20) : ""}`;
 }
 // A Focal 100 OD6 (HACF #172): an outdoor box on its U bracket, the grille
 // over its whole front, the badge at its foot.

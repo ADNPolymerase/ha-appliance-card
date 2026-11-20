@@ -1387,10 +1387,10 @@ ${lpMetal("tM", "#2b3036", "#6f7882")}</defs>
 <path d="M44 86 C46 74 44 62 42 50 L36 40 M46 56 L58 42 M47 66 L56 58" stroke="url(#lp-tK)" stroke-width="2.6" fill="none" stroke-linecap="round"/>
 <path d="M40 86 C43 72 42 60 40 48 L50 48 C50 60 50 72 54 86 Z" fill="url(#lp-tK)"/>
 <path class="lp-wash" d="M40 86 C43 72 42 60 40 48 L50 48 C50 60 50 72 54 86 Z" fill="url(#lp-tB)"/>
-<path class="lp-beam" d="M26 66 L32 66 L64 8 L34 4 Z" fill="url(#lp-tB)"/>
+<path class="lp-beam" d="M30.6 62.4 L36.4 65.4 L70 10 L38 3 Z" fill="url(#lp-tB)"/>
 ${lpGrass()}
 <path d="M30 76 L30 90 L28.8 94 L27.6 90 L27.6 76 Z" fill="#2b3036"/>
-<g transform="rotate(-14 28.8 76)"><rect x="24" y="64" width="9.6" height="12" rx="2" fill="url(#lp-tM)"/>
+<g transform="rotate(22 28.8 76)"><rect x="24" y="64" width="9.6" height="12" rx="2" fill="url(#lp-tM)"/>
 <ellipse cx="28.8" cy="64" rx="5.4" ry="1.8" fill="#1e2226"/><ellipse class="lp-lit" cx="28.8" cy="64" rx="4" ry="1.3"/></g>`;
 // Ceiling lights, the one fixed on most ceilings. A flush dome of opal glass.
 LAMP_SVGS.ceiling = () => `<defs>${lpBeam("cB")}${lpHalo("cH")}
