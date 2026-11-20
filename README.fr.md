@@ -248,6 +248,13 @@ Clique sur une famille pour voir ses appareils en marche. Les dessins sont montr
 </details>
 
 <details>
+<summary><b>Cheminées au gaz</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-fireplaces.fr.gif" alt="Cheminées au gaz">
+
+</details>
+
+<details>
 <summary><b>Pousse-boutons</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-fingerbots.fr.gif" alt="Pousse-boutons">
@@ -283,9 +290,9 @@ Clique sur une famille pour voir ses appareils en marche. Les dessins sont montr
 </details>
 
 <details>
-<summary><b>Enceintes Focal et ampli Denon</b></summary>
+<summary><b>Enceintes Focal, amplis audio-vidéo, WiiM Amp et Lenovo Smart Clock</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-hifi.fr.gif" alt="Enceintes Focal et ampli Denon">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-hifi.fr.gif" alt="Enceintes Focal, amplis audio-vidéo, WiiM Amp et Lenovo Smart Clock">
 
 </details>
 

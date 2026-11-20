@@ -248,6 +248,13 @@ Click a family to see its appliances at work. The drawings are shown with `illus
 </details>
 
 <details>
+<summary><b>Gas fireplaces</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-fireplaces.gif" alt="Gas fireplaces">
+
+</details>
+
+<details>
 <summary><b>Finger bots</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-fingerbots.gif" alt="Finger bots">
@@ -283,9 +290,9 @@ Click a family to see its appliances at work. The drawings are shown with `illus
 </details>
 
 <details>
-<summary><b>Focal speakers and Denon receiver</b></summary>
+<summary><b>Focal speakers, AV receivers, WiiM Amp and Lenovo Smart Clock</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-hifi.gif" alt="Focal speakers and Denon receiver">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-hifi.gif" alt="Focal speakers, AV receivers, WiiM Amp and Lenovo Smart Clock">
 
 </details>
 
