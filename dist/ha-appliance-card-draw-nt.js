@@ -2053,23 +2053,24 @@ function ntSpkClock(c) {
   const title = esc(String(c.title || "").slice(0, 16));
   const artist = esc(String(c.artist || "").slice(0, 20));
   const big = c.st === "playing" || c.st === "paused" ? "" : esc(c.clock || "");
-  // Seen from the front and a little to the right: the face almost upright,
-  // leaning back a touch; its side a long triangle, from the rounded ridge
-  // at the top down the sloping back to the foot behind.
+  // Its face leans well back, so seen from the front it narrows towards the
+  // top and the screen with it; its side is a long triangle, from the rounded
+  // ridge down the sloping back to the foot behind.
+  const Q = (u, v) => { const x0 = 18 + (10 - 18) * v, x1 = 82 + (90 - 82) * v; return `${+(x0 + (x1 - x0) * u).toFixed(2)} ${+(40 + 58 * v).toFixed(2)}`; };
+  const quad = (u0, v0, u1, v1) => `${Q(u0, v0)} ${Q(u1, v0)} ${Q(u1, v1)} ${Q(u0, v1)}`;
   return `<defs>${ntV(fa, p[3], p[1])}<linearGradient id="${sd}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${p[1]}"/><stop offset="1" stop-color="${p[2]}"/></linearGradient>${ntV(tp, p[3], p[0])}${spkMesh(m, .05)}<linearGradient id="${sc}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b98a9f"/><stop offset=".55" stop-color="#7f6a98"/><stop offset="1" stop-color="#5e5486"/></linearGradient></defs>
 ${spkNotes(100, 14)}
 ${ntFoot("9 99 91 99 114 93 102 90", .3)}
-<path d="M85 40 Q89 38.6 91 42 L113 89 Q114.4 93 110.4 93.6 L90.4 98.6 Z" fill="url(#${sd})"/>
-<path d="M85 40 Q89 38.6 91 42 L113 89 Q114.4 93 110.4 93.6 L90.4 98.6 Z" fill="url(#${m})"/>
-<path d="M88.4 40.6 L111.4 89.6" stroke="#fff" stroke-width=".9" opacity=".22" stroke-linecap="round"/>
-<path d="M15 40 Q12.4 40 12.2 42.6 L10 95 Q9.8 98.6 13.4 98.6 L87 98.6 Q90.6 98.6 90.4 95 L88.2 42.6 Q88 40 85.4 40 Z" fill="url(#${fa})"/>
-<path d="M15 40 Q12.4 40 12.2 42.6 L10 95 Q9.8 98.6 13.4 98.6 L87 98.6 Q90.6 98.6 90.4 95 L88.2 42.6 Q88 40 85.4 40 Z" fill="url(#${m})"/>
-<path d="M15.4 40 H85.4 Q87.6 40 88.4 39.6 Q86 37.6 82.6 37.6 H17 Q13.6 37.6 12.6 40.6 Q13.6 40 15.4 40 Z" fill="url(#${tp})"/>
-<rect x="15.2" y="44" width="70" height="49.6" rx="3.6" fill="#0b0c0e"/>
-<rect x="19.4" y="47.8" width="61.6" height="42" rx="1" fill="${lit ? `url(#${sc})` : "#141518"}"/>
-<circle cx="18.6" cy="46" r=".6" fill="#2a2c30"/><circle cx="82.4" cy="46" r=".6" fill="#2a2c30"/>
-<g ${NT_FONT} text-anchor="middle">
-${big ? `<text x="50" y="76" font-size="${ntFit(big, 52, 22).toFixed(2)}" font-weight="300" fill="#ffffff" opacity="${lit ? 1 : .22}">${big}</text>` : `<text x="50" y="66" font-size="${ntFit(title, 52, 7.4).toFixed(2)}" font-weight="500" fill="#ffffff">${title}</text>
+<path d="M80 40.4 Q84 38.6 86.4 42 L113 89 Q114.4 93 110.4 93.6 L90.4 98.6 Z" fill="url(#${sd})"/>
+<path d="M80 40.4 Q84 38.6 86.4 42 L113 89 Q114.4 93 110.4 93.6 L90.4 98.6 Z" fill="url(#${m})"/>
+<path d="M84 40.6 L111.4 89.6" stroke="#fff" stroke-width=".9" opacity=".22" stroke-linecap="round"/>
+<polygon points="${quad(0, 0, 1, 1)}" fill="url(#${fa})" stroke="url(#${fa})" stroke-width="3" stroke-linejoin="round"/>
+<polygon points="${quad(0, 0, 1, 1)}" fill="url(#${m})"/>
+<path d="M18 40 Q19 37.4 22 37.4 H78 Q81 37.4 82 40 Z" fill="url(#${tp})"/>
+<polygon points="${quad(.06, .08, .94, .93)}" fill="#0b0c0e" stroke="#0b0c0e" stroke-width="2.6" stroke-linejoin="round"/>
+<polygon points="${quad(.11, .15, .89, .86)}" fill="${lit ? `url(#${sc})` : "#141518"}"/>
+<g ${NT_FONT} text-anchor="middle" transform="translate(50 69) scale(1 .9) translate(-50 -69)">
+${big ? `<text x="50" y="76" font-size="${ntFit(big, 50, 22).toFixed(2)}" font-weight="300" fill="#ffffff" opacity="${lit ? 1 : .22}">${big}</text>` : `<text x="50" y="66" font-size="${ntFit(title, 50, 7.4).toFixed(2)}" font-weight="500" fill="#ffffff">${title}</text>
 <text x="50" y="74" font-size="4" fill="#ffffff" opacity=".8">${artist}</text>
 <rect x="32" y="80" width="36" height="1.2" rx=".6" fill="#ffffff" opacity=".3"/><rect x="32" y="80" width="${c.st === "playing" ? 22 : 14}" height="1.2" rx=".6" fill="#ffffff"/>`}
 </g>
