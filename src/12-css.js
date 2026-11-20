@@ -2000,6 +2000,9 @@ const ILLUSTRATION_CSS = {
         .dif-halo{opacity:0}
         .dif-lit .dif-halo{opacity:1;animation:dif-breathe 3s ease-in-out infinite}
         .dif-band{fill:#f4f4f2}
+        .dif-rocker{fill:#6d3030}
+        .dif-m-mist .dif-rocker,.dif-m-low .dif-rocker,.dif-m-inter .dif-rocker,.dif-m-empty .dif-rocker{fill:#e53935}
+        .dif-m-empty .dif-liquid{opacity:0}
         .dif-lit .dif-band{fill:var(--dif-lc)}
         .dif-glass{fill:var(--dif-lc);opacity:0}
         .dif-lit .dif-glass{opacity:.85}

@@ -916,8 +916,8 @@ function batteryReadOf(hass, cfg, st) {
 // humidifier entity; its light from a light entity, coloured; an empty tank
 // from a sensor.
 const DIFFUSER_ONLY_FIELDS = ["diffuser_layout", "tank_empty_entity"];
-const DIFFUSER_LAYOUTS = ["drop", "cone", "stone", "flame", "nebulizer"];
-const DIFFUSER_NAME_RE = /diffus(er|eur|or|ore)|aroma.?(diffus|therap)|airversa|mod100|(^|[._\s])spray(\s|$)|^(?!.*(coffee|cafe|espresso|kaffee|barista|jura|delonghi)).*((^|[._\s])(aroma|scent)([._\s]|$))|duftspender|essential.?oil|huiles?.?essentielles?|doftspridare|duftspreder/;
+const DIFFUSER_LAYOUTS = ["drop", "cone", "stone", "flame", "nebulizer", "plugin"];
+const DIFFUSER_NAME_RE = /diffus(er|eur|or|ore)|mosquit|moustique|muskiet|zanzar|mucken|mygg|komar|repell|relec|autan|aroma.?(diffus|therap)|airversa|mod100|(^|[._\s])spray(\s|$)|^(?!.*(coffee|cafe|espresso|kaffee|barista|jura|delonghi)).*((^|[._\s])(aroma|scent)([._\s]|$))|duftspender|essential.?oil|huiles?.?essentielles?|doftspridare|duftspreder/;
 const DIFFUSER_LABELS = { mist: "dif_mist", low: "dif_low", inter: "dif_inter", empty: "dif_empty", off: "ac_off", unav: "ev_offline" };
 const DIFFUSER_COLORS = { mist: "#26a69a", low: "#26a69a", inter: "#26a69a", empty: "#f44336", off: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)" };
 // Meross's eco mode mists less, it does not pause (#53): a lower mist and a
@@ -959,6 +959,7 @@ function diffuserLayoutOf(cfg, st) {
   if (DIFFUSER_LAYOUTS.includes(cfg.diffuser_layout)) return cfg.diffuser_layout;
   const a = (st && st.attributes) || {};
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""} ${a[DEVICE_ATTR] || ""}`).toLowerCase();
+  if (/mosquit|moustique|muskiet|zanzar|mucken|mygg|komar|repell|relec|autan|plug.?in/.test(hay)) return "plugin";
   if (/nebuli|waterless|sans.?eau/.test(hay)) return "nebulizer";
   if (/flame|flamme|flamm|llama|fiamma/.test(hay)) return "flame";
   if (/stone|galet|pebble|vitruvi|govee/.test(hay)) return "stone";

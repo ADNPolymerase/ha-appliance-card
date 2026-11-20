@@ -11574,6 +11574,9 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('diffuseur : forme choisie', machineCls(dif('on', { diffuser_layout: 'flame' })).includes('dif-l-flame'), true);
   check('diffuseur : par son nom', machineCls(render({ state_entity: 'switch.aroma_diffuser' }, { 'switch.aroma_diffuser': s('on') })).includes('dif'), true);
   check('diffuseur : nebuliseur par son nom', machineCls(render({ state_entity: 'switch.nebulizer_diffuser' }, { 'switch.nebulizer_diffuser': s('on') })).includes('dif-l-nebulizer'), true);
+  check('diffuseur : prise anti-moustiques choisie', machineCls(dif('on', { diffuser_layout: 'plugin' })).includes('dif-l-plugin'), true);
+  check('diffuseur : prise anti-moustiques par son nom', machineCls(render({ state_entity: 'switch.mosquito_plug' }, { 'switch.mosquito_plug': s('on') })).includes('dif-l-plugin'), true);
+  check('diffuseur : prise anti-moustiques, recharge vide', /dif-m-empty/.test(machineCls(dif('on', { diffuser_layout: 'plugin', tank_empty_entity: 'binary_sensor.t' }, { 'binary_sensor.t': s('on') }))), true);
   check('diffuseur : le bouton de brume', /data-entity="select.dif_spray"[^>]*data-option="on"/.test(dif('eco')), true);
   check('diffuseur : le bouton marche', /data-entity="fan.dif"/.test(fan(100)), true);
   check('cafe : arome n\'est pas un diffuseur', machineCls(render({ state_entity: 'select.coffee_aroma' }, { 'select.coffee_aroma': s('strong') })).includes('dif'), false);
