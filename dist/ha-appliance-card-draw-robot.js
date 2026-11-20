@@ -2078,33 +2078,32 @@ ${c.muted ? spkMute(84, 30) : ""}`;
 // screen leaning back, the time on it, or what is playing.
 function ntSpkClock(c) {
   const p = spkPal("clock", c.color);
-  const fa = ntId(), sd = ntId(), m = ntId(), sc = ntId(), tp = ntId();
+  const fa = ntId(), sd = ntId(), m = ntId(), sc = ntId();
   const lit = c.st !== "off";
   const title = esc(String(c.title || "").slice(0, 16));
   const artist = esc(String(c.artist || "").slice(0, 20));
   const big = c.st === "playing" || c.st === "paused" ? "" : esc(c.clock || "");
-  // Its face leans well back, so seen from the front it narrows towards the
-  // top and the screen with it; its side is a long triangle, from the rounded
-  // ridge down the sloping back to the foot behind.
-  const Q = (u, v) => { const x0 = 18 + (10 - 18) * v, x1 = 82 + (90 - 82) * v; return `${+(x0 + (x1 - x0) * u).toFixed(2)} ${+(40 + 58 * v).toFixed(2)}`; };
-  const quad = (u0, v0, u1, v1) => `${Q(u0, v0)} ${Q(u1, v0)} ${Q(u1, v1)} ${Q(u0, v1)}`;
-  return `<defs>${ntV(fa, p[3], p[1])}<linearGradient id="${sd}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${p[1]}"/><stop offset="1" stop-color="${p[2]}"/></linearGradient>${ntV(tp, p[3], p[0])}${spkMesh(m, .05)}<linearGradient id="${sc}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b98a9f"/><stop offset=".55" stop-color="#7f6a98"/><stop offset="1" stop-color="#5e5486"/></linearGradient></defs>
-${spkNotes(100, 14)}
-${ntFoot("9 99 91 99 114 93 102 90", .3)}
-<path d="M80 40.4 Q84 38.6 86.4 42 L113 89 Q114.4 93 110.4 93.6 L90.4 98.6 Z" fill="url(#${sd})"/>
-<path d="M80 40.4 Q84 38.6 86.4 42 L113 89 Q114.4 93 110.4 93.6 L90.4 98.6 Z" fill="url(#${m})"/>
-<path d="M84 40.6 L111.4 89.6" stroke="#fff" stroke-width=".9" opacity=".22" stroke-linecap="round"/>
-<polygon points="${quad(0, 0, 1, 1)}" fill="url(#${fa})" stroke="url(#${fa})" stroke-width="3" stroke-linejoin="round"/>
-<polygon points="${quad(0, 0, 1, 1)}" fill="url(#${m})"/>
-<path d="M18 40 Q19 37.4 22 37.4 H78 Q81 37.4 82 40 Z" fill="url(#${tp})"/>
-<polygon points="${quad(.06, .08, .94, .93)}" fill="#0b0c0e" stroke="#0b0c0e" stroke-width="2.6" stroke-linejoin="round"/>
-<polygon points="${quad(.11, .15, .89, .86)}" fill="${lit ? `url(#${sc})` : "#141518"}"/>
-<g ${NT_FONT} text-anchor="middle" transform="translate(50 69) scale(1 .9) translate(-50 -69)">
-${big ? `<text x="50" y="76" font-size="${ntFit(big, 50, 22).toFixed(2)}" font-weight="300" fill="#ffffff" opacity="${lit ? 1 : .22}">${big}</text>` : `<text x="50" y="66" font-size="${ntFit(title, 50, 7.4).toFixed(2)}" font-weight="500" fill="#ffffff">${title}</text>
-<text x="50" y="74" font-size="4" fill="#ffffff" opacity=".8">${artist}</text>
-<rect x="32" y="80" width="36" height="1.2" rx=".6" fill="#ffffff" opacity=".3"/><rect x="32" y="80" width="${c.st === "playing" ? 22 : 14}" height="1.2" rx=".6" fill="#ffffff"/>`}
+  // Traced from its photo, seen from the front and a little from the right:
+  // the face leaning back, nearly all screen behind a black bezel; the side a
+  // short ridge on top, then the long sloping back down to the foot behind.
+  const round = (pts, fill, extra = "") => `<polygon points="${pts}" fill="${fill}" stroke="${fill}" stroke-width="3.4" stroke-linejoin="round"${extra}/>`;
+  return `<defs>${ntV(fa, p[3], p[1])}<linearGradient id="${sd}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${p[0]}"/><stop offset="1" stop-color="${p[2]}"/></linearGradient>${spkMesh(m, .05)}<linearGradient id="${sc}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b98a9f"/><stop offset=".55" stop-color="#7f6a98"/><stop offset="1" stop-color="#5e5486"/></linearGradient></defs>
+${spkNotes(100, 12)}
+${ntFoot("10 92 88 99 110 90 96 86", .32)}
+${round("87 27.6 93.2 28.4 107.6 84 106.8 87.4 87.6 96", `url(#${sd})`)}
+<polygon points="87 27.6 93.2 28.4 107.6 84 106.8 87.4 87.6 96" fill="url(#${m})"/>
+<path d="M93 29.6 L106.6 83" stroke="#fff" stroke-width=".8" opacity=".25" stroke-linecap="round"/>
+${round("16 29.4 87 27.4 87 95.6 10.4 89.6", `url(#${fa})`)}
+<polygon points="16 29.4 87 27.4 87 95.6 10.4 89.6" fill="url(#${m})"/>
+${round("17.6 31.4 84.6 29.4 83.4 89.4 12.6 85.6", "#0b0c0e")}
+<polygon points="21.6 39.8 81 38.2 80.4 85.8 17.6 82.8" fill="${lit ? `url(#${sc})` : "#141518"}"/>
+<g ${NT_FONT} text-anchor="middle" transform="rotate(-1.4 50 62) skewX(-2.6)">
+${big ? `<text x="52.6" y="70" font-size="${ntFit(big, 52, 22).toFixed(2)}" font-weight="300" fill="#ffffff" opacity="${lit ? 1 : .22}">${big}</text>` : `<text x="52.6" y="60" font-size="${ntFit(title, 52, 7.4).toFixed(2)}" font-weight="500" fill="#ffffff">${title}</text>
+<text x="52.6" y="68" font-size="4" fill="#ffffff" opacity=".8">${artist}</text>
+<rect x="34.6" y="74" width="36" height="1.2" rx=".6" fill="#ffffff" opacity=".3"/><rect x="34.6" y="74" width="${c.st === "playing" ? 22 : 14}" height="1.2" rx=".6" fill="#ffffff"/>`}
 </g>
-${c.st === "paused" ? spkPause(50, 56, "#ffffff") : ""}${c.muted ? spkMute(92, 20) : ""}`;
+<circle cx="21.4" cy="34.6" r=".6" fill="#2a2c30"/><circle cx="80.6" cy="33.2" r=".6" fill="#2a2c30"/>
+${c.st === "paused" ? spkPause(50, 50, "#ffffff") : ""}${c.muted ? spkMute(92, 18) : ""}`;
 }
 // A mesh of fabric, for the speakers dressed in it.
 const spkMesh = (id, op = .35) => `<pattern id="${id}" width="3" height="3" patternUnits="userSpaceOnUse"><path d="M0 3 L3 0 M-1 1 L1 -1 M2 4 L4 2" stroke="#000" stroke-width=".5" opacity="${op}"/></pattern>`;
