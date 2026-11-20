@@ -15301,6 +15301,13 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('garage : un garage qui est une porte reste une porte', /M11 59 H71/.test(D({ name: 'Garage (cote gazon)' }, { device_class: 'door' })), false);
   check('galandage : ouvert glisse dans le mur', /translate\(-46 0\)/.test(DS('pocket', 'on')), true);
   check('galandage : lu dans le nom', /translate\(-46 0\)/.test(D({ name: 'Baie a galandage' }, { device_class: 'door' }, 'on')), true);
+  const DV = (more, ents) => build({ appliance_type: 'detector', state_entity: 'binary_sensor.d', ...more }, { 'binary_sensor.d': { state: 'off', attributes: { device_class: 'door' } }, ...ents });
+  const vibOn = DV({ vibration_entity: 'binary_sensor.v' }, { 'binary_sensor.v': { state: 'on', attributes: {} } });
+  check('vibration sur porte : etat Vibration, le battant tremble', /class="nta-vib"/.test(vibOn.html) && /Vibration/.test(vibOn.html), true);
+  check('vibration sur fenetre fermee : elle reste fermee', /points="41 6 59 13/.test(DV({ window_style: 'double', vibration_entity: 'binary_sensor.v' }, { 'binary_sensor.v': { state: 'on', attributes: {} } }).html), false);
+  const gbOn = DV({ window_style: 'casement', glass_break_entity: 'binary_sensor.g' }, { 'binary_sensor.g': { state: 'on', attributes: {} } });
+  check('bris de vitre sur fenetre : la vitre se fend', /M36 46 L26 34/.test(gbOn.html), true);
+  check('bris de vitre au repos : pas de fissure, mais sa ligne', !/M36 46 L26 34/.test(DV({ glass_break_entity: 'binary_sensor.g' }, { 'binary_sensor.g': { state: 'off', attributes: {} } }).html), true);
   for (const ws of ['casement', 'double', 'sliding', 'small']) for (const fc of ['', 'white', 'anthracite']) for (const v of ['off', 'on']) {
     check(`fenetre ${ws} ${fc} ${v} : ni NaN ni undefined`, /NaN|undefined/.test(DW(ws, v, { frame_color: fc })), false);
   }

@@ -343,6 +343,8 @@ const SECTIONS = [
   { field: "plug_entity", types: ["fingerbot"], labelKey: "section_plug", includeDomains: ["switch", "input_boolean", "binary_sensor"] },
   { field: "charging_entity", types: ["fingerbot"], labelKey: "section_tab_charging", includeDomains: ["binary_sensor", "sensor", "switch", "input_boolean"] },
   { field: "tamper_entity", types: ["detector"], labelKey: "det_sec_tamper", includeDomains: ["binary_sensor", "sensor"] },
+  { field: "vibration_entity", types: ["detector"], labelKey: "layout_det_vibration", includeDomains: ["binary_sensor"] },
+  { field: "glass_break_entity", types: ["detector"], labelKey: "layout_det_glass", includeDomains: ["binary_sensor"] },
   { field: "test_entity", types: ["detector"], labelKey: "sec_test", includeDomains: ["button", "input_button", "script", "switch"] },
   // Optional readings on the older types.
   ...Object.entries(OPT_LINES).flatMap(([ty, list]) => list.flatMap((o) => [{ field: o.field, types: [ty], labelKey: o.label, includeDomains: o.domains }]

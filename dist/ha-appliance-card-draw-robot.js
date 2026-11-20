@@ -1457,7 +1457,7 @@ ${ntWaves(60, 66, "#e53935", 36)}</g>`;
 function ntDetDoor(c) {
   const wd = ntId(), fr = ntId(), bd = ntId(), dk = ntId();
   // A pulled-off sensor is an alarm, not an open door.
-  const open = c.tamper ? !!c.smoke : c.on;
+  const open = !!c.smoke;
   const gw = ntId(), ex = ntId(), sk = ntId(), al = ntId(), cl = ntId(), pk = ntId();
   const style = c.window ? "" : c.style || "";
   let mx = open ? 39 : 62;
@@ -1588,7 +1588,8 @@ ${ntV(ex, "#4d555d", "#2b3136")}${ntV(al, "#7d858d", "#5b636b")}<clipPath id="${
 <linearGradient id="${sk}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8eefa"/><stop offset=".58" stop-color="#b5dcf0"/><stop offset=".59" stop-color="#93c47f"/><stop offset="1" stop-color="#6a9f58"/></linearGradient>
 <linearGradient id="${dk}" x1="0" x2="1"><stop offset="0" stop-color="#1f252b"/><stop offset="1" stop-color="#3a434b"/></linearGradient>
 <linearGradient id="${gw}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d4ecf8"/><stop offset="1" stop-color="#8fc7e6"/></linearGradient></defs>
-${leaf}
+<g class="${c.vib ? "nta-vib" : ""}">${leaf}${c.cracked ? `<g stroke="#fff" stroke-width=".9" stroke-linecap="round" fill="none" opacity=".95"><path d="M36 46 L26 34 M36 46 L48 36 M36 46 L52 52 M36 46 L44 62 M36 46 L28 60 M36 46 L22 48"/><path d="M30 39 L34 37 M44 39 L46 43 M47 54 L44 57 M31 55 L27 53" stroke-width=".6"/></g><circle cx="36" cy="46" r="1.6" fill="#fff"/>` : ""}</g>
+${c.vib ? [0, 1, 2].map((i) => `<path class="nta-beacon ntd${i + 1}" d="M${6 - i * 3} ${44 - i * 3} q-${2 + i} ${8 + i * 3} 0 ${16 + i * 6}" fill="none" stroke="#ef6c00" stroke-width="1.6" stroke-linecap="round"/>`).join("") : ""}
 <rect x="72" y="${stripY}" width="18" height="${stripH}" fill="url(#${fr})" stroke="${anth ? "#22282d" : c.frame || c.window ? "#c5ccd2" : "#cfc6b6"}" stroke-width=".6"/>
 <g${c.tamper ? ` transform="rotate(-24 81 26)"` : ""}${mx > 120 ? ` clip-path="url(#${cl})"` : ""}>${{
     // Sonoff SNZB-04P: a tall body, its light at the top, a pairing slot.

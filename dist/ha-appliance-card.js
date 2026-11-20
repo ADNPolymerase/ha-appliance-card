@@ -5954,7 +5954,7 @@ const NT_ONLY_FIELDS = {
   mobility: ["mobility_layout"],
   irrigation: ["irrigation_layout", "zone_entity", "rain_delay_entity", "soil_moisture_entity", "next_run_entity", "tap_model", "tap_wall", "watering_duration_entity"],
   litter_box: ["litter_layout", "waste_drawer_entity", "litter_level_entity", "pet_weight_entity", "visits_entity", "cat_present_entity", "last_use_entity"],
-  detector: ["detector_layout", "detector_model", "door_style", "window_style", "frame_color", "co_level_entity", "co_entity", "tamper_entity"],
+  detector: ["detector_layout", "detector_model", "door_style", "window_style", "frame_color", "vibration_entity", "glass_break_entity", "co_level_entity", "co_entity", "tamper_entity"],
   valve: ["valve_layout", "valve_fluid", "valve_handle_color", "leak_entity"],
   drying_rack: ["rack_layout", "rack_color"],
   food_processor: ["food_layout"],
@@ -6955,10 +6955,17 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const ts = cfg.tamper_entity ? stateObj(hass, cfg.tamper_entity) : null;
     const tamper = !!ts && NT_ON.includes(String(ts.state).trim().toLowerCase());
     if (ts) lines.push({ key: "det_tamper", icon: tamper ? "mdi:shield-alert" : "mdi:shield-check", label: t(hass, "det_sec_tamper"), value: t(hass, tamper ? "det_line_detected" : "det_line_clear"), entity: cfg.tamper_entity, caution: tamper });
-    const draw = { kind, window: win, style: layout === "door" ? doorStyleOf(cfg) : "", wstyle: win ? windowStyleOf(cfg) : "", frame: layout === "door" ? frameColorOf(cfg, win ? "" : doorStyleOf(cfg)) : "", model: detectorModelOf(cfg, st, layout), on: alarm || detCo || tamper, smoke: alarm, co: detCo, low, tamper, lcd: cv !== null ? `${Math.round(cv)} ppm` : alarm ? "ALARM" : "OK" };
+    // A door or window contact may come with a vibration sensor and a glass
+    // break sensor (HACF #176): a line each; the leaf trembles, the glass cracks.
+    const onOf = (e) => { const x = e ? stateObj(hass, e) : null; return x ? NT_ON.includes(String(x.state).trim().toLowerCase()) : null; };
+    const vib = layout === "door" ? onOf(cfg.vibration_entity) : null, gb = layout === "door" ? onOf(cfg.glass_break_entity) : null;
+    if (vib !== null) lines.push({ key: "det_vib", icon: "mdi:vibrate", label: t(hass, "layout_det_vibration"), value: t(hass, vib ? "det_line_detected" : "det_line_clear"), entity: cfg.vibration_entity, caution: vib });
+    if (gb !== null) lines.push({ key: "det_gb", icon: gb ? "mdi:image-broken-variant" : "mdi:window-closed-variant", label: t(hass, "layout_det_glass"), value: t(hass, gb ? "det_line_detected" : "det_line_clear"), entity: cfg.glass_break_entity, caution: gb });
+    const draw = { kind, window: win, style: layout === "door" ? doorStyleOf(cfg) : "", wstyle: win ? windowStyleOf(cfg) : "", frame: layout === "door" ? frameColorOf(cfg, win ? "" : doorStyleOf(cfg)) : "", model: detectorModelOf(cfg, st, layout), vib: !!vib, cracked: !!gb, on: alarm || detCo || tamper || !!vib || !!gb, smoke: alarm, co: detCo, low, tamper, lcd: cv !== null ? `${Math.round(cv)} ppm` : alarm ? "ALARM" : "OK" };
     if (detCo) return out("alarm", alarm ? "det_smoke_co" : "det_co", NT_COLORS.alarm, draw);
     if (tamper) return out("alarm", "det_tampered", NT_COLORS.alarm, draw);
-    if (layout === "door") return alarm ? out("on", "det_open", "#ef6c00", draw) : out("ok", "det_closed", NT_COLORS.lit, draw);
+    if (gb) return out("alarm", "det_glass_break", NT_COLORS.alarm, draw);
+    if (layout === "door") return alarm ? out("on", "det_open", "#ef6c00", draw) : vib ? out("on", "det_vibrating", "#ef6c00", draw) : out("ok", "det_closed", NT_COLORS.lit, draw);
     if (layout === "vibration") return alarm ? out("on", "det_vibrating", "#ef6c00", draw) : out("ok", "det_still", NT_COLORS.lit, draw);
     if (alarm) return out("alarm", { smoke: "det_smoke", co: "det_co", leak: "det_leak", glass: "det_glass_break" }[layout], NT_COLORS.alarm, draw);
     return out("ok", "det_ok", NT_COLORS.lit, draw);
