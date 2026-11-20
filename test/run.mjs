@@ -2719,7 +2719,7 @@ for (const [id, want, icon] of [
   check('editeur : les capteurs restent proposes', domainsOf('heat_pump').includes('sensor'), true);
   // The climate, humidifier, select and plug the newer types are read from.
   for (const [type, dom] of [['pellet_stove', 'climate'], ['air_conditioner', 'climate'], ['air_conditioner', 'select'], ['air_conditioner', 'switch'],
-    ['dehumidifier', 'humidifier'], ['dehumidifier', 'switch'], ['space_heater', 'climate'], ['space_heater', 'switch'],
+    ['dehumidifier', 'humidifier'], ['dehumidifier', 'climate'], ['dehumidifier', 'switch'], ['space_heater', 'climate'], ['space_heater', 'switch'],
     ['towel_warmer', 'climate'], ['towel_warmer', 'select'], ['towel_warmer', 'switch'], ['iron', 'switch'], ['air_fryer', 'switch']])
     check(`editeur : ${type} propose ${dom} dans la liste`, domainsOf(type).includes(dom), true);
   check('editeur : un lave-linge ne propose pas humidifier', domainsOf('washer').includes('humidifier'), false);
@@ -6936,6 +6936,21 @@ check('deshum : eteint, pas de mode', line3(dhum('off', { mode: 'continuous' }),
 check('deshum : un hygrometre a part', miniScreen(dhum('on', { current_humidity: undefined }, { 'sensor.cave_h': { state: '71.4', attributes: { unit_of_measurement: '%' } } },
   { current_humidity_entity: 'sensor.cave_h' }), 'dh-lcd'), '71%');
 check('deshum : la ventilation', line3(dhum('on', {}, { 'select.cave_fan': { state: 'High', attributes: {} } }, { fan_speed_entity: 'select.cave_fan' }), 'Fan'), 'High');
+// A climate entity, as ESPHome's midea_dehum makes it: off or dry, hvac_action, preset_mode.
+const dhc = (state, attrs = {}, extra = {}, cfg = {}) => render({ appliance_type: 'dehumidifier', state_entity: 'climate.cave', ...cfg },
+  { 'climate.cave': { state, attributes: { hvac_modes: ['off', 'dry'], current_humidity: 68, humidity: 55, ...attrs } }, ...extra });
+check('deshum climate : eteint', modeOf(dhc('off', { hvac_action: 'off' })), 'off');
+check('deshum climate : il seche', modeOf(dhc('dry', { hvac_action: 'drying' })), 'drying');
+check('deshum climate : sans action, il seche', modeOf(dhc('dry')), 'drying');
+check('deshum climate : humidite atteinte', modeOf(dhc('dry', { hvac_action: 'idle' })), 'idle');
+check('deshum climate : indisponible, eteint', modeOf(dhc('unavailable')), 'off');
+check('deshum climate : le linge', modeOf(dhc('dry', { hvac_action: 'drying', preset_mode: 'ClothesDrying' })), 'laundry');
+check('deshum climate : la ligne du mode', line3(dhc('dry', { preset_mode: 'Smart' }), 'Mode'), 'Smart');
+check('deshum climate : l\'humidite et la cible', line3(dhc('dry'), 'Humidity'), '68 % → 55 %');
+check('deshum climate : l\'ecran', miniScreen(dhc('dry'), 'dh-lcd'), '68%');
+check('deshum climate : plein', modeOf(dhc('dry', {}, dhTank('on'), { tank_entity: 'binary_sensor.cave_tank' })), 'full');
+check('deshum climate : la prise ne decide plus', modeOf(dhc('dry', { hvac_action: 'idle' }, { 'sensor.p_w': { state: '0', attributes: { unit_of_measurement: 'W' } } },
+  { power_entity: 'sensor.p_w' })), 'idle');
 // A plug.
 check('deshum sur prise : il seche', modeOf(plug3('dehumidifier', 250)), 'drying');
 check('deshum sur prise : allume au repos', modeOf(plug3('dehumidifier', 2)), 'idle');
@@ -7020,6 +7035,8 @@ const typeOf = (id, attrs = {}, state = 'on') => {
 };
 check('detection : un humidificateur de classe deshumidificateur', typeOf('humidifier.153931628871137_humidifier', { device_class: 'dehumidifier' }), 'dehumidifier');
 check('detection : un humidificateur, non', typeOf('humidifier.chambre', { device_class: 'humidifier' }), 'other');
+check('detection : un climate nomme deshumidificateur', typeOf('climate.loft_dehumidifier_dehumidifier', { hvac_modes: ['off', 'dry'] }, 'dry'), 'dehumidifier');
+check('detection : une clim qui seche reste une clim', typeOf('climate.salon_ac', { hvac_modes: ['off', 'cool', 'dry', 'fan_only'] }, 'dry'), 'other');
 for (const id of ['switch.deshumidificateur', 'switch.dehumidifier_cave', 'switch.luftentfeuchter', 'switch.deumidificatore'])
   check(`detection : ${id}`, typeOf(id), 'dehumidifier');
 for (const id of ['switch.radiateur_soufflant', 'climate.space_heater', 'switch.stufetta_bagno', 'switch.stufa_elettrica', 'switch.bain_d_huile', 'switch.heizlufter', 'switch.scaldino'])

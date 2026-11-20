@@ -394,12 +394,14 @@ const FT_COLORS = {
 const FT_LABELS = { off: "ft_off", flowing: "ft_flowing", filter: "ft_filter_due", pump: "ft_pump_due", low: "ft_low_water", offline: "ev_offline" };
 // A dehumidifier from its humidifier entity: switched on or off in its state,
 // and in its action whether it is drying or has reached the humidity asked.
-function dehumidifierModeOf(st) {
+// ESPHome's midea_dehum makes it a climate entity instead: off or dry in its
+// state, and the same in hvac_action.
+function dehumidifierModeOf(st, climate = false) {
   if (!st) return "";
   const state = String(st.state).toLowerCase();
   if (state === "off") return "off";
-  if (state !== "on") return "";
-  const action = String((st.attributes || {}).action || "").toLowerCase();
+  if (climate ? HA_OFFLINE_STATES.includes(state) : state !== "on") return "";
+  const action = String((st.attributes || {})[climate ? "hvac_action" : "action"] || "").toLowerCase();
   if (action === "idle" || action === "off") return "idle";
   return "drying";
 }
