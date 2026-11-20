@@ -2088,18 +2088,26 @@ function ntSpkClock(c) {
   // a big triangle, from the ridge on top down the sloping back to the foot.
   const round = (pts, fill, sw) => `<polygon points="${pts}" fill="${fill}" stroke="${fill}" stroke-width="${sw}" stroke-linejoin="round"/>`;
   const face = "20.4 32.2 100.7 26 90.1 98.1 6.3 90.7", side = "100.7 26 113.5 82.9 110.8 90 90.1 98.1";
+  // The screen is a rectangle seen at an angle: a trapezoid, its right edge
+  // taller. Each line of text takes the shape the screen has at its height.
+  const at = (v) => {
+    const lx = 26.1 - 12.2 * v, ly = 38.8 + 44.3 * v, rx = 93.5 - 8.6 * v, ry = 35.5 + 51.2 * v;
+    const n3 = (x) => +x.toFixed(3);
+    return `matrix(${n3((rx - lx) / 60)} ${n3((ry - ly) / 60)} -.217 .995 ${n3(lx)} ${n3(ly)})`;
+  };
+  const line = (v, txt, size, extra = "") => `<text x="30" y="0" transform="${at(v)}" font-size="${size}" ${extra}>${txt}</text>`;
   return `<defs><linearGradient id="${fa}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${p[3]}"/><stop offset="1" stop-color="${p[1]}"/></linearGradient><linearGradient id="${sd}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${p[0]}"/><stop offset=".55" stop-color="${p[3]}"/><stop offset="1" stop-color="${p[1]}"/></linearGradient>${spkMesh(m, .03)}<linearGradient id="${sc}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a77f96"/><stop offset=".5" stop-color="#8a6e98"/><stop offset="1" stop-color="#6a5a8e"/></linearGradient></defs>
 ${spkNotes(104, 8)}
 ${ntFoot("6 92 90 100 113 90 100 84", .3)}
 ${round(side, `url(#${sd})`, 9)}<polygon points="${side}" fill="url(#${m})"/>
 ${round(face, `url(#${fa})`, 9)}<polygon points="${face}" fill="url(#${m})"/>
 ${round("23.5 33.5 98.7 28.8 88.2 93.4 7.9 88.4", "#0b0c0e", 6)}
-<polygon points="28.8 39.3 88.1 35.7 79.5 88.1 14.3 86.8" fill="${lit ? `url(#${sc})` : "#141518"}" stroke="${lit ? "#8a6e98" : "#141518"}" stroke-width="1.4" stroke-linejoin="round"/>
-<g ${NT_FONT} text-anchor="middle" transform="translate(51.6 62.5) rotate(-3.4) translate(-30 -24)">
-${big ? `<text x="30" y="15" font-size="3.8" fill="#ffffff" opacity="${lit ? .85 : .2}">${esc(String(c.day || "").slice(0, 26))}</text>
-<text x="30" y="37" font-size="${ntFit(big, 56, 26).toFixed(2)}" font-weight="200" letter-spacing="-.4" fill="#ffffff" opacity="${lit ? 1 : .22}">${big}</text>` : `<text x="30" y="20" font-size="${ntFit(title, 50, 6.6).toFixed(2)}" font-weight="500" fill="#ffffff">${title}</text>
-<text x="30" y="27" font-size="3.8" fill="#ffffff" opacity=".8">${artist}</text>
-<rect x="12" y="33" width="36" height="1.2" rx=".6" fill="#ffffff" opacity=".3"/><rect x="12" y="33" width="${c.st === "playing" ? 22 : 14}" height="1.2" rx=".6" fill="#ffffff"/>`}
+<polygon points="26.1 38.8 93.5 35.5 84.9 86.7 13.9 83.1" fill="${lit ? `url(#${sc})` : "#141518"}" stroke="${lit ? "#8a6e98" : "#141518"}" stroke-width="1.4" stroke-linejoin="round"/>
+<g ${NT_FONT} text-anchor="middle" fill="#ffffff">
+${big ? `${line(.24, esc(String(c.day || "").slice(0, 26)), 3.6, `opacity="${lit ? .85 : .2}"`)}
+${line(.68, big, ntFit(big, 54, 24).toFixed(2), `font-weight="200" opacity="${lit ? 1 : .22}"`)}` : `${line(.45, title, ntFit(title, 50, 6.6).toFixed(2), 'font-weight="500"')}
+${line(.6, artist, 3.8, 'opacity=".8"')}
+<g transform="${at(.74)}"><rect x="12" y="-1" width="36" height="1.2" rx=".6" opacity=".3"/><rect x="12" y="-1" width="${c.st === "playing" ? 22 : 14}" height="1.2" rx=".6"/></g>`}
 </g>
 <circle cx="27" cy="36.4" r=".6" fill="#2a2c30"/><circle cx="93.6" cy="32.2" r=".6" fill="#2a2c30"/>
 ${c.st === "paused" ? spkPause(52, 50, "#ffffff") : ""}${c.muted ? spkMute(96, 14) : ""}`;
