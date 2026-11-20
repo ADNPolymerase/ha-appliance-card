@@ -2439,7 +2439,7 @@ const SPK_PALETTES = {
   wave: { black: ["#5e636a", "#3a3e44", "#1f2226", "#4a4f55", "#15171a"], silver: ["#eef0f2", "#c9cdd1", "#959ca3", "#dfe2e5", "#6f767d"] },
   focal: { white: ["#ffffff", "#eef0f1", "#cfd4d8", "#f7f8f9", "#aab1b7"], black: ["#4a4f55", "#2a2d31", "#141619", "#3a3e43", "#0c0d0f"] },
   wiim: { black: ["#5f6469", "#45494e", "#2c2f33", "#6e7379", "#1b1d20"], silver: ["#e3e5e7", "#c3c7cb", "#8f959b", "#eef0f1", "#6d7379"] },
-  clock: { silver: ["#c9c9c7", "#a9a9a7", "#7d7d7b", "#d7d7d5", "#5d5d5b"], blue: ["#5f7590", "#465b75", "#2e3e52", "#6d83a0", "#1f2b3a"] },
+  clock: { silver: ["#b8b8b6", "#a3a3a1", "#7f7f7d", "#c6c6c4", "#5d5d5b"], blue: ["#5f7590", "#465b75", "#2e3e52", "#6d83a0", "#1f2b3a"] },
   denon: { black: ["#3a3f45", "#202327", "#0f1113", "#2a2e33", "#4d545b"], silver: ["#e9ebed", "#c7ccd0", "#959ca3", "#dadde0", "#7b8288"] },
   flex: { black: ["#4b4f55", "#2b2e32", "#151719", "#36393e", "#0f1012"], white: ["#f6f4ee", "#dedbd2", "#b5b1a6", "#ebe8e0", "#8f8b80"],
     blue: ["#8fb1d1", "#4a72a0", "#2b4b71", "#5a82ae", "#1e3550"] },
@@ -2835,27 +2835,25 @@ function ntSpkClock(c) {
   const title = esc(String(c.title || "").slice(0, 16));
   const artist = esc(String(c.artist || "").slice(0, 20));
   const big = c.st === "playing" || c.st === "paused" ? "" : esc(c.clock || "");
-  // Traced from its photo, seen from the front and a little from the right:
-  // the face leaning back, nearly all screen behind a black bezel; the side a
-  // short ridge on top, then the long sloping back down to the foot behind.
-  const round = (pts, fill, extra = "") => `<polygon points="${pts}" fill="${fill}" stroke="${fill}" stroke-width="3.4" stroke-linejoin="round"${extra}/>`;
-  return `<defs>${ntV(fa, p[3], p[1])}<linearGradient id="${sd}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${p[0]}"/><stop offset="1" stop-color="${p[2]}"/></linearGradient>${spkMesh(m, .05)}<linearGradient id="${sc}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b98a9f"/><stop offset=".55" stop-color="#7f6a98"/><stop offset="1" stop-color="#5e5486"/></linearGradient></defs>
-${spkNotes(100, 12)}
-${ntFoot("10 92 88 99 110 90 96 86", .32)}
-${round("87 27.6 93.2 28.4 107.6 84 106.8 87.4 87.6 96", `url(#${sd})`)}
-<polygon points="87 27.6 93.2 28.4 107.6 84 106.8 87.4 87.6 96" fill="url(#${m})"/>
-<path d="M93 29.6 L106.6 83" stroke="#fff" stroke-width=".8" opacity=".25" stroke-linecap="round"/>
-${round("16 29.4 87 27.4 87 95.6 10.4 89.6", `url(#${fa})`)}
-<polygon points="16 29.4 87 27.4 87 95.6 10.4 89.6" fill="url(#${m})"/>
-${round("17.6 31.4 84.6 29.4 83.4 89.4 12.6 85.6", "#0b0c0e")}
-<polygon points="21.6 39.8 81 38.2 80.4 85.8 17.6 82.8" fill="${lit ? `url(#${sc})` : "#141518"}"/>
-<g ${NT_FONT} text-anchor="middle" transform="rotate(-1.4 50 62) skewX(-2.6)">
-${big ? `<text x="52.6" y="70" font-size="${ntFit(big, 52, 22).toFixed(2)}" font-weight="300" fill="#ffffff" opacity="${lit ? 1 : .22}">${big}</text>` : `<text x="52.6" y="60" font-size="${ntFit(title, 52, 7.4).toFixed(2)}" font-weight="500" fill="#ffffff">${title}</text>
-<text x="52.6" y="68" font-size="4" fill="#ffffff" opacity=".8">${artist}</text>
-<rect x="34.6" y="74" width="36" height="1.2" rx=".6" fill="#ffffff" opacity=".3"/><rect x="34.6" y="74" width="${c.st === "playing" ? 22 : 14}" height="1.2" rx=".6" fill="#ffffff"/>`}
+  // Traced from its product photo: seen from the right, the face leans back
+  // and turns away, nearly all of it screen behind a black bezel; the side is
+  // a big triangle, from the ridge on top down the sloping back to the foot.
+  const round = (pts, fill, sw) => `<polygon points="${pts}" fill="${fill}" stroke="${fill}" stroke-width="${sw}" stroke-linejoin="round"/>`;
+  const face = "20.4 32.2 100.7 26 90.1 98.1 6.3 90.7", side = "100.7 26 113.5 82.9 110.8 90 90.1 98.1";
+  return `<defs><linearGradient id="${fa}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${p[3]}"/><stop offset="1" stop-color="${p[1]}"/></linearGradient><linearGradient id="${sd}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${p[0]}"/><stop offset=".55" stop-color="${p[3]}"/><stop offset="1" stop-color="${p[1]}"/></linearGradient>${spkMesh(m, .03)}<linearGradient id="${sc}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a77f96"/><stop offset=".5" stop-color="#8a6e98"/><stop offset="1" stop-color="#6a5a8e"/></linearGradient></defs>
+${spkNotes(104, 8)}
+${ntFoot("6 92 90 100 113 90 100 84", .3)}
+${round(side, `url(#${sd})`, 9)}<polygon points="${side}" fill="url(#${m})"/>
+${round(face, `url(#${fa})`, 9)}<polygon points="${face}" fill="url(#${m})"/>
+${round("23.5 33.5 98.7 28.8 88.2 93.4 7.9 88.4", "#0b0c0e", 6)}
+<polygon points="28.8 39.3 88.1 35.7 79.5 88.1 14.3 86.8" fill="${lit ? `url(#${sc})` : "#141518"}" stroke="${lit ? "#8a6e98" : "#141518"}" stroke-width="1.4" stroke-linejoin="round"/>
+<g ${NT_FONT} text-anchor="middle" transform="translate(52 62) rotate(-3.4) skewX(-12) translate(-52 -62)">
+${big ? `<text x="52" y="70" font-size="${ntFit(big, 50, 22).toFixed(2)}" font-weight="300" fill="#ffffff" opacity="${lit ? 1 : .22}">${big}</text>` : `<text x="52" y="60" font-size="${ntFit(title, 48, 7.4).toFixed(2)}" font-weight="500" fill="#ffffff">${title}</text>
+<text x="52" y="68" font-size="4" fill="#ffffff" opacity=".8">${artist}</text>
+<rect x="34" y="74" width="36" height="1.2" rx=".6" fill="#ffffff" opacity=".3"/><rect x="34" y="74" width="${c.st === "playing" ? 22 : 14}" height="1.2" rx=".6" fill="#ffffff"/>`}
 </g>
-<circle cx="21.4" cy="34.6" r=".6" fill="#2a2c30"/><circle cx="80.6" cy="33.2" r=".6" fill="#2a2c30"/>
-${c.st === "paused" ? spkPause(50, 50, "#ffffff") : ""}${c.muted ? spkMute(92, 18) : ""}`;
+<circle cx="27" cy="36.4" r=".6" fill="#2a2c30"/><circle cx="93.6" cy="32.2" r=".6" fill="#2a2c30"/>
+${c.st === "paused" ? spkPause(52, 50, "#ffffff") : ""}${c.muted ? spkMute(96, 14) : ""}`;
 }
 // A mesh of fabric, for the speakers dressed in it.
 const spkMesh = (id, op = .35) => `<pattern id="${id}" width="3" height="3" patternUnits="userSpaceOnUse"><path d="M0 3 L3 0 M-1 1 L1 -1 M2 4 L4 2" stroke="#000" stroke-width=".5" opacity="${op}"/></pattern>`;
