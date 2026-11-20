@@ -922,12 +922,14 @@ const FT_COLORS = {
 const FT_LABELS = { off: "ft_off", flowing: "ft_flowing", filter: "ft_filter_due", pump: "ft_pump_due", low: "ft_low_water", offline: "ev_offline" };
 // A dehumidifier from its humidifier entity: switched on or off in its state,
 // and in its action whether it is drying or has reached the humidity asked.
-function dehumidifierModeOf(st) {
+// ESPHome's midea_dehum makes it a climate entity instead: off or dry in its
+// state, and the same in hvac_action.
+function dehumidifierModeOf(st, climate = false) {
   if (!st) return "";
   const state = String(st.state).toLowerCase();
   if (state === "off") return "off";
-  if (state !== "on") return "";
-  const action = String((st.attributes || {}).action || "").toLowerCase();
+  if (climate ? HA_OFFLINE_STATES.includes(state) : state !== "on") return "";
+  const action = String((st.attributes || {})[climate ? "hvac_action" : "action"] || "").toLowerCase();
   if (action === "idle" || action === "off") return "idle";
   return "drying";
 }
@@ -3634,14 +3636,14 @@ const AC_ONLY_FIELDS = ["vane_vertical_entity", "vane_horizontal_entity", "purif
 // The domains a type's main entity may be, besides a sensor: a tank, a
 // combi boiler and a heat pump are often their integration's own water_heater
 // or climate entity, a stove, an air conditioner and a heater their climate
-// entity, a dehumidifier its humidifier entity, a towel warmer a select on
+// entity, a dehumidifier its humidifier or climate entity, a towel warmer a select on
 // its pilot wire; and the ones that live on a smart plug may be read from the
 // plug itself.
 const STATE_DOMAINS = {
   thermostat: ["climate"],
   hood: ["fan", "switch", "select"], kettle: ["water_heater", "switch"],
   water_heater: ["water_heater"], boiler: ["water_heater", "climate"], heat_pump: ["climate", "water_heater"],
-  pellet_stove: ["climate"], air_conditioner: ["climate", "select", "switch"], dehumidifier: ["humidifier", "switch"], humidifier: ["humidifier", "switch", "fan", "input_boolean"],
+  pellet_stove: ["climate"], air_conditioner: ["climate", "select", "switch"], dehumidifier: ["humidifier", "climate", "switch"], humidifier: ["humidifier", "switch", "fan", "input_boolean"],
   space_heater: ["climate", "switch"], towel_warmer: ["climate", "select", "switch"], iron: ["switch"], toaster: ["switch"], hair_dryer: ["switch"], air_fryer: ["switch"],
   screen: ["switch", "media_player", "input_boolean", "binary_sensor"],
   air_purifier: ["fan", "switch", "select", "climate"], fan: ["fan", "switch"],
@@ -11430,15 +11432,18 @@ class ApplianceCard extends HTMLElement {
 
     // Dehumidifier. A humidifier entity says whether it is on and, in its
     // action, whether it is drying or has reached the humidity asked; its mode
-    // says when it dries the laundry. A full tank stops it, and wins.
+    // says when it dries the laundry. A climate entity (ESPHome's midea_dehum)
+    // says the same in hvac_action and preset_mode. A full tank stops it, and wins.
     let dh = null;
     if (cap.dehumidifier) {
-      const hum = domainOf(cfg.state_entity) === "humidifier" ? st : null;
+      const climate = domainOf(cfg.state_entity) === "climate";
+      const hum = climate || domainOf(cfg.state_entity) === "humidifier" ? st : null;
       const attrs = (hum && hum.attributes) || {};
+      const modeAttr = climate ? "preset_mode" : "mode";
       let mode = mappedMode(["off", "drying", "laundry", "idle", "full"]);
-      if (!mode && !powerDerived && hum) mode = dehumidifierModeOf(hum);
+      if (!mode && !powerDerived && hum) mode = dehumidifierModeOf(hum, climate);
       if (!mode) mode = plugMode("drying", "idle");
-      if (mode === "drying" && DH_LAUNDRY_RE.test(stripAccents(String(attrs.mode || "")).toLowerCase())) mode = "laundry";
+      if (mode === "drying" && DH_LAUNDRY_RE.test(stripAccents(String(attrs[modeAttr] || "")).toLowerCase())) mode = "laundry";
       // The tank: a level in percent, or a contact on when it is full.
       const tankSt = cfg.tank_entity ? stateObj(hass, cfg.tank_entity) : null;
       const tankKnown = !!tankSt && !["unknown", "unavailable"].includes(tankSt.state);
@@ -11462,7 +11467,7 @@ class ApplianceCard extends HTMLElement {
           entity: cfg.current_humidity_entity || cfg.state_entity,
         });
       }
-      if (mode !== "off") modeLine(hum, "mode");
+      if (mode !== "off") modeLine(hum, modeAttr);
       if (tankKnown && (tankPct !== null || full)) {
         extraLines.push({
           key: "tank",

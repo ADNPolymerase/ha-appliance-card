@@ -905,14 +905,14 @@ const AC_ONLY_FIELDS = ["vane_vertical_entity", "vane_horizontal_entity", "purif
 // The domains a type's main entity may be, besides a sensor: a tank, a
 // combi boiler and a heat pump are often their integration's own water_heater
 // or climate entity, a stove, an air conditioner and a heater their climate
-// entity, a dehumidifier its humidifier entity, a towel warmer a select on
+// entity, a dehumidifier its humidifier or climate entity, a towel warmer a select on
 // its pilot wire; and the ones that live on a smart plug may be read from the
 // plug itself.
 const STATE_DOMAINS = {
   thermostat: ["climate"],
   hood: ["fan", "switch", "select"], kettle: ["water_heater", "switch"],
   water_heater: ["water_heater"], boiler: ["water_heater", "climate"], heat_pump: ["climate", "water_heater"],
-  pellet_stove: ["climate"], air_conditioner: ["climate", "select", "switch"], dehumidifier: ["humidifier", "switch"], humidifier: ["humidifier", "switch", "fan", "input_boolean"],
+  pellet_stove: ["climate"], air_conditioner: ["climate", "select", "switch"], dehumidifier: ["humidifier", "climate", "switch"], humidifier: ["humidifier", "switch", "fan", "input_boolean"],
   space_heater: ["climate", "switch"], towel_warmer: ["climate", "select", "switch"], iron: ["switch"], toaster: ["switch"], hair_dryer: ["switch"], air_fryer: ["switch"],
   screen: ["switch", "media_player", "input_boolean", "binary_sensor"],
   air_purifier: ["fan", "switch", "select", "climate"], fan: ["fan", "switch"],
