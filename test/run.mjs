@@ -15236,6 +15236,32 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('fenetre : chassis blanc au lieu de la porte', /fill="#f3f5f7"/.test(D({}, { device_class: 'window' })) && !/fill="#f3f5f7"/.test(D({}, { device_class: 'door' })), true);
   check('fenetre : lue dans le nom', /fill="#f3f5f7"/.test(D({ name: 'Fenetre chambre' }, { device_class: 'opening' })), true);
   check('porte : bois', /width="62" height="106" fill="url\(#/.test(D({}, { device_class: 'door' })), true);
+  check('modele : Third Reality lu dans le fabricant', /A7 7 0 0 1 89 40/.test(D({}, { device_class: 'door', manufacturer: 'Third Reality, Inc' })), true);
+  check('modele : IKEA lu dans le nom', /x="75" y="25" width="12" height="42"/.test(D({ name: 'PARASOLL entree' }, { device_class: 'door' })), true);
+  check('modele : IKEA choisi, son voyant clignote ouvert', /nta-blinkfast" d="M78.6 34/.test(D({ detector_model: 'ikea' }, { device_class: 'door' }, 'on')), true);
+  const DS = (style, state = 'off', more = {}) => D({ door_style: style, ...more }, { device_class: 'door' }, state);
+  check('porte : vitree en haut, le panneau du haut en verre', /points="17 16 65 16 65 54 17 54" fill="url\(#/.test(DS('glass_top')), true);
+  check('porte : vitree', /points="18 14 64 14 64 104 18 104" fill="url\(#/.test(DS('glass')), true);
+  check('porte : entree vue de l interieur, le dos de la boite aux lettres', /fill="#3d444b"/.test(DS('external')), true);
+  const sky = (h) => { const m = h.match(/<linearGradient id="([^"]+)" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8eefa"/); return !!m && h.includes(`width="26" height="92" fill="url(#${m[1]})"`); };
+  check('porte : entree ouverte, le jour entre', sky(DS('external', 'on')), true);
+  check('porte : porte en verre ouverte, la piece', sky(DS('glass', 'on')), false);
+  check('porte : entree vitree, sa bande de verre', /points="24 16 38 16 38 100 24 100"/.test(DS('external_glass')), true);
+  check('porte : baie coulissante fermee en place', /translate\(0 0\)/.test(DS('sliding_glass')), true);
+  check('porte : baie coulissante ouverte glisse a gauche', /translate\(-28 0\)/.test(DS('sliding_glass', 'on')), true);
+  check('porte : grange ouverte glisse a gauche', /translate\(-30 0\)/.test(DS('sliding_wood', 'on')), true);
+  check('porte : baie lue dans le nom', /translate\(-28 0\)/.test(D({ name: 'Schuifpui tuin' }, { device_class: 'door' }, 'on')), true);
+  check('porte : grange lue dans le nom', /translate\(-30 0\)/.test(D({ name: 'Barn door' }, { device_class: 'door' }, 'on')), true);
+  check('porte : style inconnu, la porte en bois', /width="62" height="106" fill="url\(#/.test(DS('castle')), true);
+  check('porte : une fenetre garde son chassis', /fill="#f3f5f7"/.test(D({ door_style: 'external' }, { device_class: 'window' })) && !/fill="#3d444b"/.test(D({ door_style: 'external' }, { device_class: 'window' })), true);
+  for (const st of ['wood', 'glass_top', 'glass', 'external', 'external_glass', 'sliding_glass', 'sliding_wood']) {
+    for (const m of ['sonoff', 'aqara', 'hue', 'thirdreality', 'ikea']) {
+      for (const v of ['off', 'on']) {
+        const h = DS(st, v, { detector_model: m });
+        check(`porte ${st} ${m} ${v} : ni NaN ni undefined`, /NaN|undefined/.test(h), false);
+      }
+    }
+  }
   const cam = (cfg, attrs) => build({ state_entity: 'camera.c', ...cfg }, { 'camera.c': { state: 'idle', attributes: attrs } }).html;
   check('trackmix : lue dans le modele', /cam-l-trackmix/.test(cam({}, { brand: 'Reolink', model_name: 'TrackMix PoE' })), true);
   check('trackmix : choisie', /cam-tmx-pan/.test(cam({ camera_layout: 'trackmix' }, {})), true);

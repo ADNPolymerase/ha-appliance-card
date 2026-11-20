@@ -1428,9 +1428,70 @@ function ntDetDoor(c) {
   const wd = ntId(), fr = ntId(), bd = ntId(), dk = ntId();
   // A pulled-off sensor is an alarm, not an open door.
   const open = c.tamper ? !!c.smoke : c.on;
-  const gw = ntId();
-  // A window: a white sash round its glass instead of a wooden door.
-  const leaf = c.window ? (open
+  const gw = ntId(), ex = ntId(), sk = ntId(), al = ntId(), cl = ntId();
+  const style = c.window ? "" : c.style || "";
+  let mx = open ? 39 : 62;
+  let leaf = "";
+  if (style.startsWith("sliding")) {
+    // A sliding door does not swing: its panel runs left on a rail and the
+    // opening shows behind it, daylight for the patio door, the room for the barn door.
+    const glass = style === "sliding_glass";
+    const dx = open ? (glass ? -28 : -30) : 0;
+    mx = 62 + dx;
+    const pane = (x) => `<rect x="${x}" y="8" width="32" height="101" fill="url(#${al})" stroke="#3e454c" stroke-width=".6"/>
+<rect x="${x + 3.5}" y="11.5" width="25" height="94" fill="url(#${gw})" stroke="#4a5158" stroke-width=".4"/>
+<path d="M${x + 7} 30 L${x + 17} 22 M${x + 7} 42 L${x + 24} 28" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".5"/>`;
+    const roller = (x) => `<rect x="${x - .9}" y="5" width="1.8" height="7" fill="#2b2f33"/><circle cx="${x}" cy="5" r="3" fill="#3a3f44" stroke="#1d2024" stroke-width=".5"/>`;
+    const moving = glass
+      ? `${pane(40)}<rect x="66" y="48" width="2.2" height="22" rx="1.1" fill="#2b3035"/>`
+      : `${roller(20)}${roller(62)}<rect x="10" y="10" width="62" height="104" fill="url(#${wd})" stroke="#8a6440" stroke-width=".7"/>
+${[1, 2, 3, 4, 5].map((i) => `<path d="M${(10 + i * 62 / 6).toFixed(1)} 10 V114" stroke="#9a7350" stroke-width=".6" opacity=".7"/>`).join("")}
+<rect x="10" y="10" width="62" height="9" fill="#c09468" stroke="#8a6440" stroke-width=".5"/><rect x="10" y="105" width="62" height="9" fill="#c09468" stroke="#8a6440" stroke-width=".5"/>
+<path d="M16 104 L66 20" stroke="#c09468" stroke-width="7"/><path d="M14 101 L63 19 M19 106 L68 22" stroke="#8a6440" stroke-width=".5"/>
+<rect x="63" y="48" width="2.6" height="30" rx="1.2" fill="#2b2f33"/>`;
+    leaf = `<rect x="10" y="8" width="62" height="104" fill="url(#${glass ? sk : dk})"/>
+${glass ? `${pane(10)}<rect x="8" y="4" width="66" height="4" fill="#7b838b"/><rect x="8" y="109" width="66" height="4" fill="#7b838b"/>` : `<rect x="0" y="2" width="76" height="3" rx="1" fill="#2b2f33"/>`}
+<g clip-path="url(#${cl})"><g transform="translate(${dx} 0)">${moving}</g></g>`;
+  } else if (style && style !== "wood") {
+    // A swinging door drawn flat, then turned in: every point of its face is
+    // carried onto the leaf seen at an angle, as the wooden door's panels are.
+    const P = (x, y) => {
+      if (!open) return `${x} ${y}`;
+      const u = (x - 10) / 62, top = 6 + 7 * u, bot = 112 - 7 * u;
+      return `${+(10 + 36 * u).toFixed(2)} ${+(top + (y - 6) / 106 * (bot - top)).toFixed(2)}`;
+    };
+    const R = (x0, y0, x1, y1, a) => `<polygon points="${P(x0, y0)} ${P(x1, y0)} ${P(x1, y1)} ${P(x0, y1)}" ${a}/>`;
+    const L = (x0, y0, x1, y1, a) => `<path d="M${P(x0, y0)} L${P(x1, y1)}" ${a}/>`;
+    const ext = style.startsWith("external");
+    leaf = R(10, 6, 72, 112, ext ? `fill="url(#${ex})" stroke="#1d2226" stroke-width=".7"` : `fill="url(#${wd})" stroke="#8a6440" stroke-width=".7"`);
+    if (style === "glass_top") {
+      // The wooden door with its top panel glazed, the bottom one still wood.
+      leaf += R(17, 16, 65, 54, `fill="url(#${gw})" stroke="#9a7350" stroke-width=".9"`)
+        + L(22, 30, 34, 22, `stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".5"`)
+        + L(22, 42, 44, 26, `stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".5"`)
+        + R(17, 62, 65, 102, `fill="none" stroke="#9a7350" stroke-width=".9" opacity=".75"`)
+        + R(62, 60, 66, 64, `fill="#c9ccd0" stroke="#8e949a" stroke-width=".5"`);
+    } else if (style === "glass") {
+      // An interior door: a wooden frame round one tall pane of satin glass, a lever.
+      leaf += R(18, 14, 64, 104, `fill="url(#${gw})" stroke="#9a7350" stroke-width=".6"`)
+        + L(24, 32, 40, 22, `stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".5"`)
+        + L(24, 48, 54, 28, `stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".5"`)
+        + R(57, 60.6, 66, 63.4, `fill="#c9ccd0" stroke="#8e949a" stroke-width=".4"`);
+    } else {
+      // An entrance door in anthracite, seen from inside where the contact is:
+      // a lever and its lock, the back of the letter box, maybe a frosted strip.
+      if (style === "external_glass") leaf += R(24, 16, 38, 100, `fill="url(#${gw})" stroke="#15191c" stroke-width=".8"`)
+        + [44, 72].map((y) => L(24, y, 38, y, `stroke="#15191c" stroke-width=".8"`)).join("");
+      const lx = style === "external" ? 27 : 42;
+      leaf += R(lx, 74, lx + 18, 82, `fill="#3d444b" stroke="#15191c" stroke-width=".5"`)
+        + L(lx + 1.5, 76, lx + 16.5, 76, `stroke="#5d656d" stroke-width=".8"`)
+        + R(62.5, 56, 65.5, 74, `fill="#c9ccd0" stroke="#8e949a" stroke-width=".4"`)
+        + R(55, 59.4, 64.5, 62.4, `fill="#d5d9dd" stroke="#8e949a" stroke-width=".4"`)
+        + R(63.3, 68, 64.7, 71.5, `fill="#5d656d"`);
+    }
+    // Open, an entrance door lets the daylight in; an inside door shows the room.
+    if (open) leaf += `<rect x="46" y="13" width="26" height="92" fill="url(#${ext ? sk : dk})"/>`;
+  } else leaf = c.window ? (open
     ? `<polygon points="10 6 46 13 46 105 10 112" fill="#f3f5f7" stroke="#b7c0c8" stroke-width=".7"/><polygon points="15 14 41 19 41 99 15 104" fill="url(#${gw})" stroke="#b0bcc6" stroke-width=".5"/>
 <rect x="46" y="13" width="26" height="92" fill="url(#${dk})"/>`
     : `<rect x="10" y="6" width="62" height="106" fill="#f3f5f7" stroke="#b7c0c8" stroke-width=".7"/><rect x="16" y="12" width="50" height="94" fill="url(#${gw})" stroke="#b0bcc6" stroke-width=".5"/>
@@ -1441,8 +1502,9 @@ function ntDetDoor(c) {
     : `<rect x="10" y="6" width="62" height="106" fill="url(#${wd})" stroke="#8a6440" stroke-width=".7"/>
 <rect x="17" y="16" width="48" height="38" rx="1.5" fill="none" stroke="#9a7350" stroke-width=".9" opacity=".75"/><rect x="17" y="62" width="48" height="40" rx="1.5" fill="none" stroke="#9a7350" stroke-width=".9" opacity=".75"/>
 <circle cx="64" cy="62" r="2.2" fill="#c9ccd0" stroke="#8e949a" stroke-width=".5"/>`);
-  const mx = open ? 39 : 62;
   return `<defs>${ntV(wd, "#d8b48a", "#b48759")}${ntV(fr, "#fbf8f2", "#e8e1d4")}${ntV(bd, "#ffffff", "#dfe4e8")}
+${ntV(ex, "#4d555d", "#2b3136")}${ntV(al, "#7d858d", "#5b636b")}<clipPath id="${cl}"><rect x="0" y="0" width="120" height="120"/></clipPath>
+<linearGradient id="${sk}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8eefa"/><stop offset=".58" stop-color="#b5dcf0"/><stop offset=".59" stop-color="#93c47f"/><stop offset="1" stop-color="#6a9f58"/></linearGradient>
 <linearGradient id="${dk}" x1="0" x2="1"><stop offset="0" stop-color="#1f252b"/><stop offset="1" stop-color="#3a434b"/></linearGradient>
 <linearGradient id="${gw}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d4ecf8"/><stop offset="1" stop-color="#8fc7e6"/></linearGradient></defs>
 ${leaf}
@@ -1465,6 +1527,19 @@ ${leaf}
 <path d="M76 29 Q81 27 86 29" stroke="#fff" stroke-width="1.3" fill="none" stroke-linecap="round"/>
 <text x="81" y="58" font-size="4" font-weight="700" text-anchor="middle" fill="#b9c1c8" ${NT_FONT}>hue</text>
 <circle class="${open ? "nta-blinkfast" : ""}" cx="81" cy="33" r="1" fill="${open ? "#29b6f6" : "#dfe4e8"}"/>`,
+    // Third Reality 3RDS17BZ: a wide, short block with one big rounded corner,
+    // a narrow magnet as tall as it, a short mark on each where they meet.
+    thirdreality: `<rect x="${mx + 1}" y="33" width="6" height="24" rx="1.2" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".5"/>
+<path d="M${mx + 5.6} 42 V48" stroke="#c3cbd2" stroke-width=".7" stroke-linecap="round"/>
+<path d="M74.5 33 H82 A7 7 0 0 1 89 40 V55.5 A1.5 1.5 0 0 1 87.5 57 H74.5 A1.5 1.5 0 0 1 73 55.5 V34.5 A1.5 1.5 0 0 1 74.5 33 Z" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".6"/>
+<path d="M75 35 H81.5" stroke="#fff" stroke-width="1" stroke-linecap="round"/>
+<path d="M74.8 42 V48" stroke="#c3cbd2" stroke-width=".7" stroke-linecap="round"/>`,
+    // IKEA PARASOLL: a long slim stick, rounded at both ends, its light a
+    // short slot near the top; the magnet a slimmer stick with the same slot.
+    ikea: `<rect x="${mx}" y="27" width="8" height="36" rx="4" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".5"/>
+<path d="M${mx + 2.6} 35 H${mx + 5.4}" stroke="#d5dbe0" stroke-width="1" stroke-linecap="round"/>
+<rect x="75" y="25" width="12" height="42" rx="5.5" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".6"/>
+<path class="${open ? "nta-blinkfast" : ""}" d="M78.6 34 H83.4" stroke="${open ? "#29b6f6" : "#b9c1c8"}" stroke-width="1.2" stroke-linecap="round"/>`,
   }[c.model] || ""}</g>
 ${c.tamper ? `<path d="M86 36 l5 -4 M88 42 l6 -1 M85 48 l5 3" stroke="#e53935" stroke-width="1.4" stroke-linecap="round"/>` : ""}
 ${open ? ntWaves(81, 46, "#ef6c00", 20) : ""}`;

@@ -1475,7 +1475,12 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           value: this._config.detector_model || "auto",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(DETECTOR_MODELS[detectorLayoutOf(this._config, stateObj(hass, this._config.state_entity))]
-            .map((v) => ({ value: v, label: { sonoff: "Sonoff", aqara: "Aqara", hue: "Philips Hue", tuya: "Tuya", ring: "Ring", ajax: "Ajax" }[v] }))),
+            .map((v) => ({ value: v, label: { sonoff: "Sonoff", aqara: "Aqara", hue: "Philips Hue", thirdreality: "Third Reality", ikea: "IKEA", tuya: "Tuya", ring: "Ring", ajax: "Ajax" }[v] }))),
+        }) : ""}
+        ${this._type === "detector" && detectorLayoutOf(this._config, stateObj(hass, this._config.state_entity)) === "door" ? this._row("det_door_style", "door_style", {
+          type: "select",
+          value: this._config.door_style || "wood",
+          options: DOOR_STYLES.map((v) => ({ value: v, label: t(hass, `door_style_${v}`) })),
         }) : ""}
         ${this._type === "irrigation" && irrigationLayoutOf(this._config, stateObj(hass, this._config.state_entity)) === "tap" ? this._row("irr_model", "tap_model", {
           type: "select",
@@ -1909,6 +1914,8 @@ class ApplianceCardEditor extends HTMLElement {
         // Compact is written the way it always was: true for the card without
         // its drawing, nothing at all when it is off.
         if (field === "detector_model" && value === "auto") delete this._config.detector_model;
+        // The wooden door is the default and is not written.
+        if (field === "door_style" && value === "wood") delete this._config.door_style;
         // No background is the default and is not written.
         if (field === "illustration_backdrop" && !illustrationBackdropOf(value)) delete this._config.illustration_backdrop;
         if (field === "compact") {
