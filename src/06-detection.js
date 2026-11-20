@@ -18,6 +18,18 @@ const TYPE_AUTO_PATTERNS = {
     light_entity: /light|lamp|led/i,
   },
   sauna: { temperature_entity: /temp/i },
+  // IntelliFire's names (#130).
+  gas_fireplace: {
+    flame_entity: /^binary_sensor\..*flame/i,
+    flame_height_entity: /^(number|sensor)\..*flame.?(control|height|level)/i,
+    fan_entity: /^fan\./i,
+    light_entity: /^light\./i,
+    thermostat_entity: /^climate\./i,
+    temperature_entity: /^sensor\.(?!.*(target|set)).*temperature/i,
+    pilot_entity: /pilot/i,
+    error_entity: /^binary_sensor\..*error/i,
+    connectivity_entity: /^binary_sensor\..*(cloud.?)?connectivity/i,
+  },
   // Pellet grills: Traeger's, Pit Boss's, Camp Chef's, Grilla's, recteq's and
   // GMG's names for the same things.
   pellet_grill: {
@@ -814,6 +826,8 @@ const TYPE_CAPS = {
   drying_rack: { readOnly: true },
   // A kitchen robot, read from the plug it is on (HACF #170).
   food_processor: { ntFood: true },
+  // A gas fireplace (#130): flame, fan, lights and pilot on their own.
+  gas_fireplace: { ntFire: true },
   speaker: { ntSpeaker: true },
   // A game console, on PlayStation Network, Xbox, the PS4 integration or a plug.
   console: { ntConsole: true },
@@ -943,6 +957,7 @@ const STATE_DOMAINS = {
   valve: ["valve", "switch", "binary_sensor", "input_boolean"],
   drying_rack: ["binary_sensor", "cover", "input_boolean", "switch", "sensor"],
   food_processor: ["switch", "sensor", "input_boolean", "binary_sensor"],
+  gas_fireplace: ["switch", "binary_sensor", "climate", "input_boolean"],
   speaker: ["media_player"],
   console: ["media_player", "sensor", "switch", "binary_sensor", "device_tracker", "input_boolean"],
   streamer: ["media_player", "remote", "switch", "binary_sensor", "input_boolean", "sensor"],
@@ -1069,7 +1084,7 @@ function compactModeOf(v) {
 const TYPE_GROUPS = [
   ["laundry", ["washer", "dryer"]],
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster", "pellet_grill", "food_processor"]],
-  ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove"]],
+  ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove", "gas_fireplace"]],
   ["air", ["air_conditioner", "dehumidifier", "humidifier", "air_purifier", "fan", "diffuser", "hrv", "climate_sensor"]],
   ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "fingerbot", "valve", "drying_rack", "speaker", "console", "streamer", "cover"]],
   ["energy", ["solar", "solar_thermal", "home_battery", "ev_charger", "meter"]],

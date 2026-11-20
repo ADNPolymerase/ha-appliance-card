@@ -3,7 +3,7 @@
 // sauna, an aquarium, a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
 // moves moves only on a machine carrying nt-on, staggered through --d0, and
 // the robot's cable and the sump's float follow their SMIL animations.
-const NT_TYPES = ["food_processor", "drying_rack", "valve", "fingerbot", "cover", "pellet_grill", "water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer"];
+const NT_TYPES = ["food_processor", "drying_rack", "valve", "fingerbot", "cover", "pellet_grill", "water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer", "gas_fireplace"];
 // How many spools a filament dryer holds (#93).
 const FD_COUNTS = [1, 2, 4];
 const FD_COLORS = ["#43a047", "#fb8c00", "#8e24aa", "#eceff1"];
@@ -192,6 +192,7 @@ const NT_ONLY_FIELDS = {
   valve: ["valve_layout", "valve_fluid", "valve_handle_color", "leak_entity"],
   drying_rack: ["rack_layout", "rack_color"],
   food_processor: ["food_layout"],
+  gas_fireplace: ["flame_entity", "flame_height_entity", "thermostat_entity", "pilot_entity"],
   fingerbot: ["fingerbot_layout", "fingerbot_color", "bot_mode_entity", "lower_entity", "upper_entity", "sustain_entity", "reverse_entity", "touch_entity"],
   speaker: ["speaker_layout", "speaker_color"],
   console: ["console_layout", "game_entity", "playtime_entity", "playtime_left_entity"],
@@ -280,6 +281,8 @@ const NT_NAME_RES = [
   ["storage_tank", /pufferspeicher|(^|[^a-z])puffer|buffer.?tank|ballon.?tampon|thermal.?store|schichtspeicher|serbatoio.?(inerziale|di.?accumulo)|deposito.?de.?inercia|buffertank|zbiornik.?buforowy/],
   ["solar_thermal", /solar.?therm|solarthermie|solaire.?thermique|thermique.?solaire|kollektor|collector.?temp|capteur.?solaire|solar.?pump|solarpumpe|solar.?collector/],
   ["pellet_grill", /traeger|timberline|ironwood|woodridge|pit.?boss|prime.?polaris|recteq|rec.?tec.?grill|camp.?chef|woodwind|z.?grills|green.?mountain.?grill|(^|[^a-z])gmg([^a-z]|$)|grilla|pifire|smokefire|searwood|pellet.?(grill|smoker)|grill.?a.?pellet|(barbecue|fumoir).?(a.?)?granul/],
+  // A gas fireplace (#130), before the wood stove that also says fireplace.
+  ["gas_fireplace", /intellifire|gas.?fire.?place|fire.?place.?gas|heat.?(n|and|&).?glo|mertik|gaskamin|gas.?kamin|chemin\w*.?(au.?)?gaz|foyer.?(au.?)?gaz|insert.?gaz|haard.?gas|gashaard/],
   ["wood_stove", /^(?!.*(pellet|granul)).*((^|[^a-z])kamin|wood.?(stove|burner)|log.?(stove|burner)|poele.?(a.?)?bois|cheminee|holzofen|kachelofen|estufa.?de.?lena|stufa.?a.?legna|houtkachel|braskamin|vedovn|braendeovn|brandeovn|piec.?na.?drewno|fireplace)/],
   ["console", /used.?screen.?time|suspend.?software|playstation|(^|[^a-z])ps[1-5]([^a-z0-9]|$)|xbox|nintendo|gamecube|(^|[^a-z])(n64|snes|nes|wii|switch.?lite|switch.?2)([^a-z0-9]|$)|mega.?drive|genesis|console|konsole|consola|konsol/],
   ["streamer", STREAMER_NAME_RE],
@@ -2832,11 +2835,12 @@ function ntSpkClock(c) {
   const title = esc(String(c.title || "").slice(0, 16));
   const artist = esc(String(c.artist || "").slice(0, 20));
   const big = c.st === "playing" || c.st === "paused" ? "" : esc(c.clock || "");
-  return `<defs>${ntV(fa, p[3], p[1])}${ntV(sd, p[2], p[4])}${spkMesh(m, .22)}<linearGradient id="${sc}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b98a9f"/><stop offset=".55" stop-color="#7f6a98"/><stop offset="1" stop-color="#5e5486"/></linearGradient>${ntBlur(gl, 1.2)}</defs>
+  return `<defs>${ntV(fa, p[3], p[1])}${ntV(sd, p[2], p[4])}${spkMesh(m, .09)}<linearGradient id="${sc}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b98a9f"/><stop offset=".55" stop-color="#7f6a98"/><stop offset="1" stop-color="#5e5486"/></linearGradient>${ntBlur(gl, 1.2)}</defs>
 ${spkNotes(98, 14)}
-${ntFoot("12 101 92 101 108 92 98 88", .3)}
-<path d="M86 28 Q90 27 93 30 L104 42 Q106 44 106 47 L108 90 Q108 94 104 95 L91 98 Z" fill="url(#${sd})"/>
-<path d="M86 28 Q90 27 93 30 L104 42 Q106 44 106 47 L108 90 Q108 94 104 95 L91 98 Z" fill="url(#${m})"/>
+${ntFoot("12 101 92 101 113 96 104 90", .3)}
+<path d="M85.6 28.6 Q88.6 27 90.4 29.8 L111.2 91.6 Q112.4 95.6 108.4 96.2 L91 98.8 Z" fill="url(#${sd})"/>
+<path d="M85.6 28.6 Q88.6 27 90.4 29.8 L111.2 91.6 Q112.4 95.6 108.4 96.2 L91 98.8 Z" fill="url(#${m})"/>
+<path d="M88.4 29.2 L109.6 92" stroke="#fff" stroke-width=".8" opacity=".25" stroke-linecap="round"/>
 <path d="M20 35 Q16 35.6 16 40 L11 94 Q10.6 99 15 99 L87 99 Q92 99 91.6 94 L88 32 Q87.6 27.4 83 28 Z" fill="url(#${fa})"/>
 <path d="M20 35 Q16 35.6 16 40 L11 94 Q10.6 99 15 99 L87 99 Q92 99 91.6 94 L88 32 Q87.6 27.4 83 28 Z" fill="url(#${m})"/>
 <path d="M24 39.4 L80.6 32.6 Q84 32.2 84.2 35.6 L86.6 86.6 Q86.8 90 83.4 90.2 L19.6 93.2 Q16.2 93.4 16.6 90 L20.6 43 Q20.9 39.8 24 39.4 Z" fill="#0b0c0e"/>
@@ -4054,6 +4058,55 @@ ${htDial(56, 19, 8.6, c.flue, c.max || 400, c.low || 100)}
 ${txt ? ntLcd(4, 40, 20, 11, txt, true, burning ? "#ffb74d" : embers ? "#ff8a65" : "#90a4ae", ntFit(txt, 20, 7.4)) : ""}`;
 }
 
+// A gas fireplace (#130), IntelliFire or the like: the firebox behind its
+// glass in a dark surround under a mantel, ceramic logs on a bed of embers.
+// Burning, a row of flames, blue at the root, as tall as the flame setting
+// (1 to 5); the pilot a small blue flame of its own; the lights warm the
+// firebox from the top; the fan blows warm air out of the louvre above.
+function ntGasFireplace(c) {
+  const n1 = (v) => +v.toFixed(1);
+  const sur = ntId(), bk = ntId(), fl = ntId(), fl2 = ntId(), gl = ntId(), cp = ntId(), ac = ntId(), mt = ntId();
+  const flame = !!c.flame, lit = !!c.light;
+  const lvl = Math.min(5, Math.max(1, Math.round(c.level || 3)));
+  const top = 84 - (12 + lvl * 6);
+  const flames = flame ? [[27, 14, 1], [38, 15, 2], [50, 16, 3], [62, 17, 1], [74, 15, 2], [86, 13, 3], [44, 10, 2], [68, 11, 3]].map(([x, w, d], i) => {
+    const h = (84 - top) * (i % 2 ? .82 : 1), y = 84 - h;
+    return `<path class="nta-flick ntd${d}" d="M${x - w / 2} 84 Q${x - w / 2 - 1} ${n1(84 - h * .45)} ${n1(x - w * .1)} ${n1(y + h * .25)} Q${x} ${n1(y + h * .1)} ${x + .5} ${n1(y)} Q${n1(x + w * .3)} ${n1(y + h * .3)} ${n1(x + w * .5)} ${n1(84 - h * .4)} Q${x + w / 2 + 1} 80 ${x + w / 2} 84 Z" fill="url(#${fl})"/>
+<path class="nta-flick ntd${(d % 3) + 1}" d="M${x - w / 4} 84 Q${x - w / 4} ${n1(84 - h * .35)} ${x} ${n1(y + h * .45)} Q${x + w / 4} ${n1(84 - h * .35)} ${x + w / 4} 84 Z" fill="url(#${fl2})"/>`;
+  }).join("") : "";
+  const logs = [[24, 82, 34, -5], [52, 83, 36, 4], [38, 77, 30, 1], [66, 78, 26, -3]].map(([x, y, w, a]) => `<g transform="rotate(${a} ${x + w / 2} ${y})">
+<rect x="${x}" y="${y - 3.4}" width="${w}" height="6.8" rx="3.4" fill="${flame ? "#4e3a32" : lit ? "#6b5348" : "#5a4c46"}"/>
+<path d="M${x + 4} ${y - 1.4} H${x + w - 6} M${x + 7} ${y + 1.4} H${x + w - 4}" stroke="${flame ? "#ff8a50" : "#3b302b"}" stroke-width=".7" ${flame ? 'class="nta-glow"' : ""}/>
+<ellipse cx="${x + w}" cy="${y}" rx="2.4" ry="3.4" fill="${flame ? "#ff9e6a" : "#8a7a72"}" stroke="#3b2a24" stroke-width=".5"/></g>`).join("");
+  const pilot = c.pilot ? `<path class="nta-flick ntd2" d="M58.6 86 Q58.2 82.4 60 79.6 Q61.8 82.4 61.4 86 Z" fill="#64b5f6"/><path d="M59.4 86 Q59.4 84 60 82.6 Q60.6 84 60.6 86 Z" fill="#e3f2fd"/>` : "";
+  const fanDur = c.fan ? n1(2.4 - 1.6 * Math.min(1, Math.max(0, c.fanPct === null || c.fanPct === undefined ? .5 : c.fanPct))) : 0;
+  const air = c.fan ? [0, 1, 2, 3].map((i) => `<path class="nta-rise ntd${i + 1}" style="animation-duration:${fanDur}s" d="M${32 + i * 18} 36 q-3 -5 0 -10 q3 -5 0 -10" stroke="${flame ? "#ffb74d" : "#b0bec5"}" stroke-width="1.4" fill="none" stroke-linecap="round" opacity=".85"/>`).join("") : "";
+  return `<defs>${ntV(sur, "#3a3d42", "#1f2124")}${ntV(mt, "#e4ddd1", "#bfb5a6")}
+<linearGradient id="${bk}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${flame ? "#5a3020" : lit ? "#4a3428" : "#2b1d18"}"/><stop offset="1" stop-color="${flame ? "#2e1810" : "#1a1210"}"/></linearGradient>
+<linearGradient id="${fl}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#42a5f5"/><stop offset=".14" stop-color="#ff6f00"/><stop offset=".6" stop-color="#ff9800"/><stop offset="1" stop-color="#ffd54f" stop-opacity=".15"/></linearGradient>
+<linearGradient id="${fl2}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#90caf9"/><stop offset=".25" stop-color="#ffe082"/><stop offset="1" stop-color="#fff8e1" stop-opacity=".35"/></linearGradient>
+<radialGradient id="${ac}" cx=".5" cy="0" r=".9"><stop offset="0" stop-color="#ffe0b2" stop-opacity=".75"/><stop offset="1" stop-color="#ffe0b2" stop-opacity="0"/></radialGradient>
+${ntBlur(gl, 3)}<clipPath id="${cp}"><rect x="20" y="46" width="80" height="48" rx="1.5"/></clipPath></defs>
+${ntShadow(60, 110, 50)}
+${flame ? `<ellipse class="nta-glow" cx="60" cy="106" rx="44" ry="4" fill="#ffb74d" opacity=".45" filter="url(#${gl})"/>` : ""}
+<g class="nt-run">${air}</g>
+<rect x="2" y="24" width="116" height="8" rx="1.5" fill="url(#${mt})"/><path d="M3 24.6 H117" stroke="#fff" stroke-width=".8" opacity=".7"/>
+<rect x="8" y="32" width="104" height="76" rx="1.5" fill="url(#${sur})"/>
+${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((i) => `<rect x="${23 + i * 6.4}" y="37.4" width="4.2" height="1.6" rx=".6" fill="#0d0e10"/>`).join("")}
+<rect x="16" y="42" width="88" height="56" rx="2" fill="#0b0c0e"/>
+<rect x="20" y="46" width="80" height="48" rx="1.5" fill="url(#${bk})"/>
+<g clip-path="url(#${cp})">
+${[54, 62, 70].map((y) => `<path d="M20 ${y} H100" stroke="#000" stroke-width=".5" opacity=".35"/>`).join("")}${[30, 44, 58, 72, 86].map((x, i) => `<path d="M${x + (i % 2 ? 7 : 0)} 46 V54 M${x} 54 V62 M${x + 7} 62 V70" stroke="#000" stroke-width=".5" opacity=".3"/>`).join("")}
+${lit ? `<rect x="20" y="46" width="80" height="34" fill="url(#${ac})"/>` : ""}
+${flame ? `<ellipse class="nta-glow" cx="60" cy="86" rx="38" ry="9" fill="#ff8f00" opacity=".55" filter="url(#${gl})"/>` : ""}
+${flames}${logs}${pilot}
+<path d="M20 86 Q60 82 100 86 V94 H20 Z" fill="${flame ? "#5d2a18" : "#2a2420"}"/>
+${flame ? [28, 40, 52, 66, 78, 90].map((x, i) => `<circle class="nta-glow ntd${(i % 3) + 1}" cx="${x}" cy="${89 + (i % 2)}" r="1.1" fill="#ff7043"/>`).join("") : ""}
+</g>
+<path d="M22 48 L40 48 L22 80 Z" fill="#fff" opacity=".07"/>
+<rect x="16" y="100" width="88" height="5" rx="1" fill="#141517"/>${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => `<rect x="${21 + i * 8}" y="101.6" width="5" height="1.8" rx=".5" fill="#050506"/>`).join("")}
+${c.error ? `<circle cx="104" cy="16" r="6" fill="#e53935"/><path d="M104 12.4 V16.6 M104 18.8 V19.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>` : ""}`;
+}
 // A wet-rotor circulator (#88), seen from the front: its round motor head in
 // the maker's colour with the display and the LED ring, its cast body
 // between two brass unions on the flow pipe, the return running behind.
@@ -5016,7 +5069,7 @@ ${ring(46.5, 10.4, big)}${ring(68.8, 5, smalls[0])}${ring(79.2, 5, smalls[1])}
 </g>
 ${c.heat ? fpSteam(60, 10) : ""}`;
 }
-const NT_DRAW = { fp_tm31: ntFoodTm31, fp_tm6: ntFoodTm6, rack_box: ntRackBox, rack_accordion: ntRackAccordion, rack_frame: ntRackFrame, vlv_aqara: ntValveAqara, vlv_tuya: ntValveTuya,  fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_switchbot_co2: (c) => ntSbPro(c, true), ths_switchbot_pro: (c) => ntSbPro(c, false), ths_switchbot_meter: (c) => ntSbMeter(c, false), ths_switchbot_plus: (c) => ntSbMeter(c, true), ths_switchbot_outdoor: ntSbOutdoor, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, det_door: ntDetDoor, det_vibration: ntDetVibration, det_glass: ntDetGlass, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, spk_focal_bird: ntSpkFocalBird, spk_focal_od6: ntSpkFocalOd6, spk_denon_avr: ntSpkDenon, spk_avr: ntSpkAvr, spk_wiim_amp: ntSpkWiim, spk_smart_clock: ntSpkClock, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+const NT_DRAW = { gas_fireplace: ntGasFireplace, fp_tm31: ntFoodTm31, fp_tm6: ntFoodTm6, rack_box: ntRackBox, rack_accordion: ntRackAccordion, rack_frame: ntRackFrame, vlv_aqara: ntValveAqara, vlv_tuya: ntValveTuya,  fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_switchbot_co2: (c) => ntSbPro(c, true), ths_switchbot_pro: (c) => ntSbPro(c, false), ths_switchbot_meter: (c) => ntSbMeter(c, false), ths_switchbot_plus: (c) => ntSbMeter(c, true), ths_switchbot_outdoor: ntSbOutdoor, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, det_door: ntDetDoor, det_vibration: ntDetVibration, det_glass: ntDetGlass, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, spk_focal_bird: ntSpkFocalBird, spk_focal_od6: ntSpkFocalOd6, spk_denon_avr: ntSpkDenon, spk_avr: ntSpkAvr, spk_wiim_amp: ntSpkWiim, spk_smart_clock: ntSpkClock, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 // The card's colour on a drawing made after a real product: its shell, the
 // greys, blacks and whites it is drawn in, takes the colour, lightest to
 // darkest as before; what has a colour of its own (a screen's glow, a
@@ -5332,7 +5385,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
   const out = (mode, labelKey, color, draw) => ({ mode, label: t(hass, labelKey), color, lines, draw: { ...draw, unav } });
   if (unav) {
     const ml = meterLayoutOf(cfg, st);
-    const kinds = { pellet_grill: "pellet_grill", filament_dryer: "dryer", humidifier: "humidifier", water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree", mobility: `mob_${mobilityLayoutOf(cfg, st)}`,
+    const kinds = { gas_fireplace: "gas_fireplace", pellet_grill: "pellet_grill", filament_dryer: "dryer", humidifier: "humidifier", water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree", mobility: `mob_${mobilityLayoutOf(cfg, st)}`,
       irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, fingerbot: `fb_${fingerbotLayoutOf(cfg, st)}`, valve: `vlv_${valveLayoutOf(cfg, st)}`, drying_rack: `rack_${rackLayoutOf(cfg, st)}`, food_processor: `fp_${fpLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}`, console: `con_${consoleLayoutOf(cfg, st)}`, streamer: `str_${streamerLayoutOf(cfg, st)}`, climate_sensor: `ths_${thsLayoutOf(cfg, st)}`, cover: `cov_${coverLayoutOf(cfg, st)}` };
     return out("unav", "ev_offline", NT_COLORS.unav, { kind: kinds[type], on: false, electric: floorLayoutOf(cfg) === "electric", model: type === "water_pump" ? circModelOf(cfg, st) : "",
       palette: cfg.tree_palette, ...(type === "pellet_grill" ? { layout: grillLayoutOf(cfg, st) } : {}), ...(type === "filament_dryer" ? fdLook(cfg) : {}), presents: type === "christmas_tree" && treePresents(cfg), color: type === "speaker" ? speakerColorOf(cfg, st) : type === "cover" ? cvColor(cfg.cover_color, COVER_COLORS) : "",
@@ -5518,6 +5571,45 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     if (charging) return out("on", bv !== null && bv >= 100 ? "fb_charged" : "fb_charging", NT_COLORS.lit, draw);
     if (low) return { ...out("ok", "fb_low", "#ef6c00", draw) };
     return out("ok", switchMode ? "fb_released" : "fb_ready", NT_COLORS.idle, draw);
+  }
+  if (type === "gas_fireplace") {
+    // A gas fireplace (#130): its flame from the flame sensor, else from its
+    // switch or thermostat; the fan, the lights and the pilot each on their
+    // own, as IntelliFire runs them.
+    const onOf = (e) => { const x = e ? stateObj(hass, e) : null; return x ? NT_ON.includes(String(x.state).toLowerCase()) : null; };
+    const fs = onOf(cfg.flame_entity);
+    const a = (st && st.attributes) || {};
+    const flame = fs !== null ? fs : domainOf(cfg.state_entity) === "climate" ? String(a.hvac_action || "").toLowerCase() === "heating" : NT_ON.includes(raw);
+    const lvlRaw = cfg.flame_height_entity ? numericState(hass, cfg.flame_height_entity) : null;
+    const level = lvlRaw === null ? 3 : Math.min(5, Math.max(1, Math.round(lvlRaw)));
+    if (cfg.flame_height_entity && lvlRaw !== null) lines.push({ key: "gf_height", icon: "mdi:fire", label: t(hass, "gf_flame_height"), value: `${level} / 5`, entity: cfg.flame_height_entity });
+    const fanSt = cfg.fan_entity ? stateObj(hass, cfg.fan_entity) : null;
+    const fan = !!fanSt && NT_ON.includes(String(fanSt.state).toLowerCase());
+    const pct = fanSt ? numberOrNull((fanSt.attributes || {}).percentage) : null;
+    if (fanSt) lines.push({ key: "gf_fan", icon: fan ? "mdi:fan" : "mdi:fan-off", label: t(hass, "section_fan"), value: fan ? (pct !== null ? `${Math.round(pct)} %` : t(hass, "gf_on")) : t(hass, "ac_off"), entity: cfg.fan_entity });
+    const lightSt = cfg.light_entity ? stateObj(hass, cfg.light_entity) : null;
+    const light = !!lightSt && NT_ON.includes(String(lightSt.state).toLowerCase());
+    const bri = lightSt ? numberOrNull((lightSt.attributes || {}).brightness) : null;
+    if (lightSt) lines.push({ key: "gf_light", icon: light ? "mdi:lightbulb-on" : "mdi:lightbulb-outline", label: t(hass, "section_light"), value: light ? (bri !== null ? `${Math.round(bri / 2.55)} %` : t(hass, "gf_on")) : t(hass, "ac_off"), entity: cfg.light_entity });
+    const th = cfg.thermostat_entity ? stateObj(hass, cfg.thermostat_entity) : null;
+    if (th) {
+      const ta = th.attributes || {}, off = String(th.state).toLowerCase() === "off";
+      const unit = ta.temperature_unit || ((hass.config || {}).unit_system || {}).temperature || "\u00b0";
+      lines.push({ key: "gf_thermostat", icon: off ? "mdi:thermostat-off" : "mdi:thermostat", label: t(hass, "type_thermostat"), value: off || ta.temperature === undefined ? t(hass, "ac_off") : `${ta.temperature} ${unit}`, entity: cfg.thermostat_entity });
+    }
+    const tl = ntLine(hass, cfg, "gf_room", "mdi:home-thermometer", "wood_room", cfg.temperature_entity);
+    if (tl) lines.push(tl);
+    else if (th && (th.attributes || {}).current_temperature !== undefined) lines.push({ key: "gf_room", icon: "mdi:home-thermometer", label: t(hass, "wood_room"), value: `${th.attributes.current_temperature} ${th.attributes.temperature_unit || ((hass.config || {}).unit_system || {}).temperature || ""}`.trim(), entity: cfg.thermostat_entity });
+    const pilot = onOf(cfg.pilot_entity);
+    if (pilot !== null) lines.push({ key: "gf_pilot", icon: "mdi:fire-circle", label: t(hass, "gf_pilot"), value: t(hass, pilot ? "gf_on" : "ac_off"), entity: cfg.pilot_entity });
+    const error = !!onOf(cfg.error_entity);
+    const offline = onOf(cfg.connectivity_entity) === false;
+    const draw = { kind: "gas_fireplace", on: flame || fan || light || !!pilot, flame, level, fan, fanPct: pct === null ? null : pct / 100, light, pilot: !!pilot, error };
+    if (offline) return out("unav", "ev_offline", NT_COLORS.unav, draw);
+    if (error) return out("alarm", "gf_error", NT_COLORS.alarm, draw);
+    if (flame) return out("heat", "gf_burning", NT_COLORS.heat, draw);
+    if (pilot) return out("on", "gf_pilot_on", NT_COLORS.idle, draw);
+    return out("off", "ac_off", NT_COLORS.off, draw);
   }
   if (type === "food_processor") {
     // A kitchen robot read from its plug: off, ready on a live plug, mixing
@@ -6081,6 +6173,10 @@ function ntControls(hass, cfg, type) {
   if (st && !cfg.toggle_entity && type !== "meter" && type !== "fingerbot" && (["light", "switch", "input_boolean", "valve"].includes(domainOf(cfg.state_entity)) || (type === "humidifier" && domainOf(cfg.state_entity) === "humidifier"))) {
     out.push({ key: "toggle", entity: cfg.state_entity, icon: type === "valve" ? (["on", "open", "opening"].includes(String(st.state).toLowerCase()) ? "mdi:valve-open" : "mdi:valve-closed") : type === "christmas_tree" ? "mdi:pine-tree" : type === "aquarium" ? "mdi:lightbulb" : type === "mobility" ? "mdi:power-plug" : "mdi:power", label: t(hass, "toggle"),
       on: ["on", "open", "opening"].includes(String(st.state).toLowerCase()) });
+  }
+  if (type === "gas_fireplace") {
+    if (cfg.fan_entity && stateObj(hass, cfg.fan_entity) && ["fan", "switch", "input_boolean"].includes(domainOf(cfg.fan_entity))) out.push({ key: "gf_fan", entity: cfg.fan_entity, icon: "mdi:fan", label: t(hass, "section_fan"), on: ntOnOff(hass, cfg.fan_entity) });
+    if (cfg.light_entity && stateObj(hass, cfg.light_entity) && ["light", "switch", "input_boolean"].includes(domainOf(cfg.light_entity))) out.push({ key: "gf_light", entity: cfg.light_entity, icon: "mdi:lightbulb", label: t(hass, "section_light"), on: ntOnOff(hass, cfg.light_entity) });
   }
   if (type === "speaker" && st && ["playing", "paused", "buffering", "idle", "on"].includes(String(st.state).toLowerCase())) {
     const playing = ["playing", "buffering"].includes(String(st.state).toLowerCase());

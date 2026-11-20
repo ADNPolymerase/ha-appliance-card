@@ -238,7 +238,14 @@ const SECTIONS = [
     when: (c) => pumpLayoutOf(c, null) === "circulator" },
   { field: "fault_entity", types: ["water_pump"], labelKey: "heat_fault", includeDomains: ["binary_sensor", "sensor"],
     when: (c) => pumpLayoutOf(c, null) === "circulator" },
-  { field: "temperature_entity", types: ["floor_heating", "spa", "sauna", "aquarium", "filament_dryer", "pellet_grill"], labelKey: "temperature", includeDomains: ["sensor", "number", "input_number", "climate"] },
+  { field: "flame_entity", types: ["gas_fireplace"], labelKey: "gf_flame", includeDomains: ["binary_sensor", "sensor"] },
+  { field: "flame_height_entity", types: ["gas_fireplace"], labelKey: "gf_flame_height", includeDomains: ["number", "sensor", "input_number"] },
+  { field: "fan_entity", types: ["gas_fireplace"], labelKey: "section_fan", includeDomains: ["fan", "switch", "input_boolean"] },
+  { field: "light_entity", types: ["gas_fireplace"], labelKey: "section_light", includeDomains: ["light", "switch", "input_boolean"] },
+  { field: "thermostat_entity", types: ["gas_fireplace"], labelKey: "type_thermostat", includeDomains: ["climate"] },
+  { field: "pilot_entity", types: ["gas_fireplace"], labelKey: "gf_pilot", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
+  { field: "error_entity", types: ["gas_fireplace"], labelKey: "section_error", includeDomains: ["binary_sensor", "sensor"] },
+  { field: "temperature_entity", types: ["floor_heating", "spa", "sauna", "aquarium", "filament_dryer", "pellet_grill", "gas_fireplace"], labelKey: "temperature", includeDomains: ["sensor", "number", "input_number", "climate"] },
   { field: "humidity_entity", types: ["filament_dryer", "climate_sensor"], labelKey: "ac_line_humidity", includeDomains: ["sensor", "number", "input_number"] },
   // A CO2 monitor (#108): its CO2, the two thresholds that turn it orange
   // then red, and its temperature when its state is the CO2.

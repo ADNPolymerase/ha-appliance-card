@@ -1843,6 +1843,15 @@ Object.assign(EXTRA, {
   focal_bird_b: spkCard(L("Office", "Bureau"), "focal_bird", "paused", { media_title: "Bol\u00e9ro", media_artist: "Ravel" }, "black"),
   focal_od6_w: spkCard(L("Terrace", "Terrasse"), "focal_od6", "playing", { media_title: "Summertime", media_artist: "Ella Fitzgerald", volume_level: .5 }, "white"),
   focal_od6_b: spkCard(L("Pool house", "Pool house"), "focal_od6", "idle", {}, "black"),
+  fire_on: () => card({ name: L("Great room", "Salon"), appliance_type: "gas_fireplace", state_entity: "switch.if_flame", flame_entity: "binary_sensor.if_flame", flame_height_entity: "number.if_flame_control", fan_entity: "fan.if_fan", light_entity: "light.if_lights", thermostat_entity: "climate.if_thermostat", temperature_entity: "sensor.if_temperature", pilot_entity: "switch.if_pilot" },
+    [st("switch.if_flame", "on"), st("binary_sensor.if_flame", "on"), st("number.if_flame_control", 3, { min: 1, max: 5 }), st("fan.if_fan", "on", { percentage: 50 }), st("light.if_lights", "on", { brightness: 255 }),
+     st("climate.if_thermostat", "heat", { temperature: 72, current_temperature: 68, temperature_unit: "\u00b0F" }), st("sensor.if_temperature", 68.4, { unit_of_measurement: "\u00b0F", device_class: "temperature" }), st("switch.if_pilot", "off")]),
+  fire_high: () => card({ name: L("Den", "Bureau"), appliance_type: "gas_fireplace", state_entity: "switch.if2_flame", flame_height_entity: "number.if2_flame", fan_entity: "fan.if2_fan" },
+    [st("switch.if2_flame", "on"), st("number.if2_flame", 5, { min: 1, max: 5 }), st("fan.if2_fan", "off")]),
+  fire_pilot: () => card({ name: L("Bedroom", "Chambre"), appliance_type: "gas_fireplace", state_entity: "switch.if3_flame", pilot_entity: "switch.if3_pilot", light_entity: "light.if3_lights" },
+    [st("switch.if3_flame", "off"), st("switch.if3_pilot", "on"), st("light.if3_lights", "off")]),
+  fire_lights: () => card({ name: L("Living room", "S\u00e9jour"), appliance_type: "gas_fireplace", state_entity: "switch.if4_flame", light_entity: "light.if4_lights", fan_entity: "fan.if4_fan" },
+    [st("switch.if4_flame", "off"), st("light.if4_lights", "on", { brightness: 160 }), st("fan.if4_fan", "on", { percentage: 25 })]),
   avr_on: spkCard(L("Living room", "Salon"), "avr", "playing", { source: "TV", sound_mode: "Straight", volume_level: .42, media_title: "Match" }),
   wiim_on: spkCard(L("Office", "Bureau"), "wiim_amp", "playing", { media_title: "So What", media_artist: "Miles Davis", volume_level: .5 }),
   wiim_silver: spkCard(L("Kitchen", "Cuisine"), "wiim_amp", "idle", { volume_level: .3 }, "silver"),
@@ -1948,8 +1957,8 @@ function liveGallery() {
   const wrap = document.getElementById("wrap");
   wrap.innerHTML = `<header>
     <h1>HA Appliance Card</h1>
-    <p>${L("A Lovelace card for 71 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
-      "Une card Lovelace pour 71 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
+    <p>${L("A Lovelace card for 72 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
+      "Une card Lovelace pour 72 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
     <nav>${link("lang", "en", "English", !fr)}${link("lang", "fr", "Français", fr)}<span></span>${link("theme", "light", L("Light", "Clair"), !dark)}${link("theme", "dark", L("Dark", "Sombre"), dark)}<span></span>${link("plug", "0", L("Integrations", "Intégrations"), !plugOnly)}${link("plug", "1", L("Smart plug only", "Prise connectée seule"), plugOnly)}<span></span>${link("color", "", L("Own colours", "Couleurs d'origine"), !demoColor)}${[["white", "White", "Blanc"], ["grey", "Grey", "Gris"], ["black", "Black", "Noir"], ["red", "Red", "Rouge"]].map(([v, en, f]) => link("color", v, L(en, f), demoColor === v)).join("")}<span></span><a href="https://github.com/ADNPolymerase/ha-appliance-card">GitHub</a></nav>
     <p class="hint">${plugOnly
       ? L("Each card below has nothing but a smart plug: its switch and its power meter. Open “Change the values” and move the power, or press the power button.",
@@ -1963,6 +1972,7 @@ function liveGallery() {
     [L("Heating and climate", "Chauffage et climat"), [waterHeater, boiler, boilerWindow, boilerThermo, thSquare, thRound, thGlass, thValve, heatPump, pelletStove, spaceHeater, towelWarmer, towelPanel, airConditioner, dehumidifier, humidifier, humidifierNight, humidifierEmpty, humidifierLifted]],
     [L("CO\u2082 monitors", "Capteurs de CO\u2082"), [EXTRA.co2_eink, EXTRA.co2_box, EXTRA.co2_netatmo, EXTRA.co2_module]],
     [L("SwitchBot meters", "Thermom\u00e8tres SwitchBot"), [EXTRA.sb_co2, EXTRA.sb_co2_high, EXTRA.sb_pro, EXTRA.sb_meter, EXTRA.sb_plus, EXTRA.sb_outdoor]],
+    [L("Gas fireplace", "Chemin\u00e9e au gaz"), [EXTRA.fire_on, EXTRA.fire_high, EXTRA.fire_pilot, EXTRA.fire_lights], "new"],
     [L("Clock, WiiM amp, AV receiver, mini PC", "R\u00e9veil, ampli WiiM, ampli A/V, mini PC"), [EXTRA.clock_idle, EXTRA.clock_play, EXTRA.wiim_on, EXTRA.wiim_silver, EXTRA.avr_on, EXTRA.mini_pc, EXTRA.mini_pc_busy], "new"],
     [L("Windows and garage door", "Fen\u00eatres et porte de garage"), [EXTRA.win_casement, EXTRA.win_casement_open, EXTRA.win_double, EXTRA.win_double_open, EXTRA.win_sliding, EXTRA.win_sliding_open, EXTRA.win_small, EXTRA.win_small_open, EXTRA.win_vibration, EXTRA.win_glass_break, EXTRA.door_garage, EXTRA.door_garage_open, EXTRA.door_pocket, EXTRA.door_pocket_open], "new"],
     [L("Door styles (PR #131)", "Styles de porte (PR #131)"), [EXTRA.door_glass_top, EXTRA.door_external_open, EXTRA.door_sliding_glass_open, EXTRA.door_barn], "new"],

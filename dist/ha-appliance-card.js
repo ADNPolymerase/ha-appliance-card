@@ -188,7 +188,7 @@ const T = {
     type_cover: "Shutter, blind, pergola or awning", layout_cov_shutter: "Roller shutter", layout_cov_blind: "Roller blind", layout_cov_venetian: "Venetian blind", layout_cov_raffstore: "Exterior venetian blind", layout_cov_pergola: "Bioclimatic pergola", layout_cov_awning: "Awning", cov_open: "Open", cov_closed: "Closed", cov_open_at: "Open {pct} %", cov_opening: "Opening", cov_closing: "Closing", cov_deployed: "Extended", cov_retracted: "Retracted", cov_deployed_at: "Extended {pct} %", cov_deploying: "Extending", cov_retracting: "Retracting", cov_louvers_open: "Louvers open", cov_louvers_closed: "Louvers closed", cov_louvers_at: "Louvers {pct} %", cov_louvers_opening: "Opening the louvers", cov_louvers_closing: "Closing the louvers", cov_position: "Position", cov_tilt: "Slats", cov_light: "Light", cov_open_btn: "Open", cov_close_btn: "Close", cover_color: "Colour (apron, slats, frame)", fabric_color: "Fabric colour", fabric_stripes: "Striped fabric", cov_c_white: "White", cov_c_grey: "Grey", cov_c_anthracite: "Anthracite", cov_c_black: "Black", cov_c_beige: "Beige", cov_c_wood: "Wood", cov_c_brown: "Brown", cov_f_ecru: "Ecru", cov_f_linen: "Linen", cov_f_grey: "Grey", cov_f_anthracite: "Anthracite", cov_f_blue: "Blue", cov_f_petrol: "Petrol blue", cov_f_terracotta: "Terracotta", cov_f_green: "Green", layout_ths_co2_eink: "CO\u2082 monitor, e-ink (Aranet4)", layout_ths_co2_box: "CO\u2082 monitor, LED bar (AirGradient)", layout_ths_co2_netatmo: "Netatmo indoor station", layout_ths_co2_netatmo_module: "Netatmo additional indoor module", layout_ths_switchbot_co2: "SwitchBot Meter Pro CO\u2082", layout_ths_switchbot_pro: "SwitchBot Meter Pro", layout_ths_switchbot_meter: "SwitchBot Meter", layout_ths_switchbot_plus: "SwitchBot Meter Plus", layout_ths_switchbot_outdoor: "SwitchBot Indoor/Outdoor Meter", ths_co2: "CO\u2082", co2_good: "Air is fine", co2_ventilate: "Ventilation advised", co2_poor: "Ventilate now", co2_warning: "Orange from (ppm)", co2_alert: "Red from (ppm)", netatmo_color: "Netatmo colour", ntm_aluminium: "Aluminium", ntm_sand: "Sand", ntm_mint: "Mint", ntm_graphite: "Graphite",
     type_fingerbot: "Finger bot (Fingerbot, SwitchBot Bot)", layout_fb_plus: "Fingerbot Plus (Tuya, Adaprox, MOES)", layout_fb_switchbot: "SwitchBot Bot", layout_fb_classic: "Fingerbot, first model", fingerbot_color: "Colour", fb_ready: "Ready", fb_pressing: "Pressing", fb_held: "Held down", fb_released: "Released", fb_charging: "Charging", fb_charged: "Charged", fb_low: "Low battery", fb_press: "Press", fb_charge: "Charge", fb_mode: "Mode", fb_m_click: "Press", fb_m_switch: "Switch", fb_m_program: "Program", fb_lower: "Down position", fb_upper: "Up position", fb_sustain: "Hold time", fb_reverse: "Reversed", fb_touch: "Touch button", fb_yes: "Yes", fb_no: "No", fb_last: "Last press",
     type_valve: "Shut-off valve (Aqara T1, Tuya)", layout_vlv_aqara: "Aqara Valve Controller T1", layout_vlv_tuya: "Tuya valve controller", vlv_open: "Open", vlv_closed: "Closed", vlv_opening: "Opening", vlv_closing: "Closing", valve_handle_color: "Handle colour", vlv_h_red: "Red", vlv_h_blue: "Blue", vlv_h_yellow: "Yellow", vlv_h_black: "Black",
-    type_food_processor: "Kitchen robot (Thermomix)", layout_fp_tm31: "Thermomix TM31", layout_fp_tm6: "Thermomix TM6", fp_off: "Off", fp_ready: "Ready", fp_mixing: "Mixing", fp_cooking: "Cooking",
+    type_food_processor: "Kitchen robot (Thermomix)", type_gas_fireplace: "Gas fireplace", gf_burning: "Burning", gf_pilot_on: "Pilot on", gf_flame_height: "Flame height", gf_flame: "Flame sensor", gf_pilot: "Pilot light", gf_on: "On", gf_error: "Error", layout_fp_tm31: "Thermomix TM31", layout_fp_tm6: "Thermomix TM6", fp_off: "Off", fp_ready: "Ready", fp_mixing: "Mixing", fp_cooking: "Cooking",
     det_tampered: "Tampered", det_sec_tamper: "Tamper",
     cam_person: "Person detected", cam_vehicle: "Vehicle detected", cam_animal: "Animal detected", cam_siren: "Siren", cam_line_spotlight: "Spotlight", cam_line_tracking: "Auto tracking", cam_v_lit: "On", cam_v_on: "On", cam_v_off: "Off", cam_sec_person: "Person detection", cam_sec_vehicle: "Vehicle detection", cam_sec_animal: "Animal detection", cam_sec_pan: "Pan position", cam_sec_tilt: "Tilt position",
     valve_fluid: "Fluid", vlv_f_water: "Water", vlv_f_gas: "Gas",
@@ -2749,6 +2749,18 @@ const TYPE_AUTO_PATTERNS = {
     light_entity: /light|lamp|led/i,
   },
   sauna: { temperature_entity: /temp/i },
+  // IntelliFire's names (#130).
+  gas_fireplace: {
+    flame_entity: /^binary_sensor\..*flame/i,
+    flame_height_entity: /^(number|sensor)\..*flame.?(control|height|level)/i,
+    fan_entity: /^fan\./i,
+    light_entity: /^light\./i,
+    thermostat_entity: /^climate\./i,
+    temperature_entity: /^sensor\.(?!.*(target|set)).*temperature/i,
+    pilot_entity: /pilot/i,
+    error_entity: /^binary_sensor\..*error/i,
+    connectivity_entity: /^binary_sensor\..*(cloud.?)?connectivity/i,
+  },
   // Pellet grills: Traeger's, Pit Boss's, Camp Chef's, Grilla's, recteq's and
   // GMG's names for the same things.
   pellet_grill: {
@@ -3545,6 +3557,8 @@ const TYPE_CAPS = {
   drying_rack: { readOnly: true },
   // A kitchen robot, read from the plug it is on (HACF #170).
   food_processor: { ntFood: true },
+  // A gas fireplace (#130): flame, fan, lights and pilot on their own.
+  gas_fireplace: { ntFire: true },
   speaker: { ntSpeaker: true },
   // A game console, on PlayStation Network, Xbox, the PS4 integration or a plug.
   console: { ntConsole: true },
@@ -3674,6 +3688,7 @@ const STATE_DOMAINS = {
   valve: ["valve", "switch", "binary_sensor", "input_boolean"],
   drying_rack: ["binary_sensor", "cover", "input_boolean", "switch", "sensor"],
   food_processor: ["switch", "sensor", "input_boolean", "binary_sensor"],
+  gas_fireplace: ["switch", "binary_sensor", "climate", "input_boolean"],
   speaker: ["media_player"],
   console: ["media_player", "sensor", "switch", "binary_sensor", "device_tracker", "input_boolean"],
   streamer: ["media_player", "remote", "switch", "binary_sensor", "input_boolean", "sensor"],
@@ -3800,7 +3815,7 @@ function compactModeOf(v) {
 const TYPE_GROUPS = [
   ["laundry", ["washer", "dryer"]],
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster", "pellet_grill", "food_processor"]],
-  ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove"]],
+  ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove", "gas_fireplace"]],
   ["air", ["air_conditioner", "dehumidifier", "humidifier", "air_purifier", "fan", "diffuser", "hrv", "climate_sensor"]],
   ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "fingerbot", "valve", "drying_rack", "speaker", "console", "streamer", "cover"]],
   ["energy", ["solar", "solar_thermal", "home_battery", "ev_charger", "meter"]],
@@ -5772,7 +5787,7 @@ function lampSpotsOf(cfg, st) {
 // sauna, an aquarium, a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
 // moves moves only on a machine carrying nt-on, staggered through --d0, and
 // the robot's cable and the sump's float follow their SMIL animations.
-const NT_TYPES = ["food_processor", "drying_rack", "valve", "fingerbot", "cover", "pellet_grill", "water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer"];
+const NT_TYPES = ["food_processor", "drying_rack", "valve", "fingerbot", "cover", "pellet_grill", "water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer", "gas_fireplace"];
 // How many spools a filament dryer holds (#93).
 const FD_COUNTS = [1, 2, 4];
 const FD_COLORS = ["#43a047", "#fb8c00", "#8e24aa", "#eceff1"];
@@ -5961,6 +5976,7 @@ const NT_ONLY_FIELDS = {
   valve: ["valve_layout", "valve_fluid", "valve_handle_color", "leak_entity"],
   drying_rack: ["rack_layout", "rack_color"],
   food_processor: ["food_layout"],
+  gas_fireplace: ["flame_entity", "flame_height_entity", "thermostat_entity", "pilot_entity"],
   fingerbot: ["fingerbot_layout", "fingerbot_color", "bot_mode_entity", "lower_entity", "upper_entity", "sustain_entity", "reverse_entity", "touch_entity"],
   speaker: ["speaker_layout", "speaker_color"],
   console: ["console_layout", "game_entity", "playtime_entity", "playtime_left_entity"],
@@ -6049,6 +6065,8 @@ const NT_NAME_RES = [
   ["storage_tank", /pufferspeicher|(^|[^a-z])puffer|buffer.?tank|ballon.?tampon|thermal.?store|schichtspeicher|serbatoio.?(inerziale|di.?accumulo)|deposito.?de.?inercia|buffertank|zbiornik.?buforowy/],
   ["solar_thermal", /solar.?therm|solarthermie|solaire.?thermique|thermique.?solaire|kollektor|collector.?temp|capteur.?solaire|solar.?pump|solarpumpe|solar.?collector/],
   ["pellet_grill", /traeger|timberline|ironwood|woodridge|pit.?boss|prime.?polaris|recteq|rec.?tec.?grill|camp.?chef|woodwind|z.?grills|green.?mountain.?grill|(^|[^a-z])gmg([^a-z]|$)|grilla|pifire|smokefire|searwood|pellet.?(grill|smoker)|grill.?a.?pellet|(barbecue|fumoir).?(a.?)?granul/],
+  // A gas fireplace (#130), before the wood stove that also says fireplace.
+  ["gas_fireplace", /intellifire|gas.?fire.?place|fire.?place.?gas|heat.?(n|and|&).?glo|mertik|gaskamin|gas.?kamin|chemin\w*.?(au.?)?gaz|foyer.?(au.?)?gaz|insert.?gaz|haard.?gas|gashaard/],
   ["wood_stove", /^(?!.*(pellet|granul)).*((^|[^a-z])kamin|wood.?(stove|burner)|log.?(stove|burner)|poele.?(a.?)?bois|cheminee|holzofen|kachelofen|estufa.?de.?lena|stufa.?a.?legna|houtkachel|braskamin|vedovn|braendeovn|brandeovn|piec.?na.?drewno|fireplace)/],
   ["console", /used.?screen.?time|suspend.?software|playstation|(^|[^a-z])ps[1-5]([^a-z0-9]|$)|xbox|nintendo|gamecube|(^|[^a-z])(n64|snes|nes|wii|switch.?lite|switch.?2)([^a-z0-9]|$)|mega.?drive|genesis|console|konsole|consola|konsol/],
   ["streamer", STREAMER_NAME_RE],
@@ -6708,7 +6726,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
   const out = (mode, labelKey, color, draw) => ({ mode, label: t(hass, labelKey), color, lines, draw: { ...draw, unav } });
   if (unav) {
     const ml = meterLayoutOf(cfg, st);
-    const kinds = { pellet_grill: "pellet_grill", filament_dryer: "dryer", humidifier: "humidifier", water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree", mobility: `mob_${mobilityLayoutOf(cfg, st)}`,
+    const kinds = { gas_fireplace: "gas_fireplace", pellet_grill: "pellet_grill", filament_dryer: "dryer", humidifier: "humidifier", water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree", mobility: `mob_${mobilityLayoutOf(cfg, st)}`,
       irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, fingerbot: `fb_${fingerbotLayoutOf(cfg, st)}`, valve: `vlv_${valveLayoutOf(cfg, st)}`, drying_rack: `rack_${rackLayoutOf(cfg, st)}`, food_processor: `fp_${fpLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}`, console: `con_${consoleLayoutOf(cfg, st)}`, streamer: `str_${streamerLayoutOf(cfg, st)}`, climate_sensor: `ths_${thsLayoutOf(cfg, st)}`, cover: `cov_${coverLayoutOf(cfg, st)}` };
     return out("unav", "ev_offline", NT_COLORS.unav, { kind: kinds[type], on: false, electric: floorLayoutOf(cfg) === "electric", model: type === "water_pump" ? circModelOf(cfg, st) : "",
       palette: cfg.tree_palette, ...(type === "pellet_grill" ? { layout: grillLayoutOf(cfg, st) } : {}), ...(type === "filament_dryer" ? fdLook(cfg) : {}), presents: type === "christmas_tree" && treePresents(cfg), color: type === "speaker" ? speakerColorOf(cfg, st) : type === "cover" ? cvColor(cfg.cover_color, COVER_COLORS) : "",
@@ -6894,6 +6912,45 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     if (charging) return out("on", bv !== null && bv >= 100 ? "fb_charged" : "fb_charging", NT_COLORS.lit, draw);
     if (low) return { ...out("ok", "fb_low", "#ef6c00", draw) };
     return out("ok", switchMode ? "fb_released" : "fb_ready", NT_COLORS.idle, draw);
+  }
+  if (type === "gas_fireplace") {
+    // A gas fireplace (#130): its flame from the flame sensor, else from its
+    // switch or thermostat; the fan, the lights and the pilot each on their
+    // own, as IntelliFire runs them.
+    const onOf = (e) => { const x = e ? stateObj(hass, e) : null; return x ? NT_ON.includes(String(x.state).toLowerCase()) : null; };
+    const fs = onOf(cfg.flame_entity);
+    const a = (st && st.attributes) || {};
+    const flame = fs !== null ? fs : domainOf(cfg.state_entity) === "climate" ? String(a.hvac_action || "").toLowerCase() === "heating" : NT_ON.includes(raw);
+    const lvlRaw = cfg.flame_height_entity ? numericState(hass, cfg.flame_height_entity) : null;
+    const level = lvlRaw === null ? 3 : Math.min(5, Math.max(1, Math.round(lvlRaw)));
+    if (cfg.flame_height_entity && lvlRaw !== null) lines.push({ key: "gf_height", icon: "mdi:fire", label: t(hass, "gf_flame_height"), value: `${level} / 5`, entity: cfg.flame_height_entity });
+    const fanSt = cfg.fan_entity ? stateObj(hass, cfg.fan_entity) : null;
+    const fan = !!fanSt && NT_ON.includes(String(fanSt.state).toLowerCase());
+    const pct = fanSt ? numberOrNull((fanSt.attributes || {}).percentage) : null;
+    if (fanSt) lines.push({ key: "gf_fan", icon: fan ? "mdi:fan" : "mdi:fan-off", label: t(hass, "section_fan"), value: fan ? (pct !== null ? `${Math.round(pct)} %` : t(hass, "gf_on")) : t(hass, "ac_off"), entity: cfg.fan_entity });
+    const lightSt = cfg.light_entity ? stateObj(hass, cfg.light_entity) : null;
+    const light = !!lightSt && NT_ON.includes(String(lightSt.state).toLowerCase());
+    const bri = lightSt ? numberOrNull((lightSt.attributes || {}).brightness) : null;
+    if (lightSt) lines.push({ key: "gf_light", icon: light ? "mdi:lightbulb-on" : "mdi:lightbulb-outline", label: t(hass, "section_light"), value: light ? (bri !== null ? `${Math.round(bri / 2.55)} %` : t(hass, "gf_on")) : t(hass, "ac_off"), entity: cfg.light_entity });
+    const th = cfg.thermostat_entity ? stateObj(hass, cfg.thermostat_entity) : null;
+    if (th) {
+      const ta = th.attributes || {}, off = String(th.state).toLowerCase() === "off";
+      const unit = ta.temperature_unit || ((hass.config || {}).unit_system || {}).temperature || "\u00b0";
+      lines.push({ key: "gf_thermostat", icon: off ? "mdi:thermostat-off" : "mdi:thermostat", label: t(hass, "type_thermostat"), value: off || ta.temperature === undefined ? t(hass, "ac_off") : `${ta.temperature} ${unit}`, entity: cfg.thermostat_entity });
+    }
+    const tl = ntLine(hass, cfg, "gf_room", "mdi:home-thermometer", "wood_room", cfg.temperature_entity);
+    if (tl) lines.push(tl);
+    else if (th && (th.attributes || {}).current_temperature !== undefined) lines.push({ key: "gf_room", icon: "mdi:home-thermometer", label: t(hass, "wood_room"), value: `${th.attributes.current_temperature} ${th.attributes.temperature_unit || ((hass.config || {}).unit_system || {}).temperature || ""}`.trim(), entity: cfg.thermostat_entity });
+    const pilot = onOf(cfg.pilot_entity);
+    if (pilot !== null) lines.push({ key: "gf_pilot", icon: "mdi:fire-circle", label: t(hass, "gf_pilot"), value: t(hass, pilot ? "gf_on" : "ac_off"), entity: cfg.pilot_entity });
+    const error = !!onOf(cfg.error_entity);
+    const offline = onOf(cfg.connectivity_entity) === false;
+    const draw = { kind: "gas_fireplace", on: flame || fan || light || !!pilot, flame, level, fan, fanPct: pct === null ? null : pct / 100, light, pilot: !!pilot, error };
+    if (offline) return out("unav", "ev_offline", NT_COLORS.unav, draw);
+    if (error) return out("alarm", "gf_error", NT_COLORS.alarm, draw);
+    if (flame) return out("heat", "gf_burning", NT_COLORS.heat, draw);
+    if (pilot) return out("on", "gf_pilot_on", NT_COLORS.idle, draw);
+    return out("off", "ac_off", NT_COLORS.off, draw);
   }
   if (type === "food_processor") {
     // A kitchen robot read from its plug: off, ready on a live plug, mixing
@@ -7457,6 +7514,10 @@ function ntControls(hass, cfg, type) {
   if (st && !cfg.toggle_entity && type !== "meter" && type !== "fingerbot" && (["light", "switch", "input_boolean", "valve"].includes(domainOf(cfg.state_entity)) || (type === "humidifier" && domainOf(cfg.state_entity) === "humidifier"))) {
     out.push({ key: "toggle", entity: cfg.state_entity, icon: type === "valve" ? (["on", "open", "opening"].includes(String(st.state).toLowerCase()) ? "mdi:valve-open" : "mdi:valve-closed") : type === "christmas_tree" ? "mdi:pine-tree" : type === "aquarium" ? "mdi:lightbulb" : type === "mobility" ? "mdi:power-plug" : "mdi:power", label: t(hass, "toggle"),
       on: ["on", "open", "opening"].includes(String(st.state).toLowerCase()) });
+  }
+  if (type === "gas_fireplace") {
+    if (cfg.fan_entity && stateObj(hass, cfg.fan_entity) && ["fan", "switch", "input_boolean"].includes(domainOf(cfg.fan_entity))) out.push({ key: "gf_fan", entity: cfg.fan_entity, icon: "mdi:fan", label: t(hass, "section_fan"), on: ntOnOff(hass, cfg.fan_entity) });
+    if (cfg.light_entity && stateObj(hass, cfg.light_entity) && ["light", "switch", "input_boolean"].includes(domainOf(cfg.light_entity))) out.push({ key: "gf_light", entity: cfg.light_entity, icon: "mdi:lightbulb", label: t(hass, "section_light"), on: ntOnOff(hass, cfg.light_entity) });
   }
   if (type === "speaker" && st && ["playing", "paused", "buffering", "idle", "on"].includes(String(st.state).toLowerCase())) {
     const playing = ["playing", "buffering"].includes(String(st.state).toLowerCase());

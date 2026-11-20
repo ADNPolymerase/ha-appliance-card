@@ -22,7 +22,7 @@ Une card Lovelace qui dessine les appareils de la maison et les anime selon leur
 
 ## Fonctionnalités
 
-- **71 types d'appareils, plus de 170 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul, d'après l'entité et la marque et le modèle de son appareil, ou choisi avec `appliance_type`.
+- **72 types d'appareils, plus de 170 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul, d'après l'entité et la marque et le modèle de son appareil, ou choisi avec `appliance_type`.
 - **Toutes les intégrations** : chaque champ est une entité à choisir. Une simple prise connectée suffit, sa puissance dit si l'appareil chauffe, lave ou essore.
 - **L'état compris** : `Idle`, `RUNNING`, `En marche`… deviennent veille, en cours, pause, terminé, différé ou erreur, avec l'étape du cycle (lavage, rinçage, essorage…).
 - **Ce qui compte pour chaque appareil** : programme, temps restant, porte, alertes, niveaux, températures, énergie et coût, marche du jour.
@@ -352,7 +352,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. Un dessin fait d'après un vrai produit (console, boîtier de streaming, imprimante, litière…) garde ses vraies couleurs tant qu'aucune couleur n'est choisie ; son écran, la tuile de l'appli et ses pneus gardent les leurs. Les scènes autour d'un appareil (fosse de relevage, jardin, toit) et la lumière des lampes ne changent pas. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 16 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`, `hu`, `zh-Hant`. `nb` et `nb-NO` donnent le norvégien. `zh` est le chinois simplifié ; `zh-Hant`, `zh-TW` et `zh-HK` donnent le chinois traditionnel. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `fingerbot` \| `valve` \| `drying_rack` \| `food_processor` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `fingerbot` \| `valve` \| `drying_rack` \| `food_processor` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove` \| `gas_fireplace`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `illustration_tap_action` | Un appui sur le dessin seul, le reste de la carte gardant `tap_action` : `toggle` (une lampe allumée en la touchant), `more-info`, `none`, ou n'importe quelle action de Home Assistant. Sans lui, le dessin fait comme la carte. Avec `toggle`, le dessin répond comme les boutons, selon `controls_activation` : un appui, deux appuis ou un appui long. |
 | `show_light_button` | `false` cache le bouton de la lumière en haut à gauche (four, hotte, imprimante 3D, pompe de piscine, diffuseur) ; la lumière reste visible sur le dessin. |
@@ -407,6 +407,10 @@ Une section par famille d'appareils : ses options, puis ses guides. Chaque parti
 | `iron_line_color` | fer | La couleur de la ligne le long du fer : `orange` (défaut) \| `blue` (bleu) \| `body` (la couleur de l'appareil). |
 | `hair_dryer_layout` | sèche-cheveux | `pistol` (défaut, sèche-cheveux classique vu de profil) \| `ring` (sèche-cheveux en anneau vu de face). |
 | `heat_threshold` | sèche-cheveux | Puissance à partir de laquelle il souffle de l'air chaud (300 W par défaut). En dessous, seul le ventilateur tourne. |
+| `flame_entity` | cheminée au gaz | Son capteur de flamme. Il dit si le feu brûle ; sans lui, c'est l'interrupteur principal ou le thermostat (en chauffe). |
+| `flame_height_entity` | cheminée au gaz | Le réglage de flamme, de 1 à 5 : une ligne *Hauteur de flamme*, et des flammes dessinées d'autant plus hautes. |
+| `fan_entity` / `light_entity` | cheminée au gaz | Son ventilateur (une ligne avec sa vitesse, l'air chaud qui sort de la grille, un bouton) et son éclairage (une ligne avec sa luminosité, le foyer éclairé par le haut, un bouton). Les deux marchent seuls, flamme ou pas. |
+| `thermostat_entity` / `pilot_entity` | cheminée au gaz | Son thermostat (consigne et température de la pièce) et sa veilleuse (*Veilleuse* et une petite flamme bleue quand le feu est éteint). |
 | `heat_threshold` / `spin_threshold` | lave-linge, lave-vaisselle, sèche-linge | Sur une prise seule : la puissance à partir de laquelle il chauffe (1000 W par défaut, 600 W sur un sèche-linge) et celle à partir de laquelle un lave-linge essore (200 W). En dessous, un lave-linge lave, un sèche-linge refroidit le linge, et un lave-vaisselle sous son seuil sèche. |
 | `detergent_level_entity` / `softener_level_entity` | lave-linge | Les réservoirs de lessive et d'adoucissant, un niveau en % ou un capteur de niveau bas : une ligne, orange quand c'est bas. |
 | `wash_temperature_entity` / `spin_speed_entity` | lave-linge | La température de lavage et la vitesse d'essorage, en lignes. |
@@ -903,6 +907,22 @@ valve_entity: cover.vanne_poele
 ```
 
 </details>
+
+### Cheminées au gaz
+
+Une cheminée au gaz (`gas_fireplace`), IntelliFire ou autre, brûle derrière sa vitre, ses flammes aussi hautes que le réglage de flamme, bleues à la base. Son ventilateur, son éclairage et sa veilleuse marchent chacun de leur côté : le ventilateur souffle l'air chaud par la grille, l'éclairage réchauffe le foyer, la veilleuse garde une petite flamme bleue quand le feu est éteint. Une entité IntelliFire est reconnue à son nom et ses voisines sont remplies.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: gas_fireplace
+state_entity: switch.intellifire_flame
+flame_entity: binary_sensor.intellifire_flame
+flame_height_entity: number.intellifire_flame_control
+fan_entity: fan.intellifire_fan
+light_entity: light.intellifire_lights
+thermostat_entity: climate.intellifire_thermostat
+pilot_entity: switch.intellifire_pilot_light
+```
 
 ### Piscine, pompes, spa, sauna et aquarium
 

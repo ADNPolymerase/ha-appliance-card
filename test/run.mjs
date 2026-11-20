@@ -15328,6 +15328,22 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('garage : juste ouverte, elle monte', /values="0 0;0 -90"/.test(DT({ door_style: 'garage' }, 'on', .3)), true);
   check('fenetre coulissante : juste fermee, le vantail revient', /values="-26 0;0 0"/.test(DT({ window_style: 'sliding' }, 'off', .3)), true);
   check('fenetre : la poignee s efface a l ouverture', /<g opacity="0"><animate attributeName="opacity" values="1;0"/.test(DT({ window_style: 'casement' }, 'on', .3)), true);
+  // A gas fireplace (#130).
+  const GF = (more, ents) => build({ appliance_type: 'gas_fireplace', state_entity: 'switch.f', ...more }, { 'switch.f': { state: 'off', attributes: {} }, ...ents });
+  const gfOn = GF({ flame_height_entity: 'number.h', fan_entity: 'fan.v', light_entity: 'light.l', thermostat_entity: 'climate.t' }, { 'switch.f': { state: 'on', attributes: {} }, 'number.h': { state: '4', attributes: {} }, 'fan.v': { state: 'on', attributes: { percentage: 50 } }, 'light.l': { state: 'on', attributes: { brightness: 128 } }, 'climate.t': { state: 'heat', attributes: { temperature: 72, current_temperature: 68, temperature_unit: '\u00b0F' } } });
+  check('cheminee : allumee, Flamme et ses flammes', /Burning/.test(gfOn.html) && /class="nta-flick ntd/.test(gfOn.html), true);
+  check('cheminee : hauteur 4 sur 5', /4 \/ 5/.test(gfOn.html), true);
+  check('cheminee : ventilation 50 % et son air chaud', /50 %/.test(gfOn.html) && /class="nta-rise ntd1"/.test(gfOn.html), true);
+  check('cheminee : eclairage 50 %', /Light[\s\S]*?50 %/.test(gfOn.html), true);
+  check('cheminee : thermostat et piece', /72 \u00b0F/.test(gfOn.html) && /68 \u00b0F/.test(gfOn.html), true);
+  check('cheminee : la flamme suit son capteur avant l interrupteur', /Burning/.test(GF({ flame_entity: 'binary_sensor.fl' }, { 'switch.f': { state: 'on', attributes: {} }, 'binary_sensor.fl': { state: 'off', attributes: {} } }).html), false);
+  check('cheminee : eteinte, veilleuse allumee', /Pilot on/.test(GF({ pilot_entity: 'switch.p' }, { 'switch.p': { state: 'on', attributes: {} } }).html), true);
+  check('cheminee : eteinte sans rien, Off et pas de flamme', /class="nta-flick/.test(GF({}, {}).html), false);
+  check('cheminee : le ventilateur tourne flamme eteinte', /class="nta-rise ntd1"/.test(GF({ fan_entity: 'fan.v' }, { 'fan.v': { state: 'on', attributes: {} } }).html) && /\bnt-on\b/.test(GF({ fan_entity: 'fan.v' }, { 'fan.v': { state: 'on', attributes: {} } }).html), true);
+  check('cheminee : erreur', /Error/.test(GF({ error_entity: 'binary_sensor.e' }, { 'binary_sensor.e': { state: 'on', attributes: {} } }).html), true);
+  check('cheminee : reconnue par IntelliFire', /nt-k-gas_fireplace/.test(build({ state_entity: 'switch.intellifire_flame_2' }, { 'switch.intellifire_flame_2': { state: 'on', attributes: {} } }).html), true);
+  check('cheminee : boutons ventilation et eclairage', /data-key="gf_fan"|"gf_fan"/.test(gfOn.html) || /mdi:fan/.test(gfOn.html), true);
+  for (const lv of ['1', '3', '5']) check(`cheminee niveau ${lv} : ni NaN ni undefined`, /NaN|undefined/.test(GF({ flame_height_entity: 'number.h' }, { 'switch.f': { state: 'on', attributes: {} }, 'number.h': { state: lv, attributes: {} } }).html), false);
   for (const ws of ['casement', 'double', 'sliding', 'small']) for (const fc of ['', 'white', 'anthracite']) for (const v of ['off', 'on']) {
     check(`fenetre ${ws} ${fc} ${v} : ni NaN ni undefined`, /NaN|undefined/.test(DW(ws, v, { frame_color: fc })), false);
   }
