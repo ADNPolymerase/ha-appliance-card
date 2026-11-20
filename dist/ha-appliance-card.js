@@ -7224,7 +7224,8 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     if (!offish && a.sound_mode) lines.push({ key: "spk_sound_mode", icon: "mdi:surround-sound", label: t(hass, "spk_sound_mode"), value: String(a.sound_mode), entity: cfg.state_entity });
     const draw = { kind, on: playing, st: playing ? "playing" : paused ? "paused" : offish ? "off" : "idle", muted: !!a.is_volume_muted && !offish, color: speakerColorOf(cfg, st),
       src: a.source || a.app_name || "", sound: a.sound_mode || "", vol: numberOrNull(a.volume_level),
-      title: a.media_title || "", artist: a.media_artist || "", clock: layout === "smart_clock" ? clockTime(new Date(), hass) : "" };
+      title: a.media_title || "", artist: a.media_artist || "", clock: layout === "smart_clock" ? clockTime(new Date(), hass) : "",
+      day: layout === "smart_clock" ? (() => { try { return new Date().toLocaleDateString(timeLocale(hass), { weekday: "long", day: "numeric", month: "long" }); } catch (e) { return ""; } })() : "" };
     if (playing) return out("playing", "spk_playing", NT_COLORS.run, draw);
     if (paused) return out("paused", "spk_paused", NT_COLORS.idle, draw);
     if (offish) return out("off", "spk_off", NT_COLORS.off, draw);

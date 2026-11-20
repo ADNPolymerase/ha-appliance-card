@@ -2847,10 +2847,11 @@ ${round(side, `url(#${sd})`, 9)}<polygon points="${side}" fill="url(#${m})"/>
 ${round(face, `url(#${fa})`, 9)}<polygon points="${face}" fill="url(#${m})"/>
 ${round("23.5 33.5 98.7 28.8 88.2 93.4 7.9 88.4", "#0b0c0e", 6)}
 <polygon points="28.8 39.3 88.1 35.7 79.5 88.1 14.3 86.8" fill="${lit ? `url(#${sc})` : "#141518"}" stroke="${lit ? "#8a6e98" : "#141518"}" stroke-width="1.4" stroke-linejoin="round"/>
-<g ${NT_FONT} text-anchor="middle" transform="translate(52 62) rotate(-3.4) skewX(-12) translate(-52 -62)">
-${big ? `<text x="52" y="70" font-size="${ntFit(big, 50, 22).toFixed(2)}" font-weight="300" fill="#ffffff" opacity="${lit ? 1 : .22}">${big}</text>` : `<text x="52" y="60" font-size="${ntFit(title, 48, 7.4).toFixed(2)}" font-weight="500" fill="#ffffff">${title}</text>
-<text x="52" y="68" font-size="4" fill="#ffffff" opacity=".8">${artist}</text>
-<rect x="34" y="74" width="36" height="1.2" rx=".6" fill="#ffffff" opacity=".3"/><rect x="34" y="74" width="${c.st === "playing" ? 22 : 14}" height="1.2" rx=".6" fill="#ffffff"/>`}
+<g ${NT_FONT} text-anchor="middle" transform="matrix(.988 -.06 -.302 .99 28.8 39.3)">
+${big ? `<text x="30" y="15" font-size="3.8" fill="#ffffff" opacity="${lit ? .85 : .2}">${esc(String(c.day || "").slice(0, 26))}</text>
+<text x="30" y="37" font-size="${ntFit(big, 56, 26).toFixed(2)}" font-weight="200" letter-spacing="-.4" fill="#ffffff" opacity="${lit ? 1 : .22}">${big}</text>` : `<text x="30" y="20" font-size="${ntFit(title, 50, 6.6).toFixed(2)}" font-weight="500" fill="#ffffff">${title}</text>
+<text x="30" y="27" font-size="3.8" fill="#ffffff" opacity=".8">${artist}</text>
+<rect x="12" y="33" width="36" height="1.2" rx=".6" fill="#ffffff" opacity=".3"/><rect x="12" y="33" width="${c.st === "playing" ? 22 : 14}" height="1.2" rx=".6" fill="#ffffff"/>`}
 </g>
 <circle cx="27" cy="36.4" r=".6" fill="#2a2c30"/><circle cx="93.6" cy="32.2" r=".6" fill="#2a2c30"/>
 ${c.st === "paused" ? spkPause(52, 50, "#ffffff") : ""}${c.muted ? spkMute(96, 14) : ""}`;
@@ -5885,7 +5886,8 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     if (!offish && a.sound_mode) lines.push({ key: "spk_sound_mode", icon: "mdi:surround-sound", label: t(hass, "spk_sound_mode"), value: String(a.sound_mode), entity: cfg.state_entity });
     const draw = { kind, on: playing, st: playing ? "playing" : paused ? "paused" : offish ? "off" : "idle", muted: !!a.is_volume_muted && !offish, color: speakerColorOf(cfg, st),
       src: a.source || a.app_name || "", sound: a.sound_mode || "", vol: numberOrNull(a.volume_level),
-      title: a.media_title || "", artist: a.media_artist || "", clock: layout === "smart_clock" ? clockTime(new Date(), hass) : "" };
+      title: a.media_title || "", artist: a.media_artist || "", clock: layout === "smart_clock" ? clockTime(new Date(), hass) : "",
+      day: layout === "smart_clock" ? (() => { try { return new Date().toLocaleDateString(timeLocale(hass), { weekday: "long", day: "numeric", month: "long" }); } catch (e) { return ""; } })() : "" };
     if (playing) return out("playing", "spk_playing", NT_COLORS.run, draw);
     if (paused) return out("paused", "spk_paused", NT_COLORS.idle, draw);
     if (offish) return out("off", "spk_off", NT_COLORS.off, draw);

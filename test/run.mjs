@@ -15127,7 +15127,7 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('129 : l ampli generique sans le nom Denon', />DENON</.test(spk('media_player.yamaha_rx_v6a', { source: 'TV' })), false);
   check('129 : un WiiM par son nom', kindOf(spk('media_player.wiim_amp_office')), 'spk_wiim_amp');
   check('128 : un Lenovo Smart Clock par son nom', kindOf(spk('media_player.lenovo_smart_clock')), 'spk_smart_clock');
-  check('128 : au repos, l heure sur l ecran', /font-weight="300" fill="#ffffff" opacity="1">\d{1,2}[:.h ]\d{2}/.test(spk('media_player.lenovo_smart_clock', {}, 'idle')), true);
+  check('128 : au repos, l heure sur l ecran', /font-weight="200" letter-spacing="-.4" fill="#ffffff" opacity="1">\d{1,2}[:.h ]\d{2}/.test(spk('media_player.lenovo_smart_clock', {}, 'idle')), true);
   check('128 : en lecture, le titre a la place', />Morning Jazz</.test(spk('media_player.lenovo_smart_clock', { media_title: 'Morning Jazz' })), true);
   check('172 : une enceinte Denon Home reste une enceinte', kindOf(spk('media_player.denon_home_150')) !== 'spk_denon_avr', true);
   const avr = spk('media_player.denon_avr', { source: 'Blu-ray', sound_mode: 'Dolby Atmos', volume_level: .5 });
