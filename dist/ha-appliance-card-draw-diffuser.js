@@ -66,12 +66,29 @@ ${DIF_HALO(60, 106, 52, 12)}${softShadow(60, 106.4, 22.4, 4.3, 0.29)}
 <path d="M47 56 Q50 50 56 48" stroke="#fff" stroke-width="2" opacity=".7" fill="none" stroke-linecap="round"/>
 <circle cx="60" cy="96" r="2" fill="none" stroke="${base[1]}" stroke-width=".8"/>${DIF_PUFFS(60, 27)}`;
   },
+  // A plug-in liquid diffuser (a mosquito repellent): seen from the side, its
+  // two pins out to the left, the rocker on top, the refill hanging under it
+  // with its wick. The liquid goes when the tank is empty.
+  plugin: (wood, b) => `<defs><linearGradient id="dif-g-b" x1="0" y1="0" x2=".6" y2="1"><stop offset="0" stop-color="${b[3]}"/><stop offset=".5" stop-color="${b[0]}"/><stop offset="1" stop-color="${b[2]}"/></linearGradient>
+<linearGradient id="dif-g-pin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f6f7"/><stop offset=".5" stop-color="#a4aaaf"/><stop offset="1" stop-color="#d9dde0"/></linearGradient>
+<linearGradient id="dif-g-gl" x1="0" x2="1"><stop offset="0" stop-color="#a7c0cc" stop-opacity=".55"/><stop offset=".3" stop-color="#fff" stop-opacity=".8"/><stop offset="1" stop-color="#a7c0cc" stop-opacity=".45"/></linearGradient></defs>
+<path d="M24 47 H47 V51 H24 Q22 51 22 49 Q22 47 24 47 Z" fill="url(#dif-g-pin)"/><path d="M28 58 H47 V62 H28 Q26 62 26 60 Q26 58 28 58 Z" fill="url(#dif-g-pin)"/>
+<path d="M57 70 H85 Q88 70 88 74 V95 Q88 102 81 102 H61 Q54 102 54 95 V74 Q54 70 57 70 Z" fill="url(#dif-g-gl)" stroke="#9fb6c2" stroke-width=".8"/>
+<path class="dif-liquid" d="M56 82 Q71 84 86 82 V95 Q86 100 80.5 100 H61.5 Q56 100 56 95 Z" fill="#cfe2ea" opacity=".7"/>
+<rect x="68" y="66" width="6" height="33" rx="2" fill="#5b4636"/>
+<path d="M58 78 V94" stroke="#fff" stroke-width="2" opacity=".7" stroke-linecap="round"/>
+<rect x="54" y="66" width="34" height="7" rx="2" fill="${b[2]}"/>
+<path d="M51 40 Q53 31 66 30 H81 Q93 31 94 42 L95 60 Q95 69 86 69 H56 Q48 69 48 61 Z" fill="url(#dif-g-b)"/>
+<ellipse cx="47.5" cy="54" rx="5" ry="13" fill="${b[3]}" stroke="${b[1]}" stroke-width=".8"/>
+<path d="M56 38 Q60 34 68 33" stroke="#fff" stroke-width="2.4" opacity=".35" fill="none" stroke-linecap="round"/>
+<rect class="dif-rocker" x="56" y="31.2" width="10" height="3.6" rx="1" transform="rotate(-8 61 33)"/>
+<ellipse cx="80" cy="31.4" rx="7" ry="1.8" fill="${b[2]}"/><ellipse cx="80" cy="31" rx="4" ry="1" fill="#3a3530"/>${DIF_PUFFS(80, 26)}`,
 };
 function diffuserHtml(cls, d) {
   const layout = DIFFUSER_LAYOUTS.includes(d.layout) ? d.layout : "drop";
   const pal = DIF_PAL[d.palette];
   const wood = !pal && ["drop", "flame", "nebulizer"].includes(layout);
-  const b = pal || (wood ? DIF_WOOD : DIF_WHITE);
+  const b = pal || (wood ? DIF_WOOD : layout === "plugin" ? DIF_PAL.grey : DIF_WHITE);
   const flags = ["dif", `dif-l-${layout}`, `dif-m-${d.mode || "unav"}`, d.lit ? "dif-lit" : ""].filter(Boolean).join(" ");
   return `
         <div class="machine ${cls} ${flags}" style="--dif-lc:${d.lightColor || "#ffd180"}"><svg class="dif-svg" viewBox="0 0 120 120">
@@ -95,6 +112,9 @@ css: () => `
         .dif-halo{opacity:0}
         .dif-lit .dif-halo{opacity:1;animation:dif-breathe 3s ease-in-out infinite}
         .dif-band{fill:#f4f4f2}
+        .dif-rocker{fill:#6d3030}
+        .dif-m-mist .dif-rocker,.dif-m-low .dif-rocker,.dif-m-inter .dif-rocker,.dif-m-empty .dif-rocker{fill:#e53935}
+        .dif-m-empty .dif-liquid{opacity:0}
         .dif-lit .dif-band{fill:var(--dif-lc)}
         .dif-glass{fill:var(--dif-lc);opacity:0}
         .dif-lit .dif-glass{opacity:.85}
