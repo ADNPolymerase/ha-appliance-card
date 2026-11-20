@@ -1481,6 +1481,14 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           value: this._config.door_style || "wood",
           options: DOOR_STYLES.map((v) => ({ value: v, label: t(hass, `door_style_${v}`) })),
+        }) + this._row("det_window_style", "window_style", {
+          type: "select",
+          value: this._config.window_style || "auto",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(WINDOW_STYLES.map((v) => ({ value: v, label: t(hass, `window_style_${v}`) }))),
+        }) + this._row("det_frame_color", "frame_color", {
+          type: "select",
+          value: this._config.frame_color || "auto",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(FRAME_COLORS.map((v) => ({ value: v, label: t(hass, `frame_${v}`) }))),
         }) : ""}
         ${this._type === "irrigation" && irrigationLayoutOf(this._config, stateObj(hass, this._config.state_entity)) === "tap" ? this._row("irr_model", "tap_model", {
           type: "select",
@@ -1916,6 +1924,7 @@ class ApplianceCardEditor extends HTMLElement {
         if (field === "detector_model" && value === "auto") delete this._config.detector_model;
         // The wooden door is the default and is not written.
         if (field === "door_style" && value === "wood") delete this._config.door_style;
+        if ((field === "window_style" || field === "frame_color") && value === "auto") delete this._config[field];
         // No background is the default and is not written.
         if (field === "illustration_backdrop" && !illustrationBackdropOf(value)) delete this._config.illustration_backdrop;
         if (field === "compact") {

@@ -21,7 +21,11 @@ const DETECTOR_MODELS = { door: ["sonoff", "aqara", "hue", "thirdreality", "ikea
 // panel glazed, an interior glass door,
 // an entrance door, plain or with its glass strip, a sliding glass patio door
 // or a sliding barn door. A window keeps its sash.
-const DOOR_STYLES = ["wood", "glass_top", "glass", "external", "external_glass", "sliding_glass", "sliding_wood"];
+const DOOR_STYLES = ["wood", "glass_top", "glass", "external", "external_glass", "sliding_glass", "sliding_wood", "pocket", "garage"];
+// The window a contact sits on (HACF #176): one sash, two, a sliding window
+// or a small one; and the colour of its frame, white or anthracite.
+const WINDOW_STYLES = ["casement", "double", "sliding", "small"];
+const FRAME_COLORS = ["white", "anthracite"];
 // A finger bot's drawing (HACF #163), its colour, how long a press shows and
 // the power that means its plug is charging it.
 const FINGERBOT_LAYOUTS = ["plus", "switchbot", "classic"];
@@ -184,7 +188,7 @@ const NT_ONLY_FIELDS = {
   mobility: ["mobility_layout"],
   irrigation: ["irrigation_layout", "zone_entity", "rain_delay_entity", "soil_moisture_entity", "next_run_entity", "tap_model", "tap_wall", "watering_duration_entity"],
   litter_box: ["litter_layout", "waste_drawer_entity", "litter_level_entity", "pet_weight_entity", "visits_entity", "cat_present_entity", "last_use_entity"],
-  detector: ["detector_layout", "detector_model", "door_style", "co_level_entity", "co_entity", "tamper_entity"],
+  detector: ["detector_layout", "detector_model", "door_style", "window_style", "frame_color", "co_level_entity", "co_entity", "tamper_entity"],
   valve: ["valve_layout", "valve_fluid", "valve_handle_color", "leak_entity"],
   drying_rack: ["rack_layout", "rack_color"],
   food_processor: ["food_layout"],
@@ -394,9 +398,25 @@ function detectorLayoutOf(cfg, st) {
 function doorStyleOf(cfg) {
   if (DOOR_STYLES.includes(cfg.door_style)) return cfg.door_style;
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""}`).toLowerCase();
+  if (/galandage|pocket|einschub|inbouwschuif|a.?scomparsa|empotrad/.test(hay)) return "pocket";
+  if (/sectional|sectionnel|sektional|sezional|seccional|garage.?door|porte.?de.?garage|garagentor|garagedeur|puerta.?de.?garaje|porta.?da.?garage/.test(hay)) return "garage";
   if (/barn|grange|scheune|schuur|granero|fienile|stodol/.test(hay)) return "sliding_wood";
   if (/sliding|patio|schuif|schiebe|coulissant|baie.?vitree|corredera|scorrevole|skjut|skyve|skyde|przesuw|posuvn|toloajto/.test(hay)) return "sliding_glass";
   return "";
+}
+// The window: picked, else read in the name; one sash when nothing says otherwise.
+function windowStyleOf(cfg) {
+  if (WINDOW_STYLES.includes(cfg.window_style)) return cfg.window_style;
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""}`).toLowerCase();
+  if (/sliding|coulissant|schiebe|schuif|corredera|scorrevole|de.?correr|skjut|skyve|skyde|przesuw|posuvn|tolo/.test(hay)) return "sliding";
+  if (/double|deux.?battants|2.?vantaux|french|zweiflug|doppel|dos.?hojas|due.?ante|dubbel|duas.?folhas|dwuskrzyd|dvoukrid|ketszarnyu/.test(hay)) return "double";
+  if (/petite|small|klein|pequena|piccola|lucarne|vasistas|(^|[^a-z])wc([^a-z]|$)|toilet/.test(hay)) return "small";
+  return "casement";
+}
+// The frame: picked, else anthracite for a garage door and the usual one for the rest.
+function frameColorOf(cfg, style) {
+  if (FRAME_COLORS.includes(cfg.frame_color)) return cfg.frame_color;
+  return style === "garage" ? "anthracite" : "";
 }
 // Its model: picked, else read from the brand in its name or attributes.
 function detectorModelOf(cfg, st, layout) {
@@ -2155,11 +2175,66 @@ function ntDetDoor(c) {
   const wd = ntId(), fr = ntId(), bd = ntId(), dk = ntId();
   // A pulled-off sensor is an alarm, not an open door.
   const open = c.tamper ? !!c.smoke : c.on;
-  const gw = ntId(), ex = ntId(), sk = ntId(), al = ntId(), cl = ntId();
+  const gw = ntId(), ex = ntId(), sk = ntId(), al = ntId(), cl = ntId(), pk = ntId();
   const style = c.window ? "" : c.style || "";
   let mx = open ? 39 : 62;
   let leaf = "";
-  if (style.startsWith("sliding")) {
+  const anth = c.frame === "anthracite";
+  const sf = anth ? "#4a5259" : "#f3f5f7", ss = anth ? "#262c31" : "#b7c0c8", sg = anth ? "#1e2327" : "#b0bcc6";
+  const hdl = (x, y, h = 12) => `<rect x="${x}" y="${y}" width="3" height="${h}" rx="1.5" fill="#c9ccd0" stroke="#8e949a" stroke-width=".4"/>`;
+  const shine = (x, y, w) => `<path d="M${x} ${y + 12} L${x + w * .5} ${y + 6} M${x} ${y + 24} L${x + w} ${y + 10}" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".55"/>`;
+  // A sash seen flat: its frame round its glass.
+  const sash = (x, y, w, h) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${sf}" stroke="${ss}" stroke-width=".7"/><rect x="${x + 5}" y="${y + 5}" width="${w - 10}" height="${h - 10}" fill="url(#${gw})" stroke="${sg}" stroke-width=".5"/>`;
+  // The same sash turned in on its hinge at x, the room dark behind it.
+  const swung = (x, y, w, h, behind = dk) => {
+    const e = +(x + w * .58).toFixed(1), d = +(h * .066).toFixed(1);
+    return `<rect x="${e}" y="${y + d}" width="${+(x + w - e).toFixed(1)}" height="${+(h - 2 * d).toFixed(1)}" fill="url(#${behind})"/>
+<polygon points="${x} ${y} ${e} ${y + d} ${e} ${y + h - d} ${x} ${y + h}" fill="${sf}" stroke="${ss}" stroke-width=".7"/><polygon points="${x + 5} ${y + 8} ${e - 5} ${y + d + 6} ${e - 5} ${y + h - d - 6} ${x + 5} ${y + h - 8}" fill="url(#${gw})" stroke="${sg}" stroke-width=".5"/>`;
+  };
+  const ws = c.window ? c.wstyle || "casement" : "";
+  let stripY = 2, stripH = 114;
+  if (ws === "double") {
+    // Two sashes; the right one opens, the left one stays shut.
+    leaf = sash(10, 6, 31, 106) + shine(16, 12, 14) + (open ? swung(41, 6, 31, 106)
+      : sash(41, 6, 31, 106) + shine(47, 12, 14) + hdl(66, 76));
+    if (open) mx = 52;
+  } else if (ws === "sliding") {
+    // Two panes on their rails; the front one runs left over the other and the
+    // garden shows through.
+    const dx = open ? -26 : 0;
+    mx = 62 + dx;
+    leaf = `<rect x="10" y="8" width="62" height="102" fill="url(#${sk})"/>${sash(10, 8, 34, 102)}${hdl(12.5, 52, 14)}
+<g transform="translate(${dx} 0)">${sash(38, 8, 34, 102)}${shine(44, 14, 18)}</g>
+<rect x="8" y="4" width="66" height="4" fill="${sf}" stroke="${ss}" stroke-width=".5"/><rect x="8" y="110" width="66" height="4" fill="${sf}" stroke="${ss}" stroke-width=".5"/>`;
+  } else if (ws === "small") {
+    // A small window set in the wall, the contact on its frame.
+    stripY = 22; stripH = 76;
+    leaf = `<rect x="4" y="2" width="90" height="114" fill="#e9e3d8"/><rect x="4" y="2" width="90" height="114" fill="url(#${dk})" opacity=".06"/>
+<rect x="24" y="22" width="48" height="76" fill="${sf}" stroke="${ss}" stroke-width=".5"/>`
+      + (open ? swung(26, 26, 46, 68) : sash(26, 26, 46, 68) + shine(32, 30, 20) + hdl(65, 76, 10));
+    if (open) mx = 46;
+  } else if (ws) {
+    // One sash.
+    leaf = open ? swung(10, 6, 62, 106) : sash(10, 6, 62, 106) + shine(22, 12, 28) + hdl(62, 56);
+  } else if (style === "garage") {
+    // A sectional garage door, four smooth panels; open, it has gone up into
+    // the ceiling with the magnet, one panel still showing at the top.
+    const pf = anth ? `url(#${ex})` : `url(#${bd})`, ps = anth ? "#1d2226" : "#b7c0c8";
+    const grooves = (ys) => ys.map((y) => `<path d="M11 ${y} H71" stroke="${ps}" stroke-width=".8" opacity=".8"/><path d="M11 ${y + 1} H71" stroke="#fff" stroke-width=".5" opacity="${anth ? .12 : .6}"/>`).join("");
+    leaf = open
+      ? `<rect x="10" y="6" width="62" height="106" fill="url(#${dk})"/><rect x="10" y="98" width="62" height="14" fill="#2c3237"/><rect x="10" y="6" width="62" height="16" fill="${pf}" stroke="${ps}" stroke-width=".7"/>${grooves([20])}`
+      : `<rect x="10" y="6" width="62" height="106" fill="${pf}" stroke="${ps}" stroke-width=".7"/>${grooves([32.5, 59, 85.5])}`;
+    if (open) mx = 200;
+  } else if (style === "pocket") {
+    // A pocket door: one big pane that slides into the wall on its left.
+    const dx = open ? -46 : 0;
+    mx = 62 + dx;
+    const pf = c.frame ? sf : `url(#${al})`, ps = c.frame ? ss : "#3e454c";
+    leaf = `<rect x="10" y="8" width="62" height="104" fill="url(#${sk})"/>
+<g clip-path="url(#${pk})"><g transform="translate(${dx} 0)"><rect x="10" y="8" width="62" height="101" fill="${pf}" stroke="${ps}" stroke-width=".6"/>
+<rect x="14" y="12" width="54" height="93" fill="url(#${gw})" stroke="${ps}" stroke-width=".4"/>${shine(20, 22, 24)}<rect x="65" y="48" width="3" height="22" rx="1.2" fill="#2b3035"/></g></g>
+<rect x="2" y="2" width="8" height="114" fill="#e9e3d8" stroke="#cfc6b6" stroke-width=".5"/><rect x="2" y="4" width="72" height="4" fill="${c.frame ? sf : "#7b838b"}"/><rect x="2" y="109" width="72" height="4" fill="${c.frame ? sf : "#7b838b"}"/>`;
+  } else if (style.startsWith("sliding")) {
     // A sliding door does not swing: its panel runs left on a rail and the
     // opening shows behind it, daylight for the patio door, the room for the barn door.
     const glass = style === "sliding_glass";
@@ -2218,25 +2293,21 @@ ${glass ? `${pane(10)}<rect x="8" y="4" width="66" height="4" fill="#7b838b"/><r
     }
     // Open, an entrance door lets the daylight in; an inside door shows the room.
     if (open) leaf += `<rect x="46" y="13" width="26" height="92" fill="url(#${ext ? sk : dk})"/>`;
-  } else leaf = c.window ? (open
-    ? `<polygon points="10 6 46 13 46 105 10 112" fill="#f3f5f7" stroke="#b7c0c8" stroke-width=".7"/><polygon points="15 14 41 19 41 99 15 104" fill="url(#${gw})" stroke="#b0bcc6" stroke-width=".5"/>
-<rect x="46" y="13" width="26" height="92" fill="url(#${dk})"/>`
-    : `<rect x="10" y="6" width="62" height="106" fill="#f3f5f7" stroke="#b7c0c8" stroke-width=".7"/><rect x="16" y="12" width="50" height="94" fill="url(#${gw})" stroke="#b0bcc6" stroke-width=".5"/>
-<path d="M22 24 L36 18 M22 36 L50 22" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect x="62" y="56" width="3" height="12" rx="1.5" fill="#c9ccd0" stroke="#8e949a" stroke-width=".4"/>`) : (open
+  } else leaf = (open
     ? `<polygon points="10 6 46 13 46 105 10 112" fill="url(#${wd})" stroke="#8a6440" stroke-width=".7"/>
 <polygon points="16 18 40 22 40 54 16 54" fill="none" stroke="#9a7350" stroke-width=".8" opacity=".7"/><polygon points="16 64 40 64 40 97 16 101" fill="none" stroke="#9a7350" stroke-width=".8" opacity=".7"/>
 <rect x="46" y="13" width="26" height="92" fill="url(#${dk})"/>`
     : `<rect x="10" y="6" width="62" height="106" fill="url(#${wd})" stroke="#8a6440" stroke-width=".7"/>
 <rect x="17" y="16" width="48" height="38" rx="1.5" fill="none" stroke="#9a7350" stroke-width=".9" opacity=".75"/><rect x="17" y="62" width="48" height="40" rx="1.5" fill="none" stroke="#9a7350" stroke-width=".9" opacity=".75"/>
 <circle cx="64" cy="62" r="2.2" fill="#c9ccd0" stroke="#8e949a" stroke-width=".5"/>`);
-  return `<defs>${ntV(wd, "#d8b48a", "#b48759")}${ntV(fr, "#fbf8f2", "#e8e1d4")}${ntV(bd, "#ffffff", "#dfe4e8")}
-${ntV(ex, "#4d555d", "#2b3136")}${ntV(al, "#7d858d", "#5b636b")}<clipPath id="${cl}"><rect x="0" y="0" width="120" height="120"/></clipPath>
+  return `<defs>${ntV(wd, "#d8b48a", "#b48759")}${anth ? ntV(fr, "#5a626a", "#3a4148") : c.frame || c.window ? ntV(fr, "#ffffff", "#e3e7ea") : ntV(fr, "#fbf8f2", "#e8e1d4")}${ntV(bd, "#ffffff", "#dfe4e8")}
+${ntV(ex, "#4d555d", "#2b3136")}${ntV(al, "#7d858d", "#5b636b")}<clipPath id="${cl}"><rect x="0" y="0" width="120" height="120"/></clipPath><clipPath id="${pk}"><rect x="10" y="0" width="110" height="120"/></clipPath>
 <linearGradient id="${sk}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8eefa"/><stop offset=".58" stop-color="#b5dcf0"/><stop offset=".59" stop-color="#93c47f"/><stop offset="1" stop-color="#6a9f58"/></linearGradient>
 <linearGradient id="${dk}" x1="0" x2="1"><stop offset="0" stop-color="#1f252b"/><stop offset="1" stop-color="#3a434b"/></linearGradient>
 <linearGradient id="${gw}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d4ecf8"/><stop offset="1" stop-color="#8fc7e6"/></linearGradient></defs>
 ${leaf}
-<rect x="72" y="2" width="18" height="114" fill="url(#${fr})" stroke="#cfc6b6" stroke-width=".6"/>
-<g${c.tamper ? ` transform="rotate(-24 81 26)"` : ""}>${{
+<rect x="72" y="${stripY}" width="18" height="${stripH}" fill="url(#${fr})" stroke="${anth ? "#22282d" : c.frame || c.window ? "#c5ccd2" : "#cfc6b6"}" stroke-width=".6"/>
+<g${c.tamper ? ` transform="rotate(-24 81 26)"` : ""}${mx > 120 ? ` clip-path="url(#${cl})"` : ""}>${{
     // Sonoff SNZB-04P: a tall body, its light at the top, a pairing slot.
     sonoff: `<rect x="${mx}" y="33" width="8" height="24" rx="2" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".5"/>
 <rect x="74" y="26" width="14" height="38" rx="3" fill="url(#${bd})" stroke="#aeb8c1" stroke-width=".6"/>
@@ -2913,17 +2984,24 @@ ${echoRing(c, "M41.4 63 A18.6 18.6 0 1 1 78.6 63 A18.6 18.6 0 1 1 41.4 63", rg, 
 ${c.st === "paused" ? spkPause(60, 92, light ? "#7d807d" : "#fff") : ""}${c.muted ? spkMute(76, 98) : ""}`;
 }
 // A Nest Mini: a pebble of fabric on the table, four lights under the fabric.
+// The Nest Mini in the colours it is sold in (#127): chalk, charcoal, sky.
+const NEST_PAL = {
+  white: ["#fbfbfa", "#e2e0db", "#c8c5be", "#d9d6d0", "#99958d", "#cbc8c1", .7],
+  black: ["#666a70", "#45494e", "#2e3135", "#3c3f44", "#1b1d20", "#72767b", .25],
+  blue: ["#dbe7ef", "#b8cdda", "#95afbf", "#adc3d1", "#6f8999", "#c4d4de", .6],
+};
 function ntSpkNest(c) {
   const t = ntId(), sd = ntId(), m = ntId(), gl = ntId();
-  return `<defs><radialGradient id="${t}" cx=".42" cy=".3" r=".75"><stop offset="0" stop-color="#fbfbfa"/><stop offset=".7" stop-color="#e2e0db"/><stop offset="1" stop-color="#c8c5be"/></radialGradient>${ntV(sd, "#d9d6d0", "#99958d")}${spkMesh(m, .16)}${ntBlur(gl, 1.4)}</defs>
+  const q = NEST_PAL[c.color] || NEST_PAL.white;
+  return `<defs><radialGradient id="${t}" cx=".42" cy=".3" r=".75"><stop offset="0" stop-color="${q[0]}"/><stop offset=".7" stop-color="${q[1]}"/><stop offset="1" stop-color="${q[2]}"/></radialGradient>${ntV(sd, q[3], q[4])}${spkMesh(m, .16)}${ntBlur(gl, 1.4)}</defs>
 ${spkNotes(60, 26)}${c.on ? ntWaves(60, 76, "var(--primary-color, #03a9f4)", 52) : ""}
 ${spkFootShadow(60, 101.2, 42, 3)}
 <path d="M12 80 Q12 100 60 102 Q108 100 108 80 Z" fill="url(#${sd})"/>
 <path d="M12 80 Q12 100 60 102 Q108 100 108 80 Z" fill="url(#${m})"/>
 <path d="M12 80 Q12 60 60 58 Q108 60 108 80 Q108 92 60 93 Q12 92 12 80 Z" fill="url(#${t})"/>
 <path d="M12 80 Q12 60 60 58 Q108 60 108 80 Q108 92 60 93 Q12 92 12 80 Z" fill="url(#${m})"/>
-<path d="M22 72 Q36 62 58 61" fill="none" stroke="#fff" stroke-width="2.4" opacity=".7" stroke-linecap="round"/>
-${[-1.5, -.5, .5, 1.5].map((k, i) => `<circle class="${c.on ? `nta-glow ntd${i + 1}` : ""}" cx="${60 + k * 8}" cy="76" r="2" fill="${c.on ? "#ffffff" : c.st === "paused" ? "#ffb74d" : "#cbc8c1"}"${c.on ? ` filter="url(#${gl})"` : ""}/>
+<path d="M22 72 Q36 62 58 61" fill="none" stroke="#fff" stroke-width="2.4" opacity="${q[6]}" stroke-linecap="round"/>
+${[-1.5, -.5, .5, 1.5].map((k, i) => `<circle class="${c.on ? `nta-glow ntd${i + 1}` : ""}" cx="${60 + k * 8}" cy="76" r="2" fill="${c.on ? "#ffffff" : c.st === "paused" ? "#ffb74d" : q[5]}"${c.on ? ` filter="url(#${gl})"` : ""}/>
 ${c.on ? `<circle cx="${60 + k * 8}" cy="76" r="1.2" fill="#fff"/>` : ""}`).join("")}
 ${c.st === "paused" ? spkPause(60, 44, "#8d8a83") : ""}${c.muted ? spkMute(96, 52) : ""}`;
 }
@@ -5436,13 +5514,13 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     // other sensor shows its own value unless it is an alarm.
     if (ca) lines.push({ ...ca, value: detCo ? t(hass, "det_line_detected") : domainOf(cfg.co_entity) === "binary_sensor" ? t(hass, "det_line_clear") : ca.value, caution: detCo });
     const cv = cfg.co_level_entity ? numericState(hass, cfg.co_level_entity) : null;
-    const win = layout === "door" && (String((st && st.attributes.device_class) || "") === "window"
+    const win = layout === "door" && (WINDOW_STYLES.includes(cfg.window_style) || String((st && st.attributes.device_class) || "") === "window"
       || /window|fenetre|fenster|ventana|finestra|janela|(^|[^a-z])raam|okno|fonster|vindu/.test(stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""}`).toLowerCase()));
     // Its tamper switch (a contact pulled off its frame): a line, and the alarm.
     const ts = cfg.tamper_entity ? stateObj(hass, cfg.tamper_entity) : null;
     const tamper = !!ts && NT_ON.includes(String(ts.state).trim().toLowerCase());
     if (ts) lines.push({ key: "det_tamper", icon: tamper ? "mdi:shield-alert" : "mdi:shield-check", label: t(hass, "det_sec_tamper"), value: t(hass, tamper ? "det_line_detected" : "det_line_clear"), entity: cfg.tamper_entity, caution: tamper });
-    const draw = { kind, window: win, style: layout === "door" ? doorStyleOf(cfg) : "", model: detectorModelOf(cfg, st, layout), on: alarm || detCo || tamper, smoke: alarm, co: detCo, low, tamper, lcd: cv !== null ? `${Math.round(cv)} ppm` : alarm ? "ALARM" : "OK" };
+    const draw = { kind, window: win, style: layout === "door" ? doorStyleOf(cfg) : "", wstyle: win ? windowStyleOf(cfg) : "", frame: layout === "door" ? frameColorOf(cfg, win ? "" : doorStyleOf(cfg)) : "", model: detectorModelOf(cfg, st, layout), on: alarm || detCo || tamper, smoke: alarm, co: detCo, low, tamper, lcd: cv !== null ? `${Math.round(cv)} ppm` : alarm ? "ALARM" : "OK" };
     if (detCo) return out("alarm", alarm ? "det_smoke_co" : "det_co", NT_COLORS.alarm, draw);
     if (tamper) return out("alarm", "det_tampered", NT_COLORS.alarm, draw);
     if (layout === "door") return alarm ? out("on", "det_open", "#ef6c00", draw) : out("ok", "det_closed", NT_COLORS.lit, draw);

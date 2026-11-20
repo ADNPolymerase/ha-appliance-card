@@ -15282,6 +15282,33 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
       }
     }
   }
+  // Windows and garage door (HACF #176).
+  const DW = (ws, state = 'off', more = {}) => D({ window_style: ws, ...more }, { device_class: 'door' }, state);
+  check('fenetre : un style choisi en fait une fenetre', /fill="#f3f5f7"/.test(DW('casement')) && !/fill="#8a6440"/.test(DW('casement')), true);
+  check('fenetre : deux battants, deux chassis fermes', (DW('double').match(/width="31" height="106" fill="#f3f5f7"/g) || []).length, 2);
+  check('fenetre : deux battants, le droit s ouvre', /points="41 6 59 13 59 105 41 112"/.test(DW('double', 'on')), true);
+  check('fenetre : coulissante fermee', /translate\(0 0\)/.test(DW('sliding')), true);
+  check('fenetre : coulissante ouverte glisse a gauche', /translate\(-26 0\)/.test(DW('sliding', 'on')), true);
+  check('fenetre : petite, dans le mur', /width="90" height="114" fill="#e9e3d8"/.test(DW('small')), true);
+  check('fenetre : anthracite', /fill="#4a5259"/.test(DW('casement', 'off', { frame_color: 'anthracite' })) && !/fill="#f3f5f7"/.test(DW('casement', 'off', { frame_color: 'anthracite' })), true);
+  check('fenetre : coulissante lue dans le nom', /translate\(-26 0\)/.test(D({ name: 'Fenetre coulissante salon' }, { device_class: 'window' }, 'on')), true);
+  check('fenetre : petite lue dans le nom', /fill="#e9e3d8"/.test(D({ name: 'Fenetre WC' }, { device_class: 'window' })), true);
+  check('fenetre : style inconnu, un battant', /width="62" height="106" fill="#f3f5f7"/.test(DW('castle', 'off', { name: 'Fenetre' })), true);
+  check('garage : sectionnelle, anthracite par defaut', /M11 59 H71/.test(DS('garage')) && new RegExp(`fill="url\\(#[^"]+\\)" stroke="#1d2226"`).test(DS('garage')), true);
+  check('garage : blanche au choix', /stroke="#b7c0c8" stroke-width=".7"\/>/.test(DS('garage', 'off', { frame_color: 'white' })), true);
+  check('garage : ouverte, l aimant parti avec la porte', /clip-path="url\(#[^"]+\)">/.test(DS('garage', 'on')) && /x="20[0-9]"/.test(DS("garage", "on")), true);
+  check('garage : lue dans le nom', /M11 59 H71/.test(D({ name: 'Porte de garage' }, { device_class: 'garage_door' })), true);
+  check('garage : un garage qui est une porte reste une porte', /M11 59 H71/.test(D({ name: 'Garage (cote gazon)' }, { device_class: 'door' })), false);
+  check('galandage : ouvert glisse dans le mur', /translate\(-46 0\)/.test(DS('pocket', 'on')), true);
+  check('galandage : lu dans le nom', /translate\(-46 0\)/.test(D({ name: 'Baie a galandage' }, { device_class: 'door' }, 'on')), true);
+  for (const ws of ['casement', 'double', 'sliding', 'small']) for (const fc of ['', 'white', 'anthracite']) for (const v of ['off', 'on']) {
+    check(`fenetre ${ws} ${fc} ${v} : ni NaN ni undefined`, /NaN|undefined/.test(DW(ws, v, { frame_color: fc })), false);
+  }
+  for (const st of ['garage', 'pocket']) for (const v of ['off', 'on']) check(`porte ${st} ${v} : ni NaN ni undefined`, /NaN|undefined/.test(DS(st, v)), false);
+  const nest = (c) => build({ appliance_type: 'speaker', speaker_layout: 'nest_mini', state_entity: 'media_player.n', ...(c ? { speaker_color: c } : {}) }, { 'media_player.n': { state: 'idle', attributes: {} } }).html;
+  check('nest mini : craie par defaut', /stop-color="#fbfbfa"/.test(nest('')), true);
+  check('nest mini : noire (#127)', /stop-color="#666a70"/.test(nest('black')) && !/stop-color="#fbfbfa"/.test(nest('black')), true);
+  check('nest mini : bleue', /stop-color="#dbe7ef"/.test(nest('blue')), true);
   const cam = (cfg, attrs) => build({ state_entity: 'camera.c', ...cfg }, { 'camera.c': { state: 'idle', attributes: attrs } }).html;
   check('trackmix : lue dans le modele', /cam-l-trackmix/.test(cam({}, { brand: 'Reolink', model_name: 'TrackMix PoE' })), true);
   check('trackmix : choisie', /cam-tmx-pan/.test(cam({ camera_layout: 'trackmix' }, {})), true);
