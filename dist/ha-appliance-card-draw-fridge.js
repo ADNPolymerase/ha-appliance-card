@@ -5,8 +5,8 @@ export default function defineDrawing({ BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_ALE
 // except a meter's LED and an alarm's beacon. Each part's stagger is its --d0.
 const NT_CSS = `
         .cv-up{animation:cv-up .9s linear infinite}.cv-down{animation:cv-down .9s linear infinite}
-        @keyframes cv-up{from{transform:translateY(0)}to{transform:translateY(-4.2px)}}
-        @keyframes cv-down{from{transform:translateY(0)}to{transform:translateY(4.2px)}}
+        @keyframes cv-up{from{transform:translateY(0)}to{transform:translateY(calc(-1 * var(--cv-step, 4.2px)))}}
+        @keyframes cv-down{from{transform:translateY(0)}to{transform:translateY(var(--cv-step, 4.2px))}}
         .cv-arrow{animation:cv-blink 1s ease-in-out infinite}@keyframes cv-blink{0%,100%{opacity:.35}50%{opacity:1}}
         .cv-sway{animation:cv-sway 1.8s ease-in-out infinite;transform-origin:60px 14px}@keyframes cv-sway{0%,100%{transform:skewX(0)}50%{transform:skewX(.6deg)}}
         .co2-pulse{animation:co2-pulse 1.6s ease-in-out infinite}@keyframes co2-pulse{0%,100%{opacity:.45}50%{opacity:1}}

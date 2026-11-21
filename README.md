@@ -1637,6 +1637,9 @@ disk2_entity: sensor.nas_drive_2_status
 | `cover_color` | cover | The colour of the apron, the slats, the pergola's frame or the awning's cassette: `white` \| `grey` \| `anthracite` \| `black` \| `beige` \| `wood` \| `brown`, or `#rrggbb`. |
 | `fabric_color` | cover | The fabric of a roller blind or an awning: `ecru` \| `linen` \| `grey` \| `anthracite` \| `blue` \| `petrol` \| `terracotta` \| `green`, or `#rrggbb`. |
 | `fabric_stripes` | cover | Awning: a striped fabric (default) or a plain one (`false`). |
+| `illustration_image` | cover | Your own photo in place of the drawing: a path such as `/local/shutter.jpg` (a file in `/config/www/`), a web address, or a photo uploaded from the editor (*Upload a photo*, stored by Home Assistant). Take it with the cover open. |
+| `illustration_image_crop` | cover | The part of the photo shown, `[x, y, width, height]` in % of the photo, shaped like the drawing. Left out, the photo fills the drawing from its middle. The editor writes it as you drag and zoom the photo. |
+| `illustration_area` | cover | Where the cover moves over the photo, `[x, y, width, height]` in % of the drawing: the window, for its apron, fabric or slats to come down in it to its position. Up to four, as a list of lists: a window seen from inside, one per pane, keeps its middle post in front of the shutter. The editor writes it as you move the dashed frames (*Add an area* splits the first one in two). |
 | `light_entity` | cover | The light under a pergola: while it is on, a glow comes down from under the beams and lights the terrace, in the bulb's colour. A line and a button. |
 | `state_entity` on a finger bot | finger bot | Its switch (Fingerbot on Zigbee2MQTT, ZHA, Tuya, Tuya BLE, LocalTuya; SwitchBot's Bot) or its button (SwitchBot Cloud, a Bot in press mode). In click mode the arm presses and lifts again (*Pressing*), in switch mode it stays down while on (*Held down*, *Released*). A button shows *Pressing* for a few seconds after a press, then a *Last press* line. |
 | `fingerbot_layout` | finger bot | `plus` (Fingerbot Plus: Tuya, Adaprox, MOES, Zemismart, its touch pad on top) \| `switchbot` (SwitchBot Bot) \| `classic` (the first, slimmer Fingerbot). Left out, a name with SwitchBot or `bot` draws the Bot, Adaprox without Plus the first one, the rest the Plus. |
@@ -1849,6 +1852,18 @@ state_entity: cover.pergola
 cover_layout: pergola
 light_entity: light.pergola
 ```
+
+Your own photo instead of the drawing, the shutter coming down over its window. In the editor, *Upload a photo*, drag it to frame it, then put the dashed frame over the window:
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: cover
+state_entity: cover.living_room
+illustration_image: /local/living_room_shutter.jpg
+illustration_area: [[10, 6, 38.5, 73], [55.4, 6, 35.3, 73]]
+```
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/photo-cover.gif" alt="Your own photo of a window, a roller shutter, a blind and a venetian blind coming down over it">
 
 A finger bot, the small box that presses a button it is stuck beside, is a `fingerbot`. The ones you meet most, and what brings them into Home Assistant:
 

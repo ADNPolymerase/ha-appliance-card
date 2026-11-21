@@ -4625,15 +4625,15 @@ ${cvArrow(dir)}`;
 // Venetian slats seen from the front: their tilt makes them a thin edge
 // (open) or a band hiding the window (closed); lifted, they pack under the
 // head rail, or into the box of an outdoor one.
-function cvSlats(x0, x1, top, bot, p, tilt, slat, edge, cord, hidden) {
-  const gap = 5, n = Math.round((bot - top) / gap), down = Math.round(n * (1 - p / 100)), up = n - down;
+function cvSlats(x0, x1, top, bot, p, tilt, slat, edge, cord, hidden, gap = 5) {
+  const mid = cvF((x0 + x1) / 2), n = Math.round((bot - top) / gap), down = Math.round(n * (1 - p / 100)), up = n - down;
   const k = Math.max(0, Math.min(1, tilt / 100)), band = cvF(1.3 + 4.4 * (1 - k)), sp = hidden ? .5 : .42;
   const stackTop = hidden ? top - 1 - up * sp : top + 1, y0 = stackTop + up * sp;
   let o = "";
   for (let i = 0; i < up; i++) o += `<rect x="${x0}" y="${cvF(stackTop + i * sp)}" width="${x1 - x0}" height="${cvF(sp + .3)}" fill="${slat}" stroke="${edge}" stroke-width=".25"/>`;
   for (let i = 0; i < down; i++) {
     const y = cvF(y0 + i * gap + 1);
-    o += `<path d="M${x0} ${y} Q60 ${cvF(y - band * .35)} ${x1} ${y} V${cvF(y + band)} Q60 ${cvF(y + band * .65)} ${x0} ${cvF(y + band)} Z" fill="${slat}" stroke="${edge}" stroke-width=".3"/><path d="M${x0 + 2} ${cvF(y + .3)} Q60 ${cvF(y - band * .3)} ${x1 - 2} ${cvF(y + .3)}" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width=".5"/>`;
+    o += `<path d="M${x0} ${y} Q${mid} ${cvF(y - band * .35)} ${x1} ${y} V${cvF(y + band)} Q${mid} ${cvF(y + band * .65)} ${x0} ${cvF(y + band)} Z" fill="${slat}" stroke="${edge}" stroke-width=".3"/><path d="M${x0 + 2} ${cvF(y + .3)} Q${mid} ${cvF(y - band * .3)} ${x1 - 2} ${cvF(y + .3)}" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width=".5"/>`;
   }
   const yEnd = cvF(y0 + down * gap + 1);
   return `${[x0 + 14, x1 - 14].map((x) => `<path d="M${x} ${top} V${cvF(yEnd + 2)}" stroke="${cord}" stroke-width=".55"/>`).join("")}${o}<rect x="${x0 - .5}" y="${yEnd}" width="${x1 - x0 + 1}" height="2.4" rx=".8" fill="${slat}" stroke="${edge}" stroke-width=".4"/>`;
@@ -5080,6 +5080,134 @@ ${ring(46.5, 10.4, big)}${ring(68.8, 5, smalls[0])}${ring(79.2, 5, smalls[1])}
 </g>
 ${c.heat ? fpSteam(60, 10) : ""}`;
 }
+// Your own photo in place of the drawing (HACF #167): illustration_image is
+// the picture, illustration_image_crop the part of it shown ([x, y, width,
+// height] in % of the photo, cut to the drawing's 8:9 box), and
+// illustration_area the part of the box where the movement plays ([x, y,
+// width, height] in % of the box). A cover's apron, fabric or slats come down
+// in that area to its position, over the window of the photo.
+const PHOTO_TYPES = ["cover"];
+const PHOTO_ASPECT = 120 / 135;
+const PHOTO_AREA = [20, 18, 60, 64];
+// Where the picture is: a path or address as given, or a picture uploaded to
+// Home Assistant (media-source://image_upload/<id>), served at its own address.
+function photoUrlOf(v) {
+  if (v && typeof v === "object") v = v.media_content_id || v.url || "";
+  const s = String(v || "").trim();
+  const up = s.match(/^media-source:\/\/image_upload\/([A-Za-z0-9_-]+)/);
+  if (up) return `/api/image/serve/${up[1]}/original`;
+  // A path (/local/..., relative) or a web address; no other scheme.
+  if (/^data:/i.test(s)) return /^data:image\//i.test(s) ? s : "";
+  if (/^[a-z][a-z0-9+.-]*:/i.test(s)) return /^https?:\/\//i.test(s) ? s : "";
+  return s;
+}
+// [x, y, width, height] in %, as a list or "12, 8, 76, 70", kept inside the
+// box and at least 4 % wide and high; anything else is not one.
+function photoBoxOf(v) {
+  const a = Array.isArray(v) ? v : typeof v === "string" ? v.split(/[\s,;]+/).filter(Boolean) : null;
+  if (!a || a.length !== 4) return null;
+  let [x, y, w, h] = a.map(Number);
+  if (![x, y, w, h].every(Number.isFinite)) return null;
+  x = Math.max(0, Math.min(96, x)); y = Math.max(0, Math.min(96, y));
+  w = Math.max(4, Math.min(100 - x, w)); h = Math.max(4, Math.min(100 - y, h));
+  return [x, y, w, h];
+}
+// The areas where the movement plays: one, or up to four (a window seen from
+// inside, one per pane, so its middle post stays in front of the shutter), as
+// a list of lists or "x, y, w, h; x, y, w, h".
+const PHOTO_AREAS_MAX = 4;
+function photoAreasOf(v) {
+  const nested = Array.isArray(v) && v.length > 0 && v.every((x) => Array.isArray(x) || (typeof x === "string" && /[\s,]/.test(x.trim())));
+  const list = typeof v === "string" ? v.split(";") : nested ? v : [v];
+  return list.slice(0, PHOTO_AREAS_MAX).map(photoBoxOf).filter(Boolean);
+}
+// Written back as one list, or a list of lists when there are several.
+const photoAreasValue = (areas) => areas.length === 1 ? areas[0] : areas;
+function photoOf(cfg) {
+  const href = photoUrlOf(cfg && cfg.illustration_image);
+  if (!href) return null;
+  const areas = photoAreasOf(cfg.illustration_area);
+  return { href, crop: photoBoxOf(cfg.illustration_image_crop), areas: areas.length ? areas : [PHOTO_AREA.slice()] };
+}
+// The largest part of a photo of that size that fills the drawing's box, in
+// the middle: the crop at no zoom.
+function photoCoverCrop(nw, nh) {
+  const r = nw > 0 && nh > 0 ? (nw / nh) / PHOTO_ASPECT : 1;
+  return r >= 1 ? [(100 - 100 / r) / 2, 0, 100 / r, 100] : [0, (100 - 100 * r) / 2, 100, 100 * r];
+}
+// A phone photo made lighter before it is sent: 1600 px on its long side at
+// most, in JPEG, turned the way the camera held it. Kept as it is if the
+// browser cannot read it.
+async function photoShrink(file, max = 1600) {
+  try {
+    const bmp = await createImageBitmap(file);
+    const k = Math.min(1, max / Math.max(bmp.width, bmp.height));
+    if (k === 1 && file.size < 1500000 && /^image\/(jpeg|png|webp)$/.test(file.type)) return file;
+    const cv = document.createElement("canvas");
+    cv.width = Math.round(bmp.width * k);
+    cv.height = Math.round(bmp.height * k);
+    cv.getContext("2d").drawImage(bmp, 0, 0, cv.width, cv.height);
+    const blob = await new Promise((res) => cv.toBlob(res, "image/jpeg", 0.88));
+    return blob ? new File([blob], `${String(file.name || "photo").replace(/\.[^.]*$/, "")}.jpg`, { type: "image/jpeg" }) : file;
+  } catch (e) {
+    return file;
+  }
+}
+// The picture in the drawing's box, cut to its crop, else filling it.
+function ntPhotoImage(ph) {
+  const href = esc(ph.href);
+  if (!ph.crop) return `<image href="${href}" x="0" y="-10" width="120" height="135" preserveAspectRatio="xMidYMid slice"/>`;
+  const [cx, cy, cw, ch] = ph.crop;
+  return `<image href="${href}" x="${cvF(-cx / cw * 120)}" y="${cvF(-10 - cy / ch * 135)}" width="${cvF(12000 / cw)}" height="${cvF(13500 / ch)}" preserveAspectRatio="none"/>`;
+}
+// The area in the box's own units.
+const ntPhotoArea = (a) => ({ x0: cvF(a[0] * 1.2), y0: cvF(-10 + a[1] * 1.35), x1: cvF((a[0] + a[2]) * 1.2), y1: cvF(-10 + (a[1] + a[3]) * 1.35) });
+// A cover over its photo, by its drawing.
+function ntPhotoCover(c, b) {
+  const arrow = (x) => c.noArrow ? "" : cvArrow(x);
+  const { x0, y0, x1, y1 } = b, w = x1 - x0, h = y1 - y0, cl = ntId(), dir = cvDir(c), kind = c.kind;
+  const p = Math.max(0, Math.min(100, Number(c.p) || 0)), yb = cvF(y0 + h * (1 - p / 100));
+  const clip = (top, bot) => `<clipPath id="${cl}"><rect x="${x0}" y="${top}" width="${cvF(w)}" height="${cvF(Math.max(0, bot - top))}"/></clipPath>`;
+  const shade = (y) => y > y0 + .5 ? `<rect x="${x0}" y="${cvF(y)}" width="${cvF(w)}" height="${cvF(Math.min(4, y1 - y + 4))}" fill="#000" opacity=".16"/>` : "";
+  const light = c.light ? `<rect x="${x0}" y="${y0}" width="${cvF(w)}" height="${cvF(h)}" fill="${c.lightColor || "#ffe9b0"}" opacity=".22"/>` : "";
+  if (kind === "cov_venetian" || kind === "cov_raffstore" || kind === "cov_pergola") {
+    const mc = c.color || (kind === "cov_venetian" ? "#eef0f1" : "#9aa1a7");
+    const gap = cvF(Math.max(3, Math.min(7, h / 16)));
+    const slats = cvSlats(x0, x1, y0, y1, kind === "cov_pergola" ? 100 : p, kind === "cov_pergola" ? p : c.tilt, mc, cvTone(mc, -.4), cvTone(mc, -.3), kind !== "cov_venetian", gap);
+    return `<defs>${clip(y0 - 2, y1 + 4)}</defs>${light}<g clip-path="url(#${cl})">${slats}</g>${arrow(dir)}`;
+  }
+  if (kind === "cov_awning") {
+    const e = p / 100, cA = c.fabric || "#3f6f8f", cB = c.stripes === false ? cvTone(cA, .06) : "#eef0f1", fy = y0 + h * e, sp = w * .08 * e, fx0 = x0 - sp, fx1 = x1 + sp, n = 8;
+    if (e < .02) return arrow(dir === "up" ? "down" : dir === "down" ? "up" : "");
+    let st = "";
+    for (let i = 0; i < n; i++) {
+      const a = x0 + w * i / n, bb = x0 + w * (i + 1) / n, a2 = fx0 + (fx1 - fx0) * i / n, b2 = fx0 + (fx1 - fx0) * (i + 1) / n;
+      st += `<polygon points="${cvF(a)} ${y0} ${cvF(bb)} ${y0} ${cvF(b2)} ${cvF(fy)} ${cvF(a2)} ${cvF(fy)}" fill="${i % 2 ? cB : cA}"/>`;
+    }
+    let sc = "";
+    for (let i = 0; i < n * 2; i++) { const xa = fx0 + (fx1 - fx0) * i / (n * 2), xb = fx0 + (fx1 - fx0) * (i + 1) / (n * 2); sc += `<path d="M${cvF(xa)} ${cvF(fy)} V${cvF(fy + 4)} Q${cvF((xa + xb) / 2)} ${cvF(fy + 6.4)} ${cvF(xb)} ${cvF(fy + 4)} V${cvF(fy)} Z" fill="${Math.floor(i / 2) % 2 ? cB : cA}" stroke="#000" stroke-opacity=".12" stroke-width=".3"/>`; }
+    return `${shade(fy + 6)}<g${dir ? ` class="cv-sway"` : ""}>${st}</g><rect x="${cvF(fx0 - 1)}" y="${cvF(fy - .6)}" width="${cvF(fx1 - fx0 + 2)}" height="2" rx="1" fill="#8f969c"/>${sc}${arrow(dir === "up" ? "down" : dir === "down" ? "up" : "")}`;
+  }
+  if (kind === "cov_blind") {
+    const color = c.fabric || "#d8cab2", bar = c.color || "#b6bcc1";
+    const weave = []; for (let x = x0 + 2; x < x1; x += 3) weave.push(`<path d="M${cvF(x)} ${y0} V${y1}" stroke="#000" stroke-opacity=".05" stroke-width=".6"/>`);
+    return `<defs>${clip(y0, yb)}</defs>${light}<g clip-path="url(#${cl})"><g${dir ? ` class="cv-sway"` : ""}><rect x="${x0}" y="${y0}" width="${cvF(w)}" height="${cvF(h)}" fill="${color}" opacity=".93"/>${weave.join("")}</g></g>
+${yb > y0 + 1 ? `<rect x="${cvF(x0 - .5)}" y="${cvF(yb - 2.2)}" width="${cvF(w + 1)}" height="2.6" rx="1" fill="${bar}"/>` : ""}${arrow(dir)}`;
+  }
+  // A roller shutter: its apron of slats down to the position.
+  const mc = c.color || "#e4e7e9", step = cvF(Math.max(2.6, Math.min(5.5, h / 20)));
+  const slats = []; for (let y = y0 - step * 2; y < y1 + step * 2; y += step) slats.push(`<path d="M${x0} ${cvF(y)} H${x1}" stroke="${cvTone(mc, .55)}" stroke-width="${cvF(step * .22)}"/><path d="M${x0} ${cvF(y + step * .76)} H${x1}" stroke="${cvTone(mc, -.38)}" stroke-width="${cvF(step * .16)}"/>`);
+  return `<defs>${clip(y0, yb)}</defs>${light}${shade(yb)}<g clip-path="url(#${cl})"><rect x="${x0}" y="${y0}" width="${cvF(w)}" height="${cvF(h)}" fill="${mc}"/><g${dir ? ` class="cv-${dir}"` : ""} style="--cv-step:${step}px">${slats.join("")}</g></g>
+${yb > y0 + .5 ? `<rect x="${x0}" y="${cvF(yb - step * .6)}" width="${cvF(w)}" height="${cvF(step * .6)}" fill="${cvTone(mc, -.35)}"/><path d="M${x0} ${cvF(yb - .2)} H${x1}" stroke="${cvTone(mc, -.6)}" stroke-width=".6"/>` : ""}${arrow(dir)}`;
+}
+const NT_PHOTO_OVERLAYS = { cov: ntPhotoCover };
+// The photo, its rounded corners, and the movement over it.
+function ntPhoto(d) {
+  const ph = d.photo, cp = ntId(), over = NT_PHOTO_OVERLAYS[String(d.kind || "").split("_")[0]];
+  return `<defs><clipPath id="${cp}"><rect x="0" y="-10" width="120" height="135" rx="7"/></clipPath></defs>
+<g clip-path="url(#${cp})"><rect x="0" y="-10" width="120" height="135" fill="#808080" opacity=".18"/><g class="ph-img">${ntPhotoImage(ph)}</g>${over ? ph.areas.map((a, i) => over({ ...d, noArrow: i > 0 }, ntPhotoArea(a))).join("") : ""}</g>
+<rect x=".3" y="-9.7" width="119.4" height="134.4" rx="7" fill="none" stroke="#000" stroke-opacity=".14" stroke-width=".6"/>`;
+}
 const NT_DRAW = { gas_fireplace: ntGasFireplace, fp_tm31: ntFoodTm31, fp_tm6: ntFoodTm6, rack_box: ntRackBox, rack_accordion: ntRackAccordion, rack_frame: ntRackFrame, vlv_aqara: ntValveAqara, vlv_tuya: ntValveTuya,  fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_switchbot_co2: (c) => ntSbPro(c, true), ths_switchbot_pro: (c) => ntSbPro(c, false), ths_switchbot_meter: (c) => ntSbMeter(c, false), ths_switchbot_plus: (c) => ntSbMeter(c, true), ths_switchbot_outdoor: ntSbOutdoor, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, det_door: ntDetDoor, det_vibration: ntDetVibration, det_glass: ntDetGlass, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, spk_focal_bird: ntSpkFocalBird, spk_focal_od6: ntSpkFocalOd6, spk_denon_avr: ntSpkDenon, spk_avr: ntSpkAvr, spk_wiim_amp: ntSpkWiim, spk_smart_clock: ntSpkClock, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 // The card's colour on a drawing made after a real product: its shell, the
 // greys, blacks and whites it is drawn in, takes the colour, lightest to
@@ -5182,6 +5310,7 @@ function ntWinter(d, body) {
 function ntSvg(d) {
   ntN = 0;
   const draw = NT_DRAW[d && d.kind] || ntLinky;
+  if (d && d.photo) return `<svg class="nt-svg" viewBox="0 -10 120 135">${ntPhoto(d)}</svg>`;
   const body = d && d.winter ? ntWinter(d, draw(d)) : draw(d || {});
   // A speaker sold in the colour asked is drawn in it, and not tinted.
   let tint = d && d.tint && NT_TINTED.test(d.kind || "") ? d.tint : "";
@@ -5196,7 +5325,7 @@ function ntSvg(d) {
   return `<svg class="nt-svg" viewBox="0 -10 120 135">${tint ? ntTint(body, tint) : body}</svg>`;
 }
 function ntHtml(cls, d) {
-  const flags = ["nt", `nt-k-${(d && d.kind) || "none"}`, d && /^(irr|lit|det|spk)_/.test(d.kind) ? "nt-c7" : "", d && d.on ? "nt-on" : "", d && d.unav ? "nt-unav" : ""].filter(Boolean).join(" ");
+  const flags = ["nt", `nt-k-${(d && d.kind) || "none"}`, d && /^(irr|lit|det|spk)_/.test(d.kind) ? "nt-c7" : "", d && d.on ? "nt-on" : "", d && d.unav ? "nt-unav" : "", d && d.photo ? "nt-photo" : ""].filter(Boolean).join(" ");
   return `
         <div class="machine ${cls} ${flags}">${ntSvg(d)}</div>`;
 }
@@ -5205,8 +5334,8 @@ function ntHtml(cls, d) {
 // except a meter's LED and an alarm's beacon. Each part's stagger is its --d0.
 const NT_CSS = `
         .cv-up{animation:cv-up .9s linear infinite}.cv-down{animation:cv-down .9s linear infinite}
-        @keyframes cv-up{from{transform:translateY(0)}to{transform:translateY(-4.2px)}}
-        @keyframes cv-down{from{transform:translateY(0)}to{transform:translateY(4.2px)}}
+        @keyframes cv-up{from{transform:translateY(0)}to{transform:translateY(calc(-1 * var(--cv-step, 4.2px)))}}
+        @keyframes cv-down{from{transform:translateY(0)}to{transform:translateY(var(--cv-step, 4.2px))}}
         .cv-arrow{animation:cv-blink 1s ease-in-out infinite}@keyframes cv-blink{0%,100%{opacity:.35}50%{opacity:1}}
         .cv-sway{animation:cv-sway 1.8s ease-in-out infinite;transform-origin:60px 14px}@keyframes cv-sway{0%,100%{transform:skewX(0)}50%{transform:skewX(.6deg)}}
         .co2-pulse{animation:co2-pulse 1.6s ease-in-out infinite}@keyframes co2-pulse{0%,100%{opacity:.45}50%{opacity:1}}

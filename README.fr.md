@@ -1639,6 +1639,9 @@ disk2_entity: sensor.nas_drive_2_status
 | `cover_color` | volet | La couleur du tablier, des lames, du cadre de la pergola ou du coffre : `white` \| `grey` \| `anthracite` \| `black` \| `beige` \| `wood` \| `brown`, ou `#rrggbb`. |
 | `fabric_color` | volet | La toile d'un store enrouleur ou d'un store banne : `ecru` \| `linen` \| `grey` \| `anthracite` \| `blue` \| `petrol` \| `terracotta` \| `green`, ou `#rrggbb`. |
 | `fabric_stripes` | volet | Store banne : toile rayée (défaut) ou unie (`false`). |
+| `illustration_image` | volet | Votre photo à la place du dessin : un chemin comme `/local/volet.jpg` (un fichier de `/config/www/`), une adresse web, ou une photo importée depuis l'éditeur (*Importer une photo*, gardée par Home Assistant). Prenez-la volet ouvert. |
+| `illustration_image_crop` | volet | La partie de la photo affichée, `[x, y, largeur, hauteur]` en % de la photo, au format du dessin. Sans cette option, la photo remplit le dessin depuis son milieu. L'éditeur l'écrit quand vous faites glisser et zoomez la photo. |
+| `illustration_area` | volet | L'endroit où le volet bouge sur la photo, `[x, y, largeur, hauteur]` en % du dessin : la fenêtre, pour que le tablier, la toile ou les lames y descendent selon la position. Jusqu'à quatre, en liste de listes : une fenêtre vue de l'intérieur, une zone par vantail, garde son montant central devant le volet. L'éditeur l'écrit quand vous déplacez les cadres en pointillés (*Ajouter une zone* coupe le premier en deux). |
 | `light_entity` | volet | La lumière sous une pergola : allumée, un halo descend de sous les poutres et éclaire la terrasse, à la couleur de l'ampoule. Une ligne et un bouton. |
 | `state_entity` d'un pousse-bouton | pousse-bouton | Son interrupteur (Fingerbot sur Zigbee2MQTT, ZHA, Tuya, Tuya BLE, LocalTuya ; Bot de SwitchBot) ou son bouton (SwitchBot Cloud, un Bot en mode appui). En mode appui le bras appuie puis remonte (*Appui*), en mode interrupteur il reste baissé tant qu'il est allumé (*Enfoncé*, *Relâché*). Un bouton affiche *Appui* quelques secondes après un appui, puis une ligne *Dernier appui*. |
 | `fingerbot_layout` | pousse-bouton | `plus` (Fingerbot Plus : Tuya, Adaprox, MOES, Zemismart, son pavé tactile sur le dessus) \| `switchbot` (SwitchBot Bot) \| `classic` (le premier Fingerbot, plus fin). Sans lui, un nom avec SwitchBot ou `bot` dessine le Bot, Adaprox sans Plus le premier modèle, le reste le Plus. |
@@ -1851,6 +1854,18 @@ state_entity: cover.pergola
 cover_layout: pergola
 light_entity: light.pergola
 ```
+
+Votre photo à la place du dessin, le volet qui descend devant sa fenêtre. Dans l'éditeur, *Importer une photo*, faites-la glisser pour la cadrer, puis placez le cadre en pointillés sur la fenêtre :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: cover
+state_entity: cover.salon
+illustration_image: /local/volet_salon.jpg
+illustration_area: [[10, 6, 38.5, 73], [55.4, 6, 35.3, 73]]
+```
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/photo-cover.fr.gif" alt="Votre photo d'une fenêtre, un volet roulant, un store et un store vénitien qui descendent devant">
 
 Un pousse-bouton, le petit boîtier collé à côté d'un bouton qu'il appuie, est un `fingerbot`. Les plus répandus, et ce qui les amène dans Home Assistant :
 

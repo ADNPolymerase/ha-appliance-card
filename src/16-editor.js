@@ -724,7 +724,7 @@ class ApplianceCardEditor extends HTMLElement {
     // card beside its drawing, a plug's thresholds, custom fan speeds, a
     // model's own options. Without this the row only appears once the editor
     // is closed and opened again.
-    const form = [compactModeOf(this._config.compact), this._plug(), !!this._config.speed_power_custom,
+    const form = [compactModeOf(this._config.compact), this._plug(), !!this._config.speed_power_custom, photoUrlOf(this._config.illustration_image),
       ...Object.keys(this._config).filter((k) => /_layout$/.test(k)).sort().map((k) => `${k}=${this._config[k]}`)].join("|");
     if (this._form !== form) {
       this._form = form;
@@ -983,6 +983,184 @@ class ApplianceCardEditor extends HTMLElement {
         <label>${t(hass, labelKey)}</label>
         <input type="text" data-field="${field}" value="${esc(value)}" placeholder="${esc(opts.placeholder || "")}" />
       </div>`;
+  }
+
+  // Your own photo in place of the drawing (HACF #167): sent to Home
+  // Assistant's picture store, or a path, then framed by hand. The photo moves
+  // and zooms under the box of the drawing (illustration_image_crop), and the
+  // dashed frame goes over the window, where the cover comes down
+  // (illustration_area). Nothing is cut from the file, so it can be framed
+  // again later.
+  _mountPhoto(slot) {
+    if (!slot) return;
+    const hass = this._l10n, cfg = this._config, href = photoUrlOf(cfg.illustration_image);
+    slot.innerHTML = `
+      <label>${esc(t(hass, "photo_label"))}</label>
+      <div class="ph-bar">
+        <input type="text" class="ph-url" value="${esc(typeof cfg.illustration_image === "string" ? cfg.illustration_image : href)}" placeholder="/local/volet.jpg" />
+        <button type="button" class="ph-btn ph-up" title="${esc(t(hass, "photo_upload"))}"><ha-icon icon="mdi:image-plus"></ha-icon><span>${esc(t(hass, "photo_upload"))}</span></button>
+        ${href ? `<button type="button" class="ph-btn ph-del" title="${esc(t(hass, "photo_remove"))}"><ha-icon icon="mdi:delete-outline"></ha-icon></button>` : ""}
+        <input type="file" accept="image/*" class="ph-file" hidden />
+      </div>
+      <div class="ph-msg"></div>
+      ${href ? `<div class="ph-hint">${esc(t(hass, "photo_hint"))}</div>
+      <div class="ph-frame"><img class="ph-img" alt="" draggable="false" src="${esc(href)}" /></div>
+      <div class="ph-tools"><ha-icon icon="mdi:magnify-minus-outline"></ha-icon><input type="range" class="ph-zoom" min="1" max="4" step="0.01" value="1" /><ha-icon icon="mdi:magnify-plus-outline"></ha-icon>
+        <button type="button" class="ph-btn ph-add" title="${esc(t(hass, "photo_add_area"))}"><ha-icon icon="mdi:selection-ellipse-arrow-inside"></ha-icon><span>${esc(t(hass, "photo_add_area"))}</span></button>
+        <button type="button" class="ph-btn ph-reset" title="${esc(t(hass, "photo_reset"))}"><ha-icon icon="mdi:restore"></ha-icon></button></div>` : ""}`;
+    const $ = (s) => slot.querySelector(s), msg = $(".ph-msg");
+    const commit = (patch) => {
+      const next = { ...this._config, ...patch };
+      for (const k of Object.keys(patch)) if (patch[k] === undefined) delete next[k];
+      this._config = next;
+      this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
+    };
+    $(".ph-url").addEventListener("change", (ev) => {
+      const v = ev.target.value.trim();
+      commit({ illustration_image: v || undefined, illustration_image_crop: undefined, ...(v ? {} : { illustration_area: undefined }) });
+    });
+    $(".ph-up").addEventListener("click", () => $(".ph-file").click());
+    $(".ph-file").addEventListener("change", async (ev) => {
+      const file = ev.target.files && ev.target.files[0];
+      if (!file) return;
+      msg.textContent = t(hass, "photo_uploading");
+      try {
+        const fd = new FormData();
+        fd.append("file", await photoShrink(file));
+        const resp = await this._hass.fetchWithAuth("/api/image/upload", { method: "POST", body: fd });
+        if (resp.status !== 200) throw new Error(String(resp.status));
+        const img = await resp.json();
+        msg.textContent = "";
+        commit({ illustration_image: `/api/image/serve/${img.id}/original`, illustration_image_crop: undefined });
+      } catch (e) {
+        msg.textContent = `${t(hass, "photo_error")} (${e && e.message ? e.message : e})`;
+      }
+    });
+    if (!href) return;
+    $(".ph-del").addEventListener("click", () => commit({ illustration_image: undefined, illustration_image_crop: undefined, illustration_area: undefined }));
+    const frame = $(".ph-frame"), img = $(".ph-img"), zoom = $(".ph-zoom");
+    const areas0 = photoAreasOf(cfg.illustration_area);
+    const st = { crop: photoBoxOf(cfg.illustration_image_crop), areas: areas0.length ? areas0 : [PHOTO_AREA.slice()], base: null };
+    const r1 = (n) => Math.round(n * 10) / 10;
+    // One dashed frame per area, its corners to resize it and, when there is
+    // more than one, a cross to take it away.
+    const drawAreas = () => {
+      frame.querySelectorAll(".ph-area").forEach((el) => el.remove());
+      st.areas.forEach((_, i) => {
+        const el = document.createElement("div");
+        el.className = "ph-area";
+        el.setAttribute("data-i", String(i));
+        el.innerHTML = `<i data-h="nw"></i><i data-h="ne"></i><i data-h="sw"></i><i data-h="se"></i>${st.areas.length > 1 ? `<b data-del="${i}" title="${esc(t(hass, "photo_remove_area"))}">\u00d7</b>` : ""}`;
+        frame.appendChild(el);
+      });
+      const add = $(".ph-add");
+      if (add) add.disabled = st.areas.length >= PHOTO_AREAS_MAX;
+    };
+    const paint = () => {
+      if (st.base) {
+        const [cx, cy, cw, ch] = st.crop || st.base;
+        Object.assign(img.style, { width: `${10000 / cw}%`, height: `${10000 / ch}%`, left: `${-cx / cw * 100}%`, top: `${-cy / ch * 100}%` });
+        zoom.value = String(st.base[2] / cw);
+      }
+      frame.querySelectorAll(".ph-area").forEach((el) => {
+        const [x, y, w, h] = st.areas[Number(el.getAttribute("data-i"))];
+        Object.assign(el.style, { left: `${x}%`, top: `${y}%`, width: `${w}%`, height: `${h}%` });
+      });
+    };
+    const save = () => commit({ illustration_image_crop: st.crop ? st.crop.map(r1) : undefined, illustration_area: photoAreasValue(st.areas.map((a) => a.map(r1))) });
+    // The crop at a zoom, kept around its middle and inside the photo.
+    const setZoom = (z) => {
+      const [, , bw, bh] = st.base, [cx, cy, cw, ch] = st.crop || st.base;
+      z = Math.max(1, Math.min(4, z));
+      const nw = bw / z, nh = bh / z, mx = cx + cw / 2, my = cy + ch / 2;
+      st.crop = z === 1 && !st.crop ? null : [Math.max(0, Math.min(100 - nw, mx - nw / 2)), Math.max(0, Math.min(100 - nh, my - nh / 2)), nw, nh];
+    };
+    img.addEventListener("load", () => {
+      st.base = photoCoverCrop(img.naturalWidth, img.naturalHeight);
+      // A crop saved for another photo, or another shape, is put back in.
+      if (st.crop) setZoom(st.base[2] / st.crop[2]);
+      paint();
+    });
+    img.addEventListener("error", () => { msg.textContent = t(hass, "photo_error"); });
+    drawAreas();
+    paint();
+    zoom.addEventListener("input", () => { if (st.base) { setZoom(Number(zoom.value)); paint(); } });
+    zoom.addEventListener("change", save);
+    $(".ph-reset").addEventListener("click", () => { st.crop = null; st.areas = [PHOTO_AREA.slice()]; drawAreas(); paint(); save(); });
+    // A new area beside the last one: the second pane of a window.
+    $(".ph-add").addEventListener("click", () => {
+      if (st.areas.length >= PHOTO_AREAS_MAX) return;
+      const [x, y, w, h] = st.areas[st.areas.length - 1];
+      if (st.areas.length === 1 && w > 30) {
+        st.areas = [[x, y, w / 2 - 2, h], [x + w / 2 + 2, y, w / 2 - 2, h]];
+      } else {
+        const nw = Math.min(w, 40), nx = x + w + 2 + nw <= 100 ? x + w + 2 : Math.max(0, 100 - nw);
+        st.areas = [...st.areas, [nx, y, nw, h]];
+      }
+      drawAreas();
+      paint();
+      save();
+    });
+    frame.addEventListener("wheel", (ev) => {
+      if (!st.base) return;
+      ev.preventDefault();
+      setZoom(Number(zoom.value) * Math.pow(1.1, -ev.deltaY / 100));
+      paint();
+      clearTimeout(this._phWheel);
+      this._phWheel = setTimeout(save, 400);
+    }, { passive: false });
+    // A drag in a frame moves that area, a corner resizes it, the rest moves
+    // the photo under the box.
+    let drag = null;
+    frame.addEventListener("pointerdown", (ev) => {
+      if (!st.base) return;
+      const t0 = ev.target;
+      const del = t0.getAttribute && t0.getAttribute("data-del");
+      if (del !== null && del !== undefined) {
+        st.areas.splice(Number(del), 1);
+        drawAreas();
+        paint();
+        save();
+        ev.preventDefault();
+        return;
+      }
+      const areaEl = t0.closest ? t0.closest(".ph-area") : null;
+      const i = areaEl ? Number(areaEl.getAttribute("data-i")) : -1;
+      const h = t0.getAttribute && t0.getAttribute("data-h");
+      drag = { mode: i < 0 ? "pan" : h || "move", i, x: ev.clientX, y: ev.clientY, area: i < 0 ? null : st.areas[i].slice(), crop: (st.crop || st.base).slice() };
+      frame.setPointerCapture(ev.pointerId);
+      frame.classList.add("dragging");
+      ev.preventDefault();
+    });
+    frame.addEventListener("pointermove", (ev) => {
+      if (!drag) return;
+      const box = frame.getBoundingClientRect(), dx = (ev.clientX - drag.x) / box.width * 100, dy = (ev.clientY - drag.y) / box.height * 100;
+      if (drag.mode === "pan") {
+        const [cx, cy, cw, ch] = drag.crop;
+        st.crop = [Math.max(0, Math.min(100 - cw, cx - dx * cw / 100)), Math.max(0, Math.min(100 - ch, cy - dy * ch / 100)), cw, ch];
+      } else {
+        const [x, y, w, h] = drag.area;
+        if (drag.mode === "move") {
+          st.areas[drag.i] = [Math.max(0, Math.min(100 - w, x + dx)), Math.max(0, Math.min(100 - h, y + dy)), w, h];
+        } else {
+          let x0 = x, y0 = y, x1 = x + w, y1 = y + h;
+          if (drag.mode.includes("w")) x0 = Math.max(0, Math.min(x1 - 4, x0 + dx));
+          if (drag.mode.includes("e")) x1 = Math.min(100, Math.max(x0 + 4, x1 + dx));
+          if (drag.mode.includes("n")) y0 = Math.max(0, Math.min(y1 - 4, y0 + dy));
+          if (drag.mode.includes("s")) y1 = Math.min(100, Math.max(y0 + 4, y1 + dy));
+          st.areas[drag.i] = [x0, y0, x1 - x0, y1 - y0];
+        }
+      }
+      paint();
+    });
+    const end = () => {
+      if (!drag) return;
+      drag = null;
+      frame.classList.remove("dragging");
+      save();
+    };
+    frame.addEventListener("pointerup", end);
+    frame.addEventListener("pointercancel", end);
   }
 
   _mountPicker(slotEl, field, opts) {
@@ -1277,6 +1455,28 @@ class ApplianceCardEditor extends HTMLElement {
         }
         .row-inline { display: flex; align-items: center; gap: 8px; font-size: 1.05em; color: var(--primary-text-color, #1c1c1c); cursor: pointer; }
         .row-inline input { width: auto; }
+        .ph-bar { display: flex; gap: 6px; align-items: center; }
+        .ph-bar .ph-url { flex: 1; min-width: 0; }
+        .ph-btn { display: inline-flex; align-items: center; gap: 4px; padding: 7px 10px; border-radius: 6px; border: 1px solid var(--divider-color, #ccc);
+          background: var(--card-background-color, white); color: var(--primary-text-color, #1c1c1c); font: inherit; font-size: .95em; cursor: pointer; white-space: nowrap; }
+        .ph-btn ha-icon { --mdc-icon-size: 18px; }
+        .ph-msg:empty { display: none; }
+        .ph-msg { font-size: .9em; color: var(--secondary-text-color, #767676); margin: 4px 0; }
+        .ph-hint { font-size: .9em; color: var(--secondary-text-color, #767676); margin: 8px 0 4px; }
+        .ph-frame { position: relative; width: min(100%, 300px); aspect-ratio: 120 / 135; margin: 6px auto; overflow: hidden; border-radius: 10px;
+          background: repeating-conic-gradient(#8882 0% 25%, transparent 0% 50%) 0 0 / 16px 16px; touch-action: none; cursor: grab; user-select: none; }
+        .ph-frame.dragging { cursor: grabbing; }
+        .ph-frame .ph-img { position: absolute; max-width: none; pointer-events: none; }
+        .ph-area { position: absolute; box-sizing: border-box; border: 2px dashed #fff; outline: 1px solid rgba(0, 0, 0, .55); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .55);
+          background: rgba(33, 150, 243, .12); cursor: move; }
+        .ph-area i { position: absolute; width: 16px; height: 16px; margin: -9px; border-radius: 50%; background: #fff; border: 1px solid rgba(0, 0, 0, .55); box-shadow: 0 1px 3px rgba(0, 0, 0, .4); }
+        .ph-area i[data-h="nw"] { left: 0; top: 0; cursor: nwse-resize; } .ph-area i[data-h="se"] { right: 0; bottom: 0; cursor: nwse-resize; }
+        .ph-area i[data-h="ne"] { right: 0; top: 0; cursor: nesw-resize; } .ph-area i[data-h="sw"] { left: 0; bottom: 0; cursor: nesw-resize; }
+        .ph-tools { display: flex; align-items: center; gap: 8px; width: min(100%, 300px); margin: 0 auto; color: var(--secondary-text-color, #767676); }
+        .ph-tools .ph-zoom { flex: 1; min-width: 60px; }
+        .ph-btn:disabled { opacity: .45; cursor: default; }
+        .ph-area b { position: absolute; right: 4px; top: 4px; width: 18px; height: 18px; border-radius: 50%; background: rgba(0, 0, 0, .6); color: #fff;
+          font: 700 14px/18px sans-serif; text-align: center; cursor: pointer; }
         .picker-slot { margin: 6px 0; }
         .picker-slot input[type="text"], .picker-slot textarea {
           width: 100%; padding: 8px 10px; border-radius: 4px; box-sizing: border-box;
@@ -1528,7 +1728,7 @@ class ApplianceCardEditor extends HTMLElement {
         }) + (["blind", "awning"].includes(coverLayoutOf(this._config, stateObj(this._hass, this._config.state_entity))) ? this._row("fabric_color", "fabric_color", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(Object.keys(FABRIC_COLORS).map((v) => ({ value: v, label: t(hass, `cov_f_${v}`) }))),
-        }) : "") + (coverLayoutOf(this._config, stateObj(this._hass, this._config.state_entity)) === "awning" ? this._row("fabric_stripes", "fabric_stripes", { type: "checkbox", defaultOn: true }) : "") : ""}
+        }) : "") + (coverLayoutOf(this._config, stateObj(this._hass, this._config.state_entity)) === "awning" ? this._row("fabric_stripes", "fabric_stripes", { type: "checkbox", defaultOn: true }) : "") + `<div class="picker-slot ph-slot" data-slot="__photo"></div>` : ""}
         ${this._type === "climate_sensor" && /^co2_netatmo/.test(thsLayoutOf(this._config, stateObj(this._hass, this._config.state_entity))) ? this._row("netatmo_color", "netatmo_color", {
           type: "select",
           options: Object.keys(NETATMO_COLORS).map((v) => ({ value: v, label: t(hass, `ntm_${v}`) })),
@@ -1810,6 +2010,7 @@ class ApplianceCardEditor extends HTMLElement {
 
     this._wireTouchTracking();
     if (!this._plug()) this._mountStateMap(this._root.querySelector('[data-slot="__state_map"]'));
+    if (PHOTO_TYPES.includes(this._type)) this._mountPhoto(this._root.querySelector('[data-slot="__photo"]'));
     if (this._plug()) this._mountPicker(this._root.querySelector('[data-slot="state_entity"]'), "state_entity", {
       label: t(hass, "plug_switch"), includeDomains: ["switch", "input_boolean"],
     });

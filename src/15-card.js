@@ -3750,6 +3750,11 @@ class ApplianceCard extends HTMLElement {
     // The card's colour on the drawings made after a real product (a
     // Christmas tree's colour is its lights').
     if (ntDraw && BODY_COLORS[cfg.illustration_color] && applianceType !== "christmas_tree" && !(applianceType === "speaker" && cfg.speaker_color)) ntDraw = { ...ntDraw, tint: cfg.illustration_color };
+    // Your own photo in place of the drawing (HACF #167), the movement over it.
+    if (ntDraw && PHOTO_TYPES.includes(applianceType)) {
+      const photo = photoOf(cfg);
+      if (photo) ntDraw = { ...ntDraw, photo, tint: "" };
+    }
     // A smart plug switched off: the appliance on it is off, whatever it
     // says at rest (a washer's Idle, a heater's Standby, a printer's
     // Offline). A fridge, a ride or a pump says it in words of its own.

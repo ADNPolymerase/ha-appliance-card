@@ -15356,6 +15356,36 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('trackmix : lue dans le modele', /cam-l-trackmix/.test(cam({}, { brand: 'Reolink', model_name: 'TrackMix PoE' })), true);
   check('trackmix : choisie', /cam-tmx-pan/.test(cam({ camera_layout: 'trackmix' }, {})), true);
   check('trackmix : autre camera inchangee', /cam-l-outdoor/.test(cam({}, { brand: 'Arlo' })), true);
+  // Your own photo over a cover (HACF #167).
+  const PH = (more, state = 'open', attrs = { current_position: 40 }) => build({ appliance_type: 'cover', state_entity: 'cover.v', ...more }, { 'cover.v': { state, attributes: { supported_features: 15, ...attrs } } }).html;
+  const ph = PH({ illustration_image: '/local/volet.jpg', illustration_area: [20, 10, 60, 70] });
+  check('photo : la photo remplace le dessin', /<image href="\/local\/volet\.jpg"/.test(ph) && /\bnt-photo\b/.test(ph), true);
+  check('photo : sans recadrage, elle remplit le cadre', /preserveAspectRatio="xMidYMid slice"/.test(ph), true);
+  check('photo : le tablier descend dans la zone a 40 %', /<clipPath id="[^"]+"><rect x="24" y="3.5" width="72" height="56.7"\/>/.test(ph), true);
+  check('photo : volet ouvert, pas de tablier', /<clipPath id="[^"]+"><rect x="24" y="3.5" width="72" height="0"\/>/.test(PH({ illustration_image: '/local/volet.jpg', illustration_area: [20, 10, 60, 70] }, 'open', { current_position: 100 })), true);
+  check('photo : volet ferme, tablier entier', /<clipPath id="[^"]+"><rect x="24" y="3.5" width="72" height="94.5"\/>/.test(PH({ illustration_image: '/local/volet.jpg', illustration_area: [20, 10, 60, 70] }, 'closed', { current_position: 0 })), true);
+  check('photo : la zone par defaut', /<clipPath id="[^"]+"><rect x="24" y="14.3"/.test(PH({ illustration_image: '/local/volet.jpg' })), true);
+  check('photo : zone en texte', /<rect x="14.4" y="0.8" width="91.2" height="94.5"/.test(PH({ illustration_image: '/local/volet.jpg', illustration_area: '12, 8, 76, 70' }, 'closed', { current_position: 0 })), true);
+  check('photo : recadrage', /<image href="\/local\/volet\.jpg" x="-24" y="-43.75" width="240" height="270" preserveAspectRatio="none"\/>/.test(PH({ illustration_image: '/local/volet.jpg', illustration_image_crop: [10, 12.5, 50, 50] })), true);
+  check('photo : image envoyee a Home Assistant', /<image href="\/api\/image\/serve\/ab12\/original"/.test(PH({ illustration_image: 'media-source://image_upload/ab12' })), true);
+  check('photo : pas de javascript', /<image /.test(PH({ illustration_image: 'javascript:alert(1)' })), false);
+  check('photo : pas de data autre qu une image', /<image /.test(PH({ illustration_image: 'data:text/html,x' })), false);
+  check('photo : guillemets echappes', /"><script/.test(PH({ illustration_image: '/local/a"><script>.jpg' })), false);
+  check('photo : en mouvement, les lames defilent', /class="cv-down"/.test(PH({ illustration_image: '/local/v.jpg' }, 'closing', { current_position: 50 })), true);
+  check('photo : sans photo, le dessin', /<image /.test(PH({})), false);
+  check('photo : couleur du tablier', /fill="#4a5056"/.test(PH({ illustration_image: '/local/v.jpg', cover_color: 'anthracite' })), true);
+  check('photo : pas de teinte sur la photo', /\bnt-photo\b/.test(PH({ illustration_image: '/local/v.jpg', illustration_color: 'red' })), true);
+  check('photo : zone hors du cadre ramenee dedans', /<rect x="0" y="-10" width="120" height="135"\/>/.test(PH({ illustration_image: '/local/v.jpg', illustration_area: [-20, -5, 300, 300] }, 'closed', { current_position: 0 }).replace(/<clipPath id="[^"]+">/g, '')), true);
+  for (const lay of ['shutter', 'blind', 'venetian', 'raffstore', 'pergola', 'awning']) for (const [st, a] of [['open', { current_position: 100 }], ['closing', { current_position: 30, current_tilt_position: 50 }], ['closed', { current_position: 0 }]]) {
+    check(`photo ${lay} ${st} : ni NaN ni undefined`, /NaN|undefined/.test(PH({ illustration_image: '/local/v.jpg', cover_layout: lay }, st, a)), false);
+  }
+  check('photo : le volet gris quand indisponible', /\bnt-unav\b/.test(PH({ illustration_image: '/local/v.jpg' }, 'unavailable', {})), true);
+  const two = PH({ illustration_image: '/local/v.jpg', illustration_area: [[10, 6, 38, 73], [55, 6, 35, 73]] }, 'closing', { current_position: 50 });
+  check('photo : deux zones, deux tabliers', (two.match(/<clipPath id="[^"]+"><rect x="[\d.]+" y="-1.9"/g) || []).length, 2);
+  check('photo : deux zones, une seule fleche', (two.match(/class="cv-arrow"/g) || []).length, 1);
+  check('photo : deux zones en texte', (PH({ illustration_image: '/local/v.jpg', illustration_area: '10, 6, 38, 73; 55, 6, 35, 73' }, 'closed', { current_position: 0 }).match(/<clipPath id="[^"]+"><rect x="[\d.]+" y="-1.9"/g) || []).length, 2);
+  check('photo : quatre zones au plus', (PH({ illustration_image: '/local/v.jpg', illustration_area: [[0, 0, 10, 10], [20, 0, 10, 10], [40, 0, 10, 10], [60, 0, 10, 10], [80, 0, 10, 10]] }, 'closed', { current_position: 0 }).match(/<clipPath id="[^"]+"><rect x="[\d.]+" y="-10" width="12"/g) || []).length, 4);
+  check('photo : une zone invalide parmi d autres est ignoree', (PH({ illustration_image: '/local/v.jpg', illustration_area: [[10, 6, 38, 73], ['a', 1]] }, 'closed', { current_position: 0 }).match(/<clipPath id="[^"]+"><rect x="[\d.]+" y="-1.9"/g) || []).length, 1);
 }
 
 report();
