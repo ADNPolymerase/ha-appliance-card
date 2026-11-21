@@ -134,11 +134,11 @@ const P3_BODY = {
   bambu_a: { left: 8, right: 88, top: 13.6, bottom: 96.8, inlet: 16 },
   elegoo_n: { left: 8, right: 88, top: 15.2, bottom: 98.7, inlet: 16 },
 };
-function p3Spool(cx, cy, r, s) {
+function p3Spool(cx, cy, r, s, ccw) {
   if (s.empty) return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#1b1e22" stroke="#59606a" stroke-width=".7" stroke-dasharray="1.8 1.8"/><circle cx="${cx}" cy="${cy}" r="${r * .26}" fill="#3a4046"/>`;
   const spokes = [0, 120, 240].map((a) => `<rect x="${cx - r * .04}" y="${cy - r * .24}" width="${r * .08}" height="${r * .24}" fill="#7d848c" transform="rotate(${a} ${cx} ${cy})"/>`).join("");
   const rings = [.82, .66, .5].map((k) => `<circle cx="${cx}" cy="${cy}" r="${r * k}" fill="none" stroke="#000" stroke-opacity=".13" stroke-width="${Math.max(.4, r * .03)}"/>`).join("");
-  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#2a2e33"/><circle cx="${cx}" cy="${cy}" r="${r * .91}" fill="${esc(s.color)}"/>${rings}<circle cx="${cx}" cy="${cy}" r="${r * .34}" fill="#eef0f2" stroke="#9aa1a8" stroke-width=".4"/><g class="${s.on ? "p3a-turn" : ""}">${spokes}<circle cx="${cx}" cy="${cy}" r="${r * .3}" fill="none"/></g><circle cx="${cx}" cy="${cy}" r="${r * .09}" fill="#5a6168"/>${s.on ? `<circle class="p3a-on" cx="${cx}" cy="${cy + r + 1.9}" r="1.1"/>` : ""}`;
+  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#2a2e33"/><circle cx="${cx}" cy="${cy}" r="${r * .91}" fill="${esc(s.color)}"/>${rings}<circle cx="${cx}" cy="${cy}" r="${r * .34}" fill="#eef0f2" stroke="#9aa1a8" stroke-width=".4"/><g class="${s.on ? `p3a-turn${ccw ? " p3a-ccw" : ""}` : ""}">${spokes}<circle cx="${cx}" cy="${cy}" r="${r * .3}" fill="none"/></g><circle cx="${cx}" cy="${cy}" r="${r * .09}" fill="#5a6168"/>${s.on ? `<circle class="p3a-on" cx="${cx}" cy="${cy + r + 1.9}" r="1.1"/>` : ""}`;
 }
 // A filament box (#93): on top of the printer, or beside it with a tube that
 // rises beside the body, passes over its roof and comes down into a coupler.
@@ -159,7 +159,11 @@ function p3AmsParts(p, body) {
   } else {
     const cols = n === 1 ? 1 : 2, rows = Math.ceil(n / cols), w = cols * 24 + 4, h = rows * 24 + 8, r = 10.6;
     const x = body.right + 6, y = body.bottom - h;
-    const slots = a.slots.map((s, i) => p3Spool(x + 14 + (i % cols) * 24, y + 14 + Math.floor(i / cols) * 24, r, s)).join("");
+    // Elegoo's CANVAS numbers its trays round the box: 1 and 2 down the left,
+    // 3 and 4 back up the right (1 4 over 2 3), the left spools unwinding
+    // anticlockwise and the right ones clockwise.
+    const at = (i) => (cols === 2 && n > 2 ? (i < rows ? [0, i] : [1, n - 1 - i]) : [i % cols, Math.floor(i / cols)]);
+    const slots = a.slots.map((s, i) => { const [c, rw] = at(i); return p3Spool(x + 14 + c * 24, y + 14 + rw * 24, r, s, cols === 2 && c === 0); }).join("");
     const sx = x + w / 2, cy = body.top - 24;
     const path = `M${sx} ${y - 2} C${sx} ${cy},${ix + 6} ${cy},${ix} ${body.top - 1}`;
     const fil = a.active ? `<path d="${path}" fill="none" stroke="${esc(a.active.color)}" stroke-width="1.2"/><path class="p3a-flow" d="${path}" fill="none" stroke="#fff" stroke-width="1" stroke-linecap="round"/>` : "";

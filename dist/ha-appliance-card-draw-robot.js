@@ -4356,7 +4356,7 @@ function ntPhotoDetector(c, b) {
   const F = c.smoke ? 1 : 0;
   const swing = c.trans ? `dur="${DOOR_TRANS_S}s" begin="0s" fill="freeze" data-swing="${c.trans.toFixed(2)}" calcMode="spline" keyTimes="0;1" keySplines=".45 0 .25 1"` : "";
   const style = c.window ? (c.wstyle === "sliding" ? "sliding" : c.wstyle === "double" ? "double" : "casement") : c.style || "wood";
-  const outside = c.window || style === "gate" || style === "sliding_gate";
+  const outside = c.window || style === "gate" || style === "sliding_gate" || style === "garage";
   const img = ntPhotoImage(c.photo);
   const cl = ntId(), dk = ntId(), wide = ntId(), wideR = ntId();
   // What shows once the leaf has gone: the room, dark, its floor lighter
@@ -4380,7 +4380,16 @@ function ntPhotoDetector(c, b) {
     return `<g>${o}</g>`;
   };
   let leaf;
-  if (style === "garage") leaf = move(0, -h, leafOf(x0, x1, 0) + `<rect x="${x0}" y="${n2(y1 - 2)}" width="${n2(w)}" height="2" fill="#000" opacity=".35"/>`, cl);
+  if (style === "garage") {
+    // A sectional door drawn in the opening, its panels and their grooves,
+    // a seal along the bottom; it rises into the ceiling.
+    const gc = c.frame === "white" ? "#eef1f3" : "#3d444b", n = 5;
+    let p = `<rect x="${x0}" y="${y0}" width="${n2(w)}" height="${n2(h)}" fill="${gc}"/>`;
+    for (let i = 1; i < n; i++) { const y = y0 + h * i / n; p += `<path d="M${x0} ${n2(y)} H${x1}" stroke="#000" stroke-opacity=".28" stroke-width=".7"/><path d="M${x0} ${n2(y + .7)} H${x1}" stroke="#fff" stroke-opacity=".3" stroke-width=".5"/>`; }
+    for (let i = 0; i < n; i++) { const y = y0 + h * (i + .5) / n; p += `<path d="M${n2(x0 + w * .04)} ${n2(y)} H${n2(x1 - w * .04)}" stroke="#000" stroke-opacity=".08" stroke-width="${n2(h / n * .35)}"/>`; }
+    p += `<rect x="${x0}" y="${n2(y1 - 1.6)}" width="${n2(w)}" height="1.6" fill="#1d2126"/><rect x="${n2(x0 + w / 2 - 3)}" y="${n2(y1 - h / n * .6)}" width="6" height="1.4" rx=".7" fill="#000" opacity=".35"/>`;
+    leaf = move(0, -h, `<g>${p}</g>`, cl);
+  }
   else if (style === "pocket") leaf = move(-w, 0, leafOf(x0, x1, 0), cl);
   else if (style === "sliding" || style === "sliding_glass" || style === "sliding_wood") leaf = move(-w * .92, 0, leafOf(x0, x1, .12), wide);
   else if (style === "double") {

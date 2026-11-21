@@ -14283,7 +14283,15 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('boite : bobine pleine', EMPTY.test(onlyTray(s('PLA', { color: '#E53935' }))), false);
   check('boite : une bobine vide n\'est jamais active', /class="p3a-on"/.test(onlyTray(s('PLA', { color: '#E53935', empty: true, active: true }))), false);
   check('boite : in_use vaut active', /class="p3a-on"/.test(onlyTray(s('PLA', { color: '#E53935', in_use: true }))), true);
-  check('boite : la bobine active tourne', (body(A()).match(/class="p3a-turn"/g) || []).length, 1);
+  check('boite : la bobine active tourne', (body(A()).match(/class="p3a-turn/g) || []).length, 1);
+  // CANVAS: 1 and 2 down the left, 3 and 4 back up the right (1 4 over 2 3).
+  const spoolAt = (h, col) => { const m = [...body(h).matchAll(/<circle cx="([\d.]+)" cy="([\d.]+)" r="[\d.]+" fill="#2a2e33"\/><circle cx="[\d.]+" cy="[\d.]+" r="[\d.]+" fill="([^"]+)"/g)].find((x) => x[3] === col); return m ? [+m[1], +m[2]] : null; };
+  const C4 = { 'sensor.t1': T({ color: '#111111' }), 'sensor.t2': T({ color: '#222222' }), 'sensor.t3': T({ color: '#333333' }), 'sensor.t4': T({ color: '#444444' }) };
+  const h4 = A({}, C4), p1 = spoolAt(h4, '#111111'), p2 = spoolAt(h4, '#222222'), p3 = spoolAt(h4, '#333333'), p4 = spoolAt(h4, '#444444');
+  check('boite canvas : 1 en haut a gauche, 2 dessous', p1[0] === p2[0] && p2[1] > p1[1], true);
+  check('boite canvas : 4 en haut a droite, 3 dessous', p4[0] === p3[0] && p4[0] > p1[0] && p4[1] === p1[1] && p3[1] === p2[1], true);
+  check('boite canvas : a gauche la bobine tourne a l\'envers', /class="p3a-turn p3a-ccw"/.test(body(A())), true);
+  check('boite canvas : a droite elle tourne dans le sens des aiguilles', /class="p3a-turn"/.test(body(A({}, { 'sensor.t2': T({ color: '#222222' }), 'sensor.t4': T({ active: true }) }))) && !/p3a-ccw/.test(body(A({}, { 'sensor.t2': T({ color: '#222222' }), 'sensor.t4': T({ active: true }) }))), true);
   check('boite : le tube a sa couleur', /stroke="#1E88E5" stroke-width="1\.2"/.test(body(A())), true);
   check('boite : sans bobine active, pas de filament', /p3a-flow/.test(body(A({ ams_entities: ['sensor.t1'] }))), false);
   check('boite : a cote, la carte s\'elargit', /border-right:\d+px solid transparent/.test(body(A())), true);
@@ -15396,7 +15404,7 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('photo portail : ouvert, un seul battant replie loin', (PD({ door_style: 'gate', illustration_area: [10, 30, 80, 40] }).match(/scale\(0\.1 1\)/g) || []).length, 1);
   check('photo portail : ouvert sans photo ouverte, la photo derriere', /<mask /.test(PD({ door_style: 'gate', illustration_area: [10, 30, 80, 40] })), false);
   check('photo portail : barreaux dessines sur la photo', (PD({ door_style: 'gate', illustration_area: [10, 30, 80, 40] }).match(/<path d="M[\d.]+ [\d.]+ V[\d.]+"/g) || []).length > 5, true);
-  check('photo lave-linge : porte ouverte dessinee', /fill="#eef1f3" stroke="#9aa3ab"/.test(build({ appliance_type: 'washer', state_entity: 'sensor.w', door_entity: 'binary_sensor.wd', illustration_image: '/local/w.jpg' }, { 'sensor.w': { state: 'off', attributes: {} }, 'binary_sensor.wd': { state: 'on', attributes: {} } }).html), true);
+  check('photo lave-linge : porte ouverte dessinee', /fill="#1a2027"\/>[\s\S]*fill="#f4f6f8" stroke="#aeb6bd"/.test(build({ appliance_type: 'washer', state_entity: 'sensor.w', door_entity: 'binary_sensor.wd', illustration_image: '/local/w.jpg' }, { 'sensor.w': { state: 'off', attributes: {} }, 'binary_sensor.wd': { state: 'on', attributes: {} } }).html), true);
   check('photo portail coulissant : glisse vers la droite', /translate\([\d.]+ 0\)/.test(PD({ door_style: 'sliding_gate', gate_side: 'right', illustration_area: [10, 30, 80, 40] })), true);
   check('photo portail : deux battants', (PD({ door_style: 'gate', gate_leaves: 2, illustration_area: [10, 30, 80, 40] }).match(/scale\(0\.12 1\)/g) || []).length, 2);
   check('photo portail : un battant charniere a droite', /<g transform="translate\(108 0\)"><g transform="scale\(0\.1 1\)">/.test(PD({ door_style: 'gate', gate_side: 'right', illustration_area: [10, 30, 80, 40] })), true);

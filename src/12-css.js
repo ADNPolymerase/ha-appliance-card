@@ -186,6 +186,7 @@ const ILLUSTRATION_CSS = {
         .p3a-on { fill: #2ecc71; }
         .p3a-turn { transform-box: fill-box; transform-origin: 50% 50%; }
         .machine.moving .p3a-turn { animation: p3r-fan 2.4s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.moving .p3a-turn.p3a-ccw { animation-direction: reverse; }
         .p3a-flow { stroke-dasharray: 2 10; }
         .machine.moving .p3a-flow { animation: p3a-flow 1.2s linear infinite; animation-delay: var(--anim-offset, 0s); }
         @keyframes p3a-flow { to { stroke-dashoffset: -12; } }
