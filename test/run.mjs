@@ -15383,6 +15383,7 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   const two = PH({ illustration_image: '/local/v.jpg', illustration_area: [[10, 6, 38, 73], [55, 6, 35, 73]] }, 'closing', { current_position: 50 });
   check('photo : deux zones, deux tabliers', (two.match(/<clipPath id="[^"]+"><rect x="[\d.]+" y="-1.9"/g) || []).length, 2);
   check('photo : deux zones, une seule fleche', (two.match(/class="cv-arrow"/g) || []).length, 1);
+  check('photo : la fleche par-dessus les deux tabliers', two.lastIndexOf('class="cv-arrow"') > two.lastIndexOf('<clipPath'), true);
   check('photo : deux zones en texte', (PH({ illustration_image: '/local/v.jpg', illustration_area: '10, 6, 38, 73; 55, 6, 35, 73' }, 'closed', { current_position: 0 }).match(/<clipPath id="[^"]+"><rect x="[\d.]+" y="-1.9"/g) || []).length, 2);
   check('photo : quatre zones au plus', (PH({ illustration_image: '/local/v.jpg', illustration_area: [[0, 0, 10, 10], [20, 0, 10, 10], [40, 0, 10, 10], [60, 0, 10, 10], [80, 0, 10, 10]] }, 'closed', { current_position: 0 }).match(/<clipPath id="[^"]+"><rect x="[\d.]+" y="-10" width="12"/g) || []).length, 4);
   check('photo : une zone invalide parmi d autres est ignoree', (PH({ illustration_image: '/local/v.jpg', illustration_area: [[10, 6, 38, 73], ['a', 1]] }, 'closed', { current_position: 0 }).match(/<clipPath id="[^"]+"><rect x="[\d.]+" y="-1.9"/g) || []).length, 1);
