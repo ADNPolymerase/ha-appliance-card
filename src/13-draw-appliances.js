@@ -2606,13 +2606,12 @@ function photoSvg(ph, over) {
 // area holds the glass. Running, the drum is drawn in it, steel and
 // perforated, its paddles and the load turning; washing, the water sloshes at
 // the bottom; spinning, the load whirls pressed to the drum; drying, it
-// tumbles in warm air. The door open shows the drum still.
+// tumbles in warm air. Stopped, the drum is there, still, behind its glass;
+// the door open, without the glass.
 function laundryPhotoHtml(type, ctx) {
   const ph = ctx.photo, a = ph.areas[0], f = (n) => +n.toFixed(2);
   const x0 = a[0] * 1.2, y0 = -10 + a[1] * 1.35, w = a[2] * 1.2, h = a[3] * 1.35, cx = f(x0 + w / 2), cy = f(y0 + h / 2), rx = f(w / 2), ry = f(h / 2);
   const run = !!ctx.spinning, dry = type === "dryer" || !!ctx.drying, spin = !!ctx.spinCycle, open = !!ctx.doorOpen;
-  if (!run && !open) return `
-        <div class="machine ph-machine">${photoSvg(ph, "")}</div>`;
   const E = (k, extra) => `<ellipse cx="${cx}" cy="${cy}" rx="${f(rx * k)}" ry="${f(ry * k)}" ${extra}/>`;
   // The drum: steel, darker towards its back, rings of holes.
   const holes = [];
@@ -2628,7 +2627,7 @@ function laundryPhotoHtml(type, ctx) {
   const drum = E(1, `fill="url(#php-s)"`) + holes.join("") + E(.3, `fill="#2c3237" opacity=".55"`) + E(.12, `fill="#9aa3ab"`);
   const turn = (inner, dur) => `<g>${inner}<animateTransform attributeName="transform" type="rotate" from="0 ${cx} ${cy}" to="360 ${cx} ${cy}" dur="${dur}" repeatCount="indefinite"/></g>`;
   let inside;
-  if (open) inside = drum + paddles;
+  if (open || !run) inside = drum + paddles;
   else {
     const dur = spin ? ".5s" : dry ? "1.9s" : "2.8s";
     // The load: a few garments, tumbling in the lower half, or spread round
