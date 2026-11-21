@@ -1128,10 +1128,28 @@ function shortcutMenuOf(hass, cfg, cap) {
   const buttons = entries.filter((e) => SHORTCUT_PRESS.includes(domainOf(e.entity)) && usable(e.entity));
   return buttons.length ? { kind: "shortcut", dom: "button", options: buttons.map((e) => e.entity), labels: Object.fromEntries(buttons.map((e) => [e.entity, e.label || ""])), current: "" } : null;
 }
+// A gas fireplace's flame height picked in the card (#130): IntelliFire's
+// number from 1 to 5, or any number or input_number of a few steps.
+function gasFlameMenuOf(hass, cfg) {
+  const id = cfg.flame_height_entity;
+  if (!id || !["number", "input_number"].includes(domainOf(id))) return null;
+  const st = stateObj(hass, id);
+  if (!st || HA_OFFLINE_STATES.includes(String(st.state).toLowerCase())) return null;
+  const a = st.attributes || {};
+  const min = Number.isFinite(parseFloat(a.min)) ? parseFloat(a.min) : 1;
+  const max = Number.isFinite(parseFloat(a.max)) ? parseFloat(a.max) : 5;
+  const step = parseFloat(a.step) > 0 ? parseFloat(a.step) : 1;
+  const opts = [];
+  for (let v = min; v <= max + 1e-9 && opts.length <= 12; v += step) opts.push(String(Math.round(v * 100) / 100));
+  if (opts.length < 2 || opts.length > 12) return null;
+  const cur = parseFloat(st.state);
+  return { kind: "gf_flame", entity: id, dom: domainOf(id), options: opts, current: Number.isFinite(cur) ? String(Math.round(cur * 100) / 100) : "", max: opts[opts.length - 1] };
+}
 // How a line's menu says an option: a program cleaned up, a delay as its
 // length and the time it would start.
 function lineMenuLabel(hass, cfg, menu, option) {
   if (menu.kind === "program") return programLabel(hass, stateObj(hass, menu.entity), option, cfg);
+  if (menu.kind === "gf_flame") return `${option} / ${menu.max}`;
   if (menu.kind === "hum_mode") return attrLabel(hass, stateObj(hass, menu.entity), "mode", option, cfg);
   if (menu.kind === "shortcut" && menu.dom === "button") {
     if (menu.labels[option]) return menu.labels[option];

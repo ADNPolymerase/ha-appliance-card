@@ -15336,6 +15336,30 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('garage : juste ouverte, elle monte', /values="0 0;0 -90"/.test(DT({ door_style: 'garage' }, 'on', .3)), true);
   check('fenetre coulissante : juste fermee, le vantail revient', /values="-26 0;0 0"/.test(DT({ window_style: 'sliding' }, 'off', .3)), true);
   check('fenetre : la poignee s efface a l ouverture', /<g opacity="0"><animate attributeName="opacity" values="1;0"/.test(DT({ window_style: 'casement' }, 'on', .3)), true);
+  // A gas fireplace's flame height in the card, and no 32 F room (#130).
+  {
+    const calls = [];
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'gas_fireplace', state_entity: 'switch.f', flame_height_entity: 'number.h' });
+    c._hass = { ...HASS({ 'switch.f': { state: 'on', attributes: {} }, 'number.h': { state: '2', attributes: { min: 1, max: 5, step: 1 } } }), callService: (d, sv, data) => calls.push([d, sv, data]) };
+    c._render();
+    check('cheminee : hauteur de flamme en menu', /data-line-menu="gf_flame"/.test(markup(c)), true);
+    c._lineMenu = 'gf_flame'; c._render();
+    const mo = markup(c);
+    check('cheminee : niveaux 1 a 5', (mo.match(/data-line-option="([^"]*)"/g) || []).join(), ['1', '2', '3', '4', '5'].map((v) => `data-line-option="${v}"`).join());
+    check('cheminee : niveau courant coche', /<div class="mode-row sel"[^>]*data-line-option="2"><span>2 \/ 5<\/span>/.test(mo), true);
+    c._pickLine('gf_flame', '1');
+    check('cheminee : flamme reglee', JSON.stringify(calls.pop()), JSON.stringify(['number', 'set_value', { entity_id: 'number.h', value: 1 }]));
+    const sens = build({ appliance_type: 'gas_fireplace', state_entity: 'switch.f', flame_height_entity: 'sensor.h' }, { 'switch.f': { state: 'on', attributes: {} }, 'sensor.h': { state: '2', attributes: {} } }).html;
+    check('cheminee : pas de menu sur un capteur', /data-line-menu="gf_flame"/.test(sens), false);
+    check('cheminee : un capteur garde sa ligne', /2 \/ 5/.test(sens), true);
+    const room = (v, u) => build({ appliance_type: 'gas_fireplace', state_entity: 'switch.f', temperature_entity: 'sensor.t' }, { 'switch.f': { state: 'on', attributes: {} }, 'sensor.t': { state: v, attributes: { unit_of_measurement: u, device_class: 'temperature' } } }).html;
+    check('cheminee : 32 F sans sonde, pas de ligne', /home-thermometer/.test(room('32', '°F')), false);
+    check('cheminee : 0 C sans sonde, pas de ligne', /home-thermometer/.test(room('0', '°C')), false);
+    check('cheminee : 68 F, la piece', /home-thermometer/.test(room('68', '°F')), true);
+    const th0 = build({ appliance_type: 'gas_fireplace', state_entity: 'switch.f', thermostat_entity: 'climate.t' }, { 'switch.f': { state: 'on', attributes: {} }, 'climate.t': { state: 'off', attributes: { current_temperature: 32, temperature_unit: '°F' } } }).html;
+    check('cheminee : thermostat a 32 F, pas de piece', /home-thermometer/.test(th0), false);
+  }
   // A gas fireplace (#130).
   const GF = (more, ents) => build({ appliance_type: 'gas_fireplace', state_entity: 'switch.f', ...more }, { 'switch.f': { state: 'off', attributes: {} }, ...ents });
   const gfOn = GF({ flame_height_entity: 'number.h', fan_entity: 'fan.v', light_entity: 'light.l', thermostat_entity: 'climate.t' }, { 'switch.f': { state: 'on', attributes: {} }, 'number.h': { state: '4', attributes: {} }, 'fan.v': { state: 'on', attributes: { percentage: 50 } }, 'light.l': { state: 'on', attributes: { brightness: 128 } }, 'climate.t': { state: 'heat', attributes: { temperature: 72, current_temperature: 68, temperature_unit: '\u00b0F' } } });

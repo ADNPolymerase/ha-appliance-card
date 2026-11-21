@@ -415,7 +415,7 @@ Une section par famille d'appareils : ses options, puis ses guides. Chaque parti
 | `hair_dryer_layout` | sèche-cheveux | `pistol` (défaut, sèche-cheveux classique vu de profil) \| `ring` (sèche-cheveux en anneau vu de face). |
 | `heat_threshold` | sèche-cheveux | Puissance à partir de laquelle il souffle de l'air chaud (300 W par défaut). En dessous, seul le ventilateur tourne. |
 | `flame_entity` | cheminée au gaz | Son capteur de flamme. Il dit si le feu brûle ; sans lui, c'est l'interrupteur principal ou le thermostat (en chauffe). |
-| `flame_height_entity` | cheminée au gaz | Le réglage de flamme, de 1 à 5 : une ligne *Hauteur de flamme*, et des flammes dessinées d'autant plus hautes. |
+| `flame_height_entity` | cheminée au gaz | Le réglage de flamme, de 1 à 5 : une ligne *Hauteur de flamme*, et des flammes dessinées d'autant plus hautes. Un `number` se règle depuis la carte : un appui sur la ligne et on choisit la hauteur. |
 | `fan_entity` / `light_entity` | cheminée au gaz | Son ventilateur (une ligne avec sa vitesse, l'air chaud qui sort de la grille, un bouton) et son éclairage (une ligne avec sa luminosité, le foyer éclairé par le haut, un bouton). Les deux marchent seuls, flamme ou pas. |
 | `thermostat_entity` / `pilot_entity` | cheminée au gaz | Son thermostat (consigne et température de la pièce) et sa veilleuse (*Veilleuse* et une petite flamme bleue quand le feu est éteint). |
 | `heat_threshold` / `spin_threshold` | lave-linge, lave-vaisselle, sèche-linge | Sur une prise seule : la puissance à partir de laquelle il chauffe (1000 W par défaut, 600 W sur un sèche-linge) et celle à partir de laquelle un lave-linge essore (200 W). En dessous, un lave-linge lave, un sèche-linge refroidit le linge, et un lave-vaisselle sous son seuil sèche. |
@@ -917,7 +917,7 @@ valve_entity: cover.vanne_poele
 
 ### Cheminées au gaz
 
-Une cheminée au gaz (`gas_fireplace`), IntelliFire ou autre, brûle derrière sa vitre, ses flammes aussi hautes que le réglage de flamme, bleues à la base. Son ventilateur, son éclairage et sa veilleuse marchent chacun de leur côté : le ventilateur souffle l'air chaud par la grille, l'éclairage réchauffe le foyer, la veilleuse garde une petite flamme bleue quand le feu est éteint. Une entité IntelliFire est reconnue à son nom et ses voisines sont remplies.
+Une cheminée au gaz (`gas_fireplace`), IntelliFire ou autre, brûle derrière sa vitre, ses flammes aussi hautes que le réglage de flamme, bleues à la base. Son ventilateur, son éclairage et sa veilleuse marchent chacun de leur côté : le ventilateur souffle l'air chaud par la grille, l'éclairage réchauffe le foyer, la veilleuse garde une petite flamme bleue quand le feu est éteint. Une entité IntelliFire est reconnue à son nom et ses voisines sont remplies. Une température de pièce à 0 °C (32 °F), c'est IntelliFire qui dit que la télécommande n'a pas de sonde : la ligne n'est pas affichée.
 
 ```yaml
 type: custom:ha-appliance-card

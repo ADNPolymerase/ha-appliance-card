@@ -4579,7 +4579,7 @@ class ApplianceCard extends HTMLElement {
     // The program and the delayed start, picked in the card between cycles (#79).
     const programMenu = offHidden ? null : programMenuOf(hass, cfg, cap, norm);
     const delayMenu = offHidden ? null : delayMenuOf(hass, cfg, cap, norm);
-    this._lineMenus = { program: programMenu, delay: delayMenu, hum_mode: applianceType === "humidifier" ? humidifierModeMenuOf(hass, cfg) : null, hum_mist: applianceType === "humidifier" ? humidifierMistMenuOf(hass, cfg) : null, shortcut: offHidden ? null : shortcutMenuOf(hass, cfg, cap) };
+    this._lineMenus = { program: programMenu, delay: delayMenu, hum_mode: applianceType === "humidifier" ? humidifierModeMenuOf(hass, cfg) : null, hum_mist: applianceType === "humidifier" ? humidifierMistMenuOf(hass, cfg) : null, shortcut: offHidden ? null : shortcutMenuOf(hass, cfg, cap), gf_flame: applianceType === "gas_fireplace" ? gasFlameMenuOf(hass, cfg) : null };
     if (!this._lineMenus[this._lineMenu]) this._lineMenu = null;
     let lines = [];
     if (programText) {

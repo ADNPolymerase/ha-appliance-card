@@ -5829,7 +5829,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const flame = fs !== null ? fs : domainOf(cfg.state_entity) === "climate" ? String(a.hvac_action || "").toLowerCase() === "heating" : NT_ON.includes(raw);
     const lvlRaw = cfg.flame_height_entity ? numericState(hass, cfg.flame_height_entity) : null;
     const level = lvlRaw === null ? 3 : Math.min(5, Math.max(1, Math.round(lvlRaw)));
-    if (cfg.flame_height_entity && lvlRaw !== null) lines.push({ key: "gf_height", icon: "mdi:fire", label: t(hass, "gf_flame_height"), value: `${level} / 5`, entity: cfg.flame_height_entity });
+    if (cfg.flame_height_entity && lvlRaw !== null) lines.push({ key: "gf_height", icon: "mdi:fire", label: t(hass, "gf_flame_height"), value: `${level} / 5`, entity: cfg.flame_height_entity, menu: gasFlameMenuOf(hass, cfg) ? "gf_flame" : "" });
     const fanSt = cfg.fan_entity ? stateObj(hass, cfg.fan_entity) : null;
     const fan = !!fanSt && NT_ON.includes(String(fanSt.state).toLowerCase());
     const pct = fanSt ? numberOrNull((fanSt.attributes || {}).percentage) : null;
@@ -5844,9 +5844,15 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
       const unit = ta.temperature_unit || ((hass.config || {}).unit_system || {}).temperature || "\u00b0";
       lines.push({ key: "gf_thermostat", icon: off ? "mdi:thermostat-off" : "mdi:thermostat", label: t(hass, "type_thermostat"), value: off || ta.temperature === undefined ? t(hass, "ac_off") : `${ta.temperature} ${unit}`, entity: cfg.thermostat_entity });
     }
-    const tl = ntLine(hass, cfg, "gf_room", "mdi:home-thermometer", "wood_room", cfg.temperature_entity);
+    // A fireplace with no room sensor reads 0 C, 32 F in HA: IntelliFire
+    // sends 0 when its remote has no probe, so that line is left out.
+    const unitOf = (e) => { const x = stateObj(hass, e); return String(((x || {}).attributes || {}).unit_of_measurement || ((hass.config || {}).unit_system || {}).temperature || ""); };
+    const noProbe = (v, u) => v !== null && Number.isFinite(v) && (/f/i.test(u) ? Math.abs(v - 32) < 0.05 : Math.abs(v) < 0.05);
+    const tl = noProbe(cfg.temperature_entity ? numericState(hass, cfg.temperature_entity) : null, cfg.temperature_entity ? unitOf(cfg.temperature_entity) : "") ? null
+      : ntLine(hass, cfg, "gf_room", "mdi:home-thermometer", "wood_room", cfg.temperature_entity);
+    const thCur = th ? numberOrNull((th.attributes || {}).current_temperature) : null;
     if (tl) lines.push(tl);
-    else if (th && (th.attributes || {}).current_temperature !== undefined) lines.push({ key: "gf_room", icon: "mdi:home-thermometer", label: t(hass, "wood_room"), value: `${th.attributes.current_temperature} ${th.attributes.temperature_unit || ((hass.config || {}).unit_system || {}).temperature || ""}`.trim(), entity: cfg.thermostat_entity });
+    else if (th && thCur !== null && !noProbe(thCur, (th.attributes || {}).temperature_unit || ((hass.config || {}).unit_system || {}).temperature || "")) lines.push({ key: "gf_room", icon: "mdi:home-thermometer", label: t(hass, "wood_room"), value: `${th.attributes.current_temperature} ${th.attributes.temperature_unit || ((hass.config || {}).unit_system || {}).temperature || ""}`.trim(), entity: cfg.thermostat_entity });
     const pilot = onOf(cfg.pilot_entity);
     if (pilot !== null) lines.push({ key: "gf_pilot", icon: "mdi:fire-circle", label: t(hass, "gf_pilot"), value: t(hass, pilot ? "gf_on" : "ac_off"), entity: cfg.pilot_entity });
     const error = !!onOf(cfg.error_entity);

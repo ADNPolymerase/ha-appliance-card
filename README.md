@@ -415,7 +415,7 @@ One section per family of appliances: its options, then its guides. Each part op
 | `hair_dryer_layout` | hair dryer | `pistol` (default, a classic dryer seen from the side) \| `ring` (a ring dryer seen from the front). |
 | `heat_threshold` | hair dryer | Power from which the dryer blows hot air (300 W by default). Below it, only the fan runs. |
 | `flame_entity` | gas fireplace | Its flame sensor. It says whether the fire burns; left out, the main switch or the thermostat (heating) does. |
-| `flame_height_entity` | gas fireplace | The flame setting, 1 to 5: a *Flame height* line, and the flames drawn as tall. |
+| `flame_height_entity` | gas fireplace | The flame setting, 1 to 5: a *Flame height* line, and the flames drawn as tall. A `number` is set from the card: tap the line and pick the height. |
 | `fan_entity` / `light_entity` | gas fireplace | Its fan (a line with its speed, warm air out of the louvre, a button) and its lights (a line with their brightness, the firebox lit from the top, a button). Both run on their own, flame or not. |
 | `thermostat_entity` / `pilot_entity` | gas fireplace | Its thermostat (target and room temperature) and its pilot light (*Pilot on* and a small blue flame while the fire is out). |
 | `heat_threshold` / `spin_threshold` | washer, dishwasher, dryer | On a smart plug alone: the power from which it heats (1000 W by default, 600 W on a dryer) and from which a washer spins its drum (200 W). Below them a washer washes, a dryer cools the load, and a dishwasher under its threshold dries. |
@@ -917,7 +917,7 @@ valve_entity: cover.stove_mixer
 
 ### Gas fireplaces
 
-A gas fireplace (`gas_fireplace`), IntelliFire or the like, burns behind its glass, its flames as tall as the flame setting, blue at the root. Its fan, its lights and its pilot light each run on their own: the fan blows warm air out of the louvre, the lights warm the firebox, the pilot keeps a small blue flame while the fire is out. An IntelliFire entity is recognised by its name and its siblings are filled in.
+A gas fireplace (`gas_fireplace`), IntelliFire or the like, burns behind its glass, its flames as tall as the flame setting, blue at the root. Its fan, its lights and its pilot light each run on their own: the fan blows warm air out of the louvre, the lights warm the firebox, the pilot keeps a small blue flame while the fire is out. An IntelliFire entity is recognised by its name and its siblings are filled in. A room temperature of 0 °C (32 °F) is IntelliFire saying the remote has no probe: that line is left out.
 
 ```yaml
 type: custom:ha-appliance-card
