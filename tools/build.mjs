@@ -168,7 +168,7 @@ function requestDrawing(key) {
   drawState[key] = "loading";
   import(assetUrl(\`ha-appliance-card-draw-\${key}.js\`))
     .then((m) => {
-      if (!drawDeps) drawDeps = { ${sharedDraw.join(', ')} };
+      if (!drawDeps) drawDeps = { __v: CARD_VERSION, ${sharedDraw.join(', ')} };
       drawn[key] = m.default(drawDeps);
       drawState[key] = "ready";
       for (const fn of Array.from(langListeners)) {
@@ -215,7 +215,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ ${shared.join(', ')} }))
+      .then((m) => m.default({ __v: CARD_VERSION, ${shared.join(', ')} }))
       .catch((err) => {
         editorLoading = null;
         throw err;
@@ -224,12 +224,27 @@ function loadEditor() {
   return editorLoading;
 }`;
 
+const VERSION = (mainBody.match(/const CARD_VERSION = "([^"]+)"/) || [])[1];
+if (!VERSION) fail('CARD_VERSION not found');
 const HEADER = '// Built by tools/build.mjs from the files of src/: edit those, not this file.';
 const files = {
   'ha-appliance-card.js': `${HEADER}\n${mainBody.replace('__LOADER__', loader)}`,
   'ha-appliance-card-editor.js': `${HEADER}
 // The card's editor, loaded by the card the first time it is edited.
-export default function defineEditor({ ${shared.join(', ')} }) {
+export default function defineEditor(deps) {
+// A page still running the card of an earlier release, the files of this one
+// on the server: its helpers are not these, so say to reload the page.
+if (!deps || deps.__v !== ${JSON.stringify(VERSION)}) {
+  if (!customElements.get("ha-appliance-card-editor")) customElements.define("ha-appliance-card-editor", class extends HTMLElement {
+    setConfig() {}
+    connectedCallback() {
+      const fr = /^fr/i.test(navigator.language || "");
+      this.innerHTML = \`<div style="padding:16px;line-height:1.5">\${fr ? "HA Appliance Card a \\u00e9t\\u00e9 mise \\u00e0 jour : rechargez la page (Ctrl+F5 ou Cmd+Maj+R) pour modifier cette carte." : "HA Appliance Card was updated: reload the page (Ctrl+F5 or Cmd+Shift+R) to edit this card."}</div>\`;
+    }
+  });
+  return;
+}
+let { ${shared.join(', ')} } = deps;
 ${editor}
 
 if (!customElements.get("ha-appliance-card-editor")) customElements.define("ha-appliance-card-editor", ApplianceCardEditor);
@@ -239,7 +254,10 @@ if (!customElements.get("ha-appliance-card-editor")) customElements.define("ha-a
 for (const [key, f] of Object.entries(drawFiles)) {
   files[`ha-appliance-card-draw-${key}.js`] = `${HEADER}
 // The ${key} drawing and its CSS, loaded by the card the first time it shows one.
-export default function defineDrawing({ ${sharedDraw.join(', ')} }) {
+export default function defineDrawing(deps) {
+// A page still running the card of an earlier release: an arrow to reload.
+if (!deps || deps.__v !== ${JSON.stringify(VERSION)}) return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\\u21bb</div>', css: "" };
+let { ${sharedDraw.join(', ')} } = deps;
 ${f.body}
 
 return {
