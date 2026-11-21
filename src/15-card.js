@@ -3752,7 +3752,7 @@ class ApplianceCard extends HTMLElement {
     if (ntDraw && BODY_COLORS[cfg.illustration_color] && applianceType !== "christmas_tree" && !(applianceType === "speaker" && cfg.speaker_color)) ntDraw = { ...ntDraw, tint: cfg.illustration_color };
     // Your own photo in place of the drawing (HACF #167), the movement over it.
     if (ntDraw && PHOTO_TYPES.includes(applianceType)) {
-      const photo = photoOf(cfg);
+      const photo = photoOf(cfg, applianceType);
       if (photo) ntDraw = { ...ntDraw, photo, tint: "" };
     }
     // A smart plug switched off: the appliance on it is off, whatever it
@@ -4132,6 +4132,8 @@ class ApplianceCard extends HTMLElement {
       camera,
       lampDraw,
       ntDraw,
+      // Your own photo for a type drawn in HTML: a washer's porthole, a screen.
+      photo: PHOTO_TYPES.includes(applianceType) && !NT_TYPES.includes(applianceType) ? photoOf(cfg, applianceType) : null,
       mailbox,
       diffuser,
       hrv,

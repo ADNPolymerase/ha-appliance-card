@@ -188,7 +188,7 @@ const T = {
     type_cover: "Shutter, blind, pergola or awning", layout_cov_shutter: "Roller shutter", layout_cov_blind: "Roller blind", layout_cov_venetian: "Venetian blind", layout_cov_raffstore: "Exterior venetian blind", layout_cov_pergola: "Bioclimatic pergola", layout_cov_awning: "Awning", cov_open: "Open", cov_closed: "Closed", cov_open_at: "Open {pct} %", cov_opening: "Opening", cov_closing: "Closing", cov_deployed: "Extended", cov_retracted: "Retracted", cov_deployed_at: "Extended {pct} %", cov_deploying: "Extending", cov_retracting: "Retracting", cov_louvers_open: "Louvers open", cov_louvers_closed: "Louvers closed", cov_louvers_at: "Louvers {pct} %", cov_louvers_opening: "Opening the louvers", cov_louvers_closing: "Closing the louvers", cov_position: "Position", cov_tilt: "Slats", cov_light: "Light", cov_open_btn: "Open", cov_close_btn: "Close", cover_color: "Colour (apron, slats, frame)", fabric_color: "Fabric colour", fabric_stripes: "Striped fabric", cov_c_white: "White", cov_c_grey: "Grey", cov_c_anthracite: "Anthracite", cov_c_black: "Black", cov_c_beige: "Beige", cov_c_wood: "Wood", cov_c_brown: "Brown", cov_f_ecru: "Ecru", cov_f_linen: "Linen", cov_f_grey: "Grey", cov_f_anthracite: "Anthracite", cov_f_blue: "Blue", cov_f_petrol: "Petrol blue", cov_f_terracotta: "Terracotta", cov_f_green: "Green", layout_ths_co2_eink: "CO\u2082 monitor, e-ink (Aranet4)", layout_ths_co2_box: "CO\u2082 monitor, LED bar (AirGradient)", layout_ths_co2_netatmo: "Netatmo indoor station", layout_ths_co2_netatmo_module: "Netatmo additional indoor module", layout_ths_switchbot_co2: "SwitchBot Meter Pro CO\u2082", layout_ths_switchbot_pro: "SwitchBot Meter Pro", layout_ths_switchbot_meter: "SwitchBot Meter", layout_ths_switchbot_plus: "SwitchBot Meter Plus", layout_ths_switchbot_outdoor: "SwitchBot Indoor/Outdoor Meter", ths_co2: "CO\u2082", co2_good: "Air is fine", co2_ventilate: "Ventilation advised", co2_poor: "Ventilate now", co2_warning: "Orange from (ppm)", co2_alert: "Red from (ppm)", netatmo_color: "Netatmo colour", ntm_aluminium: "Aluminium", ntm_sand: "Sand", ntm_mint: "Mint", ntm_graphite: "Graphite",
     type_fingerbot: "Finger bot (Fingerbot, SwitchBot Bot)", layout_fb_plus: "Fingerbot Plus (Tuya, Adaprox, MOES)", layout_fb_switchbot: "SwitchBot Bot", layout_fb_classic: "Fingerbot, first model", fingerbot_color: "Colour", fb_ready: "Ready", fb_pressing: "Pressing", fb_held: "Held down", fb_released: "Released", fb_charging: "Charging", fb_charged: "Charged", fb_low: "Low battery", fb_press: "Press", fb_charge: "Charge", fb_mode: "Mode", fb_m_click: "Press", fb_m_switch: "Switch", fb_m_program: "Program", fb_lower: "Down position", fb_upper: "Up position", fb_sustain: "Hold time", fb_reverse: "Reversed", fb_touch: "Touch button", fb_yes: "Yes", fb_no: "No", fb_last: "Last press",
     type_valve: "Shut-off valve (Aqara T1, Tuya)", layout_vlv_aqara: "Aqara Valve Controller T1", layout_vlv_tuya: "Tuya valve controller", vlv_open: "Open", vlv_closed: "Closed", vlv_opening: "Opening", vlv_closing: "Closing", valve_handle_color: "Handle colour", vlv_h_red: "Red", vlv_h_blue: "Blue", vlv_h_yellow: "Yellow", vlv_h_black: "Black",
-    type_food_processor: "Kitchen robot (Thermomix)", type_gas_fireplace: "Gas fireplace", gf_burning: "Burning", gf_pilot_on: "Pilot on", gf_flame_height: "Flame height", gf_flame: "Flame sensor", gf_pilot: "Pilot light", gf_on: "On", gf_error: "Error", photo_label: "Your own photo", photo_upload: "Upload a photo", photo_remove: "Remove the photo", photo_hint: "Drag the photo to frame it, then put the dashed frame over the window: the cover moves inside it. Take the photo with the cover open.", photo_reset: "Frame again", photo_uploading: "Uploading\u2026", photo_error: "Couldn't load the photo", photo_add_area: "Add an area", photo_remove_area: "Remove this area", layout_fp_tm31: "Thermomix TM31", layout_fp_tm6: "Thermomix TM6", fp_off: "Off", fp_ready: "Ready", fp_mixing: "Mixing", fp_cooking: "Cooking",
+    type_food_processor: "Kitchen robot (Thermomix)", type_gas_fireplace: "Gas fireplace", gf_burning: "Burning", gf_pilot_on: "Pilot on", gf_flame_height: "Flame height", gf_flame: "Flame sensor", gf_pilot: "Pilot light", gf_on: "On", gf_error: "Error", photo_label: "Your own photo", photo_upload: "Upload a photo", photo_remove: "Remove the photo", photo_hint: "Drag the photo to frame it, then put the dashed frame over the window: the cover moves inside it. Take the photo with the cover open.", photo_reset: "Frame again", photo_uploading: "Uploading\u2026", photo_error: "Couldn't load the photo", photo_add_area: "Add an area", photo_remove_area: "Remove this area", door_style_gate: "Swing gate", door_style_sliding_gate: "Sliding gate", photo_hint_door: "Drag the photo to frame it, then put the dashed frame on the door, the window or the gate: it opens inside it. Take the photo shut.", photo_hint_laundry: "Drag the photo to frame it, then put the dashed frame on the porthole: the drum turns inside it. Take the photo door shut, machine off.", photo_hint_screen: "Drag the photo to frame it, then put the dashed frame on the screen: the picture shows inside it. Take the photo screen off.", layout_fp_tm31: "Thermomix TM31", layout_fp_tm6: "Thermomix TM6", fp_off: "Off", fp_ready: "Ready", fp_mixing: "Mixing", fp_cooking: "Cooking",
     det_tampered: "Tampered", det_sec_tamper: "Tamper",
     cam_person: "Person detected", cam_vehicle: "Vehicle detected", cam_animal: "Animal detected", cam_siren: "Siren", cam_line_spotlight: "Spotlight", cam_line_tracking: "Auto tracking", cam_v_lit: "On", cam_v_on: "On", cam_v_off: "Off", cam_sec_person: "Person detection", cam_sec_vehicle: "Vehicle detection", cam_sec_animal: "Animal detection", cam_sec_pan: "Pan position", cam_sec_tilt: "Tilt position",
     valve_fluid: "Fluid", vlv_f_water: "Water", vlv_f_gas: "Gas",
@@ -5805,7 +5805,7 @@ const DETECTOR_MODELS = { door: ["sonoff", "aqara", "hue", "thirdreality", "ikea
 // panel glazed, an interior glass door,
 // an entrance door, plain or with its glass strip, a sliding glass patio door
 // or a sliding barn door. A window keeps its sash.
-const DOOR_STYLES = ["wood", "glass_top", "glass", "external", "external_glass", "sliding_glass", "sliding_wood", "pocket", "garage"];
+const DOOR_STYLES = ["wood", "glass_top", "glass", "external", "external_glass", "sliding_glass", "sliding_wood", "pocket", "garage", "gate", "sliding_gate"];
 // The window a contact sits on (HACF #176): one sash, two, a sliding window
 // or a small one; and the colour of its frame, white or anthracite.
 const WINDOW_STYLES = ["casement", "double", "sliding", "small"];
@@ -6187,6 +6187,9 @@ function doorStyleOf(cfg) {
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""}`).toLowerCase();
   if (/galandage|pocket|einschub|inbouwschuif|a.?scomparsa|empotrad/.test(hay)) return "pocket";
   if (/sectional|sectionnel|sektional|sezional|seccional|garage.?door|porte.?de.?garage|garagentor|garagedeur|puerta.?de.?garaje|porta.?da.?garage/.test(hay)) return "garage";
+  // A driveway gate: sliding or swinging.
+  const gate = /portail|(^|[^a-z])gate|einfahrtstor|hoftor|gartentor|(^|[^a-z])tor([^a-z]|$)|cancello|portao|verja|(^|[^a-z])hek([^a-z]|$)|grind|brama|(^|[^a-z])port([^a-z]|$)/.test(hay);
+  if (gate) return /sliding|coulissant|schiebe|scorrevole|corredera|deslizante|schuif|skjut|skyve|skyde|przesuw|posuvn/.test(hay) ? "sliding_gate" : "gate";
   if (/barn|grange|scheune|schuur|granero|fienile|stodol/.test(hay)) return "sliding_wood";
   if (/sliding|patio|schuif|schiebe|coulissant|baie.?vitree|corredera|scorrevole|skjut|skyve|skyde|przesuw|posuvn|toloajto/.test(hay)) return "sliding_glass";
   return "";
@@ -6636,9 +6639,13 @@ const RACK_TRANS_S = 1.6;
 // illustration_area the part of the box where the movement plays ([x, y,
 // width, height] in % of the box). A cover's apron, fabric or slats come down
 // in that area to its position, over the window of the photo.
-const PHOTO_TYPES = ["cover"];
+const PHOTO_TYPES = ["cover", "detector", "washer", "dryer", "screen"];
 const PHOTO_ASPECT = 120 / 135;
 const PHOTO_AREA = [20, 18, 60, 64];
+// Where the movement plays until it is set: the window, the door, the
+// porthole, the screen, about where they sit on a photo taken from the front.
+const PHOTO_AREAS = { cover: [20, 18, 60, 64], detector: [22, 8, 56, 84], washer: [24, 34, 52, 46], dryer: [24, 34, 52, 46], screen: [6, 28, 88, 42] };
+const photoAreaFor = (type) => (PHOTO_AREAS[type] || PHOTO_AREA).slice();
 // Where the picture is: a path or address as given, or a picture uploaded to
 // Home Assistant (media-source://image_upload/<id>), served at its own address.
 function photoUrlOf(v) {
@@ -6673,11 +6680,11 @@ function photoAreasOf(v) {
 }
 // Written back as one list, or a list of lists when there are several.
 const photoAreasValue = (areas) => areas.length === 1 ? areas[0] : areas;
-function photoOf(cfg) {
+function photoOf(cfg, type) {
   const href = photoUrlOf(cfg && cfg.illustration_image);
   if (!href) return null;
   const areas = photoAreasOf(cfg.illustration_area);
-  return { href, crop: photoBoxOf(cfg.illustration_image_crop), areas: areas.length ? areas : [PHOTO_AREA.slice()] };
+  return { href, crop: photoBoxOf(cfg.illustration_image_crop), areas: areas.length ? areas : [photoAreaFor(type)] };
 }
 // The largest part of a photo of that size that fills the drawing's box, in
 // the middle: the crop at no zoom.
@@ -12885,7 +12892,7 @@ class ApplianceCard extends HTMLElement {
     if (ntDraw && BODY_COLORS[cfg.illustration_color] && applianceType !== "christmas_tree" && !(applianceType === "speaker" && cfg.speaker_color)) ntDraw = { ...ntDraw, tint: cfg.illustration_color };
     // Your own photo in place of the drawing (HACF #167), the movement over it.
     if (ntDraw && PHOTO_TYPES.includes(applianceType)) {
-      const photo = photoOf(cfg);
+      const photo = photoOf(cfg, applianceType);
       if (photo) ntDraw = { ...ntDraw, photo, tint: "" };
     }
     // A smart plug switched off: the appliance on it is off, whatever it
@@ -13265,6 +13272,8 @@ class ApplianceCard extends HTMLElement {
       camera,
       lampDraw,
       ntDraw,
+      // Your own photo for a type drawn in HTML: a washer's porthole, a screen.
+      photo: PHOTO_TYPES.includes(applianceType) && !NT_TYPES.includes(applianceType) ? photoOf(cfg, applianceType) : null,
       mailbox,
       diffuser,
       hrv,
@@ -14340,7 +14349,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ __v: CARD_VERSION, t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, illustrationBackdropOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, cameraLayoutOf, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, DETECTOR_MODELS, DOOR_STYLES, WINDOW_STYLES, FRAME_COLORS, FINGERBOT_LAYOUTS, VALVE_LAYOUTS, RACK_LAYOUTS, FP_LAYOUTS, FP_COOK_W, VALVE_HANDLE_COLORS, VALVE_FLUIDS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, CO2_WARN, CO2_ALERT, NETATMO_COLORS, COVER_LAYOUTS, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, PHOTO_TYPES, PHOTO_AREA, photoUrlOf, photoBoxOf, PHOTO_AREAS_MAX, photoAreasOf, photoAreasValue, photoCoverCrop, photoShrink, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
+      .then((m) => m.default({ __v: CARD_VERSION, t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, illustrationBackdropOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, cameraLayoutOf, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, DETECTOR_MODELS, DOOR_STYLES, WINDOW_STYLES, FRAME_COLORS, FINGERBOT_LAYOUTS, VALVE_LAYOUTS, RACK_LAYOUTS, FP_LAYOUTS, FP_COOK_W, VALVE_HANDLE_COLORS, VALVE_FLUIDS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, CO2_WARN, CO2_ALERT, NETATMO_COLORS, COVER_LAYOUTS, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, PHOTO_TYPES, photoAreaFor, photoUrlOf, photoBoxOf, PHOTO_AREAS_MAX, photoAreasOf, photoAreasValue, photoCoverCrop, photoShrink, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

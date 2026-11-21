@@ -1524,6 +1524,26 @@ ${move(-26, 0, sash(38, 8, 34, 102) + shine(44, 14, 18))}
   } else if (ws) {
     // One sash.
     leaf = turning(10, 6, 62, 106, shine(22, 12, 28) + hdl(62, 56));
+  } else if (style === "gate" || style === "sliding_gate") {
+    // A driveway gate between its posts, the garden through its bars: two
+    // leaves that swing open towards their posts, or one that slides behind
+    // the left post.
+    const gcol = c.frame === "white" ? "#eef1f3" : "#3d444b";
+    const bars = (x0, x1) => {
+      let o = `<rect x="${x0}" y="32" width="${x1 - x0}" height="76" fill="none" stroke="${gcol}" stroke-width="2.4"/><rect x="${x0}" y="58" width="${x1 - x0}" height="1.8" fill="${gcol}"/>`;
+      for (let x = x0 + 4; x < x1 - 1.5; x += 4) o += `<rect x="${n2(x - .6)}" y="32" width="1.2" height="76" fill="${gcol}"/>`;
+      return o;
+    };
+    const squash = (hx, inner) => `<g transform="translate(${hx} 0)"><g transform="scale(${n2(1 - .82 * F)} 1)">${c.trans ? `<animateTransform attributeName="transform" type="scale" values="${n2(1 - .82 * (1 - F))} 1;${n2(1 - .82 * F)} 1" ${swing}/>` : ""}<g transform="translate(${-hx} 0)">${inner}</g></g></g>`;
+    const post = (x) => `<rect x="${x}" y="26" width="7" height="86" fill="#d3cbbb" stroke="#a89f8e" stroke-width=".5"/><rect x="${x - 1}" y="23" width="9" height="4" fill="#bdb3a1"/>`;
+    const scene = `<rect x="0" y="0" width="82" height="118" fill="url(#${sk})"/><path d="M28 118 L37 72 H45 L54 118 Z" fill="#d6d0c4" opacity=".85"/>`;
+    if (style === "sliding_gate") {
+      mdx = -58;
+      leaf = `${scene}${move(-58, 0, bars(11, 71), pk)}${post(4)}${post(71)}`;
+    } else {
+      mdx = 4;
+      leaf = `${scene}${squash(11, bars(11, 41))}${squash(71, bars(41, 71))}${post(4)}${post(71)}`;
+    }
   } else if (style === "garage") {
     // A sectional garage door, four smooth panels; open, it has gone up into
     // the ceiling with the magnet, one panel still showing at the top.
@@ -4316,10 +4336,50 @@ ${yb > y0 + 1 ? `<rect x="${cvF(x0 - .5)}" y="${cvF(yb - 2.2)}" width="${cvF(w +
   return `<defs>${clip(y0, yb)}</defs>${light}${shade(yb)}<g clip-path="url(#${cl})"><rect x="${x0}" y="${y0}" width="${cvF(w)}" height="${cvF(h)}" fill="${mc}"/><g${dir ? ` class="cv-${dir}"` : ""} style="--cv-step:${step}px">${slats.join("")}</g></g>
 ${yb > y0 + .5 ? `<rect x="${x0}" y="${cvF(yb - step * .6)}" width="${cvF(w)}" height="${cvF(step * .6)}" fill="${cvTone(mc, -.35)}"/><path d="M${x0} ${cvF(yb - .2)} H${x1}" stroke="${cvTone(mc, -.6)}" stroke-width=".6"/>` : ""}${arrow(dir)}`;
 }
+// A door, a window, a garage door or a gate over its photo, taken shut: the
+// piece of the photo in the area is the leaf, and it moves as the real one
+// does, swinging to its hinge, sliding aside, rising into the ceiling. Behind
+// it the room's darkness for a door, the outside for a gate or a window.
+function ntPhotoDetector(c, b) {
+  if (c.kind !== "det_door") return "";
+  const { x0, y0, x1, y1 } = b, w = x1 - x0, h = y1 - y0, n2 = (v) => +v.toFixed(2);
+  const F = c.smoke ? 1 : 0;
+  const swing = c.trans ? `dur="${DOOR_TRANS_S}s" begin="0s" fill="freeze" data-swing="${c.trans.toFixed(2)}" calcMode="spline" keyTimes="0;1" keySplines=".45 0 .25 1"` : "";
+  const style = c.window ? (c.wstyle === "sliding" ? "sliding" : c.wstyle === "double" ? "double" : "casement") : c.style || "wood";
+  const outside = c.window || style === "gate" || style === "sliding_gate";
+  const img = ntPhotoImage(c.photo);
+  const cl = ntId(), dk = ntId(), wide = ntId();
+  // What shows once the leaf has gone: the room, dark, its floor lighter
+  // towards the front; for a window the view through it, brighter, as air;
+  // for a gate what lies beyond it, taken from the photo just above it.
+  const behind = c.window
+    ? `<g clip-path="url(#${cl})">${img}<rect x="${x0}" y="${y0}" width="${n2(w)}" height="${n2(h)}" fill="#fff" opacity=".18"/></g>`
+    : outside
+      ? `<g clip-path="url(#${cl})"><g transform="translate(0 ${n2(h * .9)})">${img}</g><rect x="${x0}" y="${y0}" width="${n2(w)}" height="${n2(h)}" fill="#fff" opacity=".08"/></g>`
+      : `<rect x="${x0}" y="${y0}" width="${n2(w)}" height="${n2(h)}" fill="url(#${dk})"/><path d="M${x0} ${y1} L${n2(x0 + w * .16)} ${n2(y1 - h * .2)} H${n2(x1 - w * .16)} L${x1} ${y1} Z" fill="#4a5057" opacity=".8"/><path d="M${n2(x0 + w * .16)} ${n2(y1 - h * .2)} H${n2(x1 - w * .16)}" stroke="#000" stroke-width=".5" opacity=".5"/>`;
+  // The leaf, the photo cut to the area, a shade on it as it turns away.
+  const leafOf = (cx0, cx1, shade = .3) => `<g><defs><clipPath id="${cl}l${n2(cx0)}"><rect x="${n2(cx0)}" y="${y0}" width="${n2(cx1 - cx0)}" height="${n2(h)}"/></clipPath></defs><g clip-path="url(#${cl}l${n2(cx0)})">${img}<rect x="${n2(cx0)}" y="${y0}" width="${n2(cx1 - cx0)}" height="${n2(h)}" fill="#000" opacity="${n2(shade * F)}">${c.trans ? `<animate attributeName="opacity" values="${n2(shade * (1 - F))};${n2(shade * F)}" ${swing}/>` : ""}</rect></g></g>`;
+  const move = (dx, dy, inner, clip) => `<g clip-path="url(#${clip})"><g transform="translate(${n2(dx * F)} ${n2(dy * F)})">${c.trans ? `<animateTransform attributeName="transform" type="translate" values="${n2(dx * (1 - F))} ${n2(dy * (1 - F))};${n2(dx * F)} ${n2(dy * F)}" ${swing}/>` : ""}${inner}</g></g>`;
+  const squash = (hx, inner, k = .74) => `<g transform="translate(${n2(hx)} 0)"><g transform="scale(${n2(1 - k * F)} 1)">${c.trans ? `<animateTransform attributeName="transform" type="scale" values="${n2(1 - k * (1 - F))} 1;${n2(1 - k * F)} 1" ${swing}/>` : ""}<g transform="translate(${n2(-hx)} 0)">${inner}</g></g></g>`;
+  let leaf;
+  if (style === "garage") leaf = move(0, -h, leafOf(x0, x1, 0) + `<rect x="${x0}" y="${n2(y1 - 2)}" width="${n2(w)}" height="2" fill="#000" opacity=".35"/>`, cl);
+  else if (style === "pocket") leaf = move(-w, 0, leafOf(x0, x1, 0), cl);
+  else if (style === "sliding" || style.startsWith("sliding")) leaf = move(-w * .92, 0, leafOf(x0, x1, .12), wide);
+  else if (style === "double" || style === "gate") {
+    const mx = x0 + w / 2;
+    leaf = squash(x0, leafOf(x0, mx), style === "gate" ? .82 : .74) + squash(x1, leafOf(mx, x1), style === "gate" ? .82 : .74);
+  } else leaf = squash(x0, leafOf(x0, x1));
+  // Shaken: the leaf trembles. Broken: the glass cracks.
+  const shake = c.vib ? `<animateTransform attributeName="transform" type="translate" values="0 0;.6 0;-.6 0;.4 0;0 0" dur=".25s" repeatCount="indefinite"/>` : "";
+  const cx = x0 + w * .55, cy = y0 + h * .4;
+  const crack = c.cracked ? `<g stroke="#fff" stroke-width=".7" fill="none" opacity=".9">${[[-.3, -.25], [.32, -.2], [.28, .3], [-.25, .28], [.02, -.4], [-.36, .05]].map(([u, v]) => `<path d="M${n2(cx)} ${n2(cy)} L${n2(cx + u * w * .5)} ${n2(cy + v * h * .45)} l${n2(u * 4)} ${n2(v * 6 + 2)}"/>`).join("")}<circle cx="${n2(cx)}" cy="${n2(cy)}" r="1.4" fill="#fff"/></g>` : "";
+  return `<defs><clipPath id="${cl}"><rect x="${x0}" y="${y0}" width="${n2(w)}" height="${n2(h)}"/></clipPath><clipPath id="${wide}"><rect x="${n2(x0 - w)}" y="${y0}" width="${n2(w * 2)}" height="${n2(h)}"/></clipPath>${ntV(dk, "#2b3036", "#14171a")}</defs>
+${behind}<g>${shake}${leaf}</g>${crack}`;
+}
 // A cover's arrow while it moves, drawn once over every area (an awning comes
 // down as it opens).
 const ntPhotoCoverArrow = (c) => { const dir = cvDir(c); return cvArrow(c.kind === "cov_awning" ? (dir === "up" ? "down" : dir === "down" ? "up" : "") : dir); };
-const NT_PHOTO_OVERLAYS = { cov: [ntPhotoCover, ntPhotoCoverArrow] };
+const NT_PHOTO_OVERLAYS = { cov: [ntPhotoCover, ntPhotoCoverArrow], det: [ntPhotoDetector, () => ""] };
 // The photo, its rounded corners, and the movement over it.
 function ntPhoto(d) {
   const ph = d.photo, cp = ntId(), over = NT_PHOTO_OVERLAYS[String(d.kind || "").split("_")[0]];

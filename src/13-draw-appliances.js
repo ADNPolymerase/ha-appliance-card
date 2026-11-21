@@ -2587,3 +2587,82 @@ function boilerWithThermo(svg, d) {
   return `${svg.slice(0, open)}<g transform="translate(-4 26) scale(.78)">${svg.slice(open, close)}</g>${device}</svg>`;
 }
 
+
+// Your own photo for the types drawn in HTML (HACF #165): the photo in the
+// same box as ntPhoto's, cut to its crop, what moves drawn over it in SVG.
+function photoSvg(ph, over) {
+  const href = esc(ph.href);
+  let img;
+  if (!ph.crop) img = `<image href="${href}" x="0" y="-10" width="120" height="135" preserveAspectRatio="xMidYMid slice"/>`;
+  else {
+    const [cx, cy, cw, ch] = ph.crop, f = (n) => +n.toFixed(2);
+    img = `<image href="${href}" x="${f(-cx / cw * 120)}" y="${f(-10 - cy / ch * 135)}" width="${f(12000 / cw)}" height="${f(13500 / ch)}" preserveAspectRatio="none"/>`;
+  }
+  return `<svg class="ph-svg" viewBox="0 -10 120 135" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%"><defs><clipPath id="php-c"><rect x="0" y="-10" width="120" height="135" rx="7"/></clipPath></defs>
+<g clip-path="url(#php-c)"><rect x="0" y="-10" width="120" height="135" fill="#808080" opacity=".18"/><g class="ph-img">${img}</g>${over}</g>
+<rect x=".3" y="-9.7" width="119.4" height="134.4" rx="7" fill="none" stroke="#000" stroke-opacity=".14" stroke-width=".6"/></svg>`;
+}
+// A washer's or a dryer's porthole on its photo, taken door shut and off: the
+// area holds the glass. Running, the drum is drawn in it, steel and
+// perforated, its paddles and the load turning; washing, the water sloshes at
+// the bottom; spinning, the load whirls pressed to the drum; drying, it
+// tumbles in warm air. The door open shows the drum still.
+function laundryPhotoHtml(type, ctx) {
+  const ph = ctx.photo, a = ph.areas[0], f = (n) => +n.toFixed(2);
+  const x0 = a[0] * 1.2, y0 = -10 + a[1] * 1.35, w = a[2] * 1.2, h = a[3] * 1.35, cx = f(x0 + w / 2), cy = f(y0 + h / 2), rx = f(w / 2), ry = f(h / 2);
+  const run = !!ctx.spinning, dry = type === "dryer" || !!ctx.drying, spin = !!ctx.spinCycle, open = !!ctx.doorOpen;
+  if (!run && !open) return `
+        <div class="machine ph-machine">${photoSvg(ph, "")}</div>`;
+  const E = (k, extra) => `<ellipse cx="${cx}" cy="${cy}" rx="${f(rx * k)}" ry="${f(ry * k)}" ${extra}/>`;
+  // The drum: steel, darker towards its back, rings of holes.
+  const holes = [];
+  for (const k of [.86, .66, .46]) {
+    const n = Math.round(30 * k);
+    for (let i = 0; i < n; i++) {
+      const t = (i + (k === .66 ? .5 : 0)) / n * Math.PI * 2;
+      holes.push(`<circle cx="${f(cx + Math.cos(t) * rx * k)}" cy="${f(cy + Math.sin(t) * ry * k)}" r="${f(Math.min(rx, ry) * .028)}" fill="#3d444b" opacity=".8"/>`);
+    }
+  }
+  // Its three paddles, turning with it.
+  const paddles = [0, 120, 240].map((d) => `<path d="M${f(cx - rx * .07)} ${f(cy - ry * .98)} L${f(cx + rx * .07)} ${f(cy - ry * .98)} L${f(cx + rx * .04)} ${f(cy - ry * .66)} L${f(cx - rx * .04)} ${f(cy - ry * .66)} Z" fill="#c9cfd4" stroke="#6b737b" stroke-width=".4" transform="rotate(${d} ${cx} ${cy})"/>`).join("");
+  const drum = E(1, `fill="url(#php-s)"`) + holes.join("") + E(.3, `fill="#2c3237" opacity=".55"`) + E(.12, `fill="#9aa3ab"`);
+  const turn = (inner, dur) => `<g>${inner}<animateTransform attributeName="transform" type="rotate" from="0 ${cx} ${cy}" to="360 ${cx} ${cy}" dur="${dur}" repeatCount="indefinite"/></g>`;
+  let inside;
+  if (open) inside = drum + paddles;
+  else {
+    const dur = spin ? ".5s" : dry ? "1.9s" : "2.8s";
+    // The load: a few garments, tumbling in the lower half, or spread round
+    // the drum when it spins.
+    const cols = ["#d9534f", "#3f7fbf", "#f0c419", "#f4f4f4", "#5cb85c"];
+    const load = cols.map((col, i) => {
+      const t = spin ? i / cols.length * Math.PI * 2 : Math.PI * (.2 + i * .15), k = spin ? .7 : .5;
+      const lx = cx + Math.cos(t) * rx * k, ly = cy + Math.sin(t) * ry * k;
+      const s2 = Math.min(rx, ry) * (spin ? .22 : .32);
+      return `<path d="M${f(lx - s2)} ${f(ly)} Q${f(lx - s2 * .6)} ${f(ly - s2 * .9)} ${f(lx)} ${f(ly - s2 * .5)} Q${f(lx + s2 * .7)} ${f(ly - s2)} ${f(lx + s2)} ${f(ly - s2 * .1)} Q${f(lx + s2 * .8)} ${f(ly + s2 * .7)} ${f(lx)} ${f(ly + s2 * .5)} Q${f(lx - s2 * .9)} ${f(ly + s2 * .8)} ${f(lx - s2)} ${f(ly)} Z" fill="${col}" stroke="#000" stroke-opacity=".25" stroke-width=".5"/>`;
+    }).join("");
+    const wl = cy + ry * .25, wave = (k) => `M${f(cx - rx)} ${f(wl + k)} Q${f(cx - rx / 2)} ${f(wl - 3 + k)} ${cx} ${f(wl + k)} T${f(cx + rx)} ${f(wl + k)} V${f(cy + ry)} H${f(cx - rx)} Z`;
+    const water = dry || spin ? "" : `<path d="${wave(0)}" fill="#3d8fd6" opacity=".62"><animate attributeName="d" values="${wave(0)};${wave(2.5)};${wave(0)}" dur="1.5s" repeatCount="indefinite"/></path>`
+      + [0, 1, 2, 3].map((i) => `<circle cx="${f(cx - rx * .5 + i * rx * .33)}" cy="${f(cy + ry * .75)}" r="${f(rx * .045)}" fill="#fff" opacity=".8"><animate attributeName="cy" values="${f(cy + ry * .75)};${f(wl)}" dur="${1.1 + i * .25}s" repeatCount="indefinite"/></circle>`).join("");
+    inside = turn(drum + paddles, dur) + (spin ? turn(load, dur) : `<g>${load}<animateTransform attributeName="transform" type="rotate" values="-25 ${cx} ${cy};25 ${cx} ${cy};-25 ${cx} ${cy}" dur="${dur}" repeatCount="indefinite"/></g>`) + water
+      + (dry ? E(1, `fill="#ffb74d" opacity=".14"`) : "");
+  }
+  // The glass in front, a reflection on it; none with the door open.
+  const glass = open ? "" : `<path d="M${f(cx - rx * .72)} ${f(cy - ry * .4)} Q${f(cx - rx * .3)} ${f(cy - ry * .95)} ${f(cx + rx * .45)} ${f(cy - ry * .72)}" stroke="#fff" stroke-width="2.2" fill="none" opacity=".45" stroke-linecap="round"/>` + E(1, `fill="#cfe6f5" opacity=".08"`);
+  const over = `<defs><clipPath id="php-d"><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}"/></clipPath><radialGradient id="php-s"><stop offset="0" stop-color="#5a636b"/><stop offset=".6" stop-color="#8f99a2"/><stop offset="1" stop-color="#c3cad0"/></radialGradient></defs>
+<g clip-path="url(#php-d)">${inside}${glass}</g>${E(1, `fill="none" stroke="#2c3237" stroke-width=".8" opacity=".6"`)}`;
+  const flags = [run ? "spinning" : "", dry ? "drying" : "", spin ? "spin-cycle" : "", open ? "open" : ""].filter(Boolean).join(" ");
+  return `
+        <div class="machine ph-machine ${flags}">${photoSvg(ph, over)}</div>`;
+}
+// A screen on its photo, taken off: the area is its glass, and the picture
+// it shows goes there, lit, with a little glow round it.
+function screenPhotoHtml(cls, sc, ph) {
+  const mode = sc.mode || "off", lit = SCREEN_LIT.includes(mode), a = ph.areas[0];
+  const tablet = SCREEN_TABLETS.includes(sc.layout);
+  const picture = mode === "saver" ? screenPictureHtml("saver", sc)
+    : mode === "home" ? screenPictureHtml(tablet ? "dashboard" : "home")
+      : sc.cover ? `<img class="scr-cover" src="${esc(sc.cover)}" alt="">`
+        : screenPictureHtml(sc.image);
+  return `
+        <div class="machine ${cls} ph-machine mode-${mode}${lit ? " scr-lit" : ""}">${photoSvg(ph, "")}<div class="scr-glass" style="left: ${a[0]}%; top: ${a[1]}%; width: ${a[2]}%; height: ${a[3]}%; background: ${lit ? "#000" : "transparent"}${lit ? "; box-shadow: 0 0 8px rgba(150, 190, 255, .45)" : ""}"><div class="scr-pic">${lit ? picture : ""}</div>${mode === "locked" ? '<div class="scr-lock"></div>' : ""}</div></div>`;
+}

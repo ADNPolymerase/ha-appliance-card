@@ -196,6 +196,7 @@ function boilerWithThermo(svg, d) {
 }
 
 
+
 return {
 draw: (cls, ctx) => {
     const mode = ctx.boilerMode || "idle";

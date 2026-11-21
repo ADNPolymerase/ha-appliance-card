@@ -1003,10 +1003,10 @@ class ApplianceCardEditor extends HTMLElement {
         <input type="file" accept="image/*" class="ph-file" hidden />
       </div>
       <div class="ph-msg"></div>
-      ${href ? `<div class="ph-hint">${esc(t(hass, "photo_hint"))}</div>
+      ${href ? `<div class="ph-hint">${esc(t(hass, { detector: "photo_hint_door", washer: "photo_hint_laundry", dryer: "photo_hint_laundry", screen: "photo_hint_screen" }[this._type] || "photo_hint"))}</div>
       <div class="ph-frame"><img class="ph-img" alt="" draggable="false" src="${esc(href)}" /></div>
       <div class="ph-tools"><ha-icon icon="mdi:magnify-minus-outline"></ha-icon><input type="range" class="ph-zoom" min="1" max="4" step="0.01" value="1" /><ha-icon icon="mdi:magnify-plus-outline"></ha-icon>
-        <button type="button" class="ph-btn ph-add" title="${esc(t(hass, "photo_add_area"))}"><ha-icon icon="mdi:selection-ellipse-arrow-inside"></ha-icon><span>${esc(t(hass, "photo_add_area"))}</span></button>
+        ${this._type === "cover" ? `<button type="button" class="ph-btn ph-add" title="${esc(t(hass, "photo_add_area"))}"><ha-icon icon="mdi:selection-ellipse-arrow-inside"></ha-icon><span>${esc(t(hass, "photo_add_area"))}</span></button>` : ""}
         <button type="button" class="ph-btn ph-reset" title="${esc(t(hass, "photo_reset"))}"><ha-icon icon="mdi:restore"></ha-icon></button></div>` : ""}`;
     const $ = (s) => slot.querySelector(s), msg = $(".ph-msg");
     const commit = (patch) => {
@@ -1040,7 +1040,7 @@ class ApplianceCardEditor extends HTMLElement {
     $(".ph-del").addEventListener("click", () => commit({ illustration_image: undefined, illustration_image_crop: undefined, illustration_area: undefined }));
     const frame = $(".ph-frame"), img = $(".ph-img"), zoom = $(".ph-zoom");
     const areas0 = photoAreasOf(cfg.illustration_area);
-    const st = { crop: photoBoxOf(cfg.illustration_image_crop), areas: areas0.length ? areas0 : [PHOTO_AREA.slice()], base: null };
+    const st = { crop: photoBoxOf(cfg.illustration_image_crop), areas: areas0.length ? areas0 : [photoAreaFor(this._type)], base: null };
     const r1 = (n) => Math.round(n * 10) / 10;
     // One dashed frame per area, its corners to resize it and, when there is
     // more than one, a cross to take it away.
@@ -1048,7 +1048,7 @@ class ApplianceCardEditor extends HTMLElement {
       frame.querySelectorAll(".ph-area").forEach((el) => el.remove());
       st.areas.forEach((_, i) => {
         const el = document.createElement("div");
-        el.className = "ph-area";
+        el.className = `ph-area${["washer", "dryer"].includes(this._type) ? " ph-round" : ""}`;
         el.setAttribute("data-i", String(i));
         el.innerHTML = `<i data-h="nw"></i><i data-h="ne"></i><i data-h="sw"></i><i data-h="se"></i>${st.areas.length > 1 ? `<b data-del="${i}" title="${esc(t(hass, "photo_remove_area"))}">\u00d7</b>` : ""}`;
         frame.appendChild(el);
@@ -1086,9 +1086,9 @@ class ApplianceCardEditor extends HTMLElement {
     paint();
     zoom.addEventListener("input", () => { if (st.base) { setZoom(Number(zoom.value)); paint(); } });
     zoom.addEventListener("change", save);
-    $(".ph-reset").addEventListener("click", () => { st.crop = null; st.areas = [PHOTO_AREA.slice()]; drawAreas(); paint(); save(); });
+    $(".ph-reset").addEventListener("click", () => { st.crop = null; st.areas = [photoAreaFor(this._type)]; drawAreas(); paint(); save(); });
     // A new area beside the last one: the second pane of a window.
-    $(".ph-add").addEventListener("click", () => {
+    if ($(".ph-add")) $(".ph-add").addEventListener("click", () => {
       if (st.areas.length >= PHOTO_AREAS_MAX) return;
       const [x, y, w, h] = st.areas[st.areas.length - 1];
       if (st.areas.length === 1 && w > 30) {
@@ -1475,6 +1475,7 @@ class ApplianceCardEditor extends HTMLElement {
         .ph-tools { display: flex; align-items: center; gap: 8px; width: min(100%, 300px); margin: 0 auto; color: var(--secondary-text-color, #767676); }
         .ph-tools .ph-zoom { flex: 1; min-width: 60px; }
         .ph-btn:disabled { opacity: .45; cursor: default; }
+        .ph-area.ph-round { border-radius: 50%; }
         .ph-area b { position: absolute; right: 4px; top: 4px; width: 18px; height: 18px; border-radius: 50%; background: rgba(0, 0, 0, .6); color: #fff;
           font: 700 14px/18px sans-serif; text-align: center; cursor: pointer; }
         .picker-slot { margin: 6px 0; }
@@ -1728,7 +1729,7 @@ class ApplianceCardEditor extends HTMLElement {
         }) + (["blind", "awning"].includes(coverLayoutOf(this._config, stateObj(this._hass, this._config.state_entity))) ? this._row("fabric_color", "fabric_color", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(Object.keys(FABRIC_COLORS).map((v) => ({ value: v, label: t(hass, `cov_f_${v}`) }))),
-        }) : "") + (coverLayoutOf(this._config, stateObj(this._hass, this._config.state_entity)) === "awning" ? this._row("fabric_stripes", "fabric_stripes", { type: "checkbox", defaultOn: true }) : "") + `<div class="picker-slot ph-slot" data-slot="__photo"></div>` : ""}
+        }) : "") + (coverLayoutOf(this._config, stateObj(this._hass, this._config.state_entity)) === "awning" ? this._row("fabric_stripes", "fabric_stripes", { type: "checkbox", defaultOn: true }) : "") : ""}
         ${this._type === "climate_sensor" && /^co2_netatmo/.test(thsLayoutOf(this._config, stateObj(this._hass, this._config.state_entity))) ? this._row("netatmo_color", "netatmo_color", {
           type: "select",
           options: Object.keys(NETATMO_COLORS).map((v) => ({ value: v, label: t(hass, `ntm_${v}`) })),
@@ -1952,6 +1953,7 @@ class ApplianceCardEditor extends HTMLElement {
           ${this._row("values_right", "values_right", { type: "checkbox" })}
           ${this._row("fill_height", "fill_height", { type: "checkbox" })}
           ${this._row("illustration_frame", "illustration_frame", { type: "checkbox" })}
+          ${PHOTO_TYPES.includes(this._type) ? `<div class="picker-slot ph-slot" data-slot="__photo"></div>` : ""}
         </div>
       </details>
       ${caps(this._type).zones && !this._plug() ? `

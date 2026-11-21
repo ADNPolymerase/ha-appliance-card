@@ -203,6 +203,7 @@ const DRAWINGS = {
   },
 
   laundry: (cls, ctx, type) => {
+    if (ctx.photo) return laundryPhotoHtml(type, ctx);
     // A washer-dryer empties its drum before it dries, so while it dries it is
     // a dryer: clothes turning in a warm drum. A spin empties it too, and the
     // clothes show, whirling with no water.
@@ -605,7 +606,7 @@ const DRAWINGS = {
   mailbox: (cls, ctx) => mailboxHtml(cls, ctx.mailbox || {}),
   diffuser: (cls, ctx) => diffuserHtml(cls, ctx.diffuser || {}),
   hrv: (cls, ctx) => hrvHtml(cls, ctx.hrv || {}),
-  screen: (cls, ctx) => screenHtml(cls, ctx.screen || {}),
+  screen: (cls, ctx) => (ctx.photo ? screenPhotoHtml(cls, ctx.screen || {}, ctx.photo) : screenHtml(cls, ctx.screen || {})),
   air_purifier: (cls, ctx) => purifierHtml(cls, ctx.purifier || {}),
   fan: (cls, ctx) => fanHtml(cls, ctx.fan || {}),
 

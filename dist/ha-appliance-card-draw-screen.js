@@ -163,9 +163,35 @@ function screenHtml(cls, sc) {
         <div class="machine ${cls} scr-${layout} mode-${mode}${lit}${layout === "laptop" ? ` lap-st-${sc.laptopStyle === "classic" ? "classic" : "thin"}` : ""}${layout === "laptop" && LAPTOP_COLORS[sc.color] ? ` lap-${sc.color}` : ""}${sc.muted ? " muted" : ""}${tablet ? " tablet" : ""}${sc.charging ? " charging" : ""}${sc.seen ? " seen" : ""}${sc.tower ? ` tw-${sc.tower}` : ""}"${size}>${inner}</div>`;
 }
 
+// Your own photo for the types drawn in HTML (HACF #165): the photo in the
+// same box as ntPhoto's, cut to its crop, what moves drawn over it in SVG.
+function photoSvg(ph, over) {
+  const href = esc(ph.href);
+  let img;
+  if (!ph.crop) img = `<image href="${href}" x="0" y="-10" width="120" height="135" preserveAspectRatio="xMidYMid slice"/>`;
+  else {
+    const [cx, cy, cw, ch] = ph.crop, f = (n) => +n.toFixed(2);
+    img = `<image href="${href}" x="${f(-cx / cw * 120)}" y="${f(-10 - cy / ch * 135)}" width="${f(12000 / cw)}" height="${f(13500 / ch)}" preserveAspectRatio="none"/>`;
+  }
+  return `<svg class="ph-svg" viewBox="0 -10 120 135" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%"><defs><clipPath id="php-c"><rect x="0" y="-10" width="120" height="135" rx="7"/></clipPath></defs>
+<g clip-path="url(#php-c)"><rect x="0" y="-10" width="120" height="135" fill="#808080" opacity=".18"/><g class="ph-img">${img}</g>${over}</g>
+<rect x=".3" y="-9.7" width="119.4" height="134.4" rx="7" fill="none" stroke="#000" stroke-opacity=".14" stroke-width=".6"/></svg>`;
+}
+// A screen on its photo, taken off: the area is its glass, and the picture
+// it shows goes there, lit, with a little glow round it.
+function screenPhotoHtml(cls, sc, ph) {
+  const mode = sc.mode || "off", lit = SCREEN_LIT.includes(mode), a = ph.areas[0];
+  const tablet = SCREEN_TABLETS.includes(sc.layout);
+  const picture = mode === "saver" ? screenPictureHtml("saver", sc)
+    : mode === "home" ? screenPictureHtml(tablet ? "dashboard" : "home")
+      : sc.cover ? `<img class="scr-cover" src="${esc(sc.cover)}" alt="">`
+        : screenPictureHtml(sc.image);
+  return `
+        <div class="machine ${cls} ph-machine mode-${mode}${lit ? " scr-lit" : ""}">${photoSvg(ph, "")}<div class="scr-glass" style="left: ${a[0]}%; top: ${a[1]}%; width: ${a[2]}%; height: ${a[3]}%; background: ${lit ? "#000" : "transparent"}${lit ? "; box-shadow: 0 0 8px rgba(150, 190, 255, .45)" : ""}"><div class="scr-pic">${lit ? picture : ""}</div>${mode === "locked" ? '<div class="scr-lock"></div>' : ""}</div></div>`;
+}
 
 return {
-draw: (cls, ctx) => screenHtml(cls, ctx.screen || {}),
+draw: (cls, ctx) => (ctx.photo ? screenPhotoHtml(cls, ctx.screen || {}, ctx.photo) : screenHtml(cls, ctx.screen || {})),
 css: () => `
         .scr-zoom { position: absolute; width: 96px; height: 108px; transform-origin: 0 0; }
         .scr-bezel, .scr-glass, .scr-led, .scr-foot, .scr-neck, .scr-base, .scr-shade, .scr-wall, .scr-rod, .scr-beam,
