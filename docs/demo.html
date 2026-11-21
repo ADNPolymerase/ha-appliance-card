@@ -1797,6 +1797,25 @@ const travel = (from, to, still) => {
   if (!params.has("phase")) return still;
   return Math.round(from + (to - from) * ((Number(params.get("phase")) % 4800) / 4800));
 };
+// Your own photo (HACF #165): free photos of windows (CC0, see
+// docs/photos/CREDITS.md), each framed on its window, its panes the areas,
+// dealt at random to the photo cards (the same with ?phase).
+const PHOTO_WINDOWS = [
+  { src: "photo-window.png", area: [[10, 6, 38.5, 73], [55.4, 6, 35.3, 73]] },
+  { src: "photos/window-green-shutters.jpg", crop: [20.9, 0, 59.3, 100], area: [[34.6, 24.3, 14.6, 49.7], [51.6, 24.3, 18.6, 49.7]] },
+  { src: "photos/window-green-wall.jpg", crop: [4.8, 22.7, 62.5, 46.7], area: [[25.1, 16.6, 23.2, 66.4], [53.9, 16.6, 21.6, 66.4]] },
+  { src: "photos/window-dark-room.jpg", crop: [18.4, 0, 59.3, 100], area: [[3.5, 32.5, 46.4, 56.5], [53.3, 32.5, 43.8, 56.5]] },
+  { src: "photos/window-curtains.jpg", crop: [16.1, 0, 69.9, 100], area: [[7, 15, 42.2, 73], [57.8, 15, 35.8, 73]] },
+];
+let photoDeck = [];
+const photoWindow = () => {
+  if (!photoDeck.length) photoDeck = PHOTO_WINDOWS.slice().sort(() => Math.random() - 0.5);
+  return photoDeck.pop();
+};
+const photoCard = (name, layout, state, a = {}, more = {}) => () => {
+  const w = photoWindow();
+  return covCard(name, layout, state, a, { illustration_image: w.src, ...(w.crop ? { illustration_image_crop: w.crop } : {}), illustration_area: w.area, ...more })();
+};
 const covCard = (name, layout, state, a = {}, more = {}) => () => card({ name, appliance_type: "cover", cover_layout: layout, state_entity: "cover.c_" + layout + "_" + state, ...more },
   [st("cover.c_" + layout + "_" + state, state, { supported_features: 255, ...a }), ...(more.light_entity ? [st(more.light_entity, "on", { rgb_color: [255, 207, 122] })] : [])]);
 // A finger bot (HACF #163): a Fingerbot Plus on Zigbee2MQTT charged by a
@@ -1921,10 +1940,10 @@ Object.assign(EXTRA, {
   vlv_gas: () => card({ name: L("Gas valve", "Vanne de gaz"), appliance_type: "valve", valve_layout: "tuya", state_entity: "valve.gas" }, [st("valve.gas", "closed", { device_class: "gas" })]),
   vlv_leak: () => card({ name: L("Water inlet", "Arriv\u00e9e d'eau"), appliance_type: "valve", valve_layout: "aqara", state_entity: "switch.inlet_valve", leak_entity: "binary_sensor.washer_leak" },
     [st("switch.inlet_valve", "off"), st("binary_sensor.washer_leak", "on", { device_class: "moisture" })]),
-  photo_shutter: covCard(L("Living room", "Salon"), "shutter", "closing", { current_position: travel(100, 0, 45) }, { illustration_image: "photo-window.png", illustration_area: [[10, 6, 38.5, 73], [55.4, 6, 35.3, 73]], cover_color: "grey" }),
-  photo_shutter_half: covCard(L("Living room", "Salon"), "shutter", "open", { current_position: 45 }, { illustration_image: "photo-window.png", illustration_area: [[10, 6, 38.5, 73], [55.4, 6, 35.3, 73]], cover_color: "anthracite" }),
-  photo_blind: covCard(L("Bedroom", "Chambre"), "blind", "open", { current_position: 55 }, { illustration_image: "photo-window.png", illustration_area: [6, 2, 89, 82], fabric_color: "linen" }),
-  photo_venetian: covCard(L("Office", "Bureau"), "venetian", "open", { current_position: 70, current_tilt_position: 40 }, { illustration_image: "photo-window.png", illustration_area: [[10, 6, 38.5, 73], [55.4, 6, 35.3, 73]] }),
+  photo_shutter: photoCard(L("Living room", "Salon"), "shutter", "closing", { current_position: travel(100, 0, 45) }, { cover_color: "grey" }),
+  photo_shutter_half: photoCard(L("Living room", "Salon"), "shutter", "open", { current_position: 45 }, { cover_color: "anthracite" }),
+  photo_blind: photoCard(L("Bedroom", "Chambre"), "blind", "open", { current_position: 55 }, { fabric_color: "linen" }),
+  photo_venetian: photoCard(L("Office", "Bureau"), "venetian", "open", { current_position: 70, current_tilt_position: 40 }, {}),
   cov_shutter: covCard(L("Living room", "Salon"), "shutter", "open", { current_position: 100 }),
   cov_shutter_closing: covCard(L("Kitchen", "Cuisine"), "shutter", "closing", { current_position: travel(90, 10, 45) }),
   cov_shutter_closed: covCard(L("Bedroom", "Chambre"), "shutter", "closed", { current_position: 0 }, { cover_color: "anthracite" }),
