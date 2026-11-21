@@ -2649,9 +2649,20 @@ function laundryPhotoHtml(type, ctx) {
   const glass = open ? "" : `<path d="M${f(cx - rx * .72)} ${f(cy - ry * .4)} Q${f(cx - rx * .3)} ${f(cy - ry * .95)} ${f(cx + rx * .45)} ${f(cy - ry * .72)}" stroke="#fff" stroke-width="2.2" fill="none" opacity=".45" stroke-linecap="round"/>` + E(1, `fill="#cfe6f5" opacity=".08"`);
   const over = `<defs><clipPath id="php-d"><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}"/></clipPath><radialGradient id="php-s"><stop offset="0" stop-color="#5a636b"/><stop offset=".6" stop-color="#8f99a2"/><stop offset="1" stop-color="#c3cad0"/></radialGradient></defs>
 <g clip-path="url(#php-d)">${inside}${glass}</g>${E(1, `fill="none" stroke="#2c3237" stroke-width=".8" opacity=".6"`)}`;
+  // The door open: swung out on its hinge on the left, seen nearly edge on,
+  // its white ring and its glass, a shadow on the front beside it.
+  const door = !open ? "" : (() => {
+    const dx = f(cx - rx * 1.3), drx = f(rx * .38), dry2 = f(ry * 1.12);
+    return `<ellipse cx="${f(dx + rx * .25)}" cy="${f(cy + ry * .08)}" rx="${drx}" ry="${dry2}" fill="#000" opacity=".22"/>
+<ellipse cx="${dx}" cy="${cy}" rx="${drx}" ry="${dry2}" fill="#eef1f3" stroke="#9aa3ab" stroke-width=".7"/>
+<ellipse cx="${f(dx + drx * .08)}" cy="${cy}" rx="${f(drx * .7)}" ry="${f(dry2 * .78)}" fill="#2a3138" stroke="#c3cad0" stroke-width="1"/>
+<ellipse cx="${f(dx + drx * .12)}" cy="${cy}" rx="${f(drx * .55)}" ry="${f(dry2 * .62)}" fill="#5c7a92" opacity=".55"/>
+<path d="M${f(dx - drx * .25)} ${f(cy - dry2 * .5)} Q${f(dx)} ${f(cy - dry2 * .75)} ${f(dx + drx * .3)} ${f(cy - dry2 * .55)}" stroke="#fff" stroke-width="1.2" fill="none" opacity=".6"/>
+<rect x="${f(dx + drx * .82)}" y="${f(cy - ry * .2)}" width="${f(rx * .12)}" height="${f(ry * .4)}" rx="1" fill="#c3cad0"/>`;
+  })();
   const flags = [run ? "spinning" : "", dry ? "drying" : "", spin ? "spin-cycle" : "", open ? "open" : ""].filter(Boolean).join(" ");
   return `
-        <div class="machine ph-machine ${flags}">${photoSvg(ph, over)}</div>`;
+        <div class="machine ph-machine ${flags}">${photoSvg(ph, over + door)}</div>`;
 }
 // A screen on its photo, taken off: the area is its glass, and the picture
 // it shows goes there, lit, with a little glow round it.

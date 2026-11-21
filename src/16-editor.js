@@ -724,7 +724,7 @@ class ApplianceCardEditor extends HTMLElement {
     // card beside its drawing, a plug's thresholds, custom fan speeds, a
     // model's own options. Without this the row only appears once the editor
     // is closed and opened again.
-    const form = [compactModeOf(this._config.compact), this._plug(), !!this._config.speed_power_custom, photoUrlOf(this._config.illustration_image),
+    const form = [compactModeOf(this._config.compact), this._plug(), !!this._config.speed_power_custom, photoUrlOf(this._config.illustration_image), this._config.door_style || "", this._config.gate_leaves || "",
       ...Object.keys(this._config).filter((k) => /_layout$/.test(k)).sort().map((k) => `${k}=${this._config[k]}`)].join("|");
     if (this._form !== form) {
       this._form = form;
@@ -1691,7 +1691,15 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           value: this._config.door_style || "wood",
           options: DOOR_STYLES.map((v) => ({ value: v, label: t(hass, `door_style_${v}`) })),
-        }) + this._row("det_window_style", "window_style", {
+        }) + (["gate", "sliding_gate"].includes(doorStyleOf(this._config)) ? (doorStyleOf(this._config) === "gate" ? this._row("det_gate_leaves", "gate_leaves", {
+          type: "select",
+          value: String(gateLeavesOf(this._config)),
+          options: [{ value: "1", label: t(hass, "gate_leaves_1") }, { value: "2", label: t(hass, "gate_leaves_2") }],
+        }) : "") + this._row("det_gate_side", "gate_side", {
+          type: "select",
+          value: gateSideOf(this._config),
+          options: [{ value: "left", label: t(hass, "gate_side_left") }, { value: "right", label: t(hass, "gate_side_right") }],
+        }) : "") + this._row("det_window_style", "window_style", {
           type: "select",
           value: this._config.window_style || "auto",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(WINDOW_STYLES.map((v) => ({ value: v, label: t(hass, `window_style_${v}`) }))),
@@ -2136,6 +2144,8 @@ class ApplianceCardEditor extends HTMLElement {
         if (field === "detector_model" && value === "auto") delete this._config.detector_model;
         // The wooden door is the default and is not written.
         if (field === "door_style" && value === "wood") delete this._config.door_style;
+        if (field === "gate_leaves") { if (value === "1") delete this._config.gate_leaves; else this._config.gate_leaves = 2; }
+        if (field === "gate_side" && value === "left") delete this._config.gate_side;
         if ((field === "window_style" || field === "frame_color") && value === "auto") delete this._config[field];
         // No background is the default and is not written.
         if (field === "illustration_backdrop" && !illustrationBackdropOf(value)) delete this._config.illustration_backdrop;

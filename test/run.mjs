@@ -15393,18 +15393,24 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('photo garage : ouverte, la porte est montee', /translate\(0 -[\d.]+\)/.test(PD({ door_style: 'garage', illustration_area: [10, 10, 80, 80] })), true);
   check('photo garage : fermee, elle est en place', /translate\(0 0\)/.test(PD({ door_style: 'garage', illustration_area: [10, 10, 80, 80] }, 'off')), true);
   check('photo garage : juste ouverte, elle monte', /values="0 0;0 -[\d.]+"/.test(PD({ door_style: 'garage', illustration_area: [10, 10, 80, 80] }, 'on', .3)), true);
-  check('photo portail : ouvert, un seul battant replie loin', (PD({ door_style: 'gate', illustration_area: [10, 30, 80, 40] }).match(/scale\(0\.12 1\)/g) || []).length, 1);
-  check('photo portail : ouvert, son ouverture est transparente', /<mask id="[^"]+"><rect x="0" y="-10" width="120" height="135" fill="#fff"\/><rect x="12" y="30.5" width="96" height="54" fill="#000" opacity="1"/.test(PD({ door_style: 'gate', illustration_area: [10, 30, 80, 40] })), true);
-  check('photo portail : ferme, rien n est decoupe', /fill="#000" opacity="0"/.test(PD({ door_style: 'gate', illustration_area: [10, 30, 80, 40] }, 'off')), true);
-  check('photo porte : pas de decoupe', /<mask /.test(PD({ door_style: 'wood' })), false);
+  check('photo portail : ouvert, un seul battant replie loin', (PD({ door_style: 'gate', illustration_area: [10, 30, 80, 40] }).match(/scale\(0\.1 1\)/g) || []).length, 1);
+  check('photo portail : ouvert sans photo ouverte, la photo derriere', /<mask /.test(PD({ door_style: 'gate', illustration_area: [10, 30, 80, 40] })), false);
+  check('photo portail : barreaux dessines sur la photo', (PD({ door_style: 'gate', illustration_area: [10, 30, 80, 40] }).match(/<path d="M[\d.]+ [\d.]+ V[\d.]+"/g) || []).length > 5, true);
+  check('photo lave-linge : porte ouverte dessinee', /fill="#eef1f3" stroke="#9aa3ab"/.test(build({ appliance_type: 'washer', state_entity: 'sensor.w', door_entity: 'binary_sensor.wd', illustration_image: '/local/w.jpg' }, { 'sensor.w': { state: 'off', attributes: {} }, 'binary_sensor.wd': { state: 'on', attributes: {} } }).html), true);
+  check('photo portail coulissant : glisse vers la droite', /translate\([\d.]+ 0\)/.test(PD({ door_style: 'sliding_gate', gate_side: 'right', illustration_area: [10, 30, 80, 40] })), true);
+  check('photo portail : deux battants', (PD({ door_style: 'gate', gate_leaves: 2, illustration_area: [10, 30, 80, 40] }).match(/scale\(0\.12 1\)/g) || []).length, 2);
+  check('photo portail : un battant charniere a droite', /<g transform="translate\(108 0\)"><g transform="scale\(0\.1 1\)">/.test(PD({ door_style: 'gate', gate_side: 'right', illustration_area: [10, 30, 80, 40] })), true);
   check('photo porte coulissante : glisse de cote', /translate\(-[\d.]+ 0\)/.test(PD({ door_style: 'sliding_glass' })), true);
   check('photo porte : bris de vitre, la vitre se fend', /stroke="#fff" stroke-width=".7" fill="none"/.test(build({ appliance_type: 'detector', state_entity: 'binary_sensor.d', illustration_image: '/local/d.jpg', glass_break_entity: 'binary_sensor.g' }, { 'binary_sensor.d': { state: 'off', attributes: { device_class: 'door' } }, 'binary_sensor.g': { state: 'on', attributes: {} } }).html), true);
-  for (const ds of ['wood', 'glass', 'external', 'sliding_wood', 'pocket', 'garage', 'gate']) for (const v of ['off', 'on']) {
+  for (const ds of ['wood', 'glass', 'external', 'sliding_wood', 'pocket', 'garage', 'gate', 'sliding_gate']) for (const v of ['off', 'on']) {
     check(`photo porte ${ds} ${v} : ni NaN ni undefined`, /NaN|undefined/.test(PD({ door_style: ds }, v, .4)), false);
     check(`portail dessin ${ds} ${v} : ni NaN ni undefined`, /NaN|undefined/.test(DS(ds, v)), false);
   }
   check('portail : reconnu au nom', /fill="#d3cbbb"/.test(build({ appliance_type: 'detector', state_entity: 'binary_sensor.portail' }, { 'binary_sensor.portail': { state: 'on', attributes: { device_class: 'opening' } } }).html), true);
   check('portail : un battant qui part loin', /translate\(-48 0\)/.test(DS('gate', 'on')), true);
+  check('portail coulissant : reconnu au nom', /translate\(-58 0\)/.test(build({ appliance_type: 'detector', state_entity: 'binary_sensor.portail_coulissant' }, { 'binary_sensor.portail_coulissant': { state: 'on', attributes: { device_class: 'opening' } } }).html), true);
+  check('portail coulissant : vers la droite', /translate\(58 0\)/.test(DS('sliding_gate', 'on', { gate_side: 'right' })), true);
+  for (const g of [{}, { gate_leaves: 2 }, { gate_side: 'right' }, { gate_leaves: 2, gate_side: 'right' }]) for (const v of ['off', 'on']) check(`portail ${JSON.stringify(g)} ${v} : ni NaN ni undefined`, /NaN|undefined/.test(DS('gate', v, g)), false);
   const PW = (st, more = {}, ents = {}) => render({ appliance_type: 'washer', state_entity: 'sensor.w', illustration_image: '/local/w.jpg', illustration_area: [30, 30, 40, 34], ...more }, { 'sensor.w': { state: st, attributes: {} }, ...ents });
   check('photo lave-linge : arrete, le tambour dessine immobile', /php-d/.test(PW('Idle')) && !/type="rotate" from="0 /.test(PW('Idle')), true);
   check('photo lave-linge : en marche, le tambour dessine tourne', /php-d/.test(PW('Running')) && /type="rotate" from="0 /.test(PW('Running')), true);
