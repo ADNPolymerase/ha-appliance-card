@@ -234,7 +234,7 @@ Click a family to see its appliances at work. The drawings are shown with `illus
 </details>
 
 <details>
-<summary><b>Shutters, blinds, pergolas and awnings</b></summary>
+<summary><b>Shutters, blinds, pergolas, awnings and curtains</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-covers.gif" alt="Shutters, blinds, pergolas and awnings">
 
@@ -1636,9 +1636,10 @@ disk2_entity: sensor.nas_drive_2_status
 | `co2_warning` / `co2_alert` | temperature sensor | The CO₂ thresholds in ppm: orange above `co2_warning` (1000 by default), red above `co2_alert` (1500 by default). |
 | `temperature_entity` | temperature sensor | The temperature, as a line and on the screen, when the state is the CO₂. |
 | `netatmo_color` | temperature sensor | The colour of a Netatmo station or module: `aluminium` (default) \| `sand` \| `mint` \| `graphite`. |
-| `cover_layout` | cover | `shutter` (a roller shutter with its box) \| `blind` (an indoor roller blind) \| `venetian` (a venetian blind) \| `raffstore` (an exterior venetian blind) \| `pergola` (a bioclimatic pergola against the house, its louvers turning) \| `awning`. Left out, it is read from the device class (`shutter`, `blind`, `shade`, `awning`), the name (pergola, awning, raffstore, venetian) and whether it tilts: a blind that tilts is a venetian blind, a shutter that tilts a raffstore. A garage door, a gate or a door is no window covering. The state is a `cover`: its position (`current_position`), its tilt (`current_tilt_position`), *Opening* and *Closing* animated, and three buttons (open, stop, close) as far as the device supports them. A pergola reads its louvers from the tilt, else from the position; an awning is *Extended* or *Retracted*. |
+| `cover_layout` | cover | `shutter` (a roller shutter with its box) \| `blind` (an indoor roller blind) \| `venetian` (a venetian blind) \| `raffstore` (an exterior venetian blind) \| `pergola` (a bioclimatic pergola against the house, its louvers turning) \| `awning` \| `curtain` (a curtain on a motorised rail). Left out, it is read from the device class (`shutter`, `blind`, `shade`, `awning`, `curtain`), the name (pergola, awning, raffstore, venetian, curtain) and whether it tilts: a blind that tilts is a venetian blind, a shutter that tilts a raffstore. A garage door, a gate or a door is no window covering. The state is a `cover`: its position (`current_position`), its tilt (`current_tilt_position`), *Opening* and *Closing* animated, and three buttons (open, stop, close) as far as the device supports them. A pergola reads its louvers from the tilt, else from the position; an awning is *Extended* or *Retracted*. |
 | `cover_color` | cover | The colour of the apron, the slats, the pergola's frame or the awning's cassette: `white` \| `grey` \| `anthracite` \| `black` \| `beige` \| `wood` \| `brown`, or `#rrggbb`. |
-| `fabric_color` | cover | The fabric of a roller blind or an awning: `ecru` \| `linen` \| `grey` \| `anthracite` \| `blue` \| `petrol` \| `terracotta` \| `green`, or `#rrggbb`. |
+| `curtain_opening` | cover | Which way a curtain opens: `center` (two panels from the middle, the default) \| `left` \| `right` (one panel gathering to that side). |
+| `fabric_color` | cover | The fabric of a roller blind, an awning or a curtain: `ecru` \| `linen` \| `grey` \| `anthracite` \| `blue` \| `petrol` \| `terracotta` \| `green`, or `#rrggbb`. |
 | `fabric_stripes` | cover | Awning: a striped fabric (default) or a plain one (`false`). |
 | `illustration_image` | cover, detector, washer, dryer, screen | Your own photo in place of the drawing: a path such as `/local/shutter.jpg` (a file in `/config/www/`), a web address, or a photo uploaded from the editor (*Upload a photo*, stored by Home Assistant). Take it from the front, the cover open, the door shut, the garage door or gate open (it is drawn over the photo, as the shutter's apron is), the washer off with its door shut, the screen off. |
 | `illustration_image_crop` | cover, detector, washer, dryer, screen | The part of the photo shown, `[x, y, width, height]` in % of the photo, shaped like the drawing. Left out, the photo fills the drawing from its middle. The editor writes it as you drag and zoom the photo. |

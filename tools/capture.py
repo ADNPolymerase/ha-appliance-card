@@ -89,7 +89,7 @@ FAMILIES = (
     ("climate_sensors", "ths_disc,ths_square,ths_cushion,ths_stick,ths_lcd_stand,ths_lcd_probe,ths_lcd_round", 4),
     ("co2", "co2_eink,co2_box,co2_netatmo,co2_module", 4),
     ("switchbot", "sb_co2,sb_co2_high,sb_pro,sb_meter,sb_plus,sb_outdoor", 3),
-    ("covers", "cov_shutter,cov_shutter_closing,cov_shutter_closed,cov_blind,cov_venetian,cov_raffstore,cov_pergola,cov_awning", 4),
+    ("covers", "cov_shutter,cov_shutter_closing,cov_shutter_closed,cov_blind,cov_venetian,cov_raffstore,cov_pergola,cov_awning,cov_curtain,cov_curtain_left,cov_curtain_open,cov_curtain_right", 4),
     ("fingerbots", "fb_plus,fb_charging,fb_held,fb_low,fb_switchbot,fb_switchbot_black,fb_classic", 4),
     ("valves", "vlv_aqara,vlv_aqara_closed,vlv_closing,vlv_tuya,vlv_gas,vlv_leak", 3),
     ("racks", "rack_box,rack_box_closed,rack_accordion,rack_accordion_closed,rack_frame,rack_frame_closed", 3),

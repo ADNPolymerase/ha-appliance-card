@@ -1948,6 +1948,10 @@ Object.assign(EXTRA, {
   cov_raffstore: covCard(L("Terrace blinds", "Brise-soleil terrasse"), "raffstore", "open", { current_position: 40, current_tilt_position: 100 }),
   cov_pergola: covCard(L("Pergola", "Pergola"), "pergola", "open", { current_tilt_position: 100 }, { light_entity: "light.pergola" }),
   cov_awning: covCard(L("Terrace awning", "Store banne"), "awning", "open", { current_position: 100 }, { fabric_color: "terracotta" }),
+  cov_curtain: covCard(L("Living room curtains", "Rideaux salon"), "curtain", "opening", { current_position: travel(5, 95, 55) }, { fabric_color: "petrol" }),
+  cov_curtain_left: covCard(L("Bedroom curtain", "Rideau chambre"), "curtain", "closing", { current_position: travel(95, 5, 40) }, { curtain_opening: "left" }),
+  cov_curtain_open: covCard(L("Bay window", "Baie vitrée"), "curtain", "open", { current_position: 100 }, { fabric_color: "linen" }),
+  cov_curtain_right: covCard(L("Office curtain", "Rideau bureau"), "curtain", "closed", { current_position: 0 }, { curtain_opening: "right", fabric_color: "grey" }),
 });
 // ?view=live: the public demo, linked from the README. Every family under
 // its own title, a grid that fits a phone, the language and the theme to
@@ -2006,7 +2010,7 @@ function liveGallery() {
     [L("Drying racks", "S\u00e9choirs muraux"), [EXTRA.rack_box, EXTRA.rack_box_closed, EXTRA.rack_accordion, EXTRA.rack_accordion_closed, EXTRA.rack_frame, EXTRA.rack_frame_closed]],
     [L("Shut-off valves", "Vannes d'arriv\u00e9e"), [EXTRA.vlv_aqara, EXTRA.vlv_aqara_closed, EXTRA.vlv_closing, EXTRA.vlv_tuya, EXTRA.vlv_gas, EXTRA.vlv_leak]],
     [L("Finger bots", "Pousse-boutons"), [EXTRA.fb_plus, EXTRA.fb_charging, EXTRA.fb_held, EXTRA.fb_low, EXTRA.fb_switchbot, EXTRA.fb_switchbot_black, EXTRA.fb_classic]],
-    [L("Shutters, blinds, pergolas and awnings", "Volets, stores, pergolas et stores bannes"), [EXTRA.cov_shutter, EXTRA.cov_shutter_closing, EXTRA.cov_shutter_closed, EXTRA.cov_blind, EXTRA.cov_venetian, EXTRA.cov_raffstore, EXTRA.cov_pergola, EXTRA.cov_awning]],
+    [L("Shutters, blinds, pergolas, awnings and curtains", "Volets, stores, pergolas, stores bannes et rideaux"), [EXTRA.cov_shutter, EXTRA.cov_shutter_closing, EXTRA.cov_shutter_closed, EXTRA.cov_blind, EXTRA.cov_venetian, EXTRA.cov_raffstore, EXTRA.cov_pergola, EXTRA.cov_awning, EXTRA.cov_curtain, EXTRA.cov_curtain_left, EXTRA.cov_curtain_open, EXTRA.cov_curtain_right]],
     [L("Air purifiers and fans", "Purificateurs et ventilateurs"), [purifier, boxPurifier, ringPurifier, fan, ceilingFan]],
     [L("Robots and vacuums", "Robots et aspirateurs"), [rbtVacuum, rbtEmptying, rbtBox, rbtBoxGold, rbtMop, rbtCombo, rbtDrying, rbtMower, rbtNavimow, rbtRain, rbtStick, rbtWasher]],
     [L("Electric rides", "Mobilit\u00e9 \u00e9lectrique"), [demo_mobScooter, demo_mobOffroad, demo_mobEbike, demo_mobGyropode, demo_mobMotorcycle, demo_mobUnplugged]],

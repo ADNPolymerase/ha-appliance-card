@@ -3844,6 +3844,64 @@ ${yb > top + 1 ? `<rect x="${x0 - .5}" y="${cvF(yb - 2.2)}" width="${x1 - x0 + 1
 ${dir ? `<g class="cv-${dir}">${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => `<path d="M${x0 + 4 + i * 8} ${top - 7} q1.6 3 0 6" fill="none" stroke="${cvTone(fr, -.3)}" stroke-width=".6"/>`).join("")}</g>` : ""}
 ${cvArrow(dir)}`;
 }
+// A curtain on its rail, seen from the room (#135): one panel gathering to a
+// side, or two from the middle. Its folds keep their number, so a panel
+// pulled aside packs them tight, as a real one does. Shared with the photo.
+function cvCurtain(x0, x1, top, bot, p, opening, fabric, dir, fid) {
+  const span = x1 - x0, open = Math.max(0, Math.min(100, p)) / 100;
+  const panels = opening === "center"
+    ? [[x0, x0 + Math.max(span * .09, span / 2 * (1 - open))], [x1 - Math.max(span * .09, span / 2 * (1 - open)), x1]]
+    : opening === "right" ? [[x1 - Math.max(span * .13, span * (1 - open)), x1]]
+    : [[x0, x0 + Math.max(span * .13, span * (1 - open))]];
+  const n = opening === "center" ? 6 : 10;
+  return `<g${dir ? ` class="cv-sway"` : ""}>${panels.map(([a, b]) => {
+    const fw = (b - a) / n, tight = Math.max(0, Math.min(1, 1 - fw / (span / (opening === "center" ? 12 : 20)) * .6));
+    let folds = "", hem = `M${cvF(a)} ${bot}`, glide = "";
+    for (let i = 0; i < n; i++) {
+      const fx = a + fw * i;
+      folds += `<rect x="${cvF(fx)}" y="${top}" width="${cvF(fw + .05)}" height="${cvF(bot - top)}" fill="url(#${fid})" opacity="${cvF(.75 + tight * .25)}"/>`;
+      hem += ` Q${cvF(fx + fw / 2)} ${cvF(bot + 1.2 + tight * 1.4)} ${cvF(fx + fw)} ${bot}`;
+      glide += `<circle cx="${cvF(fx + fw / 2)}" cy="${top - .3}" r=".75" fill="#8d949a"/>`;
+    }
+    return `<rect x="${cvF(a)}" y="${top}" width="${cvF(b - a)}" height="${cvF(bot - top)}" fill="${fabric}"/>${folds}<path d="${hem} V${cvF(bot - 1)} H${cvF(a)} Z" fill="${cvTone(fabric, -.12)}"/>
+<path d="M${cvF(a)} ${top} V${bot}" stroke="${cvTone(fabric, -.3)}" stroke-width=".4"/><path d="M${cvF(b)} ${top} V${bot}" stroke="${cvTone(fabric, -.3)}" stroke-width=".4"/>${glide}`;
+  }).join("")}</g>`;
+}
+// The fold's light and shadow, over the fabric's own colour.
+const cvFold = (id) => `<linearGradient id="${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".26"/><stop offset=".32" stop-color="#fff" stop-opacity="0"/><stop offset=".72" stop-color="#000" stop-opacity=".2"/><stop offset="1" stop-color="#000" stop-opacity=".04"/></linearGradient>`;
+// A curtain's arrow: the way its fabric moves.
+function cvArrowH(dir, x = 108, y = 6) {
+  if (!dir) return "";
+  const ch = (d) => d === "left" ? "M1.6 -3.4 L-2 0 L1.6 3.4" : "M-1.6 -3.4 L2 0 L-1.6 3.4";
+  const one = (d, cx) => `<g class="cv-arrow" transform="translate(${cx} ${y})"><circle r="7" fill="#1e88e5"/><path d="${ch(d)}" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+  return dir === "out" ? one("left", x - 17) + one("right", x) : dir === "in" ? one("right", x - 17) + one("left", x) : one(dir, x);
+}
+// Opening moves the fabric to where it gathers; closing brings it back.
+const cvCurtainDir = (c) => {
+  const o = c.opening || "center", dir = cvDir(c);
+  if (!dir) return "";
+  if (o === "center") return dir === "up" ? "out" : "in";
+  const toward = o === "right" ? "right" : "left";
+  return dir === "up" ? toward : toward === "left" ? "right" : "left";
+};
+// The room, its window, and the curtain hung in front of it from a rail
+// fixed above, its motor at one end of the rail.
+function ntCovCurtain(c) {
+  const wl = ntId(), gl = ntId(), fd = ntId(), fl = ntId(), x0 = 28, x1 = 92, top = 24, bot = 92;
+  const fabric = c.fabric || "#d8cab2", rail = c.color || "#c9ced2", o = c.opening || "center";
+  const motorX = o === "right" ? 6 : 108;
+  return `<defs>${cvH(wl, [[0, "#f3f4f6"], [1, "#dfe3e7"]])}${ntV(gl, "#e1f0fa", "#a9cfe9")}${cvFold(fd)}${ntV(fl, "#d9cbb4", "#c4b296")}</defs>
+<rect x="-6" y="-10" width="132" height="135" fill="url(#${wl})"/>
+<rect x="-6" y="112" width="132" height="13" fill="url(#${fl})"/><rect x="-6" y="110" width="132" height="2.4" fill="#f7f7f7" stroke="#d2d6da" stroke-width=".4"/>
+<rect x="${x0 - 4}" y="${top - 4}" width="${x1 - x0 + 8}" height="${bot - top + 8}" fill="#fafafa" stroke="#d2d6da" stroke-width=".5"/>
+${cvGlass(x0 + 3, top + 3, 59, bot - 3, gl)}${cvGlass(61, top + 3, x1 - 3, bot - 3, gl)}
+<rect x="59" y="${top}" width="2" height="${bot - top}" fill="#f4f4f4"/>
+<rect x="${x0 - 7}" y="${bot + 4}" width="${x1 - x0 + 14}" height="3.6" rx=".6" fill="#fbfbfb" stroke="#cfd4d8" stroke-width=".5"/>
+${cvCurtain(10, 110, 12, 109, c.p, o, fabric, cvDir(c), fd)}
+<rect x="8" y="9" width="104" height="3.2" rx="1" fill="${rail}" stroke="${cvTone(rail, -.3)}" stroke-width=".4"/>
+<rect x="${motorX}" y="7.4" width="6" height="12" rx="2.2" fill="${cvTone(rail, -.08)}" stroke="${cvTone(rail, -.32)}" stroke-width=".4"/><circle cx="${motorX + 3}" cy="16.6" r=".7" fill="${c.moving ? "#4caf50" : "#90a4ae"}"/>
+${cvArrowH(cvCurtainDir(c), o === "center" ? 68.5 : 60, -1)}`;
+}
 // Venetian slats seen from the front: their tilt makes them a thin edge
 // (open) or a band hiding the window (closed); lifted, they pack under the
 // head rail, or into the box of an outdoor one.
@@ -4333,6 +4391,10 @@ function ntPhotoCover(c, b) {
     for (let i = 0; i < n * 2; i++) { const xa = fx0 + (fx1 - fx0) * i / (n * 2), xb = fx0 + (fx1 - fx0) * (i + 1) / (n * 2); sc += `<path d="M${cvF(xa)} ${cvF(fy)} V${cvF(fy + 4)} Q${cvF((xa + xb) / 2)} ${cvF(fy + 6.4)} ${cvF(xb)} ${cvF(fy + 4)} V${cvF(fy)} Z" fill="${Math.floor(i / 2) % 2 ? cB : cA}" stroke="#000" stroke-opacity=".12" stroke-width=".3"/>`; }
     return `${shade(fy + 6)}<g${dir ? ` class="cv-sway"` : ""}>${st}</g><rect x="${cvF(fx0 - 1)}" y="${cvF(fy - .6)}" width="${cvF(fx1 - fx0 + 2)}" height="2" rx="1" fill="#8f969c"/>${sc}${arrow(dir === "up" ? "down" : dir === "down" ? "up" : "")}`;
   }
+  if (kind === "cov_curtain") {
+    const fd = ntId();
+    return `<defs>${cvFold(fd)}</defs>${light}${cvCurtain(x0, x1, y0, y1, p, c.opening || "center", c.fabric || "#d8cab2", dir, fd)}${c.noArrow ? "" : cvArrowH(cvCurtainDir(c))}`;
+  }
   if (kind === "cov_blind") {
     const color = c.fabric || "#d8cab2", bar = c.color || "#b6bcc1";
     const weave = []; for (let x = x0 + 2; x < x1; x += 3) weave.push(`<path d="M${cvF(x)} ${y0} V${y1}" stroke="#000" stroke-opacity=".05" stroke-width=".6"/>`);
@@ -4410,7 +4472,7 @@ ${behind}<g>${shake}${leaf}</g>${crack}`;
 }
 // A cover's arrow while it moves, drawn once over every area (an awning comes
 // down as it opens).
-const ntPhotoCoverArrow = (c) => { const dir = cvDir(c); return cvArrow(c.kind === "cov_awning" ? (dir === "up" ? "down" : dir === "down" ? "up" : "") : dir); };
+const ntPhotoCoverArrow = (c) => { const dir = cvDir(c); if (c.kind === "cov_curtain") return cvArrowH(cvCurtainDir(c)); return cvArrow(c.kind === "cov_awning" ? (dir === "up" ? "down" : dir === "down" ? "up" : "") : dir); };
 const NT_PHOTO_OVERLAYS = { cov: [ntPhotoCover, ntPhotoCoverArrow], det: [ntPhotoDetector, () => ""] };
 // The photo, its rounded corners, and the movement over it.
 function ntPhoto(d) {
@@ -4419,7 +4481,7 @@ function ntPhoto(d) {
 <g clip-path="url(#${cp})"><rect x="0" y="-10" width="120" height="135" fill="#808080" opacity=".18"/><g class="ph-img">${ntPhotoImage(ph)}</g>${over ? ph.areas.map((a) => over[0]({ ...d, noArrow: true }, ntPhotoArea(a))).join("") + over[1](d) : ""}</g>
 <rect x=".3" y="-9.7" width="119.4" height="134.4" rx="7" fill="none" stroke="#000" stroke-opacity=".14" stroke-width=".6"/>`;
 }
-const NT_DRAW = { gas_fireplace: ntGasFireplace, fp_tm31: ntFoodTm31, fp_tm6: ntFoodTm6, rack_box: ntRackBox, rack_accordion: ntRackAccordion, rack_frame: ntRackFrame, vlv_aqara: ntValveAqara, vlv_tuya: ntValveTuya,  fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_switchbot_co2: (c) => ntSbPro(c, true), ths_switchbot_pro: (c) => ntSbPro(c, false), ths_switchbot_meter: (c) => ntSbMeter(c, false), ths_switchbot_plus: (c) => ntSbMeter(c, true), ths_switchbot_outdoor: ntSbOutdoor, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, det_door: ntDetDoor, det_vibration: ntDetVibration, det_glass: ntDetGlass, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, spk_focal_bird: ntSpkFocalBird, spk_focal_od6: ntSpkFocalOd6, spk_denon_avr: ntSpkDenon, spk_avr: ntSpkAvr, spk_wiim_amp: ntSpkWiim, spk_smart_clock: ntSpkClock, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+const NT_DRAW = { gas_fireplace: ntGasFireplace, fp_tm31: ntFoodTm31, fp_tm6: ntFoodTm6, rack_box: ntRackBox, rack_accordion: ntRackAccordion, rack_frame: ntRackFrame, vlv_aqara: ntValveAqara, vlv_tuya: ntValveTuya,  fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_switchbot_co2: (c) => ntSbPro(c, true), ths_switchbot_pro: (c) => ntSbPro(c, false), ths_switchbot_meter: (c) => ntSbMeter(c, false), ths_switchbot_plus: (c) => ntSbMeter(c, true), ths_switchbot_outdoor: ntSbOutdoor, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, cov_curtain: ntCovCurtain, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, det_door: ntDetDoor, det_vibration: ntDetVibration, det_glass: ntDetGlass, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, spk_focal_bird: ntSpkFocalBird, spk_focal_od6: ntSpkFocalOd6, spk_denon_avr: ntSpkDenon, spk_avr: ntSpkAvr, spk_wiim_amp: ntSpkWiim, spk_smart_clock: ntSpkClock, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 // What a tint leaves alone: a part wrapped by ntKeep (an app's tile, a
 // display, a tyre).
 const ntKeep = (s) => `<!--k-->${s}<!--/k-->`;

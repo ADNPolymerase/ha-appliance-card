@@ -15190,6 +15190,28 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('109 : couleur inconnue ignoree', svgOf(render({ state_entity: 'cover.salon', cover_color: 'plaid' }, sh('open'))), svgOf(render({ state_entity: 'cover.salon' }, sh('open'))));
   check('109 : forme choisie', kindOf(render({ state_entity: 'cover.salon', cover_layout: 'awning' }, sh('open'))), 'cov_awning');
   check('109 : hors ligne', stateLine(render({ state_entity: 'cover.salon' }, { 'cover.salon': s('unavailable', { device_class: 'shutter' }) })), 'Offline');
+  // Curtains (#135): found by their device class or their name, one panel
+  // gathering to a side or two from the middle.
+  const cu = (a = {}, st = 'open') => ({ 'cover.rideau': s(st, { device_class: 'curtain', current_position: 40, ...a }) });
+  check('135 : rideau par sa classe', kindOf(render({ state_entity: 'cover.rideau' }, cu())), 'cov_curtain');
+  check('135 : rideau par son nom', kindOf(render({ state_entity: 'cover.rideau_salon' }, { 'cover.rideau_salon': s('open', { current_position: 40 }) })), 'cov_curtain');
+  check('135 : un store enrouleur reste un store', kindOf(render({ state_entity: 'cover.rolgordijn' }, { 'cover.rolgordijn': s('open', { current_position: 40 }) })), 'cov_blind');
+  const panel = (h) => (svgOf(h).match(/<rect x="([\d.]+)" y="12" width="([\d.]+)" height="97"(?= fill="#)/g) || []).join('|');
+  check('135 : par le milieu, deux pans', panel(render({ state_entity: 'cover.rideau' }, cu())), '<rect x="10" y="12" width="30" height="97"|<rect x="80" y="12" width="30" height="97"');
+  check('135 : vers la gauche, un pan a gauche', panel(render({ state_entity: 'cover.rideau', curtain_opening: 'left' }, cu())), '<rect x="10" y="12" width="60" height="97"');
+  check('135 : vers la droite, un pan a droite', panel(render({ state_entity: 'cover.rideau', curtain_opening: 'right' }, cu())), '<rect x="50" y="12" width="60" height="97"');
+  check('135 : ouvert, le tissu replie sur le cote', panel(render({ state_entity: 'cover.rideau', curtain_opening: 'left' }, cu({ current_position: 100 }))), '<rect x="10" y="12" width="13" height="97"');
+  check('135 : ferme, tout le rail', panel(render({ state_entity: 'cover.rideau', curtain_opening: 'right' }, cu({ current_position: 0 }, 'closed'))), '<rect x="10" y="12" width="100" height="97"');
+  check('135 : couleur du tissu', /fill="#5f7d95"/.test(svgOf(render({ state_entity: 'cover.rideau', fabric_color: 'blue' }, cu()))), true);
+  const arrows = (h) => (svgOf(h).match(/class="cv-arrow"/g) || []).length;
+  check('135 : par le milieu, deux fleches en ouvrant', arrows(render({ state_entity: 'cover.rideau' }, cu({}, 'opening'))), 2);
+  check('135 : sur un cote, une fleche', arrows(render({ state_entity: 'cover.rideau', curtain_opening: 'left' }, cu({}, 'closing'))), 1);
+  check('135 : vers la gauche, la fleche part a gauche en ouvrant', /M1.6 -3.4 L-2 0 L1.6 3.4/.test(svgOf(render({ state_entity: 'cover.rideau', curtain_opening: 'left' }, cu({}, 'opening')))), true);
+  check('135 : vers la gauche, elle revient a droite en fermant', /M-1.6 -3.4 L2 0 L-1.6 3.4/.test(svgOf(render({ state_entity: 'cover.rideau', curtain_opening: 'left' }, cu({}, 'closing')))), true);
+  check('135 : icones de rideau sur les boutons', /mdi:curtains-closed/.test(render({ state_entity: 'cover.rideau' }, cu())), true);
+  check('135 : etat traduit', stateLine(render({ state_entity: 'cover.rideau', language: 'fr' }, cu())), 'Ouvert à 40 %');
+  const phc = build({ appliance_type: 'cover', state_entity: 'cover.rideau', illustration_image: '/local/r.jpg', illustration_area: [0, 0, 100, 100], curtain_opening: 'right' }, cu()).html;
+  check('135 : sur une photo, le pan tire', /<rect x="48" y="-10" width="72" height="135" fill="#d8cab2"\/>/.test(phc), true);
   // A press calls the cover's own service.
   const c = build({ state_entity: 'cover.salon' }, sh('open')).card;
   const calls = [];

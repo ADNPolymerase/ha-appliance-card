@@ -1734,7 +1734,11 @@ class ApplianceCardEditor extends HTMLElement {
         ${this._type === "cover" ? this._row("cover_color", "cover_color", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(Object.keys(COVER_COLORS).map((v) => ({ value: v, label: t(hass, `cov_c_${v}`) }))),
-        }) + (["blind", "awning"].includes(coverLayoutOf(this._config, stateObj(this._hass, this._config.state_entity))) ? this._row("fabric_color", "fabric_color", {
+        }) + (coverLayoutOf(this._config, stateObj(this._hass, this._config.state_entity)) === "curtain" ? this._row("curtain_opening", "curtain_opening", {
+          type: "select",
+          value: curtainOpeningOf(this._config),
+          options: CURTAIN_OPENINGS.map((v) => ({ value: v, label: t(hass, `curtain_${v}`) })),
+        }) : "") + (["blind", "awning", "curtain"].includes(coverLayoutOf(this._config, stateObj(this._hass, this._config.state_entity))) ? this._row("fabric_color", "fabric_color", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(Object.keys(FABRIC_COLORS).map((v) => ({ value: v, label: t(hass, `cov_f_${v}`) }))),
         }) : "") + (coverLayoutOf(this._config, stateObj(this._hass, this._config.state_entity)) === "awning" ? this._row("fabric_stripes", "fabric_stripes", { type: "checkbox", defaultOn: true }) : "") : ""}
