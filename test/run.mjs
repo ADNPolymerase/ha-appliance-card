@@ -15361,6 +15361,25 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
     const th0 = build({ appliance_type: 'gas_fireplace', state_entity: 'switch.f', thermostat_entity: 'climate.t' }, { 'switch.f': { state: 'on', attributes: {} }, 'climate.t': { state: 'off', attributes: { current_temperature: 32, temperature_unit: '°F' } } }).html;
     check('cheminee : thermostat a 32 F, pas de piece', /home-thermometer/.test(th0), false);
   }
+  // How long the state has held (#134).
+  {
+    const ago = (ms) => new Date(Date.now() - ms).toISOString();
+    const lamp = (ms, extra = {}, st = 'on') => build({ appliance_type: 'lamp', state_entity: 'switch.l', show_state_duration: true, ...extra }, { 'switch.l': { state: st, attributes: {}, last_changed: ago(ms) } });
+    const line = (h) => ((h.match(/<div class="state-line">([^<]*)<\/div>/) || [])[1] || '');
+    check('duree : 35 min', / · 35\u00a0min$/.test(line(lamp(35 * 60000 + 20000).html)), true);
+    check('duree : 2h35', / · 2h35$/.test(line(lamp((2 * 60 + 35) * 60000 + 5000).html)), true);
+    check('duree : moins d une minute', / · &lt;\u00a01\u00a0min$/.test(line(lamp(20000).html)), true);
+    check('duree : jours et heures', / · 3d\u00a05h$/.test(line(lamp((3 * 24 + 5) * 3600000 + 60000).html)), true);
+    check('duree : sans l option, rien', / · /.test(line(build({ appliance_type: 'lamp', state_entity: 'switch.l' }, { 'switch.l': { state: 'on', attributes: {}, last_changed: ago(600000) } }).html)), false);
+    check('duree : etat eteint aussi', / · 10\u00a0min$/.test(line(lamp(600000, {}, 'off').html)), true);
+    check('duree : indisponible, rien', / · /.test(line(lamp(600000, {}, 'unavailable').html)), false);
+    check('duree : etat masque, rien', /<div class="state-line">/.test(lamp(600000, { show_state: false }).html), false);
+    const c = lamp(600000).card;
+    check('duree : minuterie posee', !!c._durationTimer, true);
+    c.disconnectedCallback && c.disconnectedCallback();
+    check('duree : minuterie levee a la deconnexion', !!c._durationTimer, false);
+  }
+
   // A gas fireplace (#130).
   const GF = (more, ents) => build({ appliance_type: 'gas_fireplace', state_entity: 'switch.f', ...more }, { 'switch.f': { state: 'off', attributes: {} }, ...ents });
   const gfOn = GF({ flame_height_entity: 'number.h', fan_entity: 'fan.v', light_entity: 'light.l', thermostat_entity: 'climate.t' }, { 'switch.f': { state: 'on', attributes: {} }, 'number.h': { state: '4', attributes: {} }, 'fan.v': { state: 'on', attributes: { percentage: 50 } }, 'light.l': { state: 'on', attributes: { brightness: 128 } }, 'climate.t': { state: 'heat', attributes: { temperature: 72, current_temperature: 68, temperature_unit: '\u00b0F' } } });

@@ -265,6 +265,8 @@ class ApplianceCard extends HTMLElement {
     this._clearCountdownTimer();
     if (this._elapsedTimer) clearInterval(this._elapsedTimer);
     this._elapsedTimer = null;
+    if (this._durationTimer) clearInterval(this._durationTimer);
+    this._durationTimer = null;
     if (this._feedTimer) clearTimeout(this._feedTimer);
     this._feedTimer = null;
     if (this._offDelayTimer) clearTimeout(this._offDelayTimer);
@@ -4909,8 +4911,23 @@ class ApplianceCard extends HTMLElement {
       ? `<div class="done-badge" data-done-seen="1" title="${esc(t(hass, "done_seen"))}" aria-label="${esc(t(hass, "done_seen"))}"><ha-icon icon="mdi:check-bold"></ha-icon></div>`
       : "";
     if (doneBadge && iconHtml && compact !== "hide") iconHtml = iconHtml.replace(/<\/div>\s*$/, `${doneBadge}</div>`);
+    // How long the state has held, on request (#134): read from the state
+    // entity's last change, so a state the card derives from a plug has none.
+    if (this._durationTimer) {
+      clearInterval(this._durationTimer);
+      this._durationTimer = null;
+    }
+    let stateLine = stateLabel;
+    if (cfg.show_state_duration && stateLabel && cfg.state_entity && !powerDerived) {
+      const dst = stateObj(hass, cfg.state_entity);
+      const at = dst ? Date.parse(dst.last_changed) : NaN;
+      if (dst && Number.isFinite(at) && !HA_OFFLINE_STATES.includes(String(dst.state).toLowerCase())) {
+        stateLine = `${stateLabel} \u00b7 ${keepTogether(stateDurationText(Date.now() - at, hass))}`;
+        if (!this._inert) this._durationTimer = setInterval(() => this._render(), COUNTDOWN_TICK_MS);
+      }
+    }
     const titleHtml = `${cfg.show_name === false ? "" : `<div class="name">${esc(name)}</div>`}
-          ${stateLabel && cfg.show_state !== false ? `<div class="state-line">${esc(stateLabel)}</div>` : ""}`;
+          ${stateLabel && cfg.show_state !== false ? `<div class="state-line">${esc(stateLine)}</div>` : ""}`;
     // A compact card has no row of its own for its buttons: they join the
     // corner switches, the light and the connection on the name's line.
     const buttonsInline = actionsHtml.replace('<div class="actions-row">', "").replace(/<\/div>$/, "");

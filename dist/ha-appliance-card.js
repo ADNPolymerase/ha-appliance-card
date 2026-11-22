@@ -147,7 +147,7 @@ const T = {
     source: "Source", source_plug: "A smart plug", source_integration: "Integration entities", plug_switch: "Smart plug switch",
     type_thermostat: "Thermostat", section_thermostat_layout: "Model", layout_th_square: "Square", layout_th_round: "Round", layout_th_glass: "Black glass", layout_th_valve: "Radiator valve", th_idle: "Target reached", th_eco: "Eco", th_away: "Away", th_frost: "Frost protection", th_window: "Window open", th_line_valve: "Valve", section_thermostat: "Room thermostat",
     compact_lines: "Information", lines_below: "Under the card", lines_beside: "Beside the drawing", lines_toggle: "Hidden, a chevron shows them", lines_show: "Show the information", lines_hide: "Hide the information",
-    type_mobility: "Electric ride", layout_mob_scooter: "Scooter", layout_mob_offroad: "Off-road scooter", layout_mob_ebike: "E-bike", layout_mob_gyropode: "Gyropode", layout_mob_motorcycle: "Electric motorcycle", mob_charging: "Charging", mob_charged: "Charged", mob_unplugged: "Unplugged", mob_plugged: "Plugged in", type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", values_right: "Values on the right", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets", illustration_frame: "Same drawing height as the cards beside it", illustration_backdrop: "Background behind the drawing", backdrop_none: "None", backdrop_neutral: "Neutral", backdrop_state: "State color", winter_snowfall: "Falling snow", det_model: "Model", det_door_style: "Door", door_style_wood: "Wooden door", door_style_glass_top: "Wooden door, glass top", door_style_glass: "Glass door", door_style_external: "Entrance door", door_style_external_glass: "Entrance door with glass", door_style_sliding_glass: "Sliding glass door", door_style_sliding_wood: "Sliding barn door", det_window_style: "Window", window_style_casement: "Single casement", window_style_double: "Double casement", window_style_sliding: "Sliding window", window_style_small: "Small window", door_style_garage: "Sectional garage door", door_style_pocket: "Pocket door", det_frame_color: "Frame", frame_white: "White", frame_anthracite: "Anthracite", layout_cam_trackmix: "Dual lens, tracking", layout_det_door: "Door or window contact", layout_det_vibration: "Vibration", layout_det_glass: "Glass break", det_open: "Open", det_closed: "Closed", det_vibrating: "Vibration", det_still: "Still", det_glass_break: "Glass break", section_screen_source: "Input source", screen_source: "Input",
+    type_mobility: "Electric ride", layout_mob_scooter: "Scooter", layout_mob_offroad: "Off-road scooter", layout_mob_ebike: "E-bike", layout_mob_gyropode: "Gyropode", layout_mob_motorcycle: "Electric motorcycle", mob_charging: "Charging", mob_charged: "Charged", mob_unplugged: "Unplugged", mob_plugged: "Plugged in", type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", values_right: "Values on the right", show_state_duration: "Time in the current state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets", illustration_frame: "Same drawing height as the cards beside it", illustration_backdrop: "Background behind the drawing", backdrop_none: "None", backdrop_neutral: "Neutral", backdrop_state: "State color", winter_snowfall: "Falling snow", det_model: "Model", det_door_style: "Door", door_style_wood: "Wooden door", door_style_glass_top: "Wooden door, glass top", door_style_glass: "Glass door", door_style_external: "Entrance door", door_style_external_glass: "Entrance door with glass", door_style_sliding_glass: "Sliding glass door", door_style_sliding_wood: "Sliding barn door", det_window_style: "Window", window_style_casement: "Single casement", window_style_double: "Double casement", window_style_sliding: "Sliding window", window_style_small: "Small window", door_style_garage: "Sectional garage door", door_style_pocket: "Pocket door", det_frame_color: "Frame", frame_white: "White", frame_anthracite: "Anthracite", layout_cam_trackmix: "Dual lens, tracking", layout_det_door: "Door or window contact", layout_det_vibration: "Vibration", layout_det_glass: "Glass break", det_open: "Open", det_closed: "Closed", det_vibrating: "Vibration", det_still: "Still", det_glass_break: "Glass break", section_screen_source: "Input source", screen_source: "Input",
     type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4", section_net_disk5: "Disk 5", section_net_disk6: "Disk 6", section_net_disk7: "Disk 7", section_net_disk8: "Disk 8",
     type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_combo: "Vacuum and mop robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", mower_style: "Mower style", mower_classic: "Classic", mower_navimow: "Navimow, orange wheels", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", shelter_garage: "Garage", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_low_battery: "Low battery", robot_bag_full: "Bag full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error", robot_station_box: "Rectangular station", robot_station_color: "Station colour", color_gold: "Gold", robot_camera: "Camera module on the robot", section_robot_clean_tank: "Clean water", section_robot_dirty_tank: "Dirty water",
     type_pool_pump: "Pool pump", pool_filtering: "Filtering", pool_chlorinating: "Chlorine injection", pool_backwash: "Backwash", pool_frost: "Frost protection", pool_light_on: "light on", section_water_temperature: "Water temperature", section_air_temperature: "Air temperature", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtration time today", section_pressure: "Filter pressure", pool_pressure_alert: "Alert above this pressure (bar)", section_pool_mode: "Pump mode", section_chlorine_pump: "Chlorine pump", section_chlorine_level: "Chlorine tank level", section_backwash: "Backwash", section_frost: "Frost protection", section_pool_alert: "Alert", pool_line_water: "Water", pool_line_air: "Air", pool_line_filtered: "Filtered today", pool_line_pressure: "Pressure", pool_line_chlorine: "Chlorine tank", pool_line_mode: "Mode",
@@ -1853,6 +1853,24 @@ function formatDuration(totalSeconds, hass) {
   const m = mins % 60;
   if (h > 0) return `${h}h${String(m).padStart(2, "0")}`;
   return `${m} min`;
+}
+
+// How long the state has held, for the state line (#134): minutes, then
+// hours and minutes, then days and hours. Floored, so the line never says an
+// hour before the hour is up. The day unit comes from the browser in the
+// card's language, so no word needs translating.
+function stateDurationText(ms, hass) {
+  const mins = Math.max(0, Math.floor(ms / 60000));
+  if (mins < 1) return "< 1 min";
+  if (mins < 60) return `${mins} min`;
+  const h = Math.floor(mins / 60);
+  if (h < 24) return `${h}h${String(mins % 60).padStart(2, "0")}`;
+  const d = Math.floor(h / 24);
+  let day = `${d}d`;
+  try {
+    day = new Intl.NumberFormat(lang(hass), { style: "unit", unit: "day", unitDisplay: "narrow" }).format(d);
+  } catch (e) { /* an old browser keeps the plain "d" */ }
+  return h % 24 ? `${day} ${h % 24}h` : day;
 }
 
 // A space inside one reading must never become a line break: "46 min" and
@@ -9434,6 +9452,8 @@ class ApplianceCard extends HTMLElement {
     this._clearCountdownTimer();
     if (this._elapsedTimer) clearInterval(this._elapsedTimer);
     this._elapsedTimer = null;
+    if (this._durationTimer) clearInterval(this._durationTimer);
+    this._durationTimer = null;
     if (this._feedTimer) clearTimeout(this._feedTimer);
     this._feedTimer = null;
     if (this._offDelayTimer) clearTimeout(this._offDelayTimer);
@@ -14078,8 +14098,23 @@ class ApplianceCard extends HTMLElement {
       ? `<div class="done-badge" data-done-seen="1" title="${esc(t(hass, "done_seen"))}" aria-label="${esc(t(hass, "done_seen"))}"><ha-icon icon="mdi:check-bold"></ha-icon></div>`
       : "";
     if (doneBadge && iconHtml && compact !== "hide") iconHtml = iconHtml.replace(/<\/div>\s*$/, `${doneBadge}</div>`);
+    // How long the state has held, on request (#134): read from the state
+    // entity's last change, so a state the card derives from a plug has none.
+    if (this._durationTimer) {
+      clearInterval(this._durationTimer);
+      this._durationTimer = null;
+    }
+    let stateLine = stateLabel;
+    if (cfg.show_state_duration && stateLabel && cfg.state_entity && !powerDerived) {
+      const dst = stateObj(hass, cfg.state_entity);
+      const at = dst ? Date.parse(dst.last_changed) : NaN;
+      if (dst && Number.isFinite(at) && !HA_OFFLINE_STATES.includes(String(dst.state).toLowerCase())) {
+        stateLine = `${stateLabel} \u00b7 ${keepTogether(stateDurationText(Date.now() - at, hass))}`;
+        if (!this._inert) this._durationTimer = setInterval(() => this._render(), COUNTDOWN_TICK_MS);
+      }
+    }
     const titleHtml = `${cfg.show_name === false ? "" : `<div class="name">${esc(name)}</div>`}
-          ${stateLabel && cfg.show_state !== false ? `<div class="state-line">${esc(stateLabel)}</div>` : ""}`;
+          ${stateLabel && cfg.show_state !== false ? `<div class="state-line">${esc(stateLine)}</div>` : ""}`;
     // A compact card has no row of its own for its buttons: they join the
     // corner switches, the light and the connection on the name's line.
     const buttonsInline = actionsHtml.replace('<div class="actions-row">', "").replace(/<\/div>$/, "");

@@ -407,6 +407,24 @@ function formatDuration(totalSeconds, hass) {
   return `${m} min`;
 }
 
+// How long the state has held, for the state line (#134): minutes, then
+// hours and minutes, then days and hours. Floored, so the line never says an
+// hour before the hour is up. The day unit comes from the browser in the
+// card's language, so no word needs translating.
+function stateDurationText(ms, hass) {
+  const mins = Math.max(0, Math.floor(ms / 60000));
+  if (mins < 1) return "< 1 min";
+  if (mins < 60) return `${mins} min`;
+  const h = Math.floor(mins / 60);
+  if (h < 24) return `${h}h${String(mins % 60).padStart(2, "0")}`;
+  const d = Math.floor(h / 24);
+  let day = `${d}d`;
+  try {
+    day = new Intl.NumberFormat(lang(hass), { style: "unit", unit: "day", unitDisplay: "narrow" }).format(d);
+  } catch (e) { /* an old browser keeps the plain "d" */ }
+  return h % 24 ? `${day} ${h % 24}h` : day;
+}
+
 // A space inside one reading must never become a line break: "46 min" and
 // "ready at 11:37" stay whole, so a narrow card can only wrap after the dot
 // instead of leaving the time alone on the next line.
