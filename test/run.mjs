@@ -15344,6 +15344,7 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
     c._hass = { ...HASS({ 'switch.f': { state: 'on', attributes: {} }, 'number.h': { state: '2', attributes: { min: 1, max: 5, step: 1 } } }), callService: (d, sv, data) => calls.push([d, sv, data]) };
     c._render();
     check('cheminee : hauteur de flamme en menu', /data-line-menu="gf_flame"/.test(markup(c)), true);
+    check('cheminee : la ligne menu n ouvre pas la fenetre de l entite', /data-line-menu="gf_flame"[^>]*data-more|data-more="number\.h"/.test(markup(c)), false);
     c._lineMenu = 'gf_flame'; c._render();
     const mo = markup(c);
     check('cheminee : niveaux 1 a 5', (mo.match(/data-line-option="([^"]*)"/g) || []).join(), ['1', '2', '3', '4', '5'].map((v) => `data-line-option="${v}"`).join());
