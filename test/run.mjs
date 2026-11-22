@@ -15402,8 +15402,40 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
     check('duree : minuterie levee a la deconnexion', !!c._durationTimer, false);
   }
 
+  // A purifier's filters: one on a Levoit, a HEPA and a carbon on a Dyson (HACF).
+  {
+    const PF = (more, ents) => build({ appliance_type: 'air_purifier', state_entity: 'fan.p', ...more }, { 'fan.p': { state: 'on', attributes: { percentage: 66 } }, ...ents });
+    const pct = (v) => ({ state: String(v), attributes: { unit_of_measurement: '%' } });
+    const lev = PF({ filter_life_entity: 'sensor.core_300s_duree_de_vie_du_filtre' }, { 'sensor.core_300s_duree_de_vie_du_filtre': pct(100) }).html;
+    check('purificateur : un filtre, Filter 100 %', />Filter<[\s\S]*?100 %/.test(lev), true);
+    const dy = PF({ filter_life_entity: 'sensor.dyson_duree_de_vie_du_filtre_hepa', filter2_life_entity: 'sensor.dyson_duree_de_vie_du_filtre_a_charbon' },
+      { 'sensor.dyson_duree_de_vie_du_filtre_hepa': pct(29), 'sensor.dyson_duree_de_vie_du_filtre_a_charbon': pct(12) }).html;
+    check('purificateur : HEPA 29 %', />HEPA filter<[\s\S]*?29 %/.test(dy), true);
+    check('purificateur : charbon 12 %', />Carbon filter<[\s\S]*?12 %/.test(dy), true);
+    const warnOf = (h, label) => { const i = h.indexOf(`>${label}<`); const row = h.lastIndexOf('<div class="info-line', i); return /^<div class="info-line warn/.test(h.slice(row, i)); };
+    check('purificateur : charbon a 12 % en alerte', warnOf(dy, 'Carbon filter'), true);
+    check('purificateur : HEPA a 29 % sans alerte', warnOf(dy, 'HEPA filter'), false);
+    const two = PF({ filter_life_entity: 'sensor.a_filter_life', filter2_life_entity: 'sensor.b_filter_life' }, { 'sensor.a_filter_life': pct(80), 'sensor.b_filter_life': pct(70) }).html;
+    check('purificateur : second filtre sans mot, Filter 2', />Filter 2<[\s\S]*?70 %/.test(two), true);
+    const hrs = PF({ filter_life_entity: 'sensor.p_filter_life' }, { 'sensor.p_filter_life': { state: '4300', attributes: { unit_of_measurement: 'h' } } }).html;
+    check('purificateur : heures, telles quelles', /4[\s  ,.]?300\s*h/.test(hrs) && !/4300 %/.test(hrs), true);
+    check('purificateur : filtre indisponible, pas de ligne', />Filter</.test(PF({ filter_life_entity: 'sensor.f' }, { 'sensor.f': { state: 'unavailable', attributes: {} } }).html), false);
+    check('purificateur : bouton reset filtre', /<div class="action-btn[^"]*"[^>]*><ha-icon icon="mdi:broom"/.test(PF({ filter_reset_entity: 'button.p_reset_filter', filter_reset_icon: 'mdi:broom' }, { 'button.p_reset_filter': { state: 'unknown', attributes: {} } }).html), true);
+    const { sug } = suggestOn('air_purifier', 'fan.salon_dyson_purificateur', [
+      ['sensor.salon_dyson_purificateur_type_de_filtre_hepa', null, null],
+      ['sensor.salon_dyson_purificateur_duree_de_vie_du_filtre_a_charbon', null, null],
+      ['sensor.salon_dyson_purificateur_duree_de_vie_du_filtre_hepa', null, null],
+      ['binary_sensor.salon_dyson_purificateur_fault_hepa_filter', null, null],
+      ['button.salon_dyson_purificateur_reset_filter', null, null]]);
+    check('purificateur : detection HEPA en premier', sug.filter_life_entity, 'sensor.salon_dyson_purificateur_duree_de_vie_du_filtre_hepa');
+    check('purificateur : detection du bouton reset filtre', sug.filter_reset_entity, 'button.salon_dyson_purificateur_reset_filter');
+    check('purificateur : detection charbon en second', sug.filter2_life_entity, 'sensor.salon_dyson_purificateur_duree_de_vie_du_filtre_a_charbon');
+    const one = suggestOn('air_purifier', 'fan.cuisine_core_300s_series', [['sensor.cuisine_core_300s_series_duree_de_vie_du_filtre', null, null]]).sug;
+    check('purificateur : detection Levoit', one.filter_life_entity, 'sensor.cuisine_core_300s_series_duree_de_vie_du_filtre');
+  }
+
   // A gas fireplace (#130).
-  const GF = (more, ents) => build({ appliance_type: 'gas_fireplace', state_entity: 'switch.f', ...more }, { 'switch.f': { state: 'off', attributes: {} }, ...ents });
+  const GF =(more, ents) => build({ appliance_type: 'gas_fireplace', state_entity: 'switch.f', ...more }, { 'switch.f': { state: 'off', attributes: {} }, ...ents });
   const gfOn = GF({ flame_height_entity: 'number.h', fan_entity: 'fan.v', light_entity: 'light.l', thermostat_entity: 'climate.t' }, { 'switch.f': { state: 'on', attributes: {} }, 'number.h': { state: '4', attributes: {} }, 'fan.v': { state: 'on', attributes: { percentage: 50 } }, 'light.l': { state: 'on', attributes: { brightness: 128 } }, 'climate.t': { state: 'heat', attributes: { temperature: 72, current_temperature: 68, temperature_unit: '\u00b0F' } } });
   check('cheminee : allumee, Flamme et ses flammes', /Burning/.test(gfOn.html) && /class="nta-flick ntd/.test(gfOn.html), true);
   check('cheminee : hauteur 4 sur 5', /4 \/ 5/.test(gfOn.html), true);

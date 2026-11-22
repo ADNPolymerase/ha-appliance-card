@@ -80,7 +80,7 @@ const T = {
     section_target_temperature: "Target temperature", section_current_temperature: "Current temperature",
     section_light: "Light", section_heating: "Heating indicator",
     section_power_level: "Power level", section_fan: "Fan",
-    section_filter_life: "Filter life", section_filter_reset: "Reset filter button",
+    section_filter_life: "Filter life", section_filter_reset: "Reset filter button", section_filter2_life: "Second filter life", filter_hepa: "HEPA filter", filter_carbon: "Carbon filter", filter_2: "Filter 2",
     section_boost: "Boost mode", section_child_lock: "Child lock",
     section_power: "Power consumption", section_zones: "Cooking zones",
     target_temperature_entity: "Target temperature entity", current_temperature_entity: "Current temperature entity",
@@ -3110,6 +3110,10 @@ const TYPE_AUTO_PATTERNS = {
     low_water_entity: /low.?water|water.?(lack|shortage|empty)|no.?water|tank.?empty/i,
     tank_lifted_entity: /lifted|detached|tank.?(removed|missing|off)/i,
     water_level_entity: /water.?level/i,
+    // A Dyson has a HEPA and a carbon filter: the carbon one goes second.
+    filter_life_entity: /^(sensor|number)\.(?!.*(type|carbon|charbon|charcoal|kohle|fault|replace)).*(filter|filtre|filtro)/i,
+    filter_reset_entity: /^(button|script|switch)\..*(reset.?filter|filter.?reset)/i,
+    filter2_life_entity: /^(sensor|number)\.(?!.*(type|fault|replace)).*(filter|filtre|filtro).*(carbon|charbon|charcoal|kohle)|^(sensor|number)\.(?!.*(type|fault|replace)).*(carbon|charbon|charcoal|kohle).*(filter|filtre|filtro)/i,
   },
   fan: {
     light_entity: /^light\./i,
@@ -3727,7 +3731,7 @@ const NETWORK_ONLY_FIELDS = ["network_layout", "switch_ports", "bays", "busy_thr
   "memory_entity", "volume_entity", "download_entity", "upload_entity", "ports_entity", "ports_total", "poe_entity",
   "problem_entity", "disk1_entity", "disk2_entity", "disk3_entity", "disk4_entity", "disk5_entity", "disk6_entity", "disk7_entity", "disk8_entity", "clients_entity", "wan_entity", "wifi_entity"];
 const SCREEN_MEDIA_FIELDS = ["media_entity", "media2_entity", "media3_entity"];
-const PURIFIER_ONLY_FIELDS = ["purifier_layout", "air_quality_entity", "display_entity", "humidifier_entity", "deep_clean_entity"];
+const PURIFIER_ONLY_FIELDS = ["purifier_layout", "air_quality_entity", "display_entity", "humidifier_entity", "deep_clean_entity", "filter2_life_entity"];
 const FAN_ONLY_FIELDS = ["fan_layout", "wood_blades", "fan_direction_inverted", "oscillating"];
 // A water tank and a humidity reading belong to a dehumidifier, and the
 // choice of a heater's model to a heater.
@@ -6552,6 +6556,34 @@ function purifierHumidifierOf(hass, cfg, tr) {
       value: days <= 0 ? tr(hass, "pf_clean_due") : relativeDays(hass, days), entity: cfg.deep_clean_entity, warn: days <= 0 });
   }
   return out;
+}
+// A purifier's filters, one or two (a Dyson's HEPA and carbon). A percentage
+// is the life left, or worn out when the entity says usage; hours or days are
+// shown as they come. Each is named by the word in its entity.
+const PF_FILTER_CARBON_RE = /carbon|charbon|charcoal|kohle|carbone|carvao|koolstof|kolfilter|kulfilter|kullfilter|wegl|uhlik|aktivszen|\u70ad|\u0443\u0433\u043e\u043b/;
+function purifierFilterLines(hass, cfg, tr) {
+  const ids = [cfg.filter_life_entity, cfg.filter2_life_entity];
+  const two = !!ids[0] && !!ids[1];
+  const lines = [];
+  ids.forEach((id, i) => {
+    const s = id ? stateObj(hass, id) : null;
+    if (!s || HA_OFFLINE_STATES.includes(String(s.state).toLowerCase())) return;
+    const f = numericState(hass, id);
+    if (f === null) return;
+    const hay = stripAccents(`${id} ${(s.attributes || {}).friendly_name || ""}`.toLowerCase());
+    const label = /hepa/.test(hay) ? tr(hass, "filter_hepa") : PF_FILTER_CARBON_RE.test(hay) ? tr(hass, "filter_carbon")
+      : two && i === 1 ? tr(hass, "filter_2") : tr(hass, "filter");
+    const unit = unitOf(hass, id) || "";
+    const worn = /usage|used/i.test(id);
+    const line = { key: i ? "pf_filter2" : "pf_filter", icon: PF_FILTER_CARBON_RE.test(hay) ? "mdi:air-filter" : "mdi:air-purifier", label, entity: id };
+    if (unit === "%" || (!unit && /life|remain|vie/i.test(id))) {
+      const pct = Math.max(0, Math.min(100, worn ? 100 - f : f));
+      lines.push({ ...line, value: `${Math.round(pct)} %`, warn: pct <= 15 });
+    } else {
+      lines.push({ ...line, value: keepTogether(formatInfoValue(s, hass, null, cfg, id)) });
+    }
+  });
+  return lines;
 }
 function humDisplayOn(hass, id) {
   const s = id ? stateObj(hass, id) : null;
@@ -12209,6 +12241,9 @@ class ApplianceCard extends HTMLElement {
       }
       const hum = purifierHumidifierOf(hass, cfg, t);
       extraLines.push(...hum.lines);
+      // Its filters: one, or two like a Dyson's HEPA and carbon, each named
+      // by the word in its entity (Ludoc, HACF).
+      extraLines.push(...purifierFilterLines(hass, cfg, t));
       const humidifying = hum.on && ["run", "night"].includes(s.mode);
       if (!cfg.state_show_raw) stateLabel = t(hass, airLabel(s.mode, humidifying ? "pf_humidifying" : s.preset === "auto" ? "pf_auto" : "pf_purifying"));
       color = humidifying && s.mode === "run" ? "#29b6f6" : AIR_COLORS[s.mode];
@@ -13377,7 +13412,7 @@ class ApplianceCard extends HTMLElement {
       { key: "pause", entity: cfg.pause_entity, icon: "mdi:pause", label: t(hass, "pause") },
       { key: "resume", entity: cfg.resume_entity, icon: "mdi:play-pause", label: t(hass, "resume") },
       { key: "stop", entity: cfg.stop_entity, icon: "mdi:stop", label: t(hass, "stop") },
-      cap.filter || cap.petFountain ? { key: "filter_reset", entity: cfg.filter_reset_entity, icon: "mdi:air-filter", label: t(hass, "filter_reset") } : {},
+      cap.filter || cap.petFountain || cap.airPurifier ? { key: "filter_reset", entity: cfg.filter_reset_entity, icon: "mdi:air-filter", label: t(hass, "filter_reset") } : {},
       cap.petFountain ? { key: "pump_reset", entity: cfg.pump_reset_entity, icon: "mdi:pump", label: t(hass, "ft_pump_reset") } : {},
       ...robotControls(hass, cfg, robot),
       ...(cap.diffuser ? diffuserControls(hass, cfg) : []),

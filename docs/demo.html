@@ -1139,9 +1139,11 @@ const purifier = () => card({
   state_entity: "fan.levoit_core_300s",
   air_quality_entity: "sensor.levoit_core_300s_pm2_5",
   display_entity: "sensor.levoit_core_300s_pm2_5",
+  filter_life_entity: "sensor.levoit_core_300s_filter_life",
 }, [
   st("fan.levoit_core_300s", "on", { preset_mode: "auto", percentage: 66 }),
   pm25("sensor.levoit_core_300s_pm2_5", 18),
+  st("sensor.levoit_core_300s_filter_life", 84, { unit_of_measurement: "%" }),
 ]);
 const boxPurifier = () => card({
   illustration_color: "white",
@@ -1164,10 +1166,14 @@ const ringPurifier = () => card({
   state_entity: "fan.dyson_purifier",
   air_quality_entity: "sensor.dyson_purifier_pm2_5",
   display_entity: "sensor.dyson_purifier_temperature",
+  filter_life_entity: "sensor.dyson_purifier_hepa_filter_life",
+  filter2_life_entity: "sensor.dyson_purifier_carbon_filter_life",
 }, [
   st("fan.dyson_purifier", "on", { percentage: 80, oscillating: true, direction: "forward" }),
   pm25("sensor.dyson_purifier_pm2_5", 42),
   st("sensor.dyson_purifier_temperature", 21.4, { unit_of_measurement: "\u00b0C" }),
+  st("sensor.dyson_purifier_hepa_filter_life", 62, { unit_of_measurement: "%" }),
+  st("sensor.dyson_purifier_carbon_filter_life", 12, { unit_of_measurement: "%" }),
 ]);
 // A pedestal fan oscillating, and a ceiling fan with wooden blades and its
 // light on, in summer.

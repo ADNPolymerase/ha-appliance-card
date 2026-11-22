@@ -733,6 +733,34 @@ function purifierHumidifierOf(hass, cfg, tr) {
   }
   return out;
 }
+// A purifier's filters, one or two (a Dyson's HEPA and carbon). A percentage
+// is the life left, or worn out when the entity says usage; hours or days are
+// shown as they come. Each is named by the word in its entity.
+const PF_FILTER_CARBON_RE = /carbon|charbon|charcoal|kohle|carbone|carvao|koolstof|kolfilter|kulfilter|kullfilter|wegl|uhlik|aktivszen|\u70ad|\u0443\u0433\u043e\u043b/;
+function purifierFilterLines(hass, cfg, tr) {
+  const ids = [cfg.filter_life_entity, cfg.filter2_life_entity];
+  const two = !!ids[0] && !!ids[1];
+  const lines = [];
+  ids.forEach((id, i) => {
+    const s = id ? stateObj(hass, id) : null;
+    if (!s || HA_OFFLINE_STATES.includes(String(s.state).toLowerCase())) return;
+    const f = numericState(hass, id);
+    if (f === null) return;
+    const hay = stripAccents(`${id} ${(s.attributes || {}).friendly_name || ""}`.toLowerCase());
+    const label = /hepa/.test(hay) ? tr(hass, "filter_hepa") : PF_FILTER_CARBON_RE.test(hay) ? tr(hass, "filter_carbon")
+      : two && i === 1 ? tr(hass, "filter_2") : tr(hass, "filter");
+    const unit = unitOf(hass, id) || "";
+    const worn = /usage|used/i.test(id);
+    const line = { key: i ? "pf_filter2" : "pf_filter", icon: PF_FILTER_CARBON_RE.test(hay) ? "mdi:air-filter" : "mdi:air-purifier", label, entity: id };
+    if (unit === "%" || (!unit && /life|remain|vie/i.test(id))) {
+      const pct = Math.max(0, Math.min(100, worn ? 100 - f : f));
+      lines.push({ ...line, value: `${Math.round(pct)} %`, warn: pct <= 15 });
+    } else {
+      lines.push({ ...line, value: keepTogether(formatInfoValue(s, hass, null, cfg, id)) });
+    }
+  });
+  return lines;
+}
 function humDisplayOn(hass, id) {
   const s = id ? stateObj(hass, id) : null;
   if (!s || HA_OFFLINE_STATES.includes(String(s.state).toLowerCase())) return true;

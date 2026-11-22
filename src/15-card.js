@@ -3017,6 +3017,9 @@ class ApplianceCard extends HTMLElement {
       }
       const hum = purifierHumidifierOf(hass, cfg, t);
       extraLines.push(...hum.lines);
+      // Its filters: one, or two like a Dyson's HEPA and carbon, each named
+      // by the word in its entity (Ludoc, HACF).
+      extraLines.push(...purifierFilterLines(hass, cfg, t));
       const humidifying = hum.on && ["run", "night"].includes(s.mode);
       if (!cfg.state_show_raw) stateLabel = t(hass, airLabel(s.mode, humidifying ? "pf_humidifying" : s.preset === "auto" ? "pf_auto" : "pf_purifying"));
       color = humidifying && s.mode === "run" ? "#29b6f6" : AIR_COLORS[s.mode];
@@ -4185,7 +4188,7 @@ class ApplianceCard extends HTMLElement {
       { key: "pause", entity: cfg.pause_entity, icon: "mdi:pause", label: t(hass, "pause") },
       { key: "resume", entity: cfg.resume_entity, icon: "mdi:play-pause", label: t(hass, "resume") },
       { key: "stop", entity: cfg.stop_entity, icon: "mdi:stop", label: t(hass, "stop") },
-      cap.filter || cap.petFountain ? { key: "filter_reset", entity: cfg.filter_reset_entity, icon: "mdi:air-filter", label: t(hass, "filter_reset") } : {},
+      cap.filter || cap.petFountain || cap.airPurifier ? { key: "filter_reset", entity: cfg.filter_reset_entity, icon: "mdi:air-filter", label: t(hass, "filter_reset") } : {},
       cap.petFountain ? { key: "pump_reset", entity: cfg.pump_reset_entity, icon: "mdi:pump", label: t(hass, "ft_pump_reset") } : {},
       ...robotControls(hass, cfg, robot),
       ...(cap.diffuser ? diffuserControls(hass, cfg) : []),

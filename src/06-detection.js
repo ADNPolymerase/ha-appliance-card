@@ -361,6 +361,10 @@ const TYPE_AUTO_PATTERNS = {
     low_water_entity: /low.?water|water.?(lack|shortage|empty)|no.?water|tank.?empty/i,
     tank_lifted_entity: /lifted|detached|tank.?(removed|missing|off)/i,
     water_level_entity: /water.?level/i,
+    // A Dyson has a HEPA and a carbon filter: the carbon one goes second.
+    filter_life_entity: /^(sensor|number)\.(?!.*(type|carbon|charbon|charcoal|kohle|fault|replace)).*(filter|filtre|filtro)/i,
+    filter_reset_entity: /^(button|script|switch)\..*(reset.?filter|filter.?reset)/i,
+    filter2_life_entity: /^(sensor|number)\.(?!.*(type|fault|replace)).*(filter|filtre|filtro).*(carbon|charbon|charcoal|kohle)|^(sensor|number)\.(?!.*(type|fault|replace)).*(carbon|charbon|charcoal|kohle).*(filter|filtre|filtro)/i,
   },
   fan: {
     light_entity: /^light\./i,
@@ -978,7 +982,7 @@ const NETWORK_ONLY_FIELDS = ["network_layout", "switch_ports", "bays", "busy_thr
   "memory_entity", "volume_entity", "download_entity", "upload_entity", "ports_entity", "ports_total", "poe_entity",
   "problem_entity", "disk1_entity", "disk2_entity", "disk3_entity", "disk4_entity", "disk5_entity", "disk6_entity", "disk7_entity", "disk8_entity", "clients_entity", "wan_entity", "wifi_entity"];
 const SCREEN_MEDIA_FIELDS = ["media_entity", "media2_entity", "media3_entity"];
-const PURIFIER_ONLY_FIELDS = ["purifier_layout", "air_quality_entity", "display_entity", "humidifier_entity", "deep_clean_entity"];
+const PURIFIER_ONLY_FIELDS = ["purifier_layout", "air_quality_entity", "display_entity", "humidifier_entity", "deep_clean_entity", "filter2_life_entity"];
 const FAN_ONLY_FIELDS = ["fan_layout", "wood_blades", "fan_direction_inverted", "oscillating"];
 // A water tank and a humidity reading belong to a dehumidifier, and the
 // choice of a heater's model to a heater.

@@ -80,10 +80,11 @@ const SECTIONS = [
   // Hood
   { field: "fan_entity", types: ["hood"], labelKey: "section_fan", includeDomains: ["fan", "select", "input_select", "sensor", "number", "input_number"] },
   { field: "boost_entity", types: ["hood"], labelKey: "section_boost", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
-  { field: "filter_life_entity", types: ["hood", "pet_fountain", "hrv"], labelKey: "section_filter_life", includeDomains: ["sensor", "number", "binary_sensor"], extra: (c) =>
+  { field: "filter_life_entity", types: ["hood", "pet_fountain", "hrv", "air_purifier"], labelKey: "section_filter_life", includeDomains: ["sensor", "number", "binary_sensor"], extra: (c) =>
       c._type === "pet_fountain" ? c._row("filter_due_below", "filter_due_below", { placeholder: "3" })
         : c._type === "hrv" ? c._row("filter_life_full", "filter_life_full", { placeholder: "90" }) : "" },
-  { field: "filter_reset_entity", types: ["hood", "pet_fountain"], labelKey: "section_filter_reset", includeDomains: ACTION_DOMAINS },
+  { field: "filter2_life_entity", types: ["air_purifier"], labelKey: "section_filter2_life", includeDomains: ["sensor", "number"] },
+  { field: "filter_reset_entity", types: ["hood", "pet_fountain", "air_purifier"], labelKey: "section_filter_reset", includeDomains: ACTION_DOMAINS },
 
   // Pet fountain
   { field: "pump_clean_entity", types: ["pet_fountain"], labelKey: "section_pump_clean", includeDomains: ["sensor", "number"] },
