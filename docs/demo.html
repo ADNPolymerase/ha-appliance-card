@@ -212,6 +212,13 @@ function simulate(sim, domain, service, data) {
     sim.set(eid, ["on", "open", "true"].includes(String(now).toLowerCase()) ? "off" : "on");
   };
   const later = (eid, value, ms) => setTimeout(() => sim.set(eid, value, null, true), ms);
+  // A Google Home alarm or timer deleted from the card (#136).
+  if (domain === "google_home" && /^delete_(alarm|timer)$/.test(service)) {
+    const key = service === "delete_alarm" ? "alarms" : "timers", idKey = service === "delete_alarm" ? "alarm_id" : "timer_id";
+    const list = ((states[id] || {}).attributes || {})[key] || [];
+    sim.set(id, list.filter((x) => x[idKey] !== data[idKey]), key);
+    return;
+  }
   if (domain === "vacuum" || domain === "lawn_mower") {
     const go = { start: "cleaning", start_mowing: "mowing", pause: "paused", return_to_base: "returning", dock: "returning", stop: "idle" }[service];
     if (go) sim.set(id, go);
@@ -1967,6 +1974,7 @@ Object.assign(EXTRA, {
   cov_shutter_closing: covCard(L("Kitchen", "Cuisine"), "shutter", "closing", { current_position: travel(90, 10, 45) }),
   cov_shutter_closed: covCard(L("Bedroom", "Chambre"), "shutter", "closed", { current_position: 0 }, { cover_color: "anthracite" }),
   cov_blind: covCard(L("Bedroom blind", "Store chambre"), "blind", "opening", { current_position: travel(10, 90, 60) }),
+  cov_blind_white: covCard(L("White blind", "Store blanc"), "blind", "open", { current_position: 45 }, { fabric_color: "white" }),
   cov_venetian: covCard(L("Office blind", "Store bureau"), "venetian", "open", { current_position: 0, current_tilt_position: 50 }),
   cov_raffstore: covCard(L("Terrace blinds", "Brise-soleil terrasse"), "raffstore", "open", { current_position: 40, current_tilt_position: 100 }),
   cov_pergola: covCard(L("Pergola", "Pergola"), "pergola", "open", { current_tilt_position: 100 }, { light_entity: "light.pergola" }),
@@ -2018,8 +2026,9 @@ function liveGallery() {
     [L("Heating and climate", "Chauffage et climat"), [waterHeater, boiler, boilerWindow, boilerThermo, thSquare, thRound, thGlass, thValve, heatPump, pelletStove, spaceHeater, towelWarmer, towelPanel, airConditioner, dehumidifier, humidifier, humidifierNight, humidifierEmpty, humidifierLifted]],
     [L("CO\u2082 monitors", "Capteurs de CO\u2082"), [EXTRA.co2_eink, EXTRA.co2_box, EXTRA.co2_netatmo, EXTRA.co2_module]],
     [L("SwitchBot meters", "Thermom\u00e8tres SwitchBot"), [EXTRA.sb_co2, EXTRA.sb_co2_high, EXTRA.sb_pro, EXTRA.sb_meter, EXTRA.sb_plus, EXTRA.sb_outdoor]],
-    [L("Your own photo (HACF #165)", "Votre photo (HACF #165)"), [EXTRA.photo_shutter, EXTRA.photo_garage, EXTRA.photo_gate, EXTRA.photo_washer, EXTRA.photo_tv], "new"],
-    [L("Gates", "Portails"), [EXTRA.gate_swing, EXTRA.gate_swing_open, EXTRA.gate_white, EXTRA.gate_white_open], "new"],
+    [L("Your own photo (HACF #165)", "Votre photo (HACF #165)"), [EXTRA.photo_shutter, EXTRA.photo_garage, EXTRA.photo_gate, EXTRA.photo_washer, EXTRA.photo_tv]],
+    [L("Gates", "Portails"), [EXTRA.gate_swing, EXTRA.gate_swing_open, EXTRA.gate_white, EXTRA.gate_white_open]],
+    [L("New: alarms and timers, tilt-in window, white fabric, purifier filters", "Nouveau : alarmes et minuteurs, fen\u00eatre \u00e0 soufflet, toile blanche, filtres du purificateur"), [EXTRA.clock_alarms, EXTRA.win_tilt, EXTRA.win_tilt_open, EXTRA.cov_blind_white, purifier, ringPurifier], "new"],
     [L("Gas fireplace", "Chemin\u00e9e au gaz"), [EXTRA.fire_on, EXTRA.fire_high, EXTRA.fire_pilot, EXTRA.fire_lights]],
     [L("Clock, WiiM amp, AV receiver, mini PC", "R\u00e9veil, ampli WiiM, ampli A/V, mini PC"), [EXTRA.clock_idle, EXTRA.clock_play, EXTRA.clock_alarms, EXTRA.wiim_on, EXTRA.wiim_silver, EXTRA.avr_on, EXTRA.mini_pc, EXTRA.mini_pc_busy]],
     [L("Windows and garage door", "Fen\u00eatres et porte de garage"), [EXTRA.win_casement, EXTRA.win_casement_open, EXTRA.win_double, EXTRA.win_double_open, EXTRA.win_sliding, EXTRA.win_sliding_open, EXTRA.win_small, EXTRA.win_small_open, EXTRA.win_tilt, EXTRA.win_tilt_open, EXTRA.win_vibration, EXTRA.win_glass_break, EXTRA.door_garage, EXTRA.door_garage_open, EXTRA.door_pocket, EXTRA.door_pocket_open]],

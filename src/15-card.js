@@ -4537,6 +4537,9 @@ class ApplianceCard extends HTMLElement {
           animation: ac-armed 0.8s ease-in-out infinite alternate; animation-delay: var(--anim-offset, 0s);
         }
         .pic-tap.armed, .cmp-pic.armed { color: inherit; background: none; border-radius: 14px; box-shadow: 0 0 0 2px var(--error-color, #f44336); }
+        /* An alarm or a timer armed for deletion (#136): its line in red, blinking. */
+        .info-line.armed { color: var(--error-color, #f44336); background: none; border-radius: 0; }
+        .info-line.armed .label { color: var(--error-color, #f44336); }
         @keyframes ac-armed { to { opacity: 0.65; } }
         @media (prefers-reduced-motion: reduce) { .armed { animation-name: none; } }
         .action-btn ha-icon { --mdc-icon-size: 20px; }
@@ -4774,7 +4777,7 @@ class ApplianceCard extends HTMLElement {
             const value = armed ? t(hass, "spk_tap_delete") : l.value;
             const tick = l.tick ? ` data-fire="${l.tick.fire}" data-dur="${l.tick.dur}"` : "";
             if (tick) this._hasTick = true;
-            const bar = l.bar !== undefined && l.bar !== null ? `<span class="lbar"><i${tick} style="width:${Math.round(l.bar * 10) / 10}%"></i></span>` : "";
+            const bar = !armed && l.bar !== undefined && l.bar !== null ? `<span class="lbar"><i${tick} style="width:${Math.round(l.bar * 10) / 10}%"></i></span>` : "";
             return `<div class="info-line ${armed || l.warn ? "warn" : l.caution ? "caution" : ""}${l.open || l.menu || delKey ? " clickable" : ""}${l.menu ? " has-menu" : ""}${l.wrap && !bar ? " wrap" : ""}${l.lit ? " lit" : ""}${l.dim ? " dim" : ""}${l.del ? " timed" : ""}${armed ? " armed" : ""}${bar ? " has-bar" : ""}${!bar && !l.wrap && !l.bare && value && String(value).length <= 14 ? " fit" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""}${delKey ? ` data-del="${esc(delKey)}"` : ""}${l.menu ? ` data-line-menu="${l.menu}" aria-expanded="${this._lineMenu === l.menu}"` : ""} title="${esc(l.label)}"><ha-icon icon="${esc(armed ? "mdi:delete" : l.icon)}"></ha-icon>${l.bare && value ? "" : `<span class="label">${esc(l.label)}</span>`}${bar}${value ? `<span${!armed && tick ? ` class="cd"${tick}` : ""}>${esc(value)}</span>` : ""}${l.menu ? `<ha-icon class="chev" icon="mdi:chevron-${this._lineMenu === l.menu ? "up" : "down"}"></ha-icon>` : ""}</div>`;
           })
           .join("")}${lineMenuHtml}</div>`
