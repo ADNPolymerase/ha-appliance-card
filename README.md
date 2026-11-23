@@ -351,6 +351,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `illustration_size` | The drawing's size, from `0.3` to `1.6` times its own (default `1`), in every mode. The text keeps its size. A slider in the editor. |
 | `font_scale` | The text's size, from `0.7` to `1.4` times its own (default `1`). The drawing keeps its size. A slider in the editor. |
 | `show_name` / `show_state` | `false` hides the name, or the state line. Both shown by default. |
+| `show_controls` | `false` hides every button under the drawing, for a card switched by touching its drawing (`illustration_tap_action: toggle`). The light button in the corner has `show_light_button`. |
 | `show_state_duration` | `true` adds how long the state has held to the state line, read from the state entity: `On · 2h35`, `Off · 3d 5h`. Off by default. |
 | `transparent` | `true` removes the card's background, border and shadow, for a card laid on a wall tablet's background. |
 | `values_right` | `true` puts the values of the lines against the right edge, like Home Assistant's entity rows. Lines without a label and the lines beside the drawing in compact mode keep their place. |

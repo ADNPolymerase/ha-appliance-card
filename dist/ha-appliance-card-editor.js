@@ -1976,6 +1976,7 @@ class ApplianceCardEditor extends HTMLElement {
           })}
           ${this._row("show_name", "show_name", { type: "checkbox", defaultOn: true })}
           ${this._row("show_state", "show_state", { type: "checkbox", defaultOn: true })}
+          ${this._row("show_controls", "show_controls", { type: "checkbox", defaultOn: true })}
           ${this._row("show_state_duration", "show_state_duration", { type: "checkbox" })}
           ${this._row("transparent", "transparent", { type: "checkbox" })}
           ${this._row("values_right", "values_right", { type: "checkbox" })}
@@ -2158,7 +2159,7 @@ class ApplianceCardEditor extends HTMLElement {
           delete this._config.speed_power_3;
         }
         // Shown is the default and is not written: only false is.
-        if (["show_name", "show_state", "show_toggle", "show_light_button", "large_temperature", "winter_snowfall"].includes(field) && value) delete this._config[field];
+        if (["show_name", "show_state", "show_controls", "show_toggle", "show_light_button", "large_temperature", "winter_snowfall"].includes(field) && value) delete this._config[field];
         // Compact is written the way it always was: true for the card without
         // its drawing, nothing at all when it is off.
         if (field === "detector_model" && value === "auto") delete this._config.detector_model;

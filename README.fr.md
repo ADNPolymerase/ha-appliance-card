@@ -351,6 +351,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `illustration_size` | Taille du dessin, de `0.3` à `1.6` fois la sienne (`1` par défaut), dans tous les modes. Le texte garde sa taille. Un curseur dans l'éditeur. |
 | `font_scale` | Taille du texte, de `0.7` à `1.4` fois la sienne (`1` par défaut). Le dessin garde sa taille. Un curseur dans l'éditeur. |
 | `show_name` / `show_state` | `false` masque le nom, ou la ligne d'état. Les deux sont affichés par défaut. |
+| `show_controls` | `false` masque tous les boutons sous le dessin, pour une carte qu'on allume en touchant le dessin (`illustration_tap_action: toggle`). Le bouton de lumière dans le coin a `show_light_button`. |
 | `show_state_duration` | `true` ajoute à la ligne d'état depuis combien de temps l'état dure, lu sur l'entité d'état : `Allumé · 2h35`, `Éteint · 3j 5h`. Désactivé par défaut. |
 | `transparent` | `true` retire le fond, la bordure et l'ombre de la carte, pour une carte posée sur le fond d'une tablette murale. |
 | `values_right` | `true` place les valeurs des lignes contre le bord droit, comme les lignes d'entités de Home Assistant. Les lignes sans libellé et celles à côté du dessin en mode compact gardent leur place. |

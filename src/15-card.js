@@ -4255,7 +4255,10 @@ class ApplianceCard extends HTMLElement {
       .filter((a) => controlFitsState(a.key, norm, cap, cfg, toggleOn))
       // The speed button means nothing while the motor is off (HACF #157). It
       // is never the power button here: the motor is state_entity.
-      .filter((a) => !(a.key === "toggle" && speedToggle && ["off", "false"].includes(String(rawState).toLowerCase())));
+      .filter((a) => !(a.key === "toggle" && speedToggle && ["off", "false"].includes(String(rawState).toLowerCase())))
+      // show_controls: false leaves every button out, for a card switched by
+      // touching its drawing (HACF #186).
+      .filter(() => cfg.show_controls !== false);
 
     const spinning = isActiveState(norm);
 

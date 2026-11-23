@@ -1186,11 +1186,12 @@ function detectApplianceType(cfg, st) {
   if (domainOf(cfg.state_entity) === "cover" && !(st && ["garage", "gate", "door", "damper"].includes(String(st.attributes.device_class || "")))) return "cover";
   if (domainOf(cfg.state_entity) === "camera") return "camera";
   if (domainOf(cfg.state_entity) === "light") return "lamp";
-  // A smoke, CO, gas or water sensor by its device class (X-Sense gives none,
+  // A smoke, CO, gas or water sensor, a door or window contact (HACF #188)
+  // or a vibration sensor by its device class (X-Sense gives none,
   // only its alarm_status); a media player that is no television. A player
   // nothing says anything about is a screen: Apple TV, Cast and Plex name no
   // class. It is never a washing machine.
-  if (domainOf(cfg.state_entity) === "binary_sensor" && (["smoke", "carbon_monoxide", "gas", "moisture"].includes(String((st && st.attributes.device_class) || "")) || /_alarm_status$/.test(String(cfg.state_entity)))) return "detector";
+  if (domainOf(cfg.state_entity) === "binary_sensor" && (["smoke", "carbon_monoxide", "gas", "moisture", "door", "window", "opening", "garage_door", "vibration"].includes(String((st && st.attributes.device_class) || "")) || /_alarm_status$/.test(String(cfg.state_entity)))) return "detector";
   if (domainOf(cfg.state_entity) === "media_player" && st && st.attributes.device_class !== "tv"
     && (st.attributes.device_class === "speaker" || /sonos|homepod|echo|nest.?(audio|mini)|google.?home|speaker|enceinte|lautsprecher|altavoz|altoparlante|soundbar|barre.?de.?son|music.?assistant|airplay|snapcast|bose|wiim|bluesound|linkplay|heos|denon|marantz|yamaha|hivi/.test(stripAccents(`${cfg.state_entity} ${stHay(st)}`).toLowerCase()))) return "speaker";
   if (domainOf(cfg.state_entity) === "media_player" && st) return st.attributes.device_class === "receiver" ? "speaker" : "screen";

@@ -9581,6 +9581,14 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     box.checked = true;
     fire(box, 'change', { target: box });
     check('editeur : recocher le nom retire la cle', 'show_name' in ed._config, false);
+    const btn = field(ed, 'show_controls');
+    btn.setAttribute('data-type', 'checkbox');
+    btn.checked = false;
+    fire(btn, 'change', { target: btn });
+    check('editeur : decocher les boutons ecrit false (HACF #186)', ed._config.show_controls, false);
+    btn.checked = true;
+    fire(btn, 'change', { target: btn });
+    check('editeur : recocher les boutons retire la cle', 'show_controls' in ed._config, false);
     const fsz = field(ed, 'font_scale');
     fsz.value = '1.2';
     fire(fsz, 'change', { target: fsz });
@@ -12936,6 +12944,21 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('detecteur : fumee', stateLine(DT('smoke', 'on')), 'Smoke detected');
   check('detecteur : CO', stateLine(DT('carbon_monoxide', 'on')), 'CO detected');
   check('detecteur : fuite', stateLine(DT('moisture', 'on')), 'Leak detected');
+  // A door or window contact found by its class (HACF #188), not a washer.
+  {
+    const AU = (cls, id = 'binary_sensor.entree') => kindOf(render({ state_entity: id }, { [id]: s('off', { device_class: cls }) }));
+    check('detecteur : contact de porte detecte seul', [AU('door'), AU('window'), AU('opening'), AU('garage_door'), AU('vibration')].map((k) => String(k).startsWith('det_')).join(), 'true,true,true,true,true');
+    check('detecteur : porte et fenetre dessinees en contact', [AU('door'), AU('window')].join(), [kindOf(DT('door', 'off')), kindOf(DT('window', 'off'))].join());
+    check('detecteur : un capteur sans classe reste ce qu il etait', String(AU('', 'binary_sensor.lave_linge_marche')).startsWith('det_'), false);
+  }
+  // show_controls: false takes every button away (HACF #186).
+  {
+    const TV = (more = {}) => render({ appliance_type: 'speaker', state_entity: 'media_player.hc', toggle_entity: 'switch.hc', ...more }, { 'media_player.hc': s('playing', { friendly_name: 'Home cinema', device_class: 'receiver' }), 'switch.hc': s('on') });
+    check('boutons : un ampli en a deux', (TV().match(/class="action-btn/g) || []).length >= 2, true);
+    check('boutons : un ampli en a', /class="action-btn/.test(TV()), true);
+    check('boutons : show_controls false les retire tous', /class="action-btn/.test(TV({ show_controls: false })), false);
+    check('boutons : le dessin reste', /<svg/.test(TV({ show_controls: false })), true);
+  }
   check('detecteur : le dessin suit la classe', [kindOf(DT('smoke', 'off')), kindOf(DT('carbon_monoxide', 'off')), kindOf(DT('moisture', 'off'))].join(), 'det_smoke,det_co,det_leak');
   check('detecteur : la fumee monte en alarme', [/class="nta-smoke/.test(DT('smoke', 'on')), /class="nta-smoke/.test(DT('smoke', 'off'))].join(), 'true,false');
   check('detecteur : taux de CO sur l ecran', /180 ppm/.test(DT('carbon_monoxide', 'on', { co_level_entity: 'sensor.co' }, { 'sensor.co': s(180, { unit_of_measurement: 'ppm' }) })), true);
