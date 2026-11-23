@@ -80,7 +80,7 @@ const T = {
     section_target_temperature: "Target temperature", section_current_temperature: "Current temperature",
     section_light: "Light", section_heating: "Heating indicator",
     section_power_level: "Power level", section_fan: "Fan",
-    section_filter_life: "Filter life", section_filter_reset: "Reset filter button", section_filter2_life: "Second filter life", filter_hepa: "HEPA filter", filter_carbon: "Carbon filter", filter_2: "Filter 2",
+    section_filter_life: "Filter life", section_filter_reset: "Reset filter button", section_filter2_life: "Second filter life", section_alarms: "Alarms", section_timers: "Timers", section_alarm_volume: "Alarm volume", spk_every_day: "Every day", spk_ringing: "Ringing", spk_snoozed: "Snoozed", spk_tap_delete: "Tap again to delete", filter_hepa: "HEPA filter", filter_carbon: "Carbon filter", filter_2: "Filter 2",
     section_boost: "Boost mode", section_child_lock: "Child lock",
     section_power: "Power consumption", section_zones: "Cooking zones",
     target_temperature_entity: "Target temperature entity", current_temperature_entity: "Current temperature entity",
@@ -147,7 +147,7 @@ const T = {
     source: "Source", source_plug: "A smart plug", source_integration: "Integration entities", plug_switch: "Smart plug switch",
     type_thermostat: "Thermostat", section_thermostat_layout: "Model", layout_th_square: "Square", layout_th_round: "Round", layout_th_glass: "Black glass", layout_th_valve: "Radiator valve", th_idle: "Target reached", th_eco: "Eco", th_away: "Away", th_frost: "Frost protection", th_window: "Window open", th_line_valve: "Valve", section_thermostat: "Room thermostat",
     compact_lines: "Information", lines_below: "Under the card", lines_beside: "Beside the drawing", lines_toggle: "Hidden, a chevron shows them", lines_show: "Show the information", lines_hide: "Hide the information",
-    type_mobility: "Electric ride", layout_mob_scooter: "Scooter", layout_mob_offroad: "Off-road scooter", layout_mob_ebike: "E-bike", layout_mob_gyropode: "Gyropode", layout_mob_motorcycle: "Electric motorcycle", mob_charging: "Charging", mob_charged: "Charged", mob_unplugged: "Unplugged", mob_plugged: "Plugged in", type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", values_right: "Values on the right", show_state_duration: "Time in the current state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets", illustration_frame: "Same drawing height as the cards beside it", illustration_backdrop: "Background behind the drawing", backdrop_none: "None", backdrop_neutral: "Neutral", backdrop_state: "State color", winter_snowfall: "Falling snow", det_model: "Model", det_door_style: "Door", door_style_wood: "Wooden door", door_style_glass_top: "Wooden door, glass top", door_style_glass: "Glass door", door_style_external: "Entrance door", door_style_external_glass: "Entrance door with glass", door_style_sliding_glass: "Sliding glass door", door_style_sliding_wood: "Sliding barn door", det_window_style: "Window", window_style_casement: "Single casement", window_style_double: "Double casement", window_style_sliding: "Sliding window", window_style_small: "Small window", door_style_garage: "Sectional garage door", door_style_pocket: "Pocket door", det_frame_color: "Frame", frame_white: "White", frame_anthracite: "Anthracite", layout_cam_trackmix: "Dual lens, tracking", layout_det_door: "Door or window contact", layout_det_vibration: "Vibration", layout_det_glass: "Glass break", det_open: "Open", det_closed: "Closed", det_vibrating: "Vibration", det_still: "Still", det_glass_break: "Glass break", section_screen_source: "Input source", screen_source: "Input",
+    type_mobility: "Electric ride", layout_mob_scooter: "Scooter", layout_mob_offroad: "Off-road scooter", layout_mob_ebike: "E-bike", layout_mob_gyropode: "Gyropode", layout_mob_motorcycle: "Electric motorcycle", mob_charging: "Charging", mob_charged: "Charged", mob_unplugged: "Unplugged", mob_plugged: "Plugged in", type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", values_right: "Values on the right", show_state_duration: "Time in the current state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets", illustration_frame: "Same drawing height as the cards beside it", illustration_backdrop: "Background behind the drawing", backdrop_none: "None", backdrop_neutral: "Neutral", backdrop_state: "State color", winter_snowfall: "Falling snow", det_model: "Model", det_door_style: "Door", door_style_wood: "Wooden door", door_style_glass_top: "Wooden door, glass top", door_style_glass: "Glass door", door_style_external: "Entrance door", door_style_external_glass: "Entrance door with glass", door_style_sliding_glass: "Sliding glass door", door_style_sliding_wood: "Sliding barn door", det_window_style: "Window", window_style_casement: "Single casement", window_style_double: "Double casement", window_style_sliding: "Sliding window", window_style_small: "Small window", window_style_tilt: "Tilt-in window", door_style_garage: "Sectional garage door", door_style_pocket: "Pocket door", det_frame_color: "Frame", frame_white: "White", frame_anthracite: "Anthracite", layout_cam_trackmix: "Dual lens, tracking", layout_det_door: "Door or window contact", layout_det_vibration: "Vibration", layout_det_glass: "Glass break", det_open: "Open", det_closed: "Closed", det_vibrating: "Vibration", det_still: "Still", det_glass_break: "Glass break", section_screen_source: "Input source", screen_source: "Input",
     type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4", section_net_disk5: "Disk 5", section_net_disk6: "Disk 6", section_net_disk7: "Disk 7", section_net_disk8: "Disk 8",
     type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_combo: "Vacuum and mop robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", mower_style: "Mower style", mower_classic: "Classic", mower_navimow: "Navimow, orange wheels", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", shelter_garage: "Garage", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_low_battery: "Low battery", robot_bag_full: "Bag full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error", robot_station_box: "Rectangular station", robot_station_color: "Station colour", color_gold: "Gold", robot_camera: "Camera module on the robot", section_robot_clean_tank: "Clean water", section_robot_dirty_tank: "Dirty water",
     type_pool_pump: "Pool pump", pool_filtering: "Filtering", pool_chlorinating: "Chlorine injection", pool_backwash: "Backwash", pool_frost: "Frost protection", pool_light_on: "light on", section_water_temperature: "Water temperature", section_air_temperature: "Air temperature", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtration time today", section_pressure: "Filter pressure", pool_pressure_alert: "Alert above this pressure (bar)", section_pool_mode: "Pump mode", section_chlorine_pump: "Chlorine pump", section_chlorine_level: "Chlorine tank level", section_backwash: "Backwash", section_frost: "Frost protection", section_pool_alert: "Alert", pool_line_water: "Water", pool_line_air: "Air", pool_line_filtered: "Filtered today", pool_line_pressure: "Pressure", pool_line_chlorine: "Chlorine tank", pool_line_mode: "Mode",
@@ -185,7 +185,7 @@ const T = {
     step_heating: "Heating", step_prewash: "Pre-wash", step_soaking: "Soaking", step_weighing: "Weighing", step_filling: "Filling", step_washing: "Washing", step_rinsing: "Rinsing", step_draining: "Draining", step_spinning: "Spinning", step_cooling: "Cooling", step_anti_crease: "Anti-crease", step_steam: "Steam",
     type_ev_charger: "EV charger", ev_no_vehicle: "No vehicle", ev_connected: "Plugged in", ev_awaiting_auth: "Awaiting authorisation", ev_charging: "Charging", ev_paused: "Charging paused", ev_scheduled: "Scheduled", ev_done: "Charging complete", ev_error: "Error", ev_offline: "Offline", section_vehicle: "Vehicle plugged in (plug sensor)", section_session_energy: "Session energy", section_current_limit: "Charging current limit", ev_power_threshold: "Charging above this power (W)", ev_line_session: "Charged", ev_line_limit: "Current limit",
     ev_discharging: "Discharging", section_discharge_power: "Power the car gives back (to the home or the grid)", ev_line_discharge: "Discharge",
-    type_cover: "Shutter, blind, pergola or awning", layout_cov_shutter: "Roller shutter", layout_cov_blind: "Roller blind", layout_cov_venetian: "Venetian blind", layout_cov_raffstore: "Exterior venetian blind", layout_cov_pergola: "Bioclimatic pergola", layout_cov_awning: "Awning", layout_cov_curtain: "Curtain", curtain_opening: "Opens", curtain_center: "From the middle", curtain_left: "To the left", curtain_right: "To the right", cov_open: "Open", cov_closed: "Closed", cov_open_at: "Open {pct} %", cov_opening: "Opening", cov_closing: "Closing", cov_deployed: "Extended", cov_retracted: "Retracted", cov_deployed_at: "Extended {pct} %", cov_deploying: "Extending", cov_retracting: "Retracting", cov_louvers_open: "Louvers open", cov_louvers_closed: "Louvers closed", cov_louvers_at: "Louvers {pct} %", cov_louvers_opening: "Opening the louvers", cov_louvers_closing: "Closing the louvers", cov_position: "Position", cov_tilt: "Slats", cov_light: "Light", cov_open_btn: "Open", cov_close_btn: "Close", cover_color: "Colour (apron, slats, frame)", fabric_color: "Fabric colour", fabric_stripes: "Striped fabric", cov_c_white: "White", cov_c_grey: "Grey", cov_c_anthracite: "Anthracite", cov_c_black: "Black", cov_c_beige: "Beige", cov_c_wood: "Wood", cov_c_brown: "Brown", cov_f_ecru: "Ecru", cov_f_linen: "Linen", cov_f_grey: "Grey", cov_f_anthracite: "Anthracite", cov_f_blue: "Blue", cov_f_petrol: "Petrol blue", cov_f_terracotta: "Terracotta", cov_f_green: "Green", layout_ths_co2_eink: "CO\u2082 monitor, e-ink (Aranet4)", layout_ths_co2_box: "CO\u2082 monitor, LED bar (AirGradient)", layout_ths_co2_netatmo: "Netatmo indoor station", layout_ths_co2_netatmo_module: "Netatmo additional indoor module", layout_ths_switchbot_co2: "SwitchBot Meter Pro CO\u2082", layout_ths_switchbot_pro: "SwitchBot Meter Pro", layout_ths_switchbot_meter: "SwitchBot Meter", layout_ths_switchbot_plus: "SwitchBot Meter Plus", layout_ths_switchbot_outdoor: "SwitchBot Indoor/Outdoor Meter", ths_co2: "CO\u2082", co2_good: "Air is fine", co2_ventilate: "Ventilation advised", co2_poor: "Ventilate now", co2_warning: "Orange from (ppm)", co2_alert: "Red from (ppm)", netatmo_color: "Netatmo colour", ntm_aluminium: "Aluminium", ntm_sand: "Sand", ntm_mint: "Mint", ntm_graphite: "Graphite",
+    type_cover: "Shutter, blind, pergola or awning", layout_cov_shutter: "Roller shutter", layout_cov_blind: "Roller blind", layout_cov_venetian: "Venetian blind", layout_cov_raffstore: "Exterior venetian blind", layout_cov_pergola: "Bioclimatic pergola", layout_cov_awning: "Awning", layout_cov_curtain: "Curtain", curtain_opening: "Opens", curtain_center: "From the middle", curtain_left: "To the left", curtain_right: "To the right", cov_open: "Open", cov_closed: "Closed", cov_open_at: "Open {pct} %", cov_opening: "Opening", cov_closing: "Closing", cov_deployed: "Extended", cov_retracted: "Retracted", cov_deployed_at: "Extended {pct} %", cov_deploying: "Extending", cov_retracting: "Retracting", cov_louvers_open: "Louvers open", cov_louvers_closed: "Louvers closed", cov_louvers_at: "Louvers {pct} %", cov_louvers_opening: "Opening the louvers", cov_louvers_closing: "Closing the louvers", cov_position: "Position", cov_tilt: "Slats", cov_light: "Light", cov_open_btn: "Open", cov_close_btn: "Close", cover_color: "Colour (apron, slats, frame)", fabric_color: "Fabric colour", fabric_stripes: "Striped fabric", cov_c_white: "White", cov_c_grey: "Grey", cov_c_anthracite: "Anthracite", cov_c_black: "Black", cov_c_beige: "Beige", cov_c_wood: "Wood", cov_c_brown: "Brown", cov_f_ecru: "Ecru", cov_f_white: "White", cov_f_linen: "Linen", cov_f_grey: "Grey", cov_f_anthracite: "Anthracite", cov_f_blue: "Blue", cov_f_petrol: "Petrol blue", cov_f_terracotta: "Terracotta", cov_f_green: "Green", layout_ths_co2_eink: "CO\u2082 monitor, e-ink (Aranet4)", layout_ths_co2_box: "CO\u2082 monitor, LED bar (AirGradient)", layout_ths_co2_netatmo: "Netatmo indoor station", layout_ths_co2_netatmo_module: "Netatmo additional indoor module", layout_ths_switchbot_co2: "SwitchBot Meter Pro CO\u2082", layout_ths_switchbot_pro: "SwitchBot Meter Pro", layout_ths_switchbot_meter: "SwitchBot Meter", layout_ths_switchbot_plus: "SwitchBot Meter Plus", layout_ths_switchbot_outdoor: "SwitchBot Indoor/Outdoor Meter", ths_co2: "CO\u2082", co2_good: "Air is fine", co2_ventilate: "Ventilation advised", co2_poor: "Ventilate now", co2_warning: "Orange from (ppm)", co2_alert: "Red from (ppm)", netatmo_color: "Netatmo colour", ntm_aluminium: "Aluminium", ntm_sand: "Sand", ntm_mint: "Mint", ntm_graphite: "Graphite",
     type_fingerbot: "Finger bot (Fingerbot, SwitchBot Bot)", layout_fb_plus: "Fingerbot Plus (Tuya, Adaprox, MOES)", layout_fb_switchbot: "SwitchBot Bot", layout_fb_classic: "Fingerbot, first model", fingerbot_color: "Colour", fb_ready: "Ready", fb_pressing: "Pressing", fb_held: "Held down", fb_released: "Released", fb_charging: "Charging", fb_charged: "Charged", fb_low: "Low battery", fb_press: "Press", fb_charge: "Charge", fb_mode: "Mode", fb_m_click: "Press", fb_m_switch: "Switch", fb_m_program: "Program", fb_lower: "Down position", fb_upper: "Up position", fb_sustain: "Hold time", fb_reverse: "Reversed", fb_touch: "Touch button", fb_yes: "Yes", fb_no: "No", fb_last: "Last press",
     type_valve: "Shut-off valve (Aqara T1, Tuya)", layout_vlv_aqara: "Aqara Valve Controller T1", layout_vlv_tuya: "Tuya valve controller", vlv_open: "Open", vlv_closed: "Closed", vlv_opening: "Opening", vlv_closing: "Closing", valve_handle_color: "Handle colour", vlv_h_red: "Red", vlv_h_blue: "Blue", vlv_h_yellow: "Yellow", vlv_h_black: "Black",
     type_food_processor: "Kitchen robot (Thermomix)", type_gas_fireplace: "Gas fireplace", gf_burning: "Burning", gf_pilot_on: "Pilot on", gf_flame_height: "Flame height", gf_flame: "Flame sensor", gf_pilot: "Pilot light", gf_on: "On", gf_error: "Error", photo_label: "Your own photo", photo_upload: "Upload a photo", photo_remove: "Remove the photo", photo_hint: "Drag the photo to frame it, then put the dashed frame over the window: the cover moves inside it. Take the photo with the cover open.", photo_reset: "Frame again", photo_uploading: "Uploading\u2026", photo_error: "Couldn't load the photo", photo_add_area: "Add an area", photo_remove_area: "Remove this area", door_style_gate: "Swing gate", door_style_sliding_gate: "Sliding gate", det_gate_leaves: "Gate leaves", gate_leaves_1: "One leaf", gate_leaves_2: "Two leaves", det_gate_side: "Opens to", gate_side_left: "Left", gate_side_right: "Right", photo_hint_door: "Drag the photo to frame it, then put the dashed frame on the door, the window or the gate: it opens inside it. Take the photo shut. A garage door or a gate: take it open, it is drawn over the photo.", photo_hint_laundry: "Drag the photo to frame it, then put the dashed frame on the porthole: the drum turns inside it. Take the photo door shut, machine off.", photo_hint_screen: "Drag the photo to frame it, then put the dashed frame on the screen: the picture shows inside it. Take the photo screen off.", layout_fp_tm31: "Thermomix TM31", layout_fp_tm6: "Thermomix TM6", fp_off: "Off", fp_ready: "Ready", fp_mixing: "Mixing", fp_cooking: "Cooking",
@@ -3435,6 +3435,14 @@ function autoSuggest(hass, cfg, sectionsFor) {
     const match = fit.find((id) => re.test(bare(id))) || fit.find((id) => re.test(id));
     if (match) patch[field] = match;
   }
+  // ha-google-home puts a speaker's alarms and timers on a device of its
+  // own (#136): found by the speaker's name, and by their own attributes.
+  if (type === "speaker") {
+    const base = String(cfg.state_entity).split(".")[1] || "";
+    const own = (dom, attr, suffix) => Object.keys(hass.states).find((id) => id.startsWith(`${dom}.${base}`) && (attr ? (hass.states[id].attributes || {})[attr] !== undefined : id.endsWith(suffix)));
+    const found = { alarms_entity: own("sensor", "next_alarm_status"), timers_entity: own("sensor", "next_timer_status"), alarm_volume_entity: own("number", "", "_alarm_volume") };
+    for (const [f, id] of Object.entries(found)) if (id && !cfg[f] && allowed.has(f)) patch[f] = id;
+  }
   if (type === "network") Object.assign(patch, netSuggest(hass, cfg));
   // An entity already given a field of its own would only repeat itself.
   const takenIds = () => new Set(Object.values(patch).concat(Object.values(cfg)).flat());
@@ -5852,7 +5860,7 @@ const gateLeavesOf = (cfg) => (Number(cfg.gate_leaves) === 2 ? 2 : 1);
 const gateSideOf = (cfg) => (cfg.gate_side === "right" ? "right" : "left");
 // The window a contact sits on (HACF #176): one sash, two, a sliding window
 // or a small one; and the colour of its frame, white or anthracite.
-const WINDOW_STYLES = ["casement", "double", "sliding", "small"];
+const WINDOW_STYLES = ["casement", "double", "sliding", "small", "tilt"];
 const FRAME_COLORS = ["white", "anthracite"];
 // A finger bot's drawing (HACF #163), its colour, how long a press shows and
 // the power that means its plug is charging it.
@@ -6022,7 +6030,7 @@ const NT_ONLY_FIELDS = {
   food_processor: ["food_layout"],
   gas_fireplace: ["flame_entity", "flame_height_entity", "thermostat_entity", "pilot_entity"],
   fingerbot: ["fingerbot_layout", "fingerbot_color", "bot_mode_entity", "lower_entity", "upper_entity", "sustain_entity", "reverse_entity", "touch_entity"],
-  speaker: ["speaker_layout", "speaker_color"],
+  speaker: ["speaker_layout", "speaker_color", "alarms_entity", "timers_entity", "alarm_volume_entity"],
   console: ["console_layout", "game_entity", "playtime_entity", "playtime_left_entity"],
   streamer: ["streamer_layout", "app_entity"],
   climate_sensor: ["climate_sensor_layout", "co2_entity", "co2_warning", "co2_alert", "netatmo_color"],
@@ -6250,6 +6258,7 @@ function windowStyleOf(cfg) {
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""}`).toLowerCase();
   if (/sliding|coulissant|schiebe|schuif|corredera|scorrevole|de.?correr|skjut|skyve|skyde|przesuw|posuvn|tolo/.test(hay)) return "sliding";
   if (/double|deux.?battants|2.?vantaux|french|zweiflug|doppel|dos.?hojas|due.?ante|dubbel|duas.?folhas|dwuskrzyd|dvoukrid|ketszarnyu/.test(hay)) return "double";
+  if (/soufflet|abattant|hopper|tilt|kipp|basculant|abatible|uchyln|sklopn|bukoablak|bundhaengt|bundh.ngt|vippe/.test(hay)) return "tilt";
   if (/petite|small|klein|pequena|piccola|lucarne|vasistas|(^|[^a-z])wc([^a-z]|$)|toilet/.test(hay)) return "small";
   return "casement";
 }
@@ -6585,6 +6594,86 @@ function purifierFilterLines(hass, cfg, tr) {
   });
   return lines;
 }
+// A Google Home speaker's alarms and timers (#136), from the sensors of
+// ha-google-home, which sit on a device of their own. An alarm: its time, its
+// days and its label, its icon lit while it is set. A timer: its label or its
+// length, how much is left as a bar and a countdown the card ticks itself.
+// A tap arms the delete, a second one deletes.
+const SPK_LIST_MAX = 4;
+function spkWeekday(hass, d) {
+  try { return new Date(Date.UTC(2024, 0, d)).toLocaleDateString(timeLocale(hass), { weekday: "short", timeZone: "UTC" }); } catch (e) { return ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][d - 1]; }
+}
+// Days 1 (Monday) to 7: every day, a run of three or more as a range, else a list.
+function spkDays(hass, tr, rec) {
+  const days = [...new Set((Array.isArray(rec) ? rec : []).map(Number).filter((d) => d >= 1 && d <= 7))].sort((a, b) => a - b);
+  if (!days.length) return "";
+  if (days.length === 7) return tr(hass, "spk_every_day");
+  const runs = [];
+  for (const d of days) {
+    const last = runs[runs.length - 1];
+    if (last && d === last[1] + 1) last[1] = d; else runs.push([d, d]);
+  }
+  return runs.map(([a, b]) => (b - a >= 2 ? `${spkWeekday(hass, a)}\u2013${spkWeekday(hass, b)}` : a === b ? spkWeekday(hass, a) : `${spkWeekday(hass, a)}, ${spkWeekday(hass, b)}`)).join(", ");
+}
+function spkSeconds(v) {
+  const m = String(v || "").trim().match(/^(?:(\d+)\s*day[s]?,\s*)?(\d+):(\d{1,2}):(\d{1,2})(?:\.\d+)?$/);
+  if (m) return (Number(m[1] || 0) * 86400) + Number(m[2]) * 3600 + Number(m[3]) * 60 + Number(m[4]);
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+// A length as the timer was set: 15 min, 1 h 30, 45 s.
+function spkLength(s) {
+  if (!(s > 0)) return "";
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = Math.round(s % 60);
+  if (h) return m ? `${h} h ${String(m).padStart(2, "0")}` : `${h} h`;
+  if (m) return sec ? `${m} min ${sec} s` : `${m} min`;
+  return `${sec} s`;
+}
+// What is left, ticking: 9:51, 1:02:05.
+function spkCountdown(s) {
+  const v = Math.max(0, Math.round(s)), h = Math.floor(v / 3600), m = Math.floor((v % 3600) / 60), sec = v % 60;
+  return h ? `${h}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}` : `${m}:${String(sec).padStart(2, "0")}`;
+}
+function speakerAlarmsOf(hass, cfg, tr, now = Date.now()) {
+  const lines = [], sliders = [];
+  const listOf = (id, key) => {
+    const s = id ? stateObj(hass, id) : null;
+    const list = s && Array.isArray((s.attributes || {})[key]) ? s.attributes[key] : [];
+    return list.filter((x) => x && typeof x === "object").slice().sort((a, b) => Number(a.fire_time || 0) - Number(b.fire_time || 0)).slice(0, SPK_LIST_MAX);
+  };
+  for (const al of listOf(cfg.alarms_entity, "alarms")) {
+    const status = String(al.status || "set").toLowerCase();
+    const at = Number(al.fire_time) * 1000;
+    const time = Number.isFinite(at) && at > 0 ? clockTime(new Date(at), hass) : String(al.local_time || "").slice(11, 16);
+    let when = spkDays(hass, tr, al.recurrence);
+    if (!when && Number.isFinite(at) && at > 0) {
+      try { when = new Date(at).toLocaleDateString(timeLocale(hass), { weekday: "short", day: "numeric", month: "short" }); } catch (e) { when = ""; }
+    }
+    const ringing = status === "ringing", snoozed = status === "snoozed";
+    const value = [ringing ? tr(hass, "spk_ringing") : snoozed ? tr(hass, "spk_snoozed") : when, al.label ? String(al.label) : ""].filter(Boolean).join(" \u00b7 ");
+    lines.push({ key: `spk_alarm_${al.alarm_id || time}`, icon: ringing ? "mdi:alarm-light" : snoozed ? "mdi:alarm-snooze" : status === "inactive" ? "mdi:alarm-off" : "mdi:alarm",
+      label: time, value, entity: cfg.alarms_entity, wrap: true, warn: ringing, caution: snoozed, lit: status === "set", dim: status === "inactive",
+      del: al.alarm_id ? { service: "delete_alarm", entity: cfg.alarms_entity, id: { alarm_id: String(al.alarm_id) } } : null });
+  }
+  for (const tm of listOf(cfg.timers_entity, "timers")) {
+    const status = String(tm.status || "set").toLowerCase();
+    const dur = spkSeconds(tm.duration);
+    const paused = status === "paused", ringing = status === "ringing";
+    const fire = Number(tm.fire_time) * 1000;
+    const left = paused ? spkSeconds(tm.remaining) : Number.isFinite(fire) && fire > 0 ? (fire - now) / 1000 : null;
+    const label = tm.label ? String(tm.label) : spkLength(dur) || tr(hass, "section_timers");
+    const pct = dur > 0 && left !== null ? Math.max(0, Math.min(100, left / dur * 100)) : null;
+    lines.push({ key: `spk_timer_${tm.timer_id || label}`, icon: ringing ? "mdi:timer-alert-outline" : paused ? "mdi:timer-pause-outline" : "mdi:timer-outline",
+      label, value: ringing ? tr(hass, "spk_ringing") : left !== null ? spkCountdown(left) : "", entity: cfg.timers_entity, warn: ringing, caution: paused, lit: !paused && !ringing,
+      bar: pct, tick: !paused && !ringing && dur > 0 && fire > 0 ? { fire, dur } : null,
+      del: tm.timer_id ? { service: "delete_timer", entity: cfg.timers_entity, id: { timer_id: String(tm.timer_id) } } : null });
+  }
+  const vol = cfg.alarm_volume_entity ? stateObj(hass, cfg.alarm_volume_entity) : null;
+  if (vol && !HA_OFFLINE_STATES.includes(String(vol.state).toLowerCase()) && ["number", "input_number"].includes(domainOf(cfg.alarm_volume_entity))) {
+    sliders.push({ entity: cfg.alarm_volume_entity, icon: "mdi:alarm-note", label: tr(hass, "section_alarm_volume") });
+  }
+  return { lines, sliders };
+}
 function humDisplayOn(hass, id) {
   const s = id ? stateObj(hass, id) : null;
   if (!s || HA_OFFLINE_STATES.includes(String(s.state).toLowerCase())) return true;
@@ -6685,7 +6774,7 @@ const COVER_LAYOUTS = ["shutter", "blind", "venetian", "raffstore", "pergola", "
 const CURTAIN_OPENINGS = ["center", "left", "right"];
 const curtainOpeningOf = (cfg) => CURTAIN_OPENINGS.includes(cfg && cfg.curtain_opening) ? cfg.curtain_opening : "center";
 const COVER_COLORS = { white: "#eceff1", grey: "#a7adb3", anthracite: "#4a5056", black: "#2b2b2b", beige: "#d9c7a6", wood: "#b98a57", brown: "#7a5236" };
-const FABRIC_COLORS = { ecru: "#e9e3d6", linen: "#d8cab2", grey: "#9ea3a8", anthracite: "#55595e", blue: "#5f7d95", petrol: "#3f6f8f", terracotta: "#b5533c", green: "#4f7d4a" };
+const FABRIC_COLORS = { white: "#f7f7f4", ecru: "#e9e3d6", linen: "#d8cab2", grey: "#9ea3a8", anthracite: "#55595e", blue: "#5f7d95", petrol: "#3f6f8f", terracotta: "#b5533c", green: "#4f7d4a" };
 const cvColor = (v, table) => {
   const s = String(v || "").trim().toLowerCase();
   if (table[s]) return table[s];
@@ -7390,10 +7479,12 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
       src: a.source || a.app_name || "", sound: a.sound_mode || "", vol: numberOrNull(a.volume_level),
       title: a.media_title || "", artist: a.media_artist || "", clock: layout === "smart_clock" ? clockTime(new Date(), hass) : "",
       day: layout === "smart_clock" ? (() => { try { return new Date().toLocaleDateString(timeLocale(hass), { weekday: "long", day: "numeric", month: "long" }); } catch (e) { return ""; } })() : "" };
-    if (playing) return out("playing", "spk_playing", NT_COLORS.run, draw);
-    if (paused) return out("paused", "spk_paused", NT_COLORS.idle, draw);
-    if (offish) return out("off", "spk_off", NT_COLORS.off, draw);
-    return out("idle", "spk_idle", NT_COLORS.idle, draw);
+    // Its Google Home alarms and timers, and the alarm's volume (#136).
+    const ga = speakerAlarmsOf(hass, cfg, t);
+    lines.push(...ga.lines);
+    const res = playing ? out("playing", "spk_playing", NT_COLORS.run, draw) : paused ? out("paused", "spk_paused", NT_COLORS.idle, draw)
+      : offish ? out("off", "spk_off", NT_COLORS.off, draw) : out("idle", "spk_idle", NT_COLORS.idle, draw);
+    return ga.sliders.length ? { ...res, sliders: ga.sliders } : res;
   }
   if (type === "mobility") {
     // On its charger (#72): unplugged when the plug is off, charging while
@@ -9491,6 +9582,8 @@ class ApplianceCard extends HTMLElement {
     this._elapsedTimer = null;
     if (this._durationTimer) clearInterval(this._durationTimer);
     this._durationTimer = null;
+    if (this._tickTimer) clearInterval(this._tickTimer);
+    this._tickTimer = null;
     if (this._feedTimer) clearTimeout(this._feedTimer);
     this._feedTimer = null;
     if (this._offDelayTimer) clearTimeout(this._offDelayTimer);
@@ -9921,6 +10014,26 @@ class ApplianceCard extends HTMLElement {
     el.setAttribute("title", t(this._hass, "confirm_again"));
   }
 
+  // A tap on an alarm or a timer (#136): the first arms it, the second within
+  // three seconds deletes it.
+  _tapDelete(key) {
+    const del = this._dels && this._dels[key];
+    if (!del) return;
+    if (this._armedKey === key && Date.now() < this._armedUntil) {
+      this._disarm();
+      haptic("light");
+      this._hass.callService("google_home", del.service, { entity_id: del.entity, ...del.id, skip_refresh: false });
+    } else {
+      this._disarm();
+      haptic("selection");
+      this._armedKey = key;
+      this._armedUntil = Date.now() + CONFIRM_MS;
+      this._armTimer = setTimeout(() => { this._disarm(); this._lastCardHtml = undefined; this._render(); }, CONFIRM_MS);
+    }
+    this._lastCardHtml = undefined;
+    this._render();
+  }
+
   _disarm() {
     if (this._armTimer) clearTimeout(this._armTimer);
     this._armTimer = null;
@@ -9985,6 +10098,8 @@ class ApplianceCard extends HTMLElement {
     const cfg = this._config;
     const hass = localizedHass(this._hass, cfg);
     if (!hass || !cfg) return;
+    this._dels = {};
+    this._hasTick = false;
 
     const st = stateObj(hass, cfg.state_entity);
     const rawState = st ? st.state : "unknown";
@@ -13661,6 +13776,15 @@ class ApplianceCard extends HTMLElement {
         .info-line.warn { color: var(--error-color, #f44336); }
         .info-line.warn ha-icon { color: var(--error-color, #f44336); }
         .info-line.caution, .info-line.caution ha-icon { color: var(--warning-color, #ff9800); }
+        /* Alarms and timers (#136): a set one's icon lit, a disabled one
+           faded, a timer's bar between its label and its countdown. */
+        .info-line.lit ha-icon { color: var(--primary-color, #03a9f4); }
+        .info-line.timed .label { color: var(--primary-text-color, #1c1c1c); font-weight: 500; }
+        .info-line.dim { opacity: .55; }
+        .info-line.has-bar > span:last-child { margin-left: auto; font-variant-numeric: tabular-nums; }
+        .info-line .lbar { flex: 1 1 40px; min-width: 32px; height: 6px; border-radius: 3px; background: var(--divider-color, rgba(127,127,127,.25)); overflow: hidden; display: flex; justify-content: flex-end; }
+        .info-line .lbar i { display: block; height: 100%; background: var(--primary-color, #03a9f4); border-radius: 3px; }
+        .info-line.caution .lbar i { background: var(--warning-color, #ff9800); }
         .bar-row { margin-top: 4px; }
         .cmp-wrap + .bar-row { margin-top: 10px; }
         .bar-row.labelled { display: flex; align-items: center; gap: 6px; font-size: 0.85em; color: var(--secondary-text-color, #767676); }
@@ -13955,11 +14079,19 @@ class ApplianceCard extends HTMLElement {
       : "";
     const linesHtml = lines.length
       ? `<div class="info-lines${infoEntities.length > INFO_COMPACT_ABOVE ? " compact" : ""}${cfg.values_right ? " right" : ""}">${lines
-          .map((l) => ({ ...l, open: !l.menu && !!l.entity && entityUsable(hass, l.entity) }))
-          .map(
-            (l) =>
-              `<div class="info-line ${l.warn ? "warn" : l.caution ? "caution" : ""}${l.open || l.menu ? " clickable" : ""}${l.menu ? " has-menu" : ""}${l.wrap ? " wrap" : ""}${!l.wrap && !l.bare && l.value && String(l.value).length <= 14 ? " fit" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""}${l.menu ? ` data-line-menu="${l.menu}" aria-expanded="${this._lineMenu === l.menu}"` : ""} title="${esc(l.label)}"><ha-icon icon="${esc(l.icon)}"></ha-icon>${l.bare && l.value ? "" : `<span class="label">${esc(l.label)}</span>`}${l.value ? `<span>${esc(l.value)}</span>` : ""}${l.menu ? `<ha-icon class="chev" icon="mdi:chevron-${this._lineMenu === l.menu ? "up" : "down"}"></ha-icon>` : ""}</div>`
-          )
+          .map((l) => ({ ...l, open: !l.menu && !l.del && !!l.entity && entityUsable(hass, l.entity) }))
+          .map((l) => {
+            // A line that deletes (#136): a first tap arms it, red, a second
+            // one within three seconds deletes.
+            const delKey = l.del ? `del|${l.del.entity}|${Object.values(l.del.id).join("|")}` : "";
+            if (delKey) this._dels[delKey] = l.del;
+            const armed = !!delKey && this._armedKey === delKey && Date.now() < this._armedUntil;
+            const value = armed ? t(hass, "spk_tap_delete") : l.value;
+            const tick = l.tick ? ` data-fire="${l.tick.fire}" data-dur="${l.tick.dur}"` : "";
+            if (tick) this._hasTick = true;
+            const bar = l.bar !== undefined && l.bar !== null ? `<span class="lbar"><i${tick} style="width:${Math.round(l.bar * 10) / 10}%"></i></span>` : "";
+            return `<div class="info-line ${armed || l.warn ? "warn" : l.caution ? "caution" : ""}${l.open || l.menu || delKey ? " clickable" : ""}${l.menu ? " has-menu" : ""}${l.wrap && !bar ? " wrap" : ""}${l.lit ? " lit" : ""}${l.dim ? " dim" : ""}${l.del ? " timed" : ""}${armed ? " armed" : ""}${bar ? " has-bar" : ""}${!bar && !l.wrap && !l.bare && value && String(value).length <= 14 ? " fit" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""}${delKey ? ` data-del="${esc(delKey)}"` : ""}${l.menu ? ` data-line-menu="${l.menu}" aria-expanded="${this._lineMenu === l.menu}"` : ""} title="${esc(l.label)}"><ha-icon icon="${esc(armed ? "mdi:delete" : l.icon)}"></ha-icon>${l.bare && value ? "" : `<span class="label">${esc(l.label)}</span>`}${bar}${value ? `<span${!armed && tick ? ` class="cd"${tick}` : ""}>${esc(value)}</span>` : ""}${l.menu ? `<ha-icon class="chev" icon="mdi:chevron-${this._lineMenu === l.menu ? "up" : "down"}"></ha-icon>` : ""}</div>`;
+          })
           .join("")}${lineMenuHtml}</div>`
       : "";
 
@@ -14303,6 +14435,28 @@ class ApplianceCard extends HTMLElement {
         value: el.getAttribute("data-value"),
       }));
     });
+    // A Google Home alarm or timer (#136): the first tap arms its delete, a
+    // second one within three seconds asks the speaker to drop it.
+    this._root.querySelectorAll(".info-line[data-del]").forEach((el) => {
+      el.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        this._tapDelete(el.getAttribute("data-del"));
+      });
+    });
+    // A timer's countdown and bar move every second without a redraw.
+    if (this._tickTimer) clearInterval(this._tickTimer);
+    this._tickTimer = null;
+    if (!this._inert && this._hasTick) {
+      this._tickTimer = setInterval(() => {
+        if (!this._root) return;
+        const now = Date.now();
+        this._root.querySelectorAll("[data-fire]").forEach((el) => {
+          const left = (Number(el.getAttribute("data-fire")) - now) / 1000, dur = Number(el.getAttribute("data-dur"));
+          if (el.tagName === "I") el.style.width = `${Math.max(0, Math.min(100, left / dur * 100))}%`;
+          else el.textContent = spkCountdown(left);
+        });
+      }, 1000);
+    }
     this._root.querySelectorAll(".info-line[data-more], .alert-row[data-more], .alerts-pill[data-more], .door-badge[data-more], .batt-badge[data-more], .cam-badge[data-more]").forEach((el) => {
       el.addEventListener("click", (ev) => {
         ev.stopPropagation();

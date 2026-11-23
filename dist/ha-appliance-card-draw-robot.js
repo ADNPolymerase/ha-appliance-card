@@ -1523,6 +1523,27 @@ ${move(-26, 0, sash(38, 8, 34, 102) + shine(44, 14, 18))}
     stripY = 22; stripH = 76; mdx = -16;
     leaf = `<rect x="4" y="2" width="90" height="114" fill="#e9e3d8"/><rect x="4" y="2" width="90" height="114" fill="url(#${dk})" opacity=".06"/>
 <rect x="24" y="22" width="48" height="76" fill="${sf}" stroke="${ss}" stroke-width=".5"/>${turning(26, 26, 46, 68, shine(32, 30, 20) + hdl(65, 76, 10))}`;
+  } else if (ws === "tilt") {
+    // A wide, low window hinged at the bottom (#137): open, its top tips in
+    // towards the room, so it comes down and looks wider, the sky showing
+    // over it, and two stays hold it on the sides.
+    stripY = 24; stripH = 46; mdx = 2; mdy = 8;
+    const x0 = 9, x1 = 69, y0 = 33, y1 = 65, cx = (x0 + x1) / 2, drop = 13, spread = 3.5;
+    const P = (px, py, f) => {
+      const v = (y1 - py) / (y1 - y0);
+      return `${n2(px + (px - cx) / ((x1 - x0) / 2) * spread * v * f)} ${n2(py + drop * v * f)}`;
+    };
+    const R = (a, b, cc, d, attrs) => {
+      const list = [[a, b], [cc, b], [cc, d], [a, d]];
+      const pts = (f) => list.map(([px, py]) => P(px, py, f)).join(" ");
+      return `<polygon points="${pts(F)}" ${attrs}>${anim("points", pts(1 - F), pts(F))}</polygon>`;
+    };
+    const stay = (x, sx) => `<path d="M${x} ${y0 + 4} L${n2(x + sx)} ${y0 + drop}" stroke="#9aa3ab" stroke-width="1.1" stroke-linecap="round"/>`;
+    leaf = `<rect x="4" y="2" width="90" height="114" fill="#e9e3d8"/><rect x="4" y="2" width="90" height="114" fill="url(#${dk})" opacity=".06"/>
+<rect x="5" y="29" width="68" height="40" fill="${sf}" stroke="${ss}" stroke-width=".5"/><rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="url(#${sk})"/>
+<g opacity="${F}">${anim("opacity", 1 - F, F)}${stay(x0 + 1, -2.5)}${stay(x1 - 1, 2.5)}</g>
+${R(x0, y0, x1, y1, `fill="${sf}" stroke="${ss}" stroke-width=".7"`)}${R(x0 + 4, y0 + 4, x1 - 4, y1 - 4, `fill="url(#${gw})" stroke="${sg}" stroke-width=".5"`)}
+${shut(`<path d="M${x0 + 10} ${y0 + 15} L${x0 + 22} ${y0 + 7} M${x0 + 12} ${y0 + 23} L${x0 + 34} ${y0 + 8}" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect x="${cx - 5}" y="${y0 + 1.2}" width="10" height="2.4" rx="1.2" fill="#c9ccd0" stroke="#8e949a" stroke-width=".4"/>`)}`;
   } else if (ws) {
     // One sash.
     leaf = turning(10, 6, 62, 106, shine(22, 12, 28) + hdl(62, 56));

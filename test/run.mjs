@@ -15434,6 +15434,82 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
     check('purificateur : detection Levoit', one.filter_life_entity, 'sensor.cuisine_core_300s_series_duree_de_vie_du_filtre');
   }
 
+  // A white shade and a tilt-in window (#137).
+  {
+    const shade = build({ appliance_type: 'cover', cover_layout: 'blind', state_entity: 'cover.s', fabric_color: 'white' }, { 'cover.s': { state: 'open', attributes: { current_position: 40 } } }).html;
+    check('137 : toile blanche', /#f7f7f4/.test(shade), true);
+    const W = (state, more = {}) => build({ appliance_type: 'detector', state_entity: 'binary_sensor.w', ...more }, { 'binary_sensor.w': { state, attributes: { device_class: 'window' } } }).html;
+    check('137 : soufflet ferme, chassis a plat', /points="9 33 69 33 69 65 9 65" fill="#f3f5f7"/.test(W('off', { window_style: 'tilt' })), true);
+    check('137 : soufflet ouvert, le haut bascule vers la piece', /points="5.5 46 72.5 46 69 65 9 65" fill="#f3f5f7"/.test(W('on', { window_style: 'tilt' })), true);
+    check('137 : soufflet lu dans le nom', /points="9 33 69 33 69 65 9 65"/.test(W('off', { name: 'Fenetre a soufflet WC' })), true);
+    check('137 : kippfenster lu dans le nom', /points="9 33 69 33 69 65 9 65"/.test(W('off', { name: 'Kippfenster Bad' })), true);
+    check('137 : une petite fenetre reste petite', /points="9 33 69 33 69 65 9 65"/.test(W('off', { name: 'Petite fenetre WC' })), false);
+    for (const v of ['off', 'on']) check(`137 : soufflet ${v}, ni NaN ni undefined`, /NaN|undefined/.test(W(v, { window_style: 'tilt' })), false);
+  }
+
+  // A Google Home speaker's alarms, timers and alarm volume (#136).
+  {
+    const now = Math.floor(Date.now() / 1000);
+    const AL = (alarms) => ({ state: 'x', attributes: { device_class: 'timestamp', next_alarm_status: 'set', alarms } });
+    const TM = (timers) => ({ state: 'x', attributes: { device_class: 'timestamp', next_timer_status: 'set', timers } });
+    const SP = (ents, more = {}) => build({ appliance_type: 'speaker', state_entity: 'media_player.clock', alarms_entity: 'sensor.clock_alarms', timers_entity: 'sensor.clock_timers', alarm_volume_entity: 'number.clock_alarm_volume', ...more },
+      { 'media_player.clock': { state: 'idle', attributes: {} }, ...ents });
+    const line = (h, label) => { const i = h.indexOf(`<span class="label">${label}</span>`); if (i < 0) return null; const a = h.lastIndexOf('<div class="info-line', i); return h.slice(a, h.indexOf('</div>', i) + 6); };
+    const set = SP({ 'sensor.clock_alarms': AL([
+      { alarm_id: 'alarm/b', fire_time: now + 7200, status: 'set', label: 'Tennis', recurrence: [5] },
+      { alarm_id: 'alarm/a', fire_time: now + 3600, status: 'set', label: null, recurrence: [1, 2, 3, 4] },
+      { alarm_id: 'alarm/c', fire_time: now + 9000, status: 'inactive', label: null, recurrence: [6, 7] },
+      { alarm_id: 'alarm/d', fire_time: now + 9600, status: 'set', label: null, recurrence: [1, 2, 3, 4, 5, 6, 7] }]) }).html;
+    const labels = [...set.matchAll(/class="info-line[^"]*timed[^"]*"[^>]*><ha-icon[^>]*><\/ha-icon><span class="label">([^<]*)</g)].map((m) => m[1]);
+    check('136 : alarmes rangees par heure', labels.length, 4);
+    const first = line(set, labels[0]);
+    check('136 : lun. a jeu. en plage', /Mon–Thu/.test(first), true);
+    check('136 : alarme reglee, icone allumee', /\blit\b/.test(first) && /mdi:alarm"/.test(first), true);
+    check('136 : jour seul et etiquette', /Fri · Tennis/.test(line(set, labels[1])), true);
+    check('136 : alarme desactivee, estompee', /\bdim\b/.test(line(set, labels[2])) && /mdi:alarm-off/.test(line(set, labels[2])), true);
+    check('136 : deux jours, en liste', /Sat, Sun/.test(line(set, labels[2])), true);
+    check('136 : tous les jours', /Every day/.test(line(set, labels[3])), true);
+    check('136 : une alarme ne s ouvre pas en fiche', /data-more=/.test(first), false);
+    const ring = SP({ 'sensor.clock_alarms': AL([{ alarm_id: 'alarm/r', fire_time: now, status: 'ringing', recurrence: [] }]) }).html;
+    check('136 : alarme qui sonne, en rouge', /info-line warn[^"]*timed/.test(ring) && /Ringing/.test(ring), true);
+    const tm = SP({ 'sensor.clock_timers': TM([
+      { timer_id: 'timer/1', fire_time: now + 450, duration: '0:15:00', remaining: null, status: 'set', label: null },
+      { timer_id: 'timer/2', fire_time: 0, duration: '0:05:00', remaining: '0:02:30', status: 'paused', label: 'Pasta' }]) }).html;
+    const t15 = line(tm, '15 min');
+    check('136 : minuteur nomme par sa duree', !!t15, true);
+    check('136 : barre a moitie', /<span class="lbar"><i data-fire="\d+" data-dur="900" style="width:(49\.\d|50)%"><\/i><\/span>/.test(t15 || ''), true);
+    check('136 : compte a rebours', /class="cd" data-fire="\d+" data-dur="900">7:(29|30)</.test(t15 || ''), true);
+    const pasta = line(tm, 'Pasta') || '';
+    check('136 : minuteur en pause, orange et fige', /caution/.test(pasta) && />2:30</.test(pasta) && !/data-fire/.test(pasta), true);
+    check('136 : en pause, la barre suit le reste', /width:50%/.test(pasta), true);
+    check('136 : pas de minuterie sans minuteur qui tourne', SP({}).card._hasTick, false);
+    check('136 : minuterie des qu un minuteur tourne', build({ appliance_type: 'speaker', state_entity: 'media_player.clock', timers_entity: 'sensor.clock_timers' }, { 'media_player.clock': { state: 'idle', attributes: {} }, 'sensor.clock_timers': TM([{ timer_id: 'timer/1', fire_time: now + 60, duration: '0:01:30', status: 'set' }]) }).card._hasTick, true);
+    check('136 : capteur indisponible, aucune ligne', /class="info-line[^"]*\btimed\b/.test(SP({ 'sensor.clock_alarms': { state: 'unavailable', attributes: { next_alarm_status: 'none' } } }).html), false);
+    check('136 : volume des alarmes en curseur', /data-slider="number.clock_alarm_volume"/.test(SP({ 'number.clock_alarm_volume': { state: '50', attributes: { min: 0, max: 100, step: 1, unit_of_measurement: '%' } } }).html), true);
+    check('136 : pas de curseur sans entite', /data-slider=/.test(SP({}, { alarm_volume_entity: undefined }).html), false);
+    // The delete: a first tap arms, a second one calls google_home.
+    const calls = [];
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'speaker', state_entity: 'media_player.clock', alarms_entity: 'sensor.clock_alarms' });
+    c._hass = { ...HASS({ 'media_player.clock': { state: 'idle', attributes: {} }, 'sensor.clock_alarms': AL([{ alarm_id: 'alarm/a', fire_time: now + 3600, status: 'set', recurrence: [1] }]) }), callService: (d, sv, data) => calls.push({ d, sv, data }) };
+    c._render();
+    const key = Object.keys(c._dels)[0];
+    c._tapDelete(key);
+    check('136 : premier appui, la ligne s arme', /info-line warn[^"]*armed/.test(markup(c)) && /Tap again to delete/.test(markup(c)) && calls.length === 0, true);
+    c._tapDelete(key);
+    check('136 : second appui, l alarme est supprimee', JSON.stringify(calls[0]), JSON.stringify({ d: 'google_home', sv: 'delete_alarm', data: { entity_id: 'sensor.clock_alarms', alarm_id: 'alarm/a', skip_refresh: false } }));
+    c._disarm();
+    // The editor finds them by the speaker's name, on their own device.
+    const ed = new Editor();
+    ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'speaker', state_entity: 'media_player.bedroom_clock' });
+    ed.hass = { ...HASS({ 'media_player.bedroom_clock': { state: 'idle', attributes: {} }, 'sensor.bedroom_clock_alarms': AL([]), 'sensor.bedroom_clock_timers': TM([]),
+      'number.bedroom_clock_alarm_volume': { state: '50', attributes: {} }, 'sensor.kitchen_alarms': AL([]) }), entities: { 'media_player.bedroom_clock': { device_id: 'cast' } } };
+    const sug = ed.events.at(-1)?.detail?.config || {};
+    check('136 : editeur, alarmes trouvees', sug.alarms_entity, 'sensor.bedroom_clock_alarms');
+    check('136 : editeur, minuteurs trouves', sug.timers_entity, 'sensor.bedroom_clock_timers');
+    check('136 : editeur, volume trouve', sug.alarm_volume_entity, 'number.bedroom_clock_alarm_volume');
+  }
+
   // A gas fireplace (#130).
   const GF =(more, ents) => build({ appliance_type: 'gas_fireplace', state_entity: 'switch.f', ...more }, { 'switch.f': { state: 'off', attributes: {} }, ...ents });
   const gfOn = GF({ flame_height_entity: 'number.h', fan_entity: 'fan.v', light_entity: 'light.l', thermostat_entity: 'climate.t' }, { 'switch.f': { state: 'on', attributes: {} }, 'number.h': { state: '4', attributes: {} }, 'fan.v': { state: 'on', attributes: { percentage: 50 } }, 'light.l': { state: 'on', attributes: { brightness: 128 } }, 'climate.t': { state: 'heat', attributes: { temperature: 72, current_temperature: 68, temperature_unit: '\u00b0F' } } });

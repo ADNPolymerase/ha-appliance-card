@@ -98,6 +98,11 @@ const SECTIONS = [
   { field: "display_entity", types: ["air_purifier"], labelKey: "section_screen", includeDomains: ["sensor", "number"] },
   { field: "humidifier_entity", types: ["air_purifier"], labelKey: "section_humidifier", includeDomains: ["humidifier"] },
   { field: "deep_clean_entity", types: ["air_purifier"], labelKey: "pf_deep_clean", includeDomains: ["sensor"], when: purifierHasTank },
+  // A Google Home speaker's alarms, timers and alarm volume (#136): sensors
+  // of ha-google-home, on a device of their own, so picked by hand.
+  { field: "alarms_entity", types: ["speaker"], labelKey: "section_alarms", includeDomains: ["sensor"] },
+  { field: "timers_entity", types: ["speaker"], labelKey: "section_timers", includeDomains: ["sensor"] },
+  { field: "alarm_volume_entity", types: ["speaker"], labelKey: "section_alarm_volume", includeDomains: ["number", "input_number"] },
   // A screen: the players that show something on it, and on a computer the
   // lock of its session.
   { field: "media_entity", types: ["screen"], labelKey: "section_media", includeDomains: ["media_player"] },

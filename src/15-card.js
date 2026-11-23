@@ -267,6 +267,8 @@ class ApplianceCard extends HTMLElement {
     this._elapsedTimer = null;
     if (this._durationTimer) clearInterval(this._durationTimer);
     this._durationTimer = null;
+    if (this._tickTimer) clearInterval(this._tickTimer);
+    this._tickTimer = null;
     if (this._feedTimer) clearTimeout(this._feedTimer);
     this._feedTimer = null;
     if (this._offDelayTimer) clearTimeout(this._offDelayTimer);
@@ -697,6 +699,26 @@ class ApplianceCard extends HTMLElement {
     el.setAttribute("title", t(this._hass, "confirm_again"));
   }
 
+  // A tap on an alarm or a timer (#136): the first arms it, the second within
+  // three seconds deletes it.
+  _tapDelete(key) {
+    const del = this._dels && this._dels[key];
+    if (!del) return;
+    if (this._armedKey === key && Date.now() < this._armedUntil) {
+      this._disarm();
+      haptic("light");
+      this._hass.callService("google_home", del.service, { entity_id: del.entity, ...del.id, skip_refresh: false });
+    } else {
+      this._disarm();
+      haptic("selection");
+      this._armedKey = key;
+      this._armedUntil = Date.now() + CONFIRM_MS;
+      this._armTimer = setTimeout(() => { this._disarm(); this._lastCardHtml = undefined; this._render(); }, CONFIRM_MS);
+    }
+    this._lastCardHtml = undefined;
+    this._render();
+  }
+
   _disarm() {
     if (this._armTimer) clearTimeout(this._armTimer);
     this._armTimer = null;
@@ -761,6 +783,8 @@ class ApplianceCard extends HTMLElement {
     const cfg = this._config;
     const hass = localizedHass(this._hass, cfg);
     if (!hass || !cfg) return;
+    this._dels = {};
+    this._hasTick = false;
 
     const st = stateObj(hass, cfg.state_entity);
     const rawState = st ? st.state : "unknown";
@@ -4437,6 +4461,15 @@ class ApplianceCard extends HTMLElement {
         .info-line.warn { color: var(--error-color, #f44336); }
         .info-line.warn ha-icon { color: var(--error-color, #f44336); }
         .info-line.caution, .info-line.caution ha-icon { color: var(--warning-color, #ff9800); }
+        /* Alarms and timers (#136): a set one's icon lit, a disabled one
+           faded, a timer's bar between its label and its countdown. */
+        .info-line.lit ha-icon { color: var(--primary-color, #03a9f4); }
+        .info-line.timed .label { color: var(--primary-text-color, #1c1c1c); font-weight: 500; }
+        .info-line.dim { opacity: .55; }
+        .info-line.has-bar > span:last-child { margin-left: auto; font-variant-numeric: tabular-nums; }
+        .info-line .lbar { flex: 1 1 40px; min-width: 32px; height: 6px; border-radius: 3px; background: var(--divider-color, rgba(127,127,127,.25)); overflow: hidden; display: flex; justify-content: flex-end; }
+        .info-line .lbar i { display: block; height: 100%; background: var(--primary-color, #03a9f4); border-radius: 3px; }
+        .info-line.caution .lbar i { background: var(--warning-color, #ff9800); }
         .bar-row { margin-top: 4px; }
         .cmp-wrap + .bar-row { margin-top: 10px; }
         .bar-row.labelled { display: flex; align-items: center; gap: 6px; font-size: 0.85em; color: var(--secondary-text-color, #767676); }
@@ -4731,11 +4764,19 @@ class ApplianceCard extends HTMLElement {
       : "";
     const linesHtml = lines.length
       ? `<div class="info-lines${infoEntities.length > INFO_COMPACT_ABOVE ? " compact" : ""}${cfg.values_right ? " right" : ""}">${lines
-          .map((l) => ({ ...l, open: !l.menu && !!l.entity && entityUsable(hass, l.entity) }))
-          .map(
-            (l) =>
-              `<div class="info-line ${l.warn ? "warn" : l.caution ? "caution" : ""}${l.open || l.menu ? " clickable" : ""}${l.menu ? " has-menu" : ""}${l.wrap ? " wrap" : ""}${!l.wrap && !l.bare && l.value && String(l.value).length <= 14 ? " fit" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""}${l.menu ? ` data-line-menu="${l.menu}" aria-expanded="${this._lineMenu === l.menu}"` : ""} title="${esc(l.label)}"><ha-icon icon="${esc(l.icon)}"></ha-icon>${l.bare && l.value ? "" : `<span class="label">${esc(l.label)}</span>`}${l.value ? `<span>${esc(l.value)}</span>` : ""}${l.menu ? `<ha-icon class="chev" icon="mdi:chevron-${this._lineMenu === l.menu ? "up" : "down"}"></ha-icon>` : ""}</div>`
-          )
+          .map((l) => ({ ...l, open: !l.menu && !l.del && !!l.entity && entityUsable(hass, l.entity) }))
+          .map((l) => {
+            // A line that deletes (#136): a first tap arms it, red, a second
+            // one within three seconds deletes.
+            const delKey = l.del ? `del|${l.del.entity}|${Object.values(l.del.id).join("|")}` : "";
+            if (delKey) this._dels[delKey] = l.del;
+            const armed = !!delKey && this._armedKey === delKey && Date.now() < this._armedUntil;
+            const value = armed ? t(hass, "spk_tap_delete") : l.value;
+            const tick = l.tick ? ` data-fire="${l.tick.fire}" data-dur="${l.tick.dur}"` : "";
+            if (tick) this._hasTick = true;
+            const bar = l.bar !== undefined && l.bar !== null ? `<span class="lbar"><i${tick} style="width:${Math.round(l.bar * 10) / 10}%"></i></span>` : "";
+            return `<div class="info-line ${armed || l.warn ? "warn" : l.caution ? "caution" : ""}${l.open || l.menu || delKey ? " clickable" : ""}${l.menu ? " has-menu" : ""}${l.wrap && !bar ? " wrap" : ""}${l.lit ? " lit" : ""}${l.dim ? " dim" : ""}${l.del ? " timed" : ""}${armed ? " armed" : ""}${bar ? " has-bar" : ""}${!bar && !l.wrap && !l.bare && value && String(value).length <= 14 ? " fit" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""}${delKey ? ` data-del="${esc(delKey)}"` : ""}${l.menu ? ` data-line-menu="${l.menu}" aria-expanded="${this._lineMenu === l.menu}"` : ""} title="${esc(l.label)}"><ha-icon icon="${esc(armed ? "mdi:delete" : l.icon)}"></ha-icon>${l.bare && value ? "" : `<span class="label">${esc(l.label)}</span>`}${bar}${value ? `<span${!armed && tick ? ` class="cd"${tick}` : ""}>${esc(value)}</span>` : ""}${l.menu ? `<ha-icon class="chev" icon="mdi:chevron-${this._lineMenu === l.menu ? "up" : "down"}"></ha-icon>` : ""}</div>`;
+          })
           .join("")}${lineMenuHtml}</div>`
       : "";
 
@@ -5079,6 +5120,28 @@ class ApplianceCard extends HTMLElement {
         value: el.getAttribute("data-value"),
       }));
     });
+    // A Google Home alarm or timer (#136): the first tap arms its delete, a
+    // second one within three seconds asks the speaker to drop it.
+    this._root.querySelectorAll(".info-line[data-del]").forEach((el) => {
+      el.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        this._tapDelete(el.getAttribute("data-del"));
+      });
+    });
+    // A timer's countdown and bar move every second without a redraw.
+    if (this._tickTimer) clearInterval(this._tickTimer);
+    this._tickTimer = null;
+    if (!this._inert && this._hasTick) {
+      this._tickTimer = setInterval(() => {
+        if (!this._root) return;
+        const now = Date.now();
+        this._root.querySelectorAll("[data-fire]").forEach((el) => {
+          const left = (Number(el.getAttribute("data-fire")) - now) / 1000, dur = Number(el.getAttribute("data-dur"));
+          if (el.tagName === "I") el.style.width = `${Math.max(0, Math.min(100, left / dur * 100))}%`;
+          else el.textContent = spkCountdown(left);
+        });
+      }, 1000);
+    }
     this._root.querySelectorAll(".info-line[data-more], .alert-row[data-more], .alerts-pill[data-more], .door-badge[data-more], .batt-badge[data-more], .cam-badge[data-more]").forEach((el) => {
       el.addEventListener("click", (ev) => {
         ev.stopPropagation();

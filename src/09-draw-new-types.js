@@ -28,7 +28,7 @@ const gateLeavesOf = (cfg) => (Number(cfg.gate_leaves) === 2 ? 2 : 1);
 const gateSideOf = (cfg) => (cfg.gate_side === "right" ? "right" : "left");
 // The window a contact sits on (HACF #176): one sash, two, a sliding window
 // or a small one; and the colour of its frame, white or anthracite.
-const WINDOW_STYLES = ["casement", "double", "sliding", "small"];
+const WINDOW_STYLES = ["casement", "double", "sliding", "small", "tilt"];
 const FRAME_COLORS = ["white", "anthracite"];
 // A finger bot's drawing (HACF #163), its colour, how long a press shows and
 // the power that means its plug is charging it.
@@ -198,7 +198,7 @@ const NT_ONLY_FIELDS = {
   food_processor: ["food_layout"],
   gas_fireplace: ["flame_entity", "flame_height_entity", "thermostat_entity", "pilot_entity"],
   fingerbot: ["fingerbot_layout", "fingerbot_color", "bot_mode_entity", "lower_entity", "upper_entity", "sustain_entity", "reverse_entity", "touch_entity"],
-  speaker: ["speaker_layout", "speaker_color"],
+  speaker: ["speaker_layout", "speaker_color", "alarms_entity", "timers_entity", "alarm_volume_entity"],
   console: ["console_layout", "game_entity", "playtime_entity", "playtime_left_entity"],
   streamer: ["streamer_layout", "app_entity"],
   climate_sensor: ["climate_sensor_layout", "co2_entity", "co2_warning", "co2_alert", "netatmo_color"],
@@ -426,6 +426,7 @@ function windowStyleOf(cfg) {
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""}`).toLowerCase();
   if (/sliding|coulissant|schiebe|schuif|corredera|scorrevole|de.?correr|skjut|skyve|skyde|przesuw|posuvn|tolo/.test(hay)) return "sliding";
   if (/double|deux.?battants|2.?vantaux|french|zweiflug|doppel|dos.?hojas|due.?ante|dubbel|duas.?folhas|dwuskrzyd|dvoukrid|ketszarnyu/.test(hay)) return "double";
+  if (/soufflet|abattant|hopper|tilt|kipp|basculant|abatible|uchyln|sklopn|bukoablak|bundhaengt|bundh.ngt|vippe/.test(hay)) return "tilt";
   if (/petite|small|klein|pequena|piccola|lucarne|vasistas|(^|[^a-z])wc([^a-z]|$)|toilet/.test(hay)) return "small";
   return "casement";
 }
@@ -760,6 +761,86 @@ function purifierFilterLines(hass, cfg, tr) {
     }
   });
   return lines;
+}
+// A Google Home speaker's alarms and timers (#136), from the sensors of
+// ha-google-home, which sit on a device of their own. An alarm: its time, its
+// days and its label, its icon lit while it is set. A timer: its label or its
+// length, how much is left as a bar and a countdown the card ticks itself.
+// A tap arms the delete, a second one deletes.
+const SPK_LIST_MAX = 4;
+function spkWeekday(hass, d) {
+  try { return new Date(Date.UTC(2024, 0, d)).toLocaleDateString(timeLocale(hass), { weekday: "short", timeZone: "UTC" }); } catch (e) { return ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][d - 1]; }
+}
+// Days 1 (Monday) to 7: every day, a run of three or more as a range, else a list.
+function spkDays(hass, tr, rec) {
+  const days = [...new Set((Array.isArray(rec) ? rec : []).map(Number).filter((d) => d >= 1 && d <= 7))].sort((a, b) => a - b);
+  if (!days.length) return "";
+  if (days.length === 7) return tr(hass, "spk_every_day");
+  const runs = [];
+  for (const d of days) {
+    const last = runs[runs.length - 1];
+    if (last && d === last[1] + 1) last[1] = d; else runs.push([d, d]);
+  }
+  return runs.map(([a, b]) => (b - a >= 2 ? `${spkWeekday(hass, a)}\u2013${spkWeekday(hass, b)}` : a === b ? spkWeekday(hass, a) : `${spkWeekday(hass, a)}, ${spkWeekday(hass, b)}`)).join(", ");
+}
+function spkSeconds(v) {
+  const m = String(v || "").trim().match(/^(?:(\d+)\s*day[s]?,\s*)?(\d+):(\d{1,2}):(\d{1,2})(?:\.\d+)?$/);
+  if (m) return (Number(m[1] || 0) * 86400) + Number(m[2]) * 3600 + Number(m[3]) * 60 + Number(m[4]);
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+// A length as the timer was set: 15 min, 1 h 30, 45 s.
+function spkLength(s) {
+  if (!(s > 0)) return "";
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = Math.round(s % 60);
+  if (h) return m ? `${h} h ${String(m).padStart(2, "0")}` : `${h} h`;
+  if (m) return sec ? `${m} min ${sec} s` : `${m} min`;
+  return `${sec} s`;
+}
+// What is left, ticking: 9:51, 1:02:05.
+function spkCountdown(s) {
+  const v = Math.max(0, Math.round(s)), h = Math.floor(v / 3600), m = Math.floor((v % 3600) / 60), sec = v % 60;
+  return h ? `${h}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}` : `${m}:${String(sec).padStart(2, "0")}`;
+}
+function speakerAlarmsOf(hass, cfg, tr, now = Date.now()) {
+  const lines = [], sliders = [];
+  const listOf = (id, key) => {
+    const s = id ? stateObj(hass, id) : null;
+    const list = s && Array.isArray((s.attributes || {})[key]) ? s.attributes[key] : [];
+    return list.filter((x) => x && typeof x === "object").slice().sort((a, b) => Number(a.fire_time || 0) - Number(b.fire_time || 0)).slice(0, SPK_LIST_MAX);
+  };
+  for (const al of listOf(cfg.alarms_entity, "alarms")) {
+    const status = String(al.status || "set").toLowerCase();
+    const at = Number(al.fire_time) * 1000;
+    const time = Number.isFinite(at) && at > 0 ? clockTime(new Date(at), hass) : String(al.local_time || "").slice(11, 16);
+    let when = spkDays(hass, tr, al.recurrence);
+    if (!when && Number.isFinite(at) && at > 0) {
+      try { when = new Date(at).toLocaleDateString(timeLocale(hass), { weekday: "short", day: "numeric", month: "short" }); } catch (e) { when = ""; }
+    }
+    const ringing = status === "ringing", snoozed = status === "snoozed";
+    const value = [ringing ? tr(hass, "spk_ringing") : snoozed ? tr(hass, "spk_snoozed") : when, al.label ? String(al.label) : ""].filter(Boolean).join(" \u00b7 ");
+    lines.push({ key: `spk_alarm_${al.alarm_id || time}`, icon: ringing ? "mdi:alarm-light" : snoozed ? "mdi:alarm-snooze" : status === "inactive" ? "mdi:alarm-off" : "mdi:alarm",
+      label: time, value, entity: cfg.alarms_entity, wrap: true, warn: ringing, caution: snoozed, lit: status === "set", dim: status === "inactive",
+      del: al.alarm_id ? { service: "delete_alarm", entity: cfg.alarms_entity, id: { alarm_id: String(al.alarm_id) } } : null });
+  }
+  for (const tm of listOf(cfg.timers_entity, "timers")) {
+    const status = String(tm.status || "set").toLowerCase();
+    const dur = spkSeconds(tm.duration);
+    const paused = status === "paused", ringing = status === "ringing";
+    const fire = Number(tm.fire_time) * 1000;
+    const left = paused ? spkSeconds(tm.remaining) : Number.isFinite(fire) && fire > 0 ? (fire - now) / 1000 : null;
+    const label = tm.label ? String(tm.label) : spkLength(dur) || tr(hass, "section_timers");
+    const pct = dur > 0 && left !== null ? Math.max(0, Math.min(100, left / dur * 100)) : null;
+    lines.push({ key: `spk_timer_${tm.timer_id || label}`, icon: ringing ? "mdi:timer-alert-outline" : paused ? "mdi:timer-pause-outline" : "mdi:timer-outline",
+      label, value: ringing ? tr(hass, "spk_ringing") : left !== null ? spkCountdown(left) : "", entity: cfg.timers_entity, warn: ringing, caution: paused, lit: !paused && !ringing,
+      bar: pct, tick: !paused && !ringing && dur > 0 && fire > 0 ? { fire, dur } : null,
+      del: tm.timer_id ? { service: "delete_timer", entity: cfg.timers_entity, id: { timer_id: String(tm.timer_id) } } : null });
+  }
+  const vol = cfg.alarm_volume_entity ? stateObj(hass, cfg.alarm_volume_entity) : null;
+  if (vol && !HA_OFFLINE_STATES.includes(String(vol.state).toLowerCase()) && ["number", "input_number"].includes(domainOf(cfg.alarm_volume_entity))) {
+    sliders.push({ entity: cfg.alarm_volume_entity, icon: "mdi:alarm-note", label: tr(hass, "section_alarm_volume") });
+  }
+  return { lines, sliders };
 }
 function humDisplayOn(hass, id) {
   const s = id ? stateObj(hass, id) : null;
@@ -2290,6 +2371,27 @@ ${move(-26, 0, sash(38, 8, 34, 102) + shine(44, 14, 18))}
     stripY = 22; stripH = 76; mdx = -16;
     leaf = `<rect x="4" y="2" width="90" height="114" fill="#e9e3d8"/><rect x="4" y="2" width="90" height="114" fill="url(#${dk})" opacity=".06"/>
 <rect x="24" y="22" width="48" height="76" fill="${sf}" stroke="${ss}" stroke-width=".5"/>${turning(26, 26, 46, 68, shine(32, 30, 20) + hdl(65, 76, 10))}`;
+  } else if (ws === "tilt") {
+    // A wide, low window hinged at the bottom (#137): open, its top tips in
+    // towards the room, so it comes down and looks wider, the sky showing
+    // over it, and two stays hold it on the sides.
+    stripY = 24; stripH = 46; mdx = 2; mdy = 8;
+    const x0 = 9, x1 = 69, y0 = 33, y1 = 65, cx = (x0 + x1) / 2, drop = 13, spread = 3.5;
+    const P = (px, py, f) => {
+      const v = (y1 - py) / (y1 - y0);
+      return `${n2(px + (px - cx) / ((x1 - x0) / 2) * spread * v * f)} ${n2(py + drop * v * f)}`;
+    };
+    const R = (a, b, cc, d, attrs) => {
+      const list = [[a, b], [cc, b], [cc, d], [a, d]];
+      const pts = (f) => list.map(([px, py]) => P(px, py, f)).join(" ");
+      return `<polygon points="${pts(F)}" ${attrs}>${anim("points", pts(1 - F), pts(F))}</polygon>`;
+    };
+    const stay = (x, sx) => `<path d="M${x} ${y0 + 4} L${n2(x + sx)} ${y0 + drop}" stroke="#9aa3ab" stroke-width="1.1" stroke-linecap="round"/>`;
+    leaf = `<rect x="4" y="2" width="90" height="114" fill="#e9e3d8"/><rect x="4" y="2" width="90" height="114" fill="url(#${dk})" opacity=".06"/>
+<rect x="5" y="29" width="68" height="40" fill="${sf}" stroke="${ss}" stroke-width=".5"/><rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="url(#${sk})"/>
+<g opacity="${F}">${anim("opacity", 1 - F, F)}${stay(x0 + 1, -2.5)}${stay(x1 - 1, 2.5)}</g>
+${R(x0, y0, x1, y1, `fill="${sf}" stroke="${ss}" stroke-width=".7"`)}${R(x0 + 4, y0 + 4, x1 - 4, y1 - 4, `fill="url(#${gw})" stroke="${sg}" stroke-width=".5"`)}
+${shut(`<path d="M${x0 + 10} ${y0 + 15} L${x0 + 22} ${y0 + 7} M${x0 + 12} ${y0 + 23} L${x0 + 34} ${y0 + 8}" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect x="${cx - 5}" y="${y0 + 1.2}" width="10" height="2.4" rx="1.2" fill="#c9ccd0" stroke="#8e949a" stroke-width=".4"/>`)}`;
   } else if (ws) {
     // One sash.
     leaf = turning(10, 6, 62, 106, shine(22, 12, 28) + hdl(62, 56));
@@ -4620,7 +4722,7 @@ const COVER_LAYOUTS = ["shutter", "blind", "venetian", "raffstore", "pergola", "
 const CURTAIN_OPENINGS = ["center", "left", "right"];
 const curtainOpeningOf = (cfg) => CURTAIN_OPENINGS.includes(cfg && cfg.curtain_opening) ? cfg.curtain_opening : "center";
 const COVER_COLORS = { white: "#eceff1", grey: "#a7adb3", anthracite: "#4a5056", black: "#2b2b2b", beige: "#d9c7a6", wood: "#b98a57", brown: "#7a5236" };
-const FABRIC_COLORS = { ecru: "#e9e3d6", linen: "#d8cab2", grey: "#9ea3a8", anthracite: "#55595e", blue: "#5f7d95", petrol: "#3f6f8f", terracotta: "#b5533c", green: "#4f7d4a" };
+const FABRIC_COLORS = { white: "#f7f7f4", ecru: "#e9e3d6", linen: "#d8cab2", grey: "#9ea3a8", anthracite: "#55595e", blue: "#5f7d95", petrol: "#3f6f8f", terracotta: "#b5533c", green: "#4f7d4a" };
 const cvColor = (v, table) => {
   const s = String(v || "").trim().toLowerCase();
   if (table[s]) return table[s];
@@ -6233,10 +6335,12 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
       src: a.source || a.app_name || "", sound: a.sound_mode || "", vol: numberOrNull(a.volume_level),
       title: a.media_title || "", artist: a.media_artist || "", clock: layout === "smart_clock" ? clockTime(new Date(), hass) : "",
       day: layout === "smart_clock" ? (() => { try { return new Date().toLocaleDateString(timeLocale(hass), { weekday: "long", day: "numeric", month: "long" }); } catch (e) { return ""; } })() : "" };
-    if (playing) return out("playing", "spk_playing", NT_COLORS.run, draw);
-    if (paused) return out("paused", "spk_paused", NT_COLORS.idle, draw);
-    if (offish) return out("off", "spk_off", NT_COLORS.off, draw);
-    return out("idle", "spk_idle", NT_COLORS.idle, draw);
+    // Its Google Home alarms and timers, and the alarm's volume (#136).
+    const ga = speakerAlarmsOf(hass, cfg, t);
+    lines.push(...ga.lines);
+    const res = playing ? out("playing", "spk_playing", NT_COLORS.run, draw) : paused ? out("paused", "spk_paused", NT_COLORS.idle, draw)
+      : offish ? out("off", "spk_off", NT_COLORS.off, draw) : out("idle", "spk_idle", NT_COLORS.idle, draw);
+    return ga.sliders.length ? { ...res, sliders: ga.sliders } : res;
   }
   if (type === "mobility") {
     // On its charger (#72): unplugged when the plug is off, charging while

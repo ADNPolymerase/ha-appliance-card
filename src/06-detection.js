@@ -686,6 +686,14 @@ function autoSuggest(hass, cfg, sectionsFor) {
     const match = fit.find((id) => re.test(bare(id))) || fit.find((id) => re.test(id));
     if (match) patch[field] = match;
   }
+  // ha-google-home puts a speaker's alarms and timers on a device of its
+  // own (#136): found by the speaker's name, and by their own attributes.
+  if (type === "speaker") {
+    const base = String(cfg.state_entity).split(".")[1] || "";
+    const own = (dom, attr, suffix) => Object.keys(hass.states).find((id) => id.startsWith(`${dom}.${base}`) && (attr ? (hass.states[id].attributes || {})[attr] !== undefined : id.endsWith(suffix)));
+    const found = { alarms_entity: own("sensor", "next_alarm_status"), timers_entity: own("sensor", "next_timer_status"), alarm_volume_entity: own("number", "", "_alarm_volume") };
+    for (const [f, id] of Object.entries(found)) if (id && !cfg[f] && allowed.has(f)) patch[f] = id;
+  }
   if (type === "network") Object.assign(patch, netSuggest(hass, cfg));
   // An entity already given a field of its own would only repeat itself.
   const takenIds = () => new Set(Object.values(patch).concat(Object.values(cfg)).flat());

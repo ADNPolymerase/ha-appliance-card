@@ -1873,6 +1873,21 @@ Object.assign(EXTRA, {
   wiim_silver: spkCard(L("Kitchen", "Cuisine"), "wiim_amp", "idle", { volume_level: .3 }, "silver"),
   clock_idle: spkCard(L("Bedroom", "Chambre"), "smart_clock", "idle", {}),
   clock_play: spkCard(L("Bedroom", "Chambre"), "smart_clock", "playing", { media_title: "Morning Jazz", media_artist: "Radio", volume_level: .3 }),
+  // A Google Home clock's alarms, timers and alarm volume (#136).
+  clock_alarms: () => {
+    const now = Math.floor(Date.now() / 1000);
+    return card({ name: L("Bedroom", "Chambre"), appliance_type: "speaker", speaker_layout: "smart_clock", state_entity: "media_player.spk_clock_alarms",
+      alarms_entity: "sensor.clock_alarms", timers_entity: "sensor.clock_timers", alarm_volume_entity: "number.clock_alarm_volume" }, [
+      st("media_player.spk_clock_alarms", "idle", {}),
+      st("sensor.clock_alarms", "x", { next_alarm_status: "set", alarms: [
+        { alarm_id: "alarm/1", fire_time: now + 16 * 3600, status: "set", label: null, recurrence: [1, 2, 3, 4, 5] },
+        { alarm_id: "alarm/2", fire_time: now + 40 * 3600, status: "inactive", label: L("Tennis", "Tennis"), recurrence: [6] }] }),
+      st("sensor.clock_timers", "x", { next_timer_status: "set", timers: [
+        { timer_id: "timer/1", fire_time: now + 412, duration: "0:15:00", remaining: null, status: "set", label: null },
+        { timer_id: "timer/2", fire_time: now + 1503, duration: "0:30:00", remaining: null, status: "set", label: L("Pasta", "P\u00e2tes") }] }),
+      st("number.clock_alarm_volume", 50, { min: 0, max: 100, step: 1, unit_of_measurement: "%" }),
+    ]);
+  },
   mini_pc: () => card({ name: L("Homelab", "Homelab"), appliance_type: "network", network_layout: "mini_pc", state_entity: "binary_sensor.mpc_ping", cpu_entity: "sensor.mpc_cpu" }, [st("binary_sensor.mpc_ping", "on"), st("sensor.mpc_cpu", 18, { unit_of_measurement: "%" })]),
   mini_pc_busy: () => card({ name: L("Proxmox", "Proxmox"), appliance_type: "network", network_layout: "mini_pc", state_entity: "binary_sensor.mpc2_ping", cpu_entity: "sensor.mpc2_cpu" }, [st("binary_sensor.mpc2_ping", "on"), st("sensor.mpc2_cpu", 91, { unit_of_measurement: "%" })]),
   denon_on: spkCard(L("Home cinema", "Home cin\u00e9ma"), "denon_avr", "playing", { source: "Blu-ray", sound_mode: "Dolby Atmos", volume_level: .55, media_title: "Dune" }),
@@ -1889,6 +1904,8 @@ Object.assign(EXTRA, {
   win_sliding_open: detCard(L("Sliding window", "Fen\u00eatre coulissante"), "door", true, { window_style: "sliding", frame_color: "anthracite" }),
   win_small: detCard(L("Bathroom", "Salle de bain"), "door", false, { window_style: "small" }),
   win_small_open: detCard(L("Bathroom", "Salle de bain"), "door", true, { window_style: "small" }),
+  win_tilt: detCard(L("Basement window", "Soupirail"), "door", false, { window_style: "tilt" }),
+  win_tilt_open: detCard(L("Basement window", "Soupirail"), "door", true, { window_style: "tilt" }),
   win_vibration: detCard(L("Living room window", "Fen\u00eatre salon"), "door", false, { window_style: "double", vibration_entity: "binary_sensor.win_vib" }, [st("binary_sensor.win_vib", "on", { device_class: "vibration" })]),
   win_glass_break: detCard(L("Patio window", "Fen\u00eatre terrasse"), "door", false, { window_style: "casement", frame_color: "anthracite", glass_break_entity: "binary_sensor.win_gb", vibration_entity: "binary_sensor.win_vib2" }, [st("binary_sensor.win_gb", "on", {}), st("binary_sensor.win_vib2", "off", {})]),
   door_garage: detCard(L("Garage door", "Porte de garage"), "door", false, { door_style: "garage" }),
@@ -2004,8 +2021,8 @@ function liveGallery() {
     [L("Your own photo (HACF #165)", "Votre photo (HACF #165)"), [EXTRA.photo_shutter, EXTRA.photo_garage, EXTRA.photo_gate, EXTRA.photo_washer, EXTRA.photo_tv], "new"],
     [L("Gates", "Portails"), [EXTRA.gate_swing, EXTRA.gate_swing_open, EXTRA.gate_white, EXTRA.gate_white_open], "new"],
     [L("Gas fireplace", "Chemin\u00e9e au gaz"), [EXTRA.fire_on, EXTRA.fire_high, EXTRA.fire_pilot, EXTRA.fire_lights]],
-    [L("Clock, WiiM amp, AV receiver, mini PC", "R\u00e9veil, ampli WiiM, ampli A/V, mini PC"), [EXTRA.clock_idle, EXTRA.clock_play, EXTRA.wiim_on, EXTRA.wiim_silver, EXTRA.avr_on, EXTRA.mini_pc, EXTRA.mini_pc_busy]],
-    [L("Windows and garage door", "Fen\u00eatres et porte de garage"), [EXTRA.win_casement, EXTRA.win_casement_open, EXTRA.win_double, EXTRA.win_double_open, EXTRA.win_sliding, EXTRA.win_sliding_open, EXTRA.win_small, EXTRA.win_small_open, EXTRA.win_vibration, EXTRA.win_glass_break, EXTRA.door_garage, EXTRA.door_garage_open, EXTRA.door_pocket, EXTRA.door_pocket_open]],
+    [L("Clock, WiiM amp, AV receiver, mini PC", "R\u00e9veil, ampli WiiM, ampli A/V, mini PC"), [EXTRA.clock_idle, EXTRA.clock_play, EXTRA.clock_alarms, EXTRA.wiim_on, EXTRA.wiim_silver, EXTRA.avr_on, EXTRA.mini_pc, EXTRA.mini_pc_busy]],
+    [L("Windows and garage door", "Fen\u00eatres et porte de garage"), [EXTRA.win_casement, EXTRA.win_casement_open, EXTRA.win_double, EXTRA.win_double_open, EXTRA.win_sliding, EXTRA.win_sliding_open, EXTRA.win_small, EXTRA.win_small_open, EXTRA.win_tilt, EXTRA.win_tilt_open, EXTRA.win_vibration, EXTRA.win_glass_break, EXTRA.door_garage, EXTRA.door_garage_open, EXTRA.door_pocket, EXTRA.door_pocket_open]],
     [L("Door styles (PR #131)", "Styles de porte (PR #131)"), [EXTRA.door_glass_top, EXTRA.door_external_open, EXTRA.door_sliding_glass_open, EXTRA.door_barn]],
     [L("Nest Mini colours, plug-in diffuser, dehumidifier on climate", "Couleurs Nest Mini, diffuseur sur prise, d\u00e9shumidificateur climate"), [EXTRA.nest_white, EXTRA.nest_black, EXTRA.nest_blue, EXTRA.dif_plugin, EXTRA.dif_plugin_off, EXTRA.dehum_climate, EXTRA.dehum_climate_idle]],
     [L("Kitchen robots", "Robots cuiseurs"), [EXTRA.fp_tm31, EXTRA.fp_tm31_off, EXTRA.fp_tm6, EXTRA.fp_tm6_ready]],
