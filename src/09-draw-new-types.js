@@ -2354,6 +2354,9 @@ function ntDetDoor(c) {
   let stripY = 2, stripH = 114;
   // Where the magnet goes when it opens: across, or up with a garage door.
   let mdx = -23, mdy = 0, mclip = "";
+  // A window that tips in (#137) carries its magnet with its sash: squeezed
+  // towards the hinge and widened like the sash, not slid.
+  let mtilt = null;
   let leaf = "";
   if (ws === "double") {
     // Two sashes; the right one opens, the left one stays shut.
@@ -2375,8 +2378,10 @@ ${move(-26, 0, sash(38, 8, 34, 102) + shine(44, 14, 18))}
     // A wide, low window hinged at the bottom (#137): open, its top tips in
     // towards the room, so it comes down and looks wider, the sky showing
     // over it, and two stays hold it on the sides.
-    stripY = 24; stripH = 46; mdx = 2; mdy = 8;
+    stripY = 24; stripH = 46; mdx = 0; mdy = 0;
     const x0 = 9, x1 = 69, y0 = 33, y1 = 65, cx = (x0 + x1) / 2, drop = 13, spread = 3.5;
+    // The magnet sits round y 45, where the sash is widened by this much.
+    mtilt = { cx, y1, sx: n2(1 + spread / ((x1 - x0) / 2) * ((y1 - 45) / (y1 - y0))), sy: n2(1 - drop / (y1 - y0)) };
     const P = (px, py, f) => {
       const v = (y1 - py) / (y1 - y0);
       return `${n2(px + (px - cx) / ((x1 - x0) / 2) * spread * v * f)} ${n2(py + drop * v * f)}`;
@@ -2527,7 +2532,10 @@ ${ntV(ex, "#4d555d", "#2b3136")}${ntV(al, "#7d858d", "#5b636b")}<clipPath id="${
 <g class="${c.vib ? "nta-vib" : ""}">${leaf}${c.cracked ? `<g stroke="#fff" stroke-width=".9" stroke-linecap="round" fill="none" opacity=".95"><path d="M36 46 L26 34 M36 46 L48 36 M36 46 L52 52 M36 46 L44 62 M36 46 L28 60 M36 46 L22 48"/><path d="M30 39 L34 37 M44 39 L46 43 M47 54 L44 57 M31 55 L27 53" stroke-width=".6"/></g><circle cx="36" cy="46" r="1.6" fill="#fff"/>` : ""}</g>
 ${c.vib ? [0, 1, 2].map((i) => `<path class="nta-beacon ntd${i + 1}" d="M${6 - i * 3} ${44 - i * 3} q-${2 + i} ${8 + i * 3} 0 ${16 + i * 6}" fill="none" stroke="#ef6c00" stroke-width="1.6" stroke-linecap="round"/>`).join("") : ""}
 <rect x="72" y="${stripY}" width="18" height="${stripH}" fill="url(#${fr})" stroke="${anth ? "#22282d" : c.frame || c.window ? "#c5ccd2" : "#cfc6b6"}" stroke-width=".6"/>
-<g${c.tamper ? ` transform="rotate(-24 81 26)"` : ""}>${move(mdx, mdy, parts[0], mclip)}${parts[1]}</g>
+<g${c.tamper ? ` transform="rotate(-24 81 26)"` : ""}>${mtilt ? (() => {
+    const sc = (f) => `${n2(1 + (mtilt.sx - 1) * f)} ${n2(1 + (mtilt.sy - 1) * f)}`;
+    return `<g transform="translate(${mtilt.cx} ${mtilt.y1})"><g transform="scale(${sc(F)})">${c.trans ? `<animateTransform attributeName="transform" type="scale" values="${sc(1 - F)};${sc(F)}" ${swing}/>` : ""}<g transform="translate(${-mtilt.cx} ${-mtilt.y1})">${parts[0]}</g></g></g>`;
+  })() : move(mdx, mdy, parts[0], mclip)}${parts[1]}</g>
 ${c.tamper ? `<path d="M86 36 l5 -4 M88 42 l6 -1 M85 48 l5 3" stroke="#e53935" stroke-width="1.4" stroke-linecap="round"/>` : ""}
 ${open ? ntWaves(81, 46, "#ef6c00", 20) : ""}`;
 }

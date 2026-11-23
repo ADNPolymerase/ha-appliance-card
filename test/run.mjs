@@ -15441,6 +15441,8 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
     const W = (state, more = {}) => build({ appliance_type: 'detector', state_entity: 'binary_sensor.w', ...more }, { 'binary_sensor.w': { state, attributes: { device_class: 'window' } } }).html;
     check('137 : soufflet ferme, chassis a plat', /points="9 33 69 33 69 65 9 65" fill="#f3f5f7"/.test(W('off', { window_style: 'tilt' })), true);
     check('137 : soufflet ouvert, le haut bascule vers la piece', /points="5.5 46 72.5 46 69 65 9 65" fill="#f3f5f7"/.test(W('on', { window_style: 'tilt' })), true);
+    check('137 : l aimant bascule avec le chassis', /<g transform="translate\(39 65\)"><g transform="scale\(1.07 0.59\)">/.test(W('on', { window_style: 'tilt' })), true);
+    check('137 : ferme, l aimant a plat', /<g transform="translate\(39 65\)"><g transform="scale\(1 1\)">/.test(W('off', { window_style: 'tilt' })), true);
     check('137 : soufflet lu dans le nom', /points="9 33 69 33 69 65 9 65"/.test(W('off', { name: 'Fenetre a soufflet WC' })), true);
     check('137 : kippfenster lu dans le nom', /points="9 33 69 33 69 65 9 65"/.test(W('off', { name: 'Kippfenster Bad' })), true);
     check('137 : une petite fenetre reste petite', /points="9 33 69 33 69 65 9 65"/.test(W('off', { name: 'Petite fenetre WC' })), false);
