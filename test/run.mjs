@@ -15834,6 +15834,49 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   fire(edS._root.querySelector('[data-role="outlet-count-select"]'), 'change', { target: { value: '1' } });
   check('editeur multiprise : moins de prises', JSON.stringify(edS.events.at(-1)?.detail?.config?.outlets), JSON.stringify(OUT.slice(0, 1)));
   check('multiprise : traduite', /Multiprise/.test(markup(newEditor({ state_entity: 'switch.strip_l1', appliance_type: 'power_strip', language: 'fr' })._root)), true);
+  // Four plugs gathered as one strip: no state entity needed (HACF #205).
+  let noStateErr = null;
+  try { new Card().setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'power_strip', outlets: OUT }); } catch (e) { noStateErr = e.message; }
+  check('multiprise : sans entite d etat, acceptee', noStateErr, null);
+  let noTypeErr = null;
+  try { new Card().setConfig({ type: 'custom:ha-appliance-card', outlets: ['switch.strip_l1'] }); } catch (e) { noTypeErr = e.message; }
+  check('multiprise : les prises seules suffisent', noTypeErr, null);
+  let emptyErr = null;
+  try { new Card().setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'power_strip', outlets: [] }); } catch (e) { emptyErr = e.message; }
+  check('multiprise : sans prise ni etat, refusee', !!emptyErr, true);
+  const free = build({ appliance_type: 'power_strip', outlets: OUT }, ST).html;
+  check('multiprise : sans entite d etat, les quatre prises', (free.match(/data-outlet="/g) || []).length, 4);
+  check('multiprise : sans entite d etat, en marche', stateLine(free), 'In use');
+  check('multiprise : sans entite d etat, le nom du type', /Power strip/.test(free), true);
+  check('multiprise : sans entite d etat, sans type', (build({ outlets: OUT }, ST).html.match(/data-outlet="/g) || []).length, 4);
+}
+
+// =============================================================================
+// Temperature precision with the appearance, for the types whose room
+// temperature has no field to hang it on (HACF #205).
+// =============================================================================
+{
+  const prec = (type, extra = {}) => /data-field="temperature_decimals"/.test(markup(newEditor({ appliance_type: type, state_entity: 'climate.x', ...extra })._root));
+  for (const type of ['pellet_stove', 'air_conditioner', 'space_heater', 'sauna', 'climate_sensor', 'wood_stove', 'storage_tank', 'pool_pump']) {
+    check(`precision : dans l apparence pour ${type}`, prec(type), true);
+  }
+  for (const type of ['washer', 'power_strip', 'tv', 'fingerbot']) check(`precision : pas pour ${type}`, prec(type), false);
+  // Once only: the types with a temperature field keep it under that field.
+  const once = (type, extra) => (markup(newEditor({ appliance_type: type, state_entity: 'sensor.x', ...extra })._root).match(/data-field="temperature_decimals"/g) || []).length;
+  check('precision : une seule fois sur le frigo', once('fridge', { fridge_temperature_entity: 'sensor.t' }), 1);
+  check('precision : une seule fois sur la chaudiere', once('boiler', { temperature_entity: 'sensor.t' }), 1);
+  check('precision : une seule fois sur le poele', once('pellet_stove', { current_temperature_entity: 'sensor.t' }), 1);
+  const ed = newEditor({ appliance_type: 'pellet_stove', state_entity: 'climate.x' });
+  const sel = ed._root.querySelectorAll('[data-field]').find((n) => n.getAttribute('data-field') === 'temperature_decimals');
+  fire(sel, 'change', { target: { getAttribute: (a) => (a === 'data-field' ? 'temperature_decimals' : null), value: 'auto' } });
+  check('precision : auto ecrit', ed.events.at(-1)?.detail?.config?.temperature_decimals, 'auto');
+  fire(sel, 'change', { target: { getAttribute: (a) => (a === 'data-field' ? 'temperature_decimals' : null), value: '0' } });
+  check('precision : le degre entier n est pas ecrit', 'temperature_decimals' in (ed.events.at(-1)?.detail?.config || {}), false);
+  // And the stove's room temperature follows it, read from its climate entity.
+  const stove = (extra) => render({ appliance_type: 'pellet_stove', state_entity: 'climate.poele', ...extra },
+    { 'climate.poele': { state: 'heat', attributes: { current_temperature: 20.6, temperature: 21, hvac_action: 'heating' } } });
+  check('precision : le poele au degre par defaut', /20,6|20\.6/.test(stove({})), false);
+  check('precision : le poele en auto', /20\.6/.test(stove({ temperature_decimals: 'auto' })), true);
 }
 
 // =============================================================================

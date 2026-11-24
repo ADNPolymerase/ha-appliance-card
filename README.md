@@ -1676,7 +1676,7 @@ disk2_entity: sensor.nas_drive_2_status
 | `leak_entity` | valve | A leak sensor: going off, it is the card's alarm and the valve drips, whatever the valve says. |
 | `rack_layout` | drying rack | `box` (a box whose front drops onto its rods, the default) \| `accordion` (accordion arms under a shelf) \| `frame` (a wooden frame that tilts away from the wall). |
 | `rack_color` | drying rack | `white` \| `wood` \| `black`. White by default for the box and the accordion, wood for the frame. |
-| `outlets` | power strip | Up to 6 sockets, as `{ entity, power_entity?, name? }`: the socket's switch, its power and its name. A socket without `power_entity` takes `sensor.<switch>_power` when it exists. Left out, the state entity is the only socket. |
+| `outlets` | power strip | Up to 6 sockets, as `{ entity, power_entity?, name? }`: the socket's switch, its power and its name. A socket without `power_entity` takes `sensor.<switch>_power` when it exists. Left out, the state entity is the only socket. Given, no `state_entity` is needed: four plugs can make one strip. |
 | `usb_entity` | power strip | The switch of its USB ports, drawn at its end. |
 | `strip_layout` | power strip | `shelly` (Shelly's Power Strip 4, white, or black with `illustration_color: black`) \| `classic` (a plain strip with a lit switch, the default). Left out, a name with Shelly picks `shelly`. |
 | `bot_mode_entity` | finger bot | Its mode: Zigbee2MQTT's and Tuya BLE's select (`click`, `switch`, `program`), as a line. SwitchBot's `switch_mode` attribute is read without it. |
@@ -2109,7 +2109,7 @@ On a slower wall tablet, `winter_snowfall: false` keeps the snow lying on everyt
 |---|---|---|
 | `heating_entity` | oven, cooker, rice cooker, water heater | Says whether it heats when the state entity cannot. Otherwise derived from the running state. |
 | `light_entity` | oven, hood, 3D printer | Light, as a small toggle in the header. A lit printer's chamber lights up too. |
-| `temperature_decimals` | fridge, kettle, water heater, boiler, heat pump | `0` (default, whole degree), `1` (one decimal) or `auto` (the entity's display precision), on the appliance's screen and in the list. |
+| `temperature_decimals` | every type that shows a temperature | `0` (default, whole degree), `1` (one decimal) or `auto` (the entity's display precision, or the value as given for a climate entity's room temperature), on the appliance's screen and in the list. In the editor, under the temperature field or with the appearance. |
 | `temperature_entity` | kettle, water heater, boiler, heat pump | Water temperature (flow temperature on a boiler or a heat pump), shown on the appliance and in the list. A `water_heater` entity provides its own. On a water heater the hot water fills the tank from 15 to 65 °C. |
 | `temperature_entity` | floor_heating, spa, sauna, aquarium | The temperature on the display and as a line, from a sensor or a `climate` entity. Left out, a thermostat's `current_temperature` is used. |
 

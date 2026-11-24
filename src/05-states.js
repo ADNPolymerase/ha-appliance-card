@@ -809,13 +809,16 @@ function localNumber(st, hass, entityId) {
 }
 
 // A temperature line reads like the entity does everywhere else in Home
-// Assistant, decimals included. Only a reading with no unit of its own (an
-// attribute, or a bare input_number) keeps the whole degree and a borrowed unit.
+// Assistant, decimals included. A climate entity's attribute reads as given;
+// a bare input_number keeps the whole degree and a borrowed unit.
 function tempText(hass, cfg, entityId, value, unit) {
   const d = tempDecimals(cfg);
   if (d !== null) return `${fixedTemp(hass, value, d)} ${unit}`;
   const st = numericEntity(hass, entityId);
   if (st && st.attributes.unit_of_measurement) return formatInfoValue(st, hass, null, cfg, entityId);
+  // A climate entity's room temperature, an attribute: the value as given,
+  // 20,6 as the thermostat card prints it (HACF #205).
+  if (/^(climate|water_heater)\./.test(entityId || "")) return `${new Intl.NumberFormat(lang(hass), { maximumFractionDigits: 2 }).format(value)} ${unit}`;
   return `${Math.round(value)} ${unit}`;
 }
 

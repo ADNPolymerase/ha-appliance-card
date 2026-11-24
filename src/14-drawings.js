@@ -737,7 +737,11 @@ function stateFreeSource(config) {
   const hasUpsSource = asUps && !!(config.input_voltage_entity || config.battery_entity);
   // And for a pump, a heater, a tree on a smart plug: the meter says it runs.
   const hasNtSource = !!config && NT_TYPES.includes(config.appliance_type) && config.appliance_type !== "meter" && !!config.power_entity;
+  // And for a power strip, whose sockets are all there is to read: four
+  // plugs gathered as one strip have no entity of their own (HACF #205).
+  const asStrip = config && (config.appliance_type === "power_strip" || !config.appliance_type);
+  const hasStripSource = asStrip && Array.isArray(config.outlets) && config.outlets.some((o) => (typeof o === "string" ? o : o && o.entity));
   return !!(hasFridgeSource || hasFeederSource || hasChargerSource || hasScreenSource || hasPoolSource
-    || hasSolarSource || hasBatterySource || hasUpsSource || hasNtSource);
+    || hasSolarSource || hasBatterySource || hasUpsSource || hasNtSource || hasStripSource);
 }
 

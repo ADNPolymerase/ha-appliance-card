@@ -31,6 +31,17 @@ const LAST_CYCLE_TYPES = CYCLE_TYPES.concat(["kettle", "iron", "toaster", "hair_
 
 // The tank and deep clean of a purifier only make sense on one that humidifies.
 const purifierHasTank = (c) => c.appliance_type !== "air_purifier" || !!c.humidifier_entity || c.purifier_layout === "ring_humidify";
+// The temperature precision. The types whose main temperature has a field of
+// its own show it under that field; every other type that shows a temperature
+// shows it with the appearance, since its room temperature may come from its
+// climate entity with no field to hang it on (HACF #205).
+const PRECISION_UNDER_FIELD = ["fridge", "kettle", "water_heater", "boiler", "heat_pump", "printer_3d"];
+const TEMP_FIELD_RE = /^(?!wash_)\w*temp\w*_entit(y|ies)$/;
+function tempPrecisionInAppearance(type) {
+  if (!type || PRECISION_UNDER_FIELD.includes(type)) return false;
+  return SECTIONS.some((s) => s.types.includes(type) && TEMP_FIELD_RE.test(s.field))
+    || (NT_ONLY_FIELDS[type] || []).some((f) => TEMP_FIELD_RE.test(f));
+}
 const SECTIONS = [
   { field: "program_entity", types: CYCLE_TYPES.filter((ty) => ty !== "printer_3d"), labelKey: "section_program", includeDomains: ["select", "sensor", "input_select"], extra: (c, hass) => c._row("program_format", "program_format", {
       type: "select",
@@ -2045,6 +2056,14 @@ class ApplianceCardEditor extends HTMLElement {
           ${this._row("show_state_duration", "show_state_duration", { type: "checkbox" })}
           ${this._row("transparent", "transparent", { type: "checkbox" })}
           ${this._row("values_right", "values_right", { type: "checkbox" })}
+          ${tempPrecisionInAppearance(this._type) ? this._row("temperature_decimals", "temperature_decimals", {
+            type: "select",
+            options: [
+              { value: "0", label: t(hass, "precision_0") },
+              { value: "1", label: t(hass, "precision_1") },
+              { value: "auto", label: t(hass, "precision_auto") },
+            ],
+          }) : ""}
           ${this._row("fill_height", "fill_height", { type: "checkbox" })}
           ${this._row("illustration_frame", "illustration_frame", { type: "checkbox" })}
           ${PHOTO_TYPES.includes(this._type) ? `<div class="picker-slot ph-slot" data-slot="__photo"></div>` : ""}
@@ -2271,6 +2290,8 @@ class ApplianceCardEditor extends HTMLElement {
         if (["window_style", "frame_color", "arcade_color", "arcade_p1_color", "arcade_p2_color"].includes(field) && value === "auto") delete this._config[field];
         // No background is the default and is not written.
         if (field === "illustration_backdrop" && !illustrationBackdropOf(value)) delete this._config.illustration_backdrop;
+        // The whole degree is the default and is not written.
+        if (field === "temperature_decimals" && value === "0") delete this._config.temperature_decimals;
         if (field === "compact") {
           if (value === "side") this._config.compact = "side";
           else if (value === "hide") this._config.compact = true;

@@ -1678,7 +1678,7 @@ disk2_entity: sensor.nas_drive_2_status
 | `leak_entity` | vanne | Un détecteur de fuite : déclenché, c'est l'alarme de la carte et la vanne goutte, quoi qu'elle dise. |
 | `rack_layout` | séchoir | `box` (caisson dont la façade se rabat sur ses barres, par défaut) \| `accordion` (bras en accordéon sous une étagère) \| `frame` (cadre en bois qui bascule du mur). |
 | `rack_color` | séchoir | `white` \| `wood` \| `black`. Par défaut blanc pour le caisson et l'accordéon, bois pour le cadre. |
-| `outlets` | multiprise | Jusqu'à 6 prises, en `{ entity, power_entity?, name? }` : l'interrupteur de la prise, sa puissance et son nom. Une prise sans `power_entity` prend `sensor.<interrupteur>_power` s'il existe. Sans liste, l'entité d'état est la seule prise. |
+| `outlets` | multiprise | Jusqu'à 6 prises, en `{ entity, power_entity?, name? }` : l'interrupteur de la prise, sa puissance et son nom. Une prise sans `power_entity` prend `sensor.<interrupteur>_power` s'il existe. Sans liste, l'entité d'état est la seule prise. Avec une liste, pas besoin de `state_entity` : quatre prises séparées peuvent former une multiprise. |
 | `usb_entity` | multiprise | L'interrupteur de ses ports USB, dessinés à son bout. |
 | `strip_layout` | multiprise | `shelly` (Power Strip 4 de Shelly, blanche, ou noire avec `illustration_color: black`) \| `classic` (multiprise simple avec interrupteur lumineux, par défaut). Sans réglage, un nom contenant Shelly choisit `shelly`. |
 | `bot_mode_entity` | pousse-bouton | Son mode : le select de Zigbee2MQTT et de Tuya BLE (`click`, `switch`, `program`), en ligne. L'attribut `switch_mode` de SwitchBot est lu sans lui. |
@@ -2112,7 +2112,7 @@ Sur une tablette murale un peu lente, `winter_snowfall: false` garde la neige po
 |---|---|---|
 | `heating_entity` | four, robot cuiseur, cuiseur à riz, chauffe-eau | Dit s'il chauffe quand l'entité d'état ne le dit pas. À défaut, déduit de l'état en cours. |
 | `light_entity` | four, hotte, imprimante 3D | Éclairage, en petite bascule dans l'en-tête. Allumé, il éclaire aussi l'enceinte de l'imprimante. |
-| `temperature_decimals` | frigo, bouilloire, chauffe-eau, chaudière, pompe à chaleur | `0` (défaut, au degré), `1` (au dixième) ou `auto` (la précision d'affichage de l'entité), sur l'écran de l'appareil et dans la liste. |
+| `temperature_decimals` | tous les types qui affichent une température | `0` (défaut, au degré), `1` (au dixième) ou `auto` (la précision d'affichage de l'entité, ou la valeur telle quelle pour la température ambiante d'une entité climate), sur l'écran de l'appareil et dans la liste. Dans l'éditeur, sous le champ de température ou avec l'apparence. |
 | `temperature_entity` | bouilloire, chauffe-eau, chaudière, pompe à chaleur | Température de l'eau (de départ sur une chaudière ou une pompe à chaleur), affichée sur l'appareil et dans la liste. Une entité `water_heater` donne la sienne toute seule. Sur un chauffe-eau, l'eau chaude remplit la cuve de 15 à 65 °C. |
 | `temperature_entity` | plancher chauffant, spa, sauna, aquarium | La température sur l'écran et en ligne, lue sur un capteur ou une entité `climate`. Sans elle, le `current_temperature` du thermostat. |
 
