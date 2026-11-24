@@ -1731,6 +1731,15 @@ const hdCard = (name, layout, watts) => () => card({ name, appliance_type: "hair
   [st("switch.hd_plug", "on"), st("sensor.hd_power", watts, { unit_of_measurement: "W" })]);
 const hdHot = hdCard(L("Hair dryer", "Sèche-cheveux"), "pistol", 1650);
 const hdRing = hdCard(L("Bathroom dryer", "Sèche-cheveux salle de bain"), "ring", 180);
+// Straighteners (#139): heating, ready, without a temperature, off.
+const stCard = (name, sw, watts, temp, extra = {}) => () => card({ name, appliance_type: "hair_dryer", hair_dryer_layout: "straightener",
+  state_entity: "switch.st_plug", power_entity: "sensor.st_power", ...(temp === null ? {} : { temperature_entity: "sensor.st_temp" }), ...extra },
+  [st("switch.st_plug", sw), st("sensor.st_power", watts, { unit_of_measurement: "W" }), st("sensor.st_temp", temp === null ? 0 : temp, { unit_of_measurement: "\u00b0C" })]);
+const hdStraightener = stCard(L("Straightener", "Lisseur"), "on", 42, 185);
+const stHeating = stCard(L("Straightener", "Lisseur"), "on", 48, 110);
+const stWhite = stCard(L("Bathroom straightener", "Lisseur salle de bain"), "on", 40, 220, { illustration_color: "white" });
+const stPlain = stCard(L("Straightener, plug only", "Lisseur, prise seule"), "on", 45, null, { illustration_color: "red" });
+const stOff = stCard(L("Straightener", "Lisseur"), "off", 0, 24);
 const ALL = { washer, dryer, steam_generator: steamGenerator,
               dishwasher, oven, microwave, hood, cooktop, fridge, kettle, cooker, coffee, rice_cooker: riceCooker, air_fryer: airFryer, toaster,
               water_heater: waterHeater, boiler, heat_pump: heatPump, pellet_stove: pelletStove,
@@ -1776,7 +1785,7 @@ const EXTRA = { printer_bambu: printerBambu, printer_centauri: printerCentauri, 
                 net_nas4: netBays(4, ["normal", "normal", "normal", "warning"], L("NAS, 4 bays", "NAS 4 baies")),
                 net_nas8: netBays(8, ["normal", "normal", "normal", "normal", "normal", "warning", "normal", "normal"], L("NAS, 8 bays", "NAS 8 baies")),
                 scr_tv: scrTv, scr_projector: scrProjector, scr_computer: scrComputer, scr_laptop: scrLaptop,
-                tab_wall: tabWall, tab_frame: tabFrame, tab_portrait: tabPortrait, hd_hot: hdHot, hd_ring: hdRing };
+                tab_wall: tabWall, tab_frame: tabFrame, tab_portrait: tabPortrait, hd_hot: hdHot, hd_ring: hdRing, hd_straightener: hdStraightener, st_heating: stHeating, st_white: stWhite, st_plain: stPlain, st_off: stOff };
 // Pellet grills (#101): every shape in every state, for the captures.
 const PG_NAMES = { timberline: L("Timberline", "Timberline"), drum: L("Drum", "Tonneau"), cart: L("Cart", "Chariot"), vertical: L("Vertical", "Vertical") };
 const pgCard = (layout, word, o = {}) => () => card({ name: PG_NAMES[layout], appliance_type: "pellet_grill", grill_layout: layout, state_entity: "climate.g", grill_state_entity: "sensor.g_state", pellet_level_entity: "sensor.g_pellets",
@@ -2045,7 +2054,8 @@ function liveGallery() {
     [L("SwitchBot meters", "Thermom\u00e8tres SwitchBot"), [EXTRA.sb_co2, EXTRA.sb_co2_high, EXTRA.sb_pro, EXTRA.sb_meter, EXTRA.sb_plus, EXTRA.sb_outdoor]],
     [L("Your own photo (HACF #165)", "Votre photo (HACF #165)"), [EXTRA.photo_shutter, EXTRA.photo_garage, EXTRA.photo_gate, EXTRA.photo_washer, EXTRA.photo_tv]],
     [L("Gates", "Portails"), [EXTRA.gate_swing, EXTRA.gate_swing_open, EXTRA.gate_white, EXTRA.gate_white_open]],
-    [L("New: arcade cabinets, the game on the screen (Recalbox)", "Nouveau : bornes d'arcade, le jeu \u00e0 l'\u00e9cran (Recalbox)"), [EXTRA.arcade_menu, EXTRA.arcade_play, EXTRA.arcade_pic, EXTRA.arcade_upright, EXTRA.arcade_off], "new"],
+    [L("New: hair straighteners, heat rising as they warm up (#139)", "Nouveau : lisseurs, la chaleur monte avec la temp\u00e9rature (#139)"), [EXTRA.st_heating, EXTRA.hd_straightener, EXTRA.st_white, EXTRA.st_plain, EXTRA.st_off], "new"],
+    [L("Arcade cabinets, the game on the screen (Recalbox)", "Bornes d'arcade, le jeu \u00e0 l'\u00e9cran (Recalbox)"), [EXTRA.arcade_menu, EXTRA.arcade_play, EXTRA.arcade_pic, EXTRA.arcade_upright, EXTRA.arcade_off]],
     [L("Power strips, each socket switched on the drawing", "Multiprises, chaque prise command\u00e9e sur le dessin"), [EXTRA.strip_shelly, EXTRA.strip_classic]],
     [L("Alarms and timers, tilt-in window, white fabric, purifier filters", "Alarmes et minuteurs, fen\u00eatre \u00e0 soufflet, toile blanche, filtres du purificateur"), [EXTRA.clock_alarms, EXTRA.win_tilt, EXTRA.win_tilt_open, EXTRA.cov_blind_white, purifier, ringPurifier]],
     [L("Gas fireplace", "Chemin\u00e9e au gaz"), [EXTRA.fire_on, EXTRA.fire_high, EXTRA.fire_pilot, EXTRA.fire_lights]],
@@ -2071,7 +2081,7 @@ function liveGallery() {
     [L("Energy", "Énergie"), [solarDay, solarRoof, solarNight, batteryCharging, batteryStation, batteryLow, evCharger, evDischarging]],
     [L("Network and servers", "Réseau et serveurs"), [netSwitch, netRouter("on"), netNas, netServer, netRack, upsOnline, upsBattery, upsLow]],
     [L("Screens and tablets", "Écrans et tablettes"), [scrTv, scrProjector, scrComputer, scrLaptop, tabWall, tabFrame, tabPortrait]],
-    [L("Home and media", "Maison et multimédia"), [hdHot, hdRing, printer3d, printerBambu, printerCentauri, printerA1, printerNeptune, printerAms, printerAmsTop, dryer1, dryer2, dryer4, scaleFresh, scaleGoal]],
+    [L("Home and media", "Maison et multimédia"), [hdHot, hdRing, hdStraightener, printer3d, printerBambu, printerCentauri, printerA1, printerNeptune, printerAms, printerAmsTop, dryer1, dryer2, dryer4, scaleFresh, scaleGoal]],
     [L("Diffusers and ventilation", "Diffuseurs et ventilation"), [difDrop, difCone, difStone, difFlame, difNebulizer, hrvDiagram, hrvBox, hrvOneDuct, hrvPair, hrvBypass, hrvSingle, hrvSingleHigh, hrvSingleOff, hrvSingleBox, hrvSingleBoxHigh, hrvBasement, hrvBasementShut]],
     [L("Cameras", "Cam\u00e9ras"), [camIndoor, camTube, camOutdoor, camDome, camPrivacy, camOffline]],
     [L("Lamps", "Lampes"), [lampBulb, lampBedside, lampFloor, lampTorch, lampPendant, lampStrip, lampSpots, lampPanels, lampDesk, lampWall, lampOff]],

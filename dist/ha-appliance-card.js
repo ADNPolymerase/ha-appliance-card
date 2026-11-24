@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.50.0";
+const CARD_VERSION = "4.51.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -195,6 +195,7 @@ const T = {
     valve_fluid: "Fluid", vlv_f_water: "Water", vlv_f_gas: "Gas",
     type_drying_rack: "Wall drying rack", layout_rack_box: "Fold-down box", layout_rack_accordion: "Accordion under a shelf", layout_rack_frame: "Tilting wooden frame", rack_open: "Unfolded", rack_closed: "Folded",
     type_power_strip: "Power strip", layout_strip_shelly: "Shelly Power Strip", layout_strip_classic: "Classic power strip", strip_on: "On", strip_off: "Off", strip_running: "In use", strip_usb: "USB ports", section_outlets: "Sockets", outlets_count: "Number of sockets", outlet: "Socket", outlet_power: "Socket power", outlet_name: "Socket name",
+    layout_hd_straightener: "Hair straightener", st_heating: "Heating", st_ready: "Ready", st_on_for: "On for", straightener_ready_temperature: "Ready from (\u00b0C)",
     layout_con_arcade_bartop: "Arcade bartop", layout_con_arcade_upright: "Arcade cabinet", arcade_color: "Frame colour", arcade_p1_color: "Player 1 colour", arcade_p2_color: "Player 2 colour", con_system: "System", con_game_image: "Game picture", color_purple: "Purple",
     strip_usb_on: "On", strip_usb_off: "Off",
   },
@@ -4052,7 +4053,7 @@ function detectApplianceType(cfg, st) {
   // plenty of them are sold as air fryer ovens.
   // A hair dryer, before the tumble dryer that "dryer" and "seche" would make
   // of it.
-  if (HAIR_DRYER_RE.test(hay)) return "hair_dryer";
+  if (HAIR_DRYER_RE.test(hay) || STRAIGHTENER_RE.test(hay)) return "hair_dryer";
   // A rice cooker before it: Xiaomi's says cook_status too.
   if (RICE_COOKER_RE.test(hay)) return "rice_cooker";
   if (COOK_STATUS_RE.test(hay) || optionsInclude(st, ["preheat_end"])) return "air_fryer";
@@ -4358,6 +4359,12 @@ const IRON_LABELS = { off: "iron_off", heating: "iron_heating", ready: "iron_rea
 const IRON_LOW_W = 800;
 const IRON_HIGH_W = 1600;
 const HD_LABELS = { off: "ac_off", cool: "hd_cool", hot: "hd_hot", on: "screen_on" };
+// A hair straightener (#139): heating until its plates reach this, then ready.
+const ST_READY_C = 150;
+// Left on this long, it is worth a glance.
+const ST_ALERT_MIN = 30;
+const ST_LABELS = { off: "ac_off", heating: "st_heating", ready: "st_ready", on: "screen_on" };
+const STRAIGHTENER_RE = /straighten|flat.?iron|lisseur|fer.?a.?lisser|glatteisen|haarglatter|plancha.?(de.?pelo|para.?el.?pelo|del.?pelo)|piastra.?(per.?)?capelli|stijltang|plattang|rettetang|glattejern|prostownic|zehlicka.?na.?vlasy|hajvasal|\u76f4\u53d1\u5668|\u76f4\u9aee\u5668|\u0432\u044b\u043f\u0440\u044f\u043c\u0438\u0442\u0435\u043b/;
 // A network device. Its name says which drawing it gets when none is chosen:
 // a NAS by its maker or its system, a switch by its name, a rack by its own.
 // A Nintendo Switch is a console, not a switch.
@@ -12602,9 +12609,33 @@ class ApplianceCard extends HTMLElement {
       else if (watts !== null) mode = watts <= onAt ? "off" : watts < heatAt ? "cool" : "hot";
       else mode = sw === "on" || isActiveState(norm) ? "on" : "off";
       const level = mode === "cool" ? 2 : mode === "hot" ? (watts >= Math.max(HD_HIGH_W, heatAt * 2) ? 5 : 3) : mode === "on" ? 3 : 0;
-      if (!cfg.state_show_raw) stateLabel = t(hass, HD_LABELS[mode]);
-      color = HD_COLORS[mode];
-      hairDryer = { mode, level, layout: cfg.hair_dryer_layout === "ring" ? "ring" : "pistol" };
+      const hdLayout = ["pistol", "ring", "straightener"].includes(cfg.hair_dryer_layout) ? cfg.hair_dryer_layout
+        : STRAIGHTENER_RE.test(stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase()) ? "straightener" : "pistol";
+      if (hdLayout === "straightener") {
+        // A straightener (#139): heating until its plates are hot enough,
+        // then ready; without a temperature, only on. How long it has been on
+        // is a line, worth a glance after half an hour.
+        const temp = cfg.temperature_entity ? tempState(hass, cfg.temperature_entity) : null;
+        const readyCfg = parseFloat(cfg.straightener_ready_temperature);
+        const readyAt = isFinite(readyCfg) && readyCfg > 0 ? readyCfg : ST_READY_C;
+        const stMode = mode === "off" ? "off" : temp === null ? "on" : temp < readyAt ? "heating" : "ready";
+        if (!cfg.state_show_raw) stateLabel = t(hass, ST_LABELS[stMode]);
+        color = stMode === "off" ? HD_COLORS.off : HD_COLORS.hot;
+        if (temp !== null && stMode !== "off") {
+          extraLines.push({ key: "st_temp", icon: "mdi:thermometer", label: t(hass, "temperature"), value: tempText(hass, cfg, cfg.temperature_entity, temp, temperatureUnit(hass, cfg.temperature_entity)), entity: cfg.temperature_entity });
+        }
+        if (stMode !== "off") {
+          if (!this._stOnSince) this._stOnSince = sw === "on" && st.last_changed ? Date.parse(st.last_changed) || Date.now() : Date.now();
+          const secs = Math.max(0, (Date.now() - this._stOnSince) / 1000);
+          extraLines.push({ key: "st_on_for", icon: "mdi:timer-outline", label: t(hass, "st_on_for"), value: formatDuration(secs, hass), entity: cfg.state_entity, caution: secs >= ST_ALERT_MIN * 60 });
+        } else this._stOnSince = null;
+        const bc = BODY_COLORS[cfg.illustration_color];
+        hairDryer = { mode: stMode, level: 0, layout: "straightener", temp: stMode === "off" ? null : temp, body: bc ? bc.body : "", bodyHi: bc ? bc.hi : "" };
+      } else {
+        if (!cfg.state_show_raw) stateLabel = t(hass, HD_LABELS[mode]);
+        color = HD_COLORS[mode];
+        hairDryer = { mode, level, layout: hdLayout === "ring" ? "ring" : "pistol" };
+      }
     }
 
     // A screen, read from its plug first: nothing at all is off, a trickle up
@@ -13776,7 +13807,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.dh && illustrationCtx.dh.mode,
       illustrationCtx.heater && illustrationCtx.heater.mode,
       illustrationCtx.toaster && illustrationCtx.toaster.mode,
-      illustrationCtx.hairDryer && [illustrationCtx.hairDryer.mode, illustrationCtx.hairDryer.level, illustrationCtx.hairDryer.layout].join("/"),
+      illustrationCtx.hairDryer && [illustrationCtx.hairDryer.mode, illustrationCtx.hairDryer.level, illustrationCtx.hairDryer.layout, illustrationCtx.hairDryer.temp, illustrationCtx.hairDryer.body].join("/"),
       illustrationCtx.network && [illustrationCtx.network.mode, illustrationCtx.network.layout, illustrationCtx.network.lit,
         illustrationCtx.network.disks.join(""), illustrationCtx.network.wifiOff].join("/"),
       illustrationCtx.robot && [illustrationCtx.robot.mode, illustrationCtx.robot.layout, illustrationCtx.robot.poolTime].join("/"),
@@ -14784,7 +14815,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ __v: CARD_VERSION, t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, illustrationBackdropOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, cameraLayoutOf, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, DETECTOR_MODELS, DOOR_STYLES, gateLeavesOf, gateSideOf, WINDOW_STYLES, FRAME_COLORS, FINGERBOT_LAYOUTS, VALVE_LAYOUTS, RACK_LAYOUTS, STRIP_LAYOUTS, STRIP_MAX, FP_LAYOUTS, FP_COOK_W, VALVE_HANDLE_COLORS, VALVE_FLUIDS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, doorStyleOf, consoleLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, CO2_WARN, CO2_ALERT, NETATMO_COLORS, COVER_LAYOUTS, CURTAIN_OPENINGS, curtainOpeningOf, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, PHOTO_TYPES, photoAreaFor, photoUrlOf, photoBoxOf, PHOTO_AREAS_MAX, photoAreasOf, photoAreasValue, photoCoverCrop, photoShrink, ARC_COLORS, ARC_BUTTONS, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
+      .then((m) => m.default({ __v: CARD_VERSION, t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, illustrationBackdropOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, ST_READY_C, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, cameraLayoutOf, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, DETECTOR_MODELS, DOOR_STYLES, gateLeavesOf, gateSideOf, WINDOW_STYLES, FRAME_COLORS, FINGERBOT_LAYOUTS, VALVE_LAYOUTS, RACK_LAYOUTS, STRIP_LAYOUTS, STRIP_MAX, FP_LAYOUTS, FP_COOK_W, VALVE_HANDLE_COLORS, VALVE_FLUIDS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, doorStyleOf, consoleLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, CO2_WARN, CO2_ALERT, NETATMO_COLORS, COVER_LAYOUTS, CURTAIN_OPENINGS, curtainOpeningOf, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, PHOTO_TYPES, photoAreaFor, photoUrlOf, photoBoxOf, PHOTO_AREAS_MAX, photoAreasOf, photoAreasValue, photoCoverCrop, photoShrink, ARC_COLORS, ARC_BUTTONS, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

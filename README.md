@@ -414,7 +414,8 @@ One section per family of appliances: its options, then its guides. Each part op
 | `phase_entity` / `phase_map` | washer, dryer, dishwasher | The step the cycle is at, named on the state line. See *Cycle steps* below. |
 | `iron_layout` | iron | `iron` (default, the iron alone) \| `generator` (the same iron on the base of a steam generator). |
 | `iron_line_color` | iron | The colour of the line along the iron: `orange` (default) \| `blue` \| `body` (the colour of the appliance). |
-| `hair_dryer_layout` | hair dryer | `pistol` (default, a classic dryer seen from the side) \| `ring` (a ring dryer seen from the front). |
+| `hair_dryer_layout` | hair dryer | `pistol` (default, a classic dryer seen from the side) \| `ring` (a ring dryer seen from the front) \| `straightener` (a hair straightener). |
+| `straightener_ready_temperature` | hair straightener | Temperature from which it is *Ready*, in °C (150 by default). |
 | `heat_threshold` | hair dryer | Power from which the dryer blows hot air (300 W by default). Below it, only the fan runs. |
 | `flame_entity` | gas fireplace | Its flame sensor. It says whether the fire burns; left out, the main switch or the thermostat (heating) does. |
 | `flame_height_entity` | gas fireplace | The flame setting, 1 to 5: a *Flame height* line, and the flames drawn as tall. A `number` is set from the card: tap the line and pick the height. |
@@ -478,6 +479,17 @@ appliance_type: hair_dryer
 hair_dryer_layout: ring
 state_entity: switch.hair_dryer_plug
 power_entity: sensor.hair_dryer_plug_power
+```
+
+A hair straightener is a third model (`hair_dryer_layout: straightener`, or a name such as *straightener*, *flat iron*, *lisseur*): *Heating* until `temperature_entity` reaches `straightener_ready_temperature` (150 °C by default), then *Ready*; without a temperature, only *On*. Heat rises from the plates, more of it as they get hotter. An *On for* line shows how long it has been on, flagged after 30 minutes.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: hair_dryer
+hair_dryer_layout: straightener
+state_entity: switch.straightener_plug
+power_entity: sensor.straightener_plug_power
+temperature_entity: sensor.straightener_temperature
 ```
 
 </details>

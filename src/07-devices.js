@@ -155,6 +155,12 @@ const IRON_LABELS = { off: "iron_off", heating: "iron_heating", ready: "iron_rea
 const IRON_LOW_W = 800;
 const IRON_HIGH_W = 1600;
 const HD_LABELS = { off: "ac_off", cool: "hd_cool", hot: "hd_hot", on: "screen_on" };
+// A hair straightener (#139): heating until its plates reach this, then ready.
+const ST_READY_C = 150;
+// Left on this long, it is worth a glance.
+const ST_ALERT_MIN = 30;
+const ST_LABELS = { off: "ac_off", heating: "st_heating", ready: "st_ready", on: "screen_on" };
+const STRAIGHTENER_RE = /straighten|flat.?iron|lisseur|fer.?a.?lisser|glatteisen|haarglatter|plancha.?(de.?pelo|para.?el.?pelo|del.?pelo)|piastra.?(per.?)?capelli|stijltang|plattang|rettetang|glattejern|prostownic|zehlicka.?na.?vlasy|hajvasal|\u76f4\u53d1\u5668|\u76f4\u9aee\u5668|\u0432\u044b\u043f\u0440\u044f\u043c\u0438\u0442\u0435\u043b/;
 // A network device. Its name says which drawing it gets when none is chosen:
 // a NAS by its maker or its system, a switch by its name, a rack by its own.
 // A Nintendo Switch is a console, not a switch.

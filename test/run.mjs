@@ -9154,6 +9154,83 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
 }
 
 // =============================================================================
+// Hair straightener (#139)
+// =============================================================================
+
+{
+  const ST = { appliance_type: 'hair_dryer', hair_dryer_layout: 'straightener', state_entity: 'switch.st', power_entity: 'sensor.st_w', temperature_entity: 'sensor.st_t' };
+  const sts = (w, temp, sw = 'on', changed = '2026-08-12T09:50:00Z') => ({ 'switch.st': { state: sw, attributes: {}, last_changed: changed },
+    'sensor.st_w': { state: String(w), attributes: { unit_of_measurement: 'W' } },
+    ...(temp === undefined ? {} : { 'sensor.st_t': { state: String(temp), attributes: { unit_of_measurement: '°C' } } }) });
+  const stMode = h => (/\bmode-(\w+)/.exec(machineCls(h)) || [, null])[1];
+  const waveDur = h => (/<animate attributeName="opacity" values="0;\.85;0;0" keyTimes="[^"]*" dur="([\d.]+)s"/.exec(h) || [, null])[1];
+  const waves = h => (h.match(/values="0;\.85;0;0"/g) || []).length;
+  const lineVal = (h, label) => (new RegExp(`class="label">${label}</span><span>([^<]*)`).exec(h) || [, null])[1];
+  const lineCls = (h, label) => (new RegExp(`<div class="info-line ([^"]*)"[^>]*title="${label}"`).exec(h) || [, ''])[1];
+  check('lisseur : le modele', /hd-straightener/.test(machineCls(render(ST, sts(45, 120)))), true);
+  check('lisseur : prise coupee, eteint', stMode(render(ST, sts(0, 25, 'off'))), 'off');
+  check('lisseur : eteint se dit', stateLine(render(ST, sts(0, 25, 'off'))), 'Off');
+  check('lisseur : branche sans consommer, eteint', stMode(render(ST, sts(0, 25))), 'off');
+  check('lisseur : sous 150 C, en chauffe', stMode(render(ST, sts(45, 120))), 'heating');
+  check('lisseur : en chauffe se dit', stateLine(render(ST, sts(45, 120))), 'Heating');
+  check('lisseur : a 150 C, pret', stMode(render(ST, sts(45, 150))), 'ready');
+  check('lisseur : pret se dit', stateLine(render(ST, sts(45, 200))), 'Ready');
+  check('lisseur : en francais', stateLine(render({ ...ST, language: 'fr' }, sts(45, 200))), 'Prêt');
+  check('lisseur : seuil pret reglable', stMode(render({ ...ST, straightener_ready_temperature: 180 }, sts(45, 160))), 'heating');
+  check('lisseur : seuil pret reglable, atteint', stMode(render({ ...ST, straightener_ready_temperature: 180 }, sts(45, 185))), 'ready');
+  check('lisseur : sans temperature, allume', stMode(render({ ...ST, temperature_entity: undefined }, sts(45))), 'on');
+  check('lisseur : sans temperature, allume se dit', stateLine(render({ ...ST, temperature_entity: undefined }, sts(45))), 'On');
+  check('lisseur : en chauffe en orange', stateColor(render(ST, sts(45, 120))), '#ff7043');
+  // The plates.
+  check('lisseur : eteint, plaques froides', /stPlate\)/.test(render(ST, sts(0, 25, 'off'))), true);
+  check('lisseur : en chauffe, plaques tiedes', /stPlateWarm\)/.test(render(ST, sts(45, 120))), true);
+  check('lisseur : pret, plaques chaudes', /stPlateHot\)/.test(render(ST, sts(45, 200))), true);
+  check('lisseur : l afficheur donne la temperature', /200°/.test(render(ST, sts(45, 200))), true);
+  check('lisseur : eteint, afficheur vide', /\d°</.test(render(ST, sts(0, 25, 'off'))), false);
+  check('lisseur : pret, voyant vert', /fill="#4caf50"/.test(render(ST, sts(45, 200))), true);
+  // The heat, more of it as it gets hotter, always over the whole plate.
+  check('lisseur : eteint, pas de chaleur', waves(render(ST, sts(0, 25, 'off'))), 0);
+  check('lisseur : huit endroits ou monter', waves(render(ST, sts(45, 200))), 8);
+  check('lisseur : 80 C, une vague a la fois', waveDur(render(ST, sts(45, 80))), '17.60');
+  check('lisseur : 140 C, deux', waveDur(render(ST, sts(45, 140))), '8.80');
+  check('lisseur : 190 C, trois', waveDur(render(ST, sts(45, 190))), '5.87');
+  check('lisseur : 230 C, quatre', waveDur(render(ST, sts(45, 230))), '4.40');
+  check('lisseur : sans temperature, plaques tiedes', /stPlateWarm\)/.test(render({ ...ST, temperature_entity: undefined }, sts(45))), true);
+  check('lisseur : couleur par defaut', /stop-color="#f1f3f4"/.test(render(ST, sts(45, 200))), false);
+  check('lisseur : sans temperature, deux', waveDur(render({ ...ST, temperature_entity: undefined }, sts(45))), '8.80');
+  check('lisseur : les vagues montent', /values="0 2;0 -8;0 -8"/.test(render(ST, sts(45, 200))), true);
+  check('lisseur : chaque endroit a son tour', new Set((render(ST, sts(45, 200)).match(/begin="[\d.]+s"/g) || [])).size, 8);
+  // Lines.
+  check('lisseur : la temperature', lineVal(render(ST, sts(45, 120)), 'Temperature'), '120 °C');
+  check('lisseur : eteint, pas de temperature', lineVal(render(ST, sts(0, 25, 'off')), 'Temperature'), null);
+  check('lisseur : allume depuis', lineVal(render(ST, sts(45, 120)), 'On for'), '10 min');
+  check('lisseur : 10 min, rien a signaler', /caution/.test(lineCls(render(ST, sts(45, 120)), 'On for')), false);
+  check('lisseur : oublie 40 min, a signaler', /caution/.test(lineCls(render(ST, sts(45, 120, 'on', '2026-08-12T09:20:00Z')), 'On for')), true);
+  check('lisseur : eteint, plus de duree', lineVal(render(ST, sts(0, 25, 'off')), 'On for'), null);
+  {
+    const { card } = build(ST, sts(45, 120));
+    const before = markup(card);
+    check('lisseur : le dessin suit la temperature', rerender(card, sts(45, 200)) !== before, true);
+  }
+  check('lisseur : couleur du corps', /stop-color="#f1f3f4"/.test(render({ ...ST, illustration_color: 'white' }, sts(45, 200))), true);
+  // Detection.
+  const stType = id => /hd-straightener/.test(render({ state_entity: id }, { [id]: { state: 'on', attributes: {} } }));
+  for (const id of ['switch.lisseur', 'switch.hair_straightener', 'switch.flat_iron', 'switch.glatteisen', 'switch.piastra_capelli', 'switch.plancha_de_pelo', 'switch.stijltang', 'switch.prostownica'])
+    check(`detection lisseur : ${id}`, stType(id), true);
+  check('detection : un seche-cheveux reste un seche-cheveux', stType('switch.seche_cheveux'), false);
+  check('detection : un fer a repasser n est pas un lisseur', stType('switch.fer_a_repasser'), false);
+  // Editor.
+  const ed = newEditor({ state_entity: 'switch.st', appliance_type: 'hair_dryer', hair_dryer_layout: 'straightener' });
+  check('editeur lisseur : dans les modeles', /<option value="straightener"/.test(markup(ed)), true);
+  check('editeur lisseur : le seuil pret', /straightener_ready_temperature/.test(markup(ed)), true);
+  check('editeur lisseur : la temperature', markup(ed).includes('data-toggle="temperature_entity"'), true);
+  check('editeur lisseur : pas de seuil de chaleur', /"heat_threshold"/.test(markup(ed)), false);
+  const edHd = markup(newEditor({ state_entity: 'switch.sc', appliance_type: 'hair_dryer' }));
+  check('editeur seche-cheveux : pas de temperature', edHd.includes('data-toggle="temperature_entity"'), false);
+  check('editeur seche-cheveux : pas de seuil pret', /straightener_ready_temperature/.test(edHd), false);
+}
+
+// =============================================================================
 // Screen: television, projector, computer
 // =============================================================================
 

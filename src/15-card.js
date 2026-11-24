@@ -3133,9 +3133,33 @@ class ApplianceCard extends HTMLElement {
       else if (watts !== null) mode = watts <= onAt ? "off" : watts < heatAt ? "cool" : "hot";
       else mode = sw === "on" || isActiveState(norm) ? "on" : "off";
       const level = mode === "cool" ? 2 : mode === "hot" ? (watts >= Math.max(HD_HIGH_W, heatAt * 2) ? 5 : 3) : mode === "on" ? 3 : 0;
-      if (!cfg.state_show_raw) stateLabel = t(hass, HD_LABELS[mode]);
-      color = HD_COLORS[mode];
-      hairDryer = { mode, level, layout: cfg.hair_dryer_layout === "ring" ? "ring" : "pistol" };
+      const hdLayout = ["pistol", "ring", "straightener"].includes(cfg.hair_dryer_layout) ? cfg.hair_dryer_layout
+        : STRAIGHTENER_RE.test(stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase()) ? "straightener" : "pistol";
+      if (hdLayout === "straightener") {
+        // A straightener (#139): heating until its plates are hot enough,
+        // then ready; without a temperature, only on. How long it has been on
+        // is a line, worth a glance after half an hour.
+        const temp = cfg.temperature_entity ? tempState(hass, cfg.temperature_entity) : null;
+        const readyCfg = parseFloat(cfg.straightener_ready_temperature);
+        const readyAt = isFinite(readyCfg) && readyCfg > 0 ? readyCfg : ST_READY_C;
+        const stMode = mode === "off" ? "off" : temp === null ? "on" : temp < readyAt ? "heating" : "ready";
+        if (!cfg.state_show_raw) stateLabel = t(hass, ST_LABELS[stMode]);
+        color = stMode === "off" ? HD_COLORS.off : HD_COLORS.hot;
+        if (temp !== null && stMode !== "off") {
+          extraLines.push({ key: "st_temp", icon: "mdi:thermometer", label: t(hass, "temperature"), value: tempText(hass, cfg, cfg.temperature_entity, temp, temperatureUnit(hass, cfg.temperature_entity)), entity: cfg.temperature_entity });
+        }
+        if (stMode !== "off") {
+          if (!this._stOnSince) this._stOnSince = sw === "on" && st.last_changed ? Date.parse(st.last_changed) || Date.now() : Date.now();
+          const secs = Math.max(0, (Date.now() - this._stOnSince) / 1000);
+          extraLines.push({ key: "st_on_for", icon: "mdi:timer-outline", label: t(hass, "st_on_for"), value: formatDuration(secs, hass), entity: cfg.state_entity, caution: secs >= ST_ALERT_MIN * 60 });
+        } else this._stOnSince = null;
+        const bc = BODY_COLORS[cfg.illustration_color];
+        hairDryer = { mode: stMode, level: 0, layout: "straightener", temp: stMode === "off" ? null : temp, body: bc ? bc.body : "", bodyHi: bc ? bc.hi : "" };
+      } else {
+        if (!cfg.state_show_raw) stateLabel = t(hass, HD_LABELS[mode]);
+        color = HD_COLORS[mode];
+        hairDryer = { mode, level, layout: hdLayout === "ring" ? "ring" : "pistol" };
+      }
     }
 
     // A screen, read from its plug first: nothing at all is off, a trickle up
@@ -4307,7 +4331,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.dh && illustrationCtx.dh.mode,
       illustrationCtx.heater && illustrationCtx.heater.mode,
       illustrationCtx.toaster && illustrationCtx.toaster.mode,
-      illustrationCtx.hairDryer && [illustrationCtx.hairDryer.mode, illustrationCtx.hairDryer.level, illustrationCtx.hairDryer.layout].join("/"),
+      illustrationCtx.hairDryer && [illustrationCtx.hairDryer.mode, illustrationCtx.hairDryer.level, illustrationCtx.hairDryer.layout, illustrationCtx.hairDryer.temp, illustrationCtx.hairDryer.body].join("/"),
       illustrationCtx.network && [illustrationCtx.network.mode, illustrationCtx.network.layout, illustrationCtx.network.lit,
         illustrationCtx.network.disks.join(""), illustrationCtx.network.wifiOff].join("/"),
       illustrationCtx.robot && [illustrationCtx.robot.mode, illustrationCtx.robot.layout, illustrationCtx.robot.poolTime].join("/"),

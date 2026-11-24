@@ -262,6 +262,7 @@ const SECTIONS = [
   { field: "co2_entity", types: ["climate_sensor"], labelKey: "ths_co2", includeDomains: ["sensor", "number", "input_number"],
     extra: (c) => c._row("co2_warning", "co2_warning", { placeholder: String(CO2_WARN) }) + c._row("co2_alert", "co2_alert", { placeholder: String(CO2_ALERT) }) },
   { field: "temperature_entity", types: ["climate_sensor"], labelKey: "temperature", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "temperature_entity", types: ["hair_dryer"], labelKey: "temperature", includeDomains: ["sensor", "number", "input_number"], when: (c) => c.hair_dryer_layout === "straightener" },
   // The light under a pergola (#109), its LED strip drawn under the beams.
   { field: "light_entity", types: ["cover"], labelKey: "cov_light", includeDomains: ["light", "switch", "input_boolean"], when: (c) => coverLayoutOf(c, null) === "pergola" },
   { field: "grill_state_entity", types: ["pellet_grill"], labelKey: "section_grill_state", includeDomains: ["sensor"] },
@@ -1693,8 +1694,10 @@ class ApplianceCardEditor extends HTMLElement {
           options: [
             { value: "pistol", label: t(hass, "layout_hd_pistol") },
             { value: "ring", label: t(hass, "layout_hd_ring") },
+            { value: "straightener", label: t(hass, "layout_hd_straightener") },
           ],
-        }) + this._row("hd_heat_threshold", "heat_threshold", { placeholder: String(HD_HEAT_W) }) : ""}
+        }) + (this._config.hair_dryer_layout === "straightener" ? this._row("straightener_ready_temperature", "straightener_ready_temperature", { placeholder: String(ST_READY_C) })
+          : this._row("hd_heat_threshold", "heat_threshold", { placeholder: String(HD_HEAT_W) })) : ""}
         ${this._type === "network" ? (() => {
           const layout = netLayoutOf(this._config, stateObj(hass, this._config.state_entity));
           return this._row("section_screen_layout", "network_layout", {

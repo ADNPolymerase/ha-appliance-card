@@ -414,7 +414,8 @@ Une section par famille d'appareils : ses options, puis ses guides. Chaque parti
 | `phase_entity` / `phase_map` | lave-linge, sèche-linge, lave-vaisselle | L'étape du cycle, nommée sur la ligne d'état. Voir *Étapes du cycle* plus bas. |
 | `iron_layout` | fer | `iron` (défaut, le fer seul) \| `generator` (le même fer sur le socle d'une centrale vapeur). |
 | `iron_line_color` | fer | La couleur de la ligne le long du fer : `orange` (défaut) \| `blue` (bleu) \| `body` (la couleur de l'appareil). |
-| `hair_dryer_layout` | sèche-cheveux | `pistol` (défaut, sèche-cheveux classique vu de profil) \| `ring` (sèche-cheveux en anneau vu de face). |
+| `hair_dryer_layout` | sèche-cheveux | `pistol` (défaut, sèche-cheveux classique vu de profil) \| `ring` (sèche-cheveux en anneau vu de face) \| `straightener` (lisseur). |
+| `straightener_ready_temperature` | lisseur | Température à partir de laquelle il est *Prêt*, en °C (150 par défaut). |
 | `heat_threshold` | sèche-cheveux | Puissance à partir de laquelle il souffle de l'air chaud (300 W par défaut). En dessous, seul le ventilateur tourne. |
 | `flame_entity` | cheminée au gaz | Son capteur de flamme. Il dit si le feu brûle ; sans lui, c'est l'interrupteur principal ou le thermostat (en chauffe). |
 | `flame_height_entity` | cheminée au gaz | Le réglage de flamme, de 1 à 5 : une ligne *Hauteur de flamme*, et des flammes dessinées d'autant plus hautes. Un `number` se règle depuis la carte : un appui sur la ligne et on choisit la hauteur. |
@@ -478,6 +479,17 @@ appliance_type: hair_dryer
 hair_dryer_layout: ring
 state_entity: switch.prise_seche_cheveux
 power_entity: sensor.prise_seche_cheveux_puissance
+```
+
+Le lisseur est un troisième modèle (`hair_dryer_layout: straightener`, ou un nom comme *lisseur*, *straightener*, *flat iron*) : *En chauffe* tant que `temperature_entity` n'a pas atteint `straightener_ready_temperature` (150 °C par défaut), puis *Prêt* ; sans température, seulement *Allumé*. La chaleur monte des plaques, d'autant plus qu'elles sont chaudes. Une ligne *Allumé depuis* donne le temps écoulé, signalée au bout de 30 minutes.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: hair_dryer
+hair_dryer_layout: straightener
+state_entity: switch.lisseur
+power_entity: sensor.lisseur_puissance
+temperature_entity: sensor.lisseur_temperature
 ```
 
 </details>

@@ -1254,7 +1254,7 @@ function detectApplianceType(cfg, st) {
   // plenty of them are sold as air fryer ovens.
   // A hair dryer, before the tumble dryer that "dryer" and "seche" would make
   // of it.
-  if (HAIR_DRYER_RE.test(hay)) return "hair_dryer";
+  if (HAIR_DRYER_RE.test(hay) || STRAIGHTENER_RE.test(hay)) return "hair_dryer";
   // A rice cooker before it: Xiaomi's says cook_status too.
   if (RICE_COOKER_RE.test(hay)) return "rice_cooker";
   if (COOK_STATUS_RE.test(hay) || optionsInclude(st, ["preheat_end"])) return "air_fryer";
