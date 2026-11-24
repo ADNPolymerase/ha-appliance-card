@@ -2,7 +2,7 @@
 // The lamp drawing and its CSS, loaded by the card the first time it shows one.
 export default function defineDrawing(deps) {
 // A page still running the card of an earlier release: an arrow to reload.
-if (!deps || deps.__v !== "4.51.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
+if (!deps || deps.__v !== "4.52.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
 let { ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, numberOrNull, shdBlur, t, thsColor, zoneColumns } = deps;
 const softShadow = (cx, cy, rx, ry, op = .26, b = 1.6) => { const id = `shd-${cx}-${cy}-${rx}`.replace(/\./g, "_"); return `${shdBlur(id, b)}<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#000" opacity="${op}" filter="url(#${id})"/>`; };
 // The lamp, drawn in the light's colour: its halo, the cone it throws, and
@@ -15,7 +15,67 @@ const lpSpotRow = (c, gap) => {
   return Array.from({ length: n }, (_, i) => 48 + (i - (n - 1) / 2) * gap[n]);
 };
 const lpMetal = (id, a = "#6f7882", b = "#e8ecf0") => `<linearGradient id="lp-${id}" x1="0" x2="1"><stop offset="0" stop-color="${a}"/><stop offset=".45" stop-color="${b}"/><stop offset="1" stop-color="${a}"/></linearGradient>`;
+// A wine barrel turned into a bar (HACF #200): staves and black hoops, an
+// arched opening. Its light on, the bar is open: the lit shelf with the
+// glasses stored upside down, a carafe and a shaker above, bottles below.
+// Off, a plain curtain hangs over the opening, in the colour chosen.
+function lpBarrelBar(c) {
+  const n = (v) => +v.toFixed(2);
+  let N = 0;
+  const id = () => `lp-bb${++N}`;
+  const open = c.mode === "on", lit = c.mode === "on";
+  const lc = `rgb(${(Array.isArray(c.rgb) ? c.rgb : LAMP_WARM).join(",")})`;
+  const CUR = { grey: ["#6b7078", "#8a9099", "#565b62"], beige: ["#b9a888", "#d6c7a8", "#a08f70"], red: ["#7a1f27", "#9e2d36", "#5c151b"], blue: ["#2c3e66", "#3e5585", "#1f2d4d"], green: ["#3d5a3a", "#527a4e", "#2c432a"], black: ["#26282c", "#383b40", "#1b1c1f"] };
+  const [cm, ch, cl] = CUR[c.curtain] || CUR.grey;
+  const wood = id(), inside = id(), light = id(), soft = id(), curtain = id(), clip = id(), top = id();
+  // The barrel's outline: bulging in the middle.
+  const L = (y) => n(20 - 6 * Math.sin(Math.PI * (y - 4) / 116)), R = (y) => n(100 + 6 * Math.sin(Math.PI * (y - 4) / 116));
+  const outline = `M${L(8)} 8 Q${L(8) - 6} 62 ${L(118)} 118 Q60 126 ${R(118)} 118 Q${R(8) + 6} 62 ${R(8)} 8 Z`;
+  const hoop = (y, w = 4) => `<path d="M${n(L(y) - .4)} ${y} Q60 ${n(y + 7)} ${n(R(y) + .4)} ${y} V${n(y + w)} Q60 ${n(y + w + 7)} ${n(L(y) - .4)} ${n(y + w)} Z" fill="#1d1e21"/><path d="M${n(L(y) - .4)} ${y} Q60 ${n(y + 7)} ${n(R(y) + .4)} ${y}" stroke="#55585e" stroke-width=".5" fill="none"/>`;
+  const staves = Array.from({ length: 9 }, (_, i) => { const x = 26 + i * 8.5; return `<path d="M${x} 9 Q${n(x + (x - 60) * .12)} 62 ${x} 119" stroke="#5a3a1c" stroke-width=".5" fill="none" opacity=".55"/>`; }).join("");
+  // The opening: an arch cut through the front staves.
+  const ox0 = 32, ox1 = 88, oy0 = 34, oy1 = 104;
+  const arch = `M${ox0} ${oy1} V${oy0 + 6} Q${ox0} ${oy0} ${ox0 + 6} ${oy0} H${ox1 - 6} Q${ox1} ${oy0} ${ox1} ${oy0 + 6} V${oy1} Q60 ${oy1 + 5} ${ox0} ${oy1} Z`;
+  // The top shelf as in the photo: cocktail glasses stored upside down, a
+  // carafe, a shaker, tumblers.
+  const martini = (x, y, sc = 1) => { const w = 3.6 * sc, h = 5 * sc, st = 4.6 * sc, f = 2.2 * sc;
+    return `<path d="M${n(x - w)} ${y} L${x} ${n(y - h)} L${n(x + w)} ${y} Z" fill="#e8f1f8" fill-opacity=".35" stroke="#b9c6d0" stroke-width=".35"/><path d="M${n(x - w)} ${y} Q${x} ${n(y + .9 * sc)} ${n(x + w)} ${y}" fill="none" stroke="#d6e0e7" stroke-width=".35"/><path d="M${x} ${n(y - h)} V${n(y - h - st)}" stroke="#c9d4dc" stroke-width=".5"/><ellipse cx="${x}" cy="${n(y - h - st)}" rx="${f}" ry="${n(.7 * sc)}" fill="#e8f1f8" fill-opacity=".6" stroke="#b9c6d0" stroke-width=".3"/><path d="M${n(x - w + .8)} ${n(y - .6)} L${n(x - .6)} ${n(y - h + 1)}" stroke="#fff" stroke-width=".35" opacity=".7"/>`; };
+  const glasses = [37, 45.5, 54].map((x) => martini(x, 63, 1)).join("")
+    + `<path d="M60 63 V54.5 Q60 52.6 61.4 51.8 V49.8 H65.4 V51.8 Q66.8 52.6 66.8 54.5 V63 Z" fill="#e3edf5" fill-opacity=".45" stroke="#aebcc8" stroke-width=".35"/><rect x="61" y="56.4" width="4.8" height="3" fill="#e9d35a" opacity=".9"/><rect x="61.8" y="57.8" width="3.2" height="1.4" fill="#c62828"/>`
+    + `<path d="M69.2 63 V53 L70 50 H74.6 L75.4 53 V63 Z" fill="#c4ccd4"/><path d="M70 50 Q72.3 47.4 74.6 50 Z" fill="#aeb7c0"/><rect x="70.6" y="47" width="3.4" height="1.6" rx=".6" fill="#9aa3ad"/><path d="M70.4 53.4 V62" stroke="#fff" stroke-width=".6" opacity=".55"/>`;
+  const bottleCols = ["#7a3b1d", "#2e6b2e", "#c9a227", "#e8eef2", "#5a2a14", "#9b1d1d", "#2c5f2d", "#d97b1a", "#3b3b3b"];
+  const bottles = bottleCols.map((col, i) => { const x = 37 + i * 5.6, h = 16 + ((i * 7) % 9), y = 99 - h;
+    return `<rect x="${n(x - 2.1)}" y="${y + 5}" width="4.2" height="${h - 5}" rx="1" fill="${col}" opacity=".92"/><rect x="${n(x - .8)}" y="${y}" width="1.6" height="5.4" fill="${col}"/><rect x="${n(x - .9)}" y="${y - .9}" width="1.8" height="1.2" fill="#2a2a2a"/>${i % 2 ? `<rect x="${n(x - 1.6)}" y="${y + 9}" width="3.2" height="4" fill="#f3e6c4" opacity=".85"/>` : ""}<rect x="${n(x - 1.6)}" y="${y + 6}" width=".7" height="${h - 8}" fill="#fff" opacity=".25"/>`; }).join("");
+  const interior = `<clipPath id="${clip}"><path d="${arch}"/></clipPath><g clip-path="url(#${clip})">
+<rect x="${ox0}" y="${oy0}" width="${ox1 - ox0}" height="${oy1 - oy0 + 6}" fill="url(#${inside})"/>
+<path d="M${ox0} 64 H${ox1} L${ox1 - 3} 67 H${ox0 + 3} Z" fill="#b98a52"/><rect x="${ox0}" y="63" width="${ox1 - ox0}" height="1.4" fill="#d8ad74"/>
+${glasses}${bottles}
+${lit ? `<rect x="${ox0 + 2}" y="${oy0}" width="${ox1 - ox0 - 4}" height="1.6" fill="#fff6d8"/><path d="M${ox0 + 4} ${oy0 + 1} H${ox1 - 4} L${ox1} ${oy1} H${ox0} Z" fill="url(#${light})"/><path d="M${ox0 + 4} 65 H${ox1 - 4} L${ox1} ${oy1} H${ox0} Z" fill="url(#${light})" opacity=".7"/>` : `<rect x="${ox0}" y="${oy0}" width="${ox1 - ox0}" height="${oy1 - oy0 + 6}" fill="#000" opacity=".45"/>`}
+</g>`;
+  // The curtain: dark cloth, gathered at the top, its white dot pattern.
+  const folds = Array.from({ length: 7 }, (_, i) => { const x = ox0 + 2 + i * 8; return `<path d="M${x} ${oy0 - 2} Q${x + 2.5} 70 ${x - 1} ${oy1 + 4}" stroke="#000" stroke-width="1.4" opacity=".22" fill="none"/>`; }).join("");
+  const _unused = Array.from({ length: 26 }, (_, i) => { const a = i * 0.21 - 2.6, r = 18 + (i % 4) * 7; return `<path d="M52 44 L${n(52 + Math.cos(a) * r)} ${n(44 + Math.sin(a) * r * 1.2 + 20)}" stroke="#fff" stroke-width=".25" opacity=".55"/><circle cx="${n(52 + Math.cos(a) * r)}" cy="${n(44 + Math.sin(a) * r * 1.2 + 20)}" r=".7" fill="#fff" opacity=".8"/>`; }).join("");
+  const curt = `<g clip-path="url(#${clip}c)"><path d="M${ox0 - 2} ${oy0 - 3} H${ox1 + 2} V${oy1 + 4} Q${ox1 - 6} ${oy1 + 9} ${ox1 - 14} ${oy1 + 6} Q60 ${oy1 + 10} ${ox0 + 10} ${oy1 + 7} Q${ox0 + 2} ${oy1 + 9} ${ox0 - 2} ${oy1 + 4} Z" fill="url(#${curtain})"/>${folds}<path d="M${ox0 - 2} ${oy0 - 3} H${ox1 + 2} V${oy0} H${ox0 - 2} Z" fill="${cl}"/>${Array.from({ length: 10 }, (_, i) => `<circle cx="${n(ox0 + 1 + i * 6.1)}" cy="${oy0 - 1.5}" r=".9" fill="#c9ced6"/>`).join("")}</g>
+<clipPath id="${clip}c"><path d="M${ox0 - 2} ${oy0 - 3} H${ox1 + 2} V${oy1 + 12} H${ox0 - 2} Z"/></clipPath>`;
+  return `<defs><linearGradient id="${wood}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6b4320"/><stop offset=".3" stop-color="#a87341"/><stop offset=".6" stop-color="#9a6838"/><stop offset="1" stop-color="#5a3818"/></linearGradient>
+<linearGradient id="${inside}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a2614"/><stop offset="1" stop-color="#1e140b"/></linearGradient>
+<linearGradient id="${light}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${lc}" stop-opacity=".55"/><stop offset="1" stop-color="${lc}" stop-opacity="0"/></linearGradient>
+<linearGradient id="${curtain}" x1="0" y1="0" x2="1" y2="0">${[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => `<stop offset="${n(i / 8)}" stop-color="${i % 2 ? ch : cm}"/>`).join("")}<stop offset="1" stop-color="${cl}"/></linearGradient>
+<linearGradient id="${top}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a4e27"/><stop offset=".5" stop-color="#b07c48"/><stop offset="1" stop-color="#6b4320"/></linearGradient>
+<filter id="${soft}" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2"/></filter></defs>
+<ellipse cx="60" cy="122" rx="46" ry="3.4" fill="#000" opacity=".2" filter="url(#${soft})"/>
+${lit && open ? `<ellipse cx="60" cy="116" rx="30" ry="5" fill="${lc}" opacity=".35" filter="url(#${soft})"/>` : ""}
+<path d="${outline}" fill="url(#${wood})"/>${staves}
+<ellipse cx="60" cy="8" rx="${n(R(8) - 60)}" ry="5.4" fill="url(#${top})" stroke="#3a2614" stroke-width=".6"/><ellipse cx="60" cy="8" rx="${n(R(8) - 63)}" ry="4" fill="none" stroke="#5a3a1c" stroke-width=".5"/>
+${hoop(10, 3.6)}${hoop(22)}
+<path d="${arch}" fill="none" stroke="#3a2614" stroke-width="2.4"/>
+${open ? interior : `<path d="${arch}" fill="#1a1208"/>`}
+${!open ? curt : ""}
+${hoop(108)}${hoop(116, 3)}
+${lit && open ? `<path d="${arch}" fill="none" stroke="#ffe7a0" stroke-width=".8" opacity=".6"/>` : ""}`;
+}
 const LAMP_SVGS = {
+  barrel_bar: (c) => `<g transform="translate(0 2) scale(.8)">${lpBarrelBar(c)}</g>`,
   bulb: () => `<defs>${lpHalo("bH")}
 <radialGradient id="lp-bG" cx=".42" cy=".38" r=".62"><stop offset="0" stop-color="#fff"/><stop offset=".45" class="lp-stop"/><stop offset="1" class="lp-stop" stop-opacity=".75"/></radialGradient>${lpMetal("bM")}</defs>
 <circle class="lp-halo" cx="48" cy="38" r="44" fill="url(#lp-bH)"/>

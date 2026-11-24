@@ -3754,7 +3754,8 @@ class ApplianceCard extends HTMLElement {
     let lampDraw = null;
     if (cap.lamp) {
       const l = lampReadOf(hass, cfg, st);
-      if (!cfg.state_show_raw || l.mode === "unav") stateLabel = t(hass, LAMP_LABELS[l.mode]);
+      const lpLayout = lampLayoutOf(cfg, st);
+      if (!cfg.state_show_raw || l.mode === "unav") stateLabel = t(hass, (lpLayout === "barrel_bar" ? BAR_LABELS : LAMP_LABELS)[l.mode]);
       color = LAMP_COLORS[l.mode];
       if (l.pct !== null) {
         extraLines.push({ key: "lamp_brightness", icon: "mdi:brightness-6", label: t(hass, "lamp_line_brightness"),
@@ -3771,7 +3772,7 @@ class ApplianceCard extends HTMLElement {
       const mst = cfg.motion_entity ? stateObj(hass, cfg.motion_entity) : null;
       const motion = !!mst && ["on", "true", "1", "detected", "home"].includes(String(mst.state).trim().toLowerCase());
       if (mst) extraLines.push({ key: "lamp_motion", icon: motion ? "mdi:motion-sensor" : "mdi:motion-sensor-off", label: t(hass, "section_motion"), value: t(hass, motion ? "det_line_detected" : "det_line_clear"), entity: cfg.motion_entity, caution: motion });
-      lampDraw = { mode: l.mode, rgb: l.rgb, pct: l.pct, fx: !!l.effect, layout: lampLayoutOf(cfg, st), spots: lampSpotsOf(cfg, st), motion };
+      lampDraw = { mode: l.mode, rgb: l.rgb, pct: l.pct, fx: !!l.effect, layout: lpLayout, spots: lampSpotsOf(cfg, st), motion, curtain: cfg.curtain_color };
     }
 
     // The HACF drawings: a pump, underfloor heating, a spa, a sauna, an

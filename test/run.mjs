@@ -15867,4 +15867,170 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('editeur console : pas de couleurs d arcade', /data-field="arcade_color"/.test(markup(newEditor({ state_entity: 'media_player.ps5', appliance_type: 'console', console_layout: 'ps5' })._root)), false);
 }
 
+// =============================================================================
+// Pinball cabinet (pincab, HACF #203): a console layout like the arcade ones.
+// =============================================================================
+{
+  const S = (v, a = {}) => ({ state: v, attributes: a });
+  const PC = (extra = {}, states = {}) => build({ appliance_type: 'console', console_layout: 'pincab', state_entity: 'switch.pincab', ...extra }, { 'switch.pincab': S('on'), ...states }).html;
+  const svg = (h) => (h.match(/<svg class="nt-svg"[\s\S]*?<\/svg>/) || [''])[0];
+  check('pincab : dessine', /nt-k-con_pincab/.test(PC()), true);
+  check('pincab : allume, au menu', stateLine(PC()), 'On');
+  check('pincab : sur une prise qui consomme, toujours au menu', stateLine(PC({ power_entity: 'sensor.w', power_on_threshold: 20 }, { 'sensor.w': S('180', { unit_of_measurement: 'W' }) })), 'On');
+  check('pincab : au menu, PRESS START', /PRESS START/.test(PC()), true);
+  check('pincab : au menu, pas de bille', /<animateMotion/.test(PC()), false);
+  const play = PC({ game_entity: 'sensor.pinup_table' }, { 'sensor.pinup_table': S('Space Station') });
+  check('pincab : une table, en jeu', stateLine(play), 'Playing');
+  check('pincab : la table en ligne', infoLine(play, 'Game').replace(/ /g, ' '), 'Space Station');
+  check('pincab : en jeu, la bille roule', /<animateMotion/.test(play), true);
+  check('pincab : en jeu, les flippers frappent', (play.match(/type="rotate" values="0 (9|20)\.5 51;/g) || []).length, 2);
+  check('pincab : en jeu, le score', /1,250,400/.test(play), true);
+  const pic = PC({ game_entity: 'sensor.pinup_table', image_entity: 'image.pinup_backglass' }, { 'sensor.pinup_table': S('Space Station'), 'image.pinup_backglass': S('2026-11-24T10:00:00', { entity_picture: '/api/image_proxy/image.pinup_backglass?token=x' }) });
+  check('pincab : le fronton de la table', /<image href="\/api\/image_proxy\/image\.pinup_backglass\?token=x"/.test(pic), true);
+  check('pincab : au menu, le fronton generique', /PINBALL</.test(PC()), true);
+  const off = PC({}, { 'switch.pincab': S('off') });
+  check('pincab : eteint', stateLine(off), 'Off');
+  check('pincab : eteint, ecrans noirs', /PRESS START|PINBALL</.test(off), false);
+  check('pincab : violet par defaut', /stroke="#8e4fd6"/.test(PC()), true);
+  check('pincab : couleur du cadre', /stroke="#d32f2f"/.test(PC({ arcade_color: 'red' })), true);
+  check('pincab : decor plus clair que le cadre', /stroke="#ff9c9c"/i.test(PC({ arcade_color: 'red' })) || /stroke="#[ef][0-9a-f]{5}"/i.test(svg(PC({ arcade_color: 'red' }))), true);
+  check('pincab : pas teinte par la couleur de la carte', svg(PC({ illustration_color: 'red' })) === svg(PC()), true);
+  check('pincab : aucun gabarit oublie dans le dessin', /\$\{/.test(svg(PC())) || /\$\{/.test(svg(PC({ game_entity: 'sensor.t' }, { 'sensor.t': S('x') }))), false);
+  check('pincab : le cote est rempli', /<path d="[^"]+" fill="url\(#nt\d+\)"/.test(svg(PC())), true);
+  check('pincab : quatre pieds au sol', (svg(PC()).match(/<ellipse rx="1\.3" ry="1\.3" fill="#11141a"\/>/g) || []).length, 4);
+  for (const id of ['switch.pincab', 'switch.pinball', 'switch.flipper_virtuel', 'switch.pinup_popper', 'switch.visual_pinball'])
+    check(`pincab : reconnu par ${id}`, /nt-k-con_pincab/.test(render({ appliance_type: 'console', state_entity: id }, { [id]: S('on') })), true);
+  check('pincab : une borne reste une borne', /nt-k-con_arcade_bartop/.test(render({ appliance_type: 'console', state_entity: 'switch.recalbox' }, { 'switch.recalbox': S('on') })), true);
+  const ed = markup(newEditor({ state_entity: 'switch.pincab', appliance_type: 'console', console_layout: 'pincab' })._root);
+  check('editeur pincab : dans les modeles', /<option value="pincab"/.test(ed), true);
+  check('editeur pincab : la couleur du cadre', /data-field="arcade_color"/.test(ed), true);
+  check('editeur pincab : pas de couleurs de joueurs', /data-field="arcade_p1_color"/.test(ed), false);
+}
+
+// =============================================================================
+// Water dispenser, chiller and carbonator (#140)
+// =============================================================================
+{
+  const S = (v, a = {}) => ({ state: String(v), attributes: a });
+  const W = (w, extra = {}, states = {}, sw = 'on') => build({ appliance_type: 'water_dispenser', state_entity: 'switch.wd', power_entity: 'sensor.wd_w', ...extra },
+    { 'switch.wd': S(sw), 'sensor.wd_w': S(w, { unit_of_measurement: 'W' }), ...states }).html;
+  const kind = (h) => (/nt-k-(\w+)/.exec(machineCls(h)) || [, ''])[1];
+  const svg = (h) => (h.match(/<svg class="nt-svg"[\s\S]*?<\/svg>/) || [''])[0];
+  const line = (h, label) => { const m = new RegExp(`<div class="info-line ([^"]*)"[^>]*title="${label}">[\\s\\S]*?<span class="label">[^<]*</span><span>([^<]*)`).exec(h); return m ? { cls: m[1], v: m[2].replace(/ /g, ' ') } : null; };
+  check('distributeur : sous l evier par defaut', kind(W(0)), 'wd_under_sink');
+  check('distributeur : colonne', kind(W(0, { water_dispenser_layout: 'column' })), 'wd_column');
+  check('distributeur : colonne reconnue au nom', kind(build({ appliance_type: 'water_dispenser', state_entity: 'switch.water_cooler' }, { 'switch.water_cooler': S('on') }).html), 'wd_column');
+  check('distributeur : prise coupee, eteint', stateLine(W(0, {}, {}, 'off')), 'Off');
+  check('distributeur : branche sans consommer, en veille', stateLine(W(0)), 'Standby');
+  check('distributeur : le compresseur, refroidit', stateLine(W(85)), 'Cooling');
+  check('distributeur : refroidit en bleu', stateColor(W(85)), '#29b6f6');
+  check('distributeur : la pompe en plus, gazeifie', stateLine(W(220)), 'Carbonating');
+  check('distributeur : seuil de froid reglable', stateLine(W(85, { cooling_threshold: 100 })), 'Standby');
+  check('distributeur : seuil de gazeification reglable', stateLine(W(220, { carbonation_threshold: 300 })), 'Cooling');
+  check('distributeur : sans mesure, allume', stateLine(build({ appliance_type: 'water_dispenser', state_entity: 'switch.wd' }, { 'switch.wd': S('on') }).html), 'On');
+  check('distributeur : en francais', stateLine(W(85, { language: 'fr' })), 'Refroidit');
+  const D = (mode) => W(85, { dispensing_entity: 'binary_sensor.d', dispense_mode_entity: 'select.m' }, { 'binary_sensor.d': S('on'), 'select.m': S(mode) });
+  check('distributeur : distribue, l eau choisie', stateLine(D('Frizzante')), 'Sparkling water');
+  check('distributeur : eau plate', stateLine(D('Still')), 'Still water');
+  check('distributeur : eau fraiche par defaut', stateLine(D('Fredda')), 'Cold water');
+  check('distributeur : distribuer prime sur refroidir', stateLine(W(85, { dispensing_entity: 'binary_sensor.d' }, { 'binary_sensor.d': S('on') })), 'Cold water');
+  check('distributeur : pas en train de distribuer', stateLine(W(85, { dispensing_entity: 'binary_sensor.d' }, { 'binary_sensor.d': S('off') })), 'Cooling');
+  check('distributeur : un debit, il distribue', stateLine(W(85, { dispensing_entity: 'sensor.flow' }, { 'sensor.flow': S('1.2', { unit_of_measurement: 'L/min' }) })), 'Cold water');
+  check('distributeur : remplissage', stateLine(W(85, { refill_entity: 'binary_sensor.r' }, { 'binary_sensor.r': S('on') })), 'Refilling');
+  // The drawing.
+  check('distributeur : refroidit, le givre', /fill="#4fc3f7" opacity="\.12"/.test(svg(W(85))), true);
+  check('distributeur : en veille, pas de givre', /fill="#4fc3f7" opacity="\.12"/.test(svg(W(0))), false);
+  check('distributeur : gazeifie, les bulles', /fill="#80deea" opacity="0"/.test(svg(W(220))), true);
+  check('distributeur : gazeuse, le verre petille', (svg(D('Sparkling')).match(/<circle[^>]*fill="#fff" opacity="0"/g) || []).length > 4, true);
+  check('distributeur : plate, sans bulles', (svg(D('Still')).match(/<circle[^>]*fill="#fff" opacity="0"/g) || []).length, 0);
+  check('distributeur : le verre se remplit dans sa forme', /<clipPath id="wg\d+_\d+"><path d="M[^"]+"\/><\/clipPath><g clip-path="url\(#wg\d+_\d+\)"><rect[^>]*><animate attributeName="y"/.test(svg(D('Still'))), true);
+  check('distributeur : eau fraiche, des flocons sur la machine', /stroke="#29b6f6"/.test(svg(D('Fredda'))), true);
+  check('distributeur : eau plate, pas de flocons', /stroke="#29b6f6"/.test(svg(D('Still'))), false);
+  check('distributeur : eau fraiche plus bleue', /fill="#4fb3ec"/.test(svg(D('Fredda'))) && !/fill="#4fb3ec"/.test(svg(D('Still'))), true);
+  const RF = (extra = {}) => svg(W(85, { refill_entity: 'binary_sensor.r', ...extra }, { 'binary_sensor.r': S('on') }));
+  check('distributeur : remplissage, l eau coule dans le tuyau', /stroke="#4fc3f7" stroke-width="1\.5"/.test(RF()) && /attributeName="stroke-dashoffset"/.test(RF()), true);
+  check('distributeur : remplissage, la jauge monte', /attributeName="height" values="0;12\.6/.test(RF()), true);
+  check('distributeur : remplissage, plus de goutte', /q-2\.[26] /.test(RF()) || /q-2\.[26] /.test(RF({ water_dispenser_layout: 'column' })), false);
+  check('distributeur : colonne, remplissage visible', /attributeName="height" values="0;23/.test(RF({ water_dispenser_layout: 'column' })), true);
+  check('distributeur : colonne, CO2 bas affiche', />CO\u2082<\/text>/.test(svg(W(4, { water_dispenser_layout: 'column', co2_cylinder_entity: 'binary_sensor.c' }, { 'binary_sensor.c': S('on') }))), true);
+  check('distributeur : colonne, CO2 bon, rien', />CO\u2082<\/text>/.test(svg(W(4, { water_dispenser_layout: 'column', co2_cylinder_entity: 'binary_sensor.c' }, { 'binary_sensor.c': S('off') }))), false);
+  check('distributeur : aucun gabarit oublie', /\$\{/.test(svg(W(85)) + svg(D('Sparkling')) + svg(W(85, { water_dispenser_layout: 'column' }))), false);
+  check('distributeur : colonne, la temperature a l afficheur', />6°</.test(svg(W(85, { water_dispenser_layout: 'column', temperature_entity: 'sensor.t' }, { 'sensor.t': S(6, { unit_of_measurement: '°C' }) }))), true);
+  // Lines and alerts.
+  const all = W(4, { filter_life_entity: 'sensor.f', co2_cylinder_entity: 'binary_sensor.co2', water_total_entity: 'sensor.l', maintenance_entity: 'binary_sensor.m', temperature_entity: 'sensor.t' },
+    { 'sensor.f': S(8, { unit_of_measurement: '%' }), 'binary_sensor.co2': S('on'), 'sensor.l': S('152.4', { unit_of_measurement: 'L' }), 'binary_sensor.m': S('off'), 'sensor.t': S(6, { unit_of_measurement: '°C' }) });
+  check('distributeur : litres distribues', line(all, 'Water dispensed').v, '152.4 L');
+  check('distributeur : filtre bas, signale', /caution/.test(line(all, 'Filter').cls), true);
+  check('distributeur : CO2 bas', line(all, 'CO₂').v, 'Low');
+  check('distributeur : CO2 bas, signale', /caution/.test(line(all, 'CO₂').cls), true);
+  check('distributeur : entretien OK', line(all, 'Maintenance').v, 'OK');
+  check('distributeur : entretien OK, rien a signaler', /caution/.test(line(all, 'Maintenance').cls), false);
+  check('distributeur : alerte sur le dessin', /<text y="2\.1"[^>]*>!</.test(svg(all)), true);
+  check('distributeur : CO2 bas, etiquette orange', /<rect x="20" y="66" width="14" height="5" fill="#ff9800"/.test(svg(all)), true);
+  const okAll = W(4, { filter_life_entity: 'sensor.f', co2_cylinder_entity: 'sensor.co2' }, { 'sensor.f': S(60, { unit_of_measurement: '%' }), 'sensor.co2': S(70, { unit_of_measurement: '%' }) });
+  check('distributeur : CO2 seul bas, alerte sur le dessin', /<text y="2\.1"[^>]*>!</.test(svg(W(4, { co2_cylinder_entity: 'sensor.co2' }, { 'sensor.co2': S(5, { unit_of_measurement: '%' }) }))), true);
+  check('distributeur : filtre et CO2 bons, pas d alerte', /<text y="2\.1"[^>]*>!</.test(svg(okAll)), false);
+  check('distributeur : CO2 a 10 %, bas', /caution/.test(line(W(4, { co2_cylinder_entity: 'sensor.co2' }, { 'sensor.co2': S(10, { unit_of_measurement: '%' }) }), 'CO₂').cls), true);
+  check('distributeur : CO2 dit vide', /caution/.test(line(W(4, { co2_cylinder_entity: 'sensor.co2' }, { 'sensor.co2': S('Empty') }), 'CO₂').cls), true);
+  check('distributeur : entretien a faire', line(W(4, { maintenance_entity: 'binary_sensor.m' }, { 'binary_sensor.m': S('on') }), 'Maintenance').v, 'Due');
+  check('distributeur : eteint, pas de temperature', line(W(0, { temperature_entity: 'sensor.t' }, { 'sensor.t': S(6) }, 'off'), 'Temperature'), null);
+  // Detection.
+  const wdType = (id) => kind(build({ state_entity: id }, { [id]: S('on') }).html).startsWith('wd_');
+  for (const id of ['switch.erogatore_acqua', 'switch.water_dispenser', 'switch.water_cooler', 'switch.fontaine_a_eau', 'switch.wasserspender', 'switch.gasatore'])
+    check(`detection distributeur : ${id}`, wdType(id), true);
+  check('detection : un adoucisseur n est pas un distributeur', wdType('switch.water_heater'), false);
+  // Editor.
+  const ed = markup(newEditor({ state_entity: 'switch.wd', appliance_type: 'water_dispenser' })._root);
+  check('editeur distributeur : dans la liste', /<option value="water_dispenser"/.test(ed), true);
+  check('editeur distributeur : les modeles', /<option value="under_sink"/.test(ed) && /<option value="column"/.test(ed), true);
+  for (const f of ['dispensing_entity', 'dispense_mode_entity', 'refill_entity', 'water_total_entity', 'co2_cylinder_entity', 'maintenance_entity', 'filter_life_entity', 'temperature_entity'])
+    check(`editeur distributeur : ${f}`, ed.includes(`data-toggle="${f}"`), true);
+  const edP = markup(newEditor({ state_entity: 'switch.wd', power_entity: 'sensor.wd_w', appliance_type: 'water_dispenser' })._root);
+  check('editeur distributeur : les seuils', /cooling_threshold/.test(edP) && /carbonation_threshold/.test(edP), true);
+}
+
+// =============================================================================
+// Jukebox and barrel bar (HACF #200)
+// =============================================================================
+{
+  const S = (v, a = {}) => ({ state: String(v), attributes: a });
+  const kind = (h) => (/nt-k-(\w+)/.exec(machineCls(h)) || [, ''])[1];
+  const svg = (h) => (h.match(/<svg class="(nt|lp)-svg"[\s\S]*?<\/svg>/) || [''])[0];
+  const J = (w, extra = {}, sw = 'on') => build({ appliance_type: 'speaker', speaker_layout: 'jukebox', state_entity: 'switch.jb', power_entity: 'sensor.jb_w', power_on_threshold: 80, ...extra },
+    { 'switch.jb': S(sw), 'sensor.jb_w': S(w, { unit_of_measurement: 'W' }) }).html;
+  check('jukebox : dessine', kind(J(120)), 'spk_jukebox');
+  check('jukebox : reconnu au nom', kind(build({ state_entity: 'switch.jukebox' }, { 'switch.jukebox': S('on') }).html), 'spk_jukebox');
+  check('jukebox : un Rock-Ola', kind(build({ appliance_type: 'speaker', state_entity: 'media_player.rock_ola' }, { 'media_player.rock_ola': S('idle') }).html), 'spk_jukebox');
+  check('jukebox : au-dessus du seuil, en lecture', stateLine(J(120)), 'Playing');
+  check('jukebox : en lecture, les touches pulsent', /<path d="M[^"]+ Z" fill="#3d8bff"><animate/.test(svg(J(120))), true);
+  check('jukebox : en lecture, le cadre rouge saute', /stroke="#ff5252"[^>]*><animate attributeName="opacity"[^>]*calcMode="discrete"/.test(svg(J(120))), true);
+  check('jukebox : allume sans jouer, eclaire mais immobile', /fill="#3d8bff"/.test(svg(J(40))) && !/<path d="M[^"]+ Z" fill="#3d8bff"><animate/.test(svg(J(40))), true);
+  check('jukebox : eteint, rien d allume', /fill="#3d8bff"/.test(svg(J(0, {}, 'off'))), false);
+  check('jukebox : les lettres', ['J', 'U', 'K', 'E', 'B', 'O', 'X'].every((ch) => new RegExp(`>${ch}(<animate|</text>)`).test(svg(J(120)))), true);
+  check('jukebox : quarante etiquettes', (svg(J(40)).match(/fill="#fbfbe6"/g) || []).length, 40);
+  check('jukebox : pas teinte par la couleur de la carte', svg(J(40, { illustration_color: 'red' })) === svg(J(40)), true);
+  check('jukebox : aucun gabarit oublie', /\$\{/.test(svg(J(120))), false);
+  const edJ = markup(newEditor({ state_entity: 'switch.jb', appliance_type: 'speaker' })._root);
+  check('editeur jukebox : dans les modeles', /<option value="jukebox"/.test(edJ), true);
+  // Barrel bar.
+  const B = (state, extra = {}, attrs = {}) => build({ appliance_type: 'lamp', lamp_layout: 'barrel_bar', state_entity: 'light.bar', ...extra }, { 'light.bar': S(state, attrs) }).html;
+  const lpCls = (h) => machineCls(h);
+  check('bar : dessine', /lp-l-barrel_bar/.test(lpCls(B('on'))), true);
+  check('bar : reconnu au nom', /lp-l-barrel_bar/.test(lpCls(build({ state_entity: 'light.barrique' }, { 'light.barrique': S('off') }).html)), true);
+  check('bar : allume, ouvert', stateLine(B('on')), 'Open');
+  check('bar : eteint, ferme', stateLine(B('off')), 'Closed');
+  check('bar : en francais', stateLine(B('off', { language: 'fr' })), 'Fermé');
+  check('bar : ouvert, les bouteilles', (svg(B('on')).match(/<rect x="[\d.]+" y="[\d.]+" width="1\.8" height="1\.2" fill="#2a2a2a"\/>/g) || []).length, 9);
+  check('bar : ouvert, trois verres retournes', (svg(B('on')).match(/<ellipse cx="[\d.]+" cy="[\d.]+" rx="2\.2"/g) || []).length, 3);
+  check('bar : ferme, le rideau', /fill="#c9ced6"/.test(svg(B('off'))) && !/fill="#2a2a2a"/.test(svg(B('off'))), true);
+  check('bar : rideau gris par defaut', /stop-color="#6b7078"/.test(svg(B('off'))), true);
+  check('bar : rideau rouge', /stop-color="#7a1f27"/.test(svg(B('off', { curtain_color: 'red' }))), true);
+  check('bar : la lumiere prend la couleur de la lampe', /stop-color="rgb\(255,0,0\)"/.test(svg(B('on', {}, { rgb_color: [255, 0, 0] }))), true);
+  check('bar : aucun gabarit oublie', /\$\{/.test(svg(B('on')) + svg(B('off'))), false);
+  const edB = markup(newEditor({ state_entity: 'light.bar', appliance_type: 'lamp', lamp_layout: 'barrel_bar' })._root);
+  check('editeur bar : dans les modeles', /<option value="barrel_bar"/.test(edB), true);
+  check('editeur bar : couleur du rideau', /curtain_color/.test(edB), true);
+  check('editeur lampe : pas de rideau ailleurs', /curtain_color/.test(markup(newEditor({ state_entity: 'light.x', appliance_type: 'lamp', lamp_layout: 'bulb' })._root)), false);
+}
+
 report();

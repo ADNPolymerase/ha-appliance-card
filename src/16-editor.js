@@ -80,7 +80,7 @@ const SECTIONS = [
   // Hood
   { field: "fan_entity", types: ["hood"], labelKey: "section_fan", includeDomains: ["fan", "select", "input_select", "sensor", "number", "input_number"] },
   { field: "boost_entity", types: ["hood"], labelKey: "section_boost", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
-  { field: "filter_life_entity", types: ["hood", "pet_fountain", "hrv", "air_purifier"], labelKey: "section_filter_life", includeDomains: ["sensor", "number", "binary_sensor"], extra: (c) =>
+  { field: "filter_life_entity", types: ["hood", "pet_fountain", "hrv", "air_purifier", "water_dispenser"], labelKey: "section_filter_life", includeDomains: ["sensor", "number", "binary_sensor"], extra: (c) =>
       c._type === "pet_fountain" ? c._row("filter_due_below", "filter_due_below", { placeholder: "3" })
         : c._type === "hrv" ? c._row("filter_life_full", "filter_life_full", { placeholder: "90" }) : "" },
   { field: "filter2_life_entity", types: ["air_purifier"], labelKey: "section_filter2_life", includeDomains: ["sensor", "number"] },
@@ -398,6 +398,13 @@ const SECTIONS = [
   { field: "light_entity", types: ["oven", "hood", "printer_3d", "fan", "pool_pump", "diffuser", "spa"], labelKey: "section_light", includeDomains: ["light", "switch", "input_boolean", "binary_sensor"] },
   { field: "camera_entity", types: ["printer_3d", "robot", "pet_feeder"], labelKey: "type_camera", includeDomains: ["camera", "image"] },
   { field: "usb_entity", types: ["power_strip"], labelKey: "strip_usb", includeDomains: ["switch", "input_boolean"] },
+  { field: "temperature_entity", types: ["water_dispenser"], labelKey: "temperature", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "dispensing_entity", types: ["water_dispenser"], labelKey: "wd_dispensing_entity", includeDomains: ["binary_sensor", "sensor", "switch", "input_boolean"] },
+  { field: "dispense_mode_entity", types: ["water_dispenser"], labelKey: "wd_mode_entity", includeDomains: ["select", "input_select", "sensor"] },
+  { field: "refill_entity", types: ["water_dispenser"], labelKey: "wd_refill_entity", includeDomains: ["binary_sensor", "sensor", "switch"] },
+  { field: "water_total_entity", types: ["water_dispenser"], labelKey: "wd_dispensed", includeDomains: ["sensor", "counter", "number"] },
+  { field: "co2_cylinder_entity", types: ["water_dispenser"], labelKey: "wd_co2", includeDomains: ["sensor", "binary_sensor", "number"] },
+  { field: "maintenance_entity", types: ["water_dispenser"], labelKey: "wd_maintenance", includeDomains: ["binary_sensor", "sensor"] },
   { field: "system_entity", types: ["console"], labelKey: "con_system", includeDomains: ["sensor", "input_text", "select"] },
   { field: "image_entity", types: ["console"], labelKey: "con_game_image", includeDomains: ["image", "camera", "sensor"] },
 
@@ -614,6 +621,7 @@ const SECTIONS = [
         : "";
       // What a plug alone tells of a washer's steps and a hob's zones.
       const plugRows = c._type === "food_processor" ? c._row("step_heat_threshold", "heat_threshold", { placeholder: String(FP_COOK_W) })
+        : c._type === "water_dispenser" ? c._row("cooling_threshold", "cooling_threshold", { placeholder: String(WD_COOL_W) }) + c._row("carbonation_threshold", "carbonation_threshold", { placeholder: String(WD_CARB_W) })
         : ["washer", "dishwasher", "dryer"].includes(c._type)
         ? c._row("step_heat_threshold", "heat_threshold", { placeholder: String(c._type === "dryer" ? DRYER_HEAT_W : WASH_HEAT_W) })
           + (c._type === "washer" ? c._row("step_spin_threshold", "spin_threshold", { placeholder: String(WASH_SPIN_W) }) : "")
@@ -1743,7 +1751,7 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(CIRC_MODELS.map((v) => ({ value: v, label: v === "generic" ? t(hass, "circ_model_generic") : v === "dab" ? "DAB" : v[0].toUpperCase() + v.slice(1) }))),
         }) : "") : ""}
-        ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["pellet_grill", "grill_layout", GRILL_LAYOUTS, "pg"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"], ["streamer", "streamer_layout", STREAMER_LAYOUTS, "str"], ["climate_sensor", "climate_sensor_layout", THS_LAYOUTS, "ths"], ["cover", "cover_layout", COVER_LAYOUTS, "cov"], ["fingerbot", "fingerbot_layout", FINGERBOT_LAYOUTS, "fb"], ["valve", "valve_layout", VALVE_LAYOUTS, "vlv"], ["drying_rack", "rack_layout", RACK_LAYOUTS, "rack"], ["power_strip", "strip_layout", STRIP_LAYOUTS, "strip"], ["food_processor", "food_layout", FP_LAYOUTS, "fp"]]
+        ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["pellet_grill", "grill_layout", GRILL_LAYOUTS, "pg"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"], ["streamer", "streamer_layout", STREAMER_LAYOUTS, "str"], ["climate_sensor", "climate_sensor_layout", THS_LAYOUTS, "ths"], ["cover", "cover_layout", COVER_LAYOUTS, "cov"], ["fingerbot", "fingerbot_layout", FINGERBOT_LAYOUTS, "fb"], ["valve", "valve_layout", VALVE_LAYOUTS, "vlv"], ["drying_rack", "rack_layout", RACK_LAYOUTS, "rack"], ["power_strip", "strip_layout", STRIP_LAYOUTS, "strip"], ["water_dispenser", "water_dispenser_layout", WD_LAYOUTS, "wd"], ["food_processor", "food_layout", FP_LAYOUTS, "fp"]]
           .filter(([ty]) => this._type === ty).map(([, f, list, p]) => this._row("section_screen_layout", f, { type: "select",
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(list.map((v) => ({ value: v, label: t(hass, `layout_${p}_${v}`) }))) })).join("")}
         ${this._type === "detector" && DETECTOR_MODELS[detectorLayoutOf(this._config, stateObj(hass, this._config.state_entity))] ? this._row("det_model", "detector_model", {
@@ -1811,7 +1819,7 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: Object.keys(NETATMO_COLORS).map((v) => ({ value: v, label: t(hass, `ntm_${v}`) })),
         }) : ""}
-        ${this._type === "console" && /^arcade_/.test(consoleLayoutOf(this._config, stateObj(hass, this._config.state_entity))) ? [["arcade_color", Object.keys(ARC_COLORS)], ["arcade_p1_color", Object.keys(ARC_BUTTONS)], ["arcade_p2_color", Object.keys(ARC_BUTTONS)]].map(([f, list]) => this._row(f, f, {
+        ${this._type === "console" && /^(arcade_|pincab$)/.test(consoleLayoutOf(this._config, stateObj(hass, this._config.state_entity))) ? [["arcade_color", Object.keys(ARC_COLORS)], ["arcade_p1_color", Object.keys(ARC_BUTTONS)], ["arcade_p2_color", Object.keys(ARC_BUTTONS)]].slice(0, consoleLayoutOf(this._config, stateObj(hass, this._config.state_entity)) === "pincab" ? 1 : 3).map(([f, list]) => this._row(f, f, {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(list.map((v) => ({ value: v, label: t(hass, `color_${v}`) }))),
         })).join("") : ""}
@@ -1857,6 +1865,9 @@ class ApplianceCardEditor extends HTMLElement {
         }) + (LAMP_SPOT_ROWS.includes(lampLayoutOf(this._config, stateObj(hass, this._config.state_entity))) ? this._row("lamp_spots", "spots", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(LAMP_SPOTS.map((v) => ({ value: String(v), label: String(v) }))),
+        }) : "") + (lampLayoutOf(this._config, stateObj(hass, this._config.state_entity)) === "barrel_bar" ? this._row("curtain_color", "curtain_color", {
+          type: "select",
+          options: CURTAIN_COLORS.map((v) => ({ value: v, label: t(hass, `color_${v}`) })),
         }) : "") + this._row("show_toggle", "show_toggle", { type: "checkbox", defaultOn: true }) : ""}
         ${this._type === "robot" ? (() => {
           const layout = robotLayoutOf(this._config, stateObj(hass, this._config.state_entity));

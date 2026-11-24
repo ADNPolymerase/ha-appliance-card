@@ -425,6 +425,12 @@ const TYPE_AUTO_PATTERNS = {
   power_strip: {
     usb_entity: /^switch\..*usb/i,
   },
+  water_dispenser: {
+    filter_life_entity: /^(sensor|binary_sensor)\..*(filter|filtre|filtro)/i,
+    co2_cylinder_entity: /^(sensor|binary_sensor)\..*(co2|cylinder|bombola|bouteille|zylinder)/i,
+    water_total_entity: /^sensor\..*(dispensed|liters|litres|litri|volume|water.?total)/i,
+    dispensing_entity: /^binary_sensor\..*(dispens|erog|pour)/i,
+  },
   valve: {
     battery_entity: /batter/i,
     leak_entity: /^binary_sensor\..*(leak|fuite|water|wasser|flood)/i,
@@ -871,6 +877,8 @@ const TYPE_CAPS = {
   power_strip: { ntStrip: true },
   // A kitchen robot, read from the plug it is on (HACF #170).
   food_processor: { ntFood: true },
+  // A water dispenser, chiller and carbonator (#140), mostly on a plug.
+  water_dispenser: { ntWater: true },
   // A gas fireplace (#130): flame, fan, lights and pilot on their own.
   gas_fireplace: { ntFire: true },
   speaker: { ntSpeaker: true },
@@ -1003,6 +1011,7 @@ const STATE_DOMAINS = {
   drying_rack: ["binary_sensor", "cover", "input_boolean", "switch", "sensor"],
   power_strip: ["switch", "input_boolean", "light"],
   food_processor: ["switch", "sensor", "input_boolean", "binary_sensor"],
+  water_dispenser: ["switch", "sensor", "input_boolean", "binary_sensor"],
   gas_fireplace: ["switch", "binary_sensor", "climate", "input_boolean"],
   speaker: ["media_player"],
   console: ["media_player", "sensor", "switch", "binary_sensor", "device_tracker", "input_boolean"],
@@ -1129,7 +1138,7 @@ function compactModeOf(v) {
 // thirty types in one list were hard to find one's way in.
 const TYPE_GROUPS = [
   ["laundry", ["washer", "dryer"]],
-  ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster", "pellet_grill", "food_processor"]],
+  ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster", "pellet_grill", "food_processor", "water_dispenser"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove", "gas_fireplace"]],
   ["air", ["air_conditioner", "dehumidifier", "humidifier", "air_purifier", "fan", "diffuser", "hrv", "climate_sensor"]],
   ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "fingerbot", "valve", "drying_rack", "power_strip", "speaker", "console", "streamer", "cover"]],
@@ -1227,7 +1236,7 @@ function detectApplianceType(cfg, st) {
   // class. It is never a washing machine.
   if (domainOf(cfg.state_entity) === "binary_sensor" && (["smoke", "carbon_monoxide", "gas", "moisture", "door", "window", "opening", "garage_door", "vibration"].includes(String((st && st.attributes.device_class) || "")) || /_alarm_status$/.test(String(cfg.state_entity)))) return "detector";
   if (domainOf(cfg.state_entity) === "media_player" && st && st.attributes.device_class !== "tv"
-    && (st.attributes.device_class === "speaker" || /sonos|homepod|echo|nest.?(audio|mini)|google.?home|speaker|enceinte|lautsprecher|altavoz|altoparlante|soundbar|barre.?de.?son|music.?assistant|airplay|snapcast|bose|wiim|bluesound|linkplay|heos|denon|marantz|yamaha|hivi/.test(stripAccents(`${cfg.state_entity} ${stHay(st)}`).toLowerCase()))) return "speaker";
+    && (st.attributes.device_class === "speaker" || /sonos|homepod|juke.?box|echo|nest.?(audio|mini)|google.?home|speaker|enceinte|lautsprecher|altavoz|altoparlante|soundbar|barre.?de.?son|music.?assistant|airplay|snapcast|bose|wiim|bluesound|linkplay|heos|denon|marantz|yamaha|hivi/.test(stripAccents(`${cfg.state_entity} ${stHay(st)}`).toLowerCase()))) return "speaker";
   if (domainOf(cfg.state_entity) === "media_player" && st) return st.attributes.device_class === "receiver" ? "speaker" : "screen";
   {
     // A diffuser and a ventilation unit by their name or their maker's.

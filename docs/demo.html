@@ -150,12 +150,12 @@ const PLUG_WATTS = { washer: 1900, dryer: 2000, dishwasher: 1800, oven: 2400, mi
   rice_cooker: 500, air_fryer: 1500, toaster: 900, iron: 2200, fridge: 70, water_heater: 2000, space_heater: 1500, towel_warmer: 600,
   dehumidifier: 250, air_purifier: 30, fan: 35, hood: 120, screen: 120, hair_dryer: 1200, printer_3d: 200, pool_pump: 750, robot: 24,
   cooktop: 2600, food_processor: 500, pet_fountain: 2, water_pump: 800, floor_heating: 1200, spa: 2000, sauna: 6000, aquarium: 60, christmas_tree: 20, pellet_grill: 45,
-  humidifier: 25, filament_dryer: 60, mobility: 150, irrigation: 6, litter_box: 10, speaker: 8, console: 120, streamer: 6 };
+  humidifier: 25, filament_dryer: 60, mobility: 150, irrigation: 6, litter_box: 10, speaker: 8, console: 120, streamer: 6, water_dispenser: 85 };
 const PLUG_MAX = { washer: 2400, dryer: 2800, dishwasher: 2200, oven: 3500, microwave: 1300, kettle: 2400, coffee: 1500, cooker: 1200,
   rice_cooker: 800, air_fryer: 2000, toaster: 1200, iron: 2600, fridge: 200, water_heater: 3000, space_heater: 2000, towel_warmer: 1000,
   dehumidifier: 400, air_purifier: 80, fan: 80, hood: 300, screen: 250, hair_dryer: 2200, printer_3d: 400, pool_pump: 1500, robot: 60,
   cooktop: 7200, food_processor: 1200, pet_fountain: 5, water_pump: 1500, floor_heating: 2500, spa: 3000, sauna: 9000, aquarium: 150, christmas_tree: 50, pellet_grill: 400,
-  humidifier: 50, filament_dryer: 120, mobility: 600, irrigation: 15, litter_box: 40, speaker: 40, console: 250, streamer: 15 };
+  humidifier: 50, filament_dryer: 120, mobility: 600, irrigation: 15, litter_box: 40, speaker: 40, console: 250, streamer: 15, water_dispenser: 400 };
 const plugOnly = params.get("plug") === "1";
 // ?color= draws every card of the live gallery in one illustration colour.
 const demoColor = ["white", "grey", "black", "red"].includes(params.get("color")) ? params.get("color") : "";
@@ -1950,6 +1950,38 @@ Object.assign(EXTRA, {
     [st("switch.tm6_plug", "on"), st("sensor.tm6_power", 1050, { unit_of_measurement: "W", device_class: "power", min: 0, max: 1200, step: 10 })]),
   fp_tm6_ready: () => card({ name: L("Kitchen robot", "Robot cuiseur"), appliance_type: "food_processor", food_layout: "tm6", state_entity: "switch.tm6b_plug", power_entity: "sensor.tm6b_power" },
     [st("switch.tm6b_plug", "on"), st("sensor.tm6b_power", 1, { unit_of_measurement: "W", device_class: "power", min: 0, max: 1200, step: 10 })]),
+  jukebox_play: () => card({ name: L("Jukebox", "Jukebox"), appliance_type: "speaker", speaker_layout: "jukebox", state_entity: "media_player.jukebox" },
+    [st("media_player.jukebox", "playing", { media_title: "Golden Hour", media_artist: "The Night Owls", volume_level: .6 })]),
+  jukebox_idle: () => card({ name: L("Jukebox", "Jukebox"), appliance_type: "speaker", speaker_layout: "jukebox", state_entity: "media_player.jukebox2" },
+    [st("media_player.jukebox2", "idle")]),
+  jukebox_off: () => card({ name: L("Jukebox", "Jukebox"), appliance_type: "speaker", speaker_layout: "jukebox", state_entity: "media_player.jukebox3" },
+    [st("media_player.jukebox3", "off")]),
+  barrel_open: () => card({ name: L("Barrel bar", "Bar tonneau"), appliance_type: "lamp", lamp_layout: "barrel_bar", state_entity: "light.barrel" },
+    [st("light.barrel", "on", { brightness: 200, color_mode: "color_temp", color_temp_kelvin: 2900 })]),
+  barrel_closed: () => card({ name: L("Barrel bar", "Bar tonneau"), appliance_type: "lamp", lamp_layout: "barrel_bar", state_entity: "light.barrel2" },
+    [st("light.barrel2", "off")]),
+  barrel_red: () => card({ name: L("Barrel bar", "Bar tonneau"), appliance_type: "lamp", lamp_layout: "barrel_bar", curtain_color: "red", state_entity: "light.barrel3" },
+    [st("light.barrel3", "off")]),
+  wd_cooling: () => card({ name: L("Kitchen water", "Eau de la cuisine"), appliance_type: "water_dispenser", state_entity: "switch.wd", power_entity: "sensor.wd_power", temperature_entity: "sensor.wd_temp", water_total_entity: "sensor.wd_liters" },
+    [st("switch.wd", "on"), st("sensor.wd_power", 85, { unit_of_measurement: "W", device_class: "power", min: 0, max: 400, step: 5 }), st("sensor.wd_temp", 7, { unit_of_measurement: "\u00b0C" }), st("sensor.wd_liters", 152.4, { unit_of_measurement: "L" })]),
+  wd_sparkling: () => card({ name: L("Kitchen water", "Eau de la cuisine"), appliance_type: "water_dispenser", state_entity: "switch.wd2", power_entity: "sensor.wd2_power", dispensing_entity: "binary_sensor.wd2_flow", dispense_mode_entity: "select.wd2_water", water_total_entity: "sensor.wd2_liters" },
+    [st("switch.wd2", "on"), st("sensor.wd2_power", 4, { unit_of_measurement: "W" }), st("binary_sensor.wd2_flow", "on"), st("select.wd2_water", "Sparkling", { options: ["Still", "Cold", "Sparkling"] }), st("sensor.wd2_liters", 152.6, { unit_of_measurement: "L" })]),
+  wd_carbonating: () => card({ name: L("Kitchen water", "Eau de la cuisine"), appliance_type: "water_dispenser", state_entity: "switch.wd3", power_entity: "sensor.wd3_power", co2_cylinder_entity: "sensor.wd3_co2" },
+    [st("switch.wd3", "on"), st("sensor.wd3_power", 210, { unit_of_measurement: "W" }), st("sensor.wd3_co2", 64, { unit_of_measurement: "%" })]),
+  wd_co2_low: () => card({ name: L("Kitchen water", "Eau de la cuisine"), appliance_type: "water_dispenser", state_entity: "switch.wd4", power_entity: "sensor.wd4_power", co2_cylinder_entity: "binary_sensor.wd4_co2", filter_life_entity: "sensor.wd4_filter" },
+    [st("switch.wd4", "on"), st("sensor.wd4_power", 3, { unit_of_measurement: "W" }), st("binary_sensor.wd4_co2", "on"), st("sensor.wd4_filter", 42, { unit_of_measurement: "%" })]),
+  wd_column: () => card({ name: L("Office cooler", "Fontaine du bureau"), appliance_type: "water_dispenser", water_dispenser_layout: "column", state_entity: "switch.wd5", power_entity: "sensor.wd5_power", temperature_entity: "sensor.wd5_temp", dispensing_entity: "binary_sensor.wd5_flow", dispense_mode_entity: "sensor.wd5_water" },
+    [st("switch.wd5", "on"), st("sensor.wd5_power", 90, { unit_of_measurement: "W" }), st("sensor.wd5_temp", 6, { unit_of_measurement: "\u00b0C" }), st("binary_sensor.wd5_flow", "on"), st("sensor.wd5_water", "Cold")]),
+  wd_column_cool: () => card({ name: L("Office cooler", "Fontaine du bureau"), appliance_type: "water_dispenser", water_dispenser_layout: "column", state_entity: "switch.wd6", power_entity: "sensor.wd6_power", temperature_entity: "sensor.wd6_temp" },
+    [st("switch.wd6", "on"), st("sensor.wd6_power", 95, { unit_of_measurement: "W" }), st("sensor.wd6_temp", 9, { unit_of_measurement: "\u00b0C" })]),
+  pincab_menu: () => card({ name: L("Pinball", "Flipper"), appliance_type: "console", console_layout: "pincab", state_entity: "switch.pincab" },
+    [st("switch.pincab", "on")]),
+  pincab_play: () => card({ name: L("Pinball", "Flipper"), appliance_type: "console", console_layout: "pincab", state_entity: "switch.pincab2", game_entity: "sensor.pincab2_table" },
+    [st("switch.pincab2", "on"), st("sensor.pincab2_table", "Space Station")]),
+  pincab_blue: () => card({ name: L("Game room", "Salle de jeux"), appliance_type: "console", console_layout: "pincab", arcade_color: "blue", state_entity: "switch.pincab3", game_entity: "sensor.pincab3_table" },
+    [st("switch.pincab3", "on"), st("sensor.pincab3_table", "Neon Galaxy")]),
+  pincab_off: () => card({ name: L("Pinball", "Flipper"), appliance_type: "console", console_layout: "pincab", arcade_color: "red", state_entity: "switch.pincab4" },
+    [st("switch.pincab4", "off")]),
   arcade_menu: () => card({ name: L("Bartop", "Borne de table"), appliance_type: "console", console_layout: "arcade_bartop", state_entity: "switch.recalbox", system_entity: "sensor.recalbox_system" },
     [st("switch.recalbox", "on"), st("sensor.recalbox_system", "unavailable")]),
   arcade_play: () => card({ name: L("Bartop", "Borne de table"), appliance_type: "console", console_layout: "arcade_bartop", state_entity: "switch.recalbox2", game_entity: "sensor.recalbox2_game", system_entity: "sensor.recalbox2_system" },
@@ -2037,8 +2069,8 @@ function liveGallery() {
   const wrap = document.getElementById("wrap");
   wrap.innerHTML = `<header>
     <h1>HA Appliance Card</h1>
-    <p>${L("A Lovelace card for 72 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
-      "Une card Lovelace pour 72 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
+    <p>${L("A Lovelace card for 73 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
+      "Une card Lovelace pour 73 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
     <nav>${link("lang", "en", "English", !fr)}${link("lang", "fr", "Français", fr)}<span></span>${link("theme", "light", L("Light", "Clair"), !dark)}${link("theme", "dark", L("Dark", "Sombre"), dark)}<span></span>${link("plug", "0", L("Integrations", "Intégrations"), !plugOnly)}${link("plug", "1", L("Smart plug only", "Prise connectée seule"), plugOnly)}<span></span>${link("color", "", L("Own colours", "Couleurs d'origine"), !demoColor)}${[["white", "White", "Blanc"], ["grey", "Grey", "Gris"], ["black", "Black", "Noir"], ["red", "Red", "Rouge"]].map(([v, en, f]) => link("color", v, L(en, f), demoColor === v)).join("")}<span></span><a href="https://github.com/ADNPolymerase/ha-appliance-card">GitHub</a></nav>
     <p class="hint">${plugOnly
       ? L("Each card below has nothing but a smart plug: its switch and its power meter. Open “Change the values” and move the power, or press the power button.",
@@ -2054,7 +2086,10 @@ function liveGallery() {
     [L("SwitchBot meters", "Thermom\u00e8tres SwitchBot"), [EXTRA.sb_co2, EXTRA.sb_co2_high, EXTRA.sb_pro, EXTRA.sb_meter, EXTRA.sb_plus, EXTRA.sb_outdoor]],
     [L("Your own photo (HACF #165)", "Votre photo (HACF #165)"), [EXTRA.photo_shutter, EXTRA.photo_garage, EXTRA.photo_gate, EXTRA.photo_washer, EXTRA.photo_tv]],
     [L("Gates", "Portails"), [EXTRA.gate_swing, EXTRA.gate_swing_open, EXTRA.gate_white, EXTRA.gate_white_open]],
-    [L("New: hair straighteners, heat rising as they warm up (#139)", "Nouveau : lisseurs, la chaleur monte avec la temp\u00e9rature (#139)"), [EXTRA.st_heating, EXTRA.hd_straightener, EXTRA.st_white, EXTRA.st_plain, EXTRA.st_off], "new"],
+    [L("New: a jukebox and a barrel bar (HACF #200)", "Nouveau : un jukebox et un bar tonneau (HACF #200)"), [EXTRA.jukebox_play, EXTRA.jukebox_idle, EXTRA.jukebox_off, EXTRA.barrel_open, EXTRA.barrel_closed, EXTRA.barrel_red], "new"],
+    [L("New: water dispensers, chillers and carbonators (#140)", "Nouveau : distributeurs d'eau, refroidisseurs et gaz\u00e9ificateurs (#140)"), [EXTRA.wd_cooling, EXTRA.wd_sparkling, EXTRA.wd_carbonating, EXTRA.wd_co2_low, EXTRA.wd_column, EXTRA.wd_column_cool], "new"],
+    [L("New: pinball cabinets (pincab), the ball in play", "Nouveau : flippers virtuels (pincab), la bille en jeu"), [EXTRA.pincab_menu, EXTRA.pincab_play, EXTRA.pincab_blue, EXTRA.pincab_off], "new"],
+    [L("Hair straighteners, heat rising as they warm up (#139)", "Lisseurs, la chaleur monte avec la temp\u00e9rature (#139)"), [EXTRA.st_heating, EXTRA.hd_straightener, EXTRA.st_white, EXTRA.st_plain, EXTRA.st_off]],
     [L("Arcade cabinets, the game on the screen (Recalbox)", "Bornes d'arcade, le jeu \u00e0 l'\u00e9cran (Recalbox)"), [EXTRA.arcade_menu, EXTRA.arcade_play, EXTRA.arcade_pic, EXTRA.arcade_upright, EXTRA.arcade_off]],
     [L("Power strips, each socket switched on the drawing", "Multiprises, chaque prise command\u00e9e sur le dessin"), [EXTRA.strip_shelly, EXTRA.strip_classic]],
     [L("Alarms and timers, tilt-in window, white fabric, purifier filters", "Alarmes et minuteurs, fen\u00eatre \u00e0 soufflet, toile blanche, filtres du purificateur"), [EXTRA.clock_alarms, EXTRA.win_tilt, EXTRA.win_tilt_open, EXTRA.cov_blind_white, purifier, ringPurifier]],

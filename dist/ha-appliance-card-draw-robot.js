@@ -2,7 +2,7 @@
 // The robot drawing and its CSS, loaded by the card the first time it shows one.
 export default function defineDrawing(deps) {
 // A page still running the card of an earlier release: an arrow to reload.
-if (!deps || deps.__v !== "4.51.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
+if (!deps || deps.__v !== "4.52.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
 let { ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, numberOrNull, shdBlur, t, thsColor, zoneColumns } = deps;
 // The small screen and the air lines the dehumidifier and the two heaters
 // share. Warm air rises; the air a dehumidifier or a fan blows goes the other
@@ -4725,13 +4725,330 @@ ${arcSides(28.6, 91.4, [[30, -7.5], [30, 8.5], [35, 13.5], [35, 45], [30, 57], [
 <rect x="28.2" y="-7.6" width="63.6" height="129.4" rx="1.2" fill="none" stroke="#fff" stroke-width=".6" opacity=".22"/>`;
 }
 
-const NT_DRAW = { con_arcade_bartop: (c) => arcBartop({ ...c, playing: c.st === "playing" }), con_arcade_upright: (c) => arcUpright({ ...c, playing: c.st === "playing" }), strip_shelly: ntStripShelly, strip_classic: ntStripClassic, gas_fireplace: ntGasFireplace, fp_tm31: ntFoodTm31, fp_tm6: ntFoodTm6, rack_box: ntRackBox, rack_accordion: ntRackAccordion, rack_frame: ntRackFrame, vlv_aqara: ntValveAqara, vlv_tuya: ntValveTuya,  fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_switchbot_co2: (c) => ntSbPro(c, true), ths_switchbot_pro: (c) => ntSbPro(c, false), ths_switchbot_meter: (c) => ntSbMeter(c, false), ths_switchbot_plus: (c) => ntSbMeter(c, true), ths_switchbot_outdoor: ntSbOutdoor, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, cov_curtain: ntCovCurtain, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, det_door: ntDetDoor, det_vibration: ntDetVibration, det_glass: ntDetGlass, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, spk_focal_bird: ntSpkFocalBird, spk_focal_od6: ntSpkFocalOd6, spk_denon_avr: ntSpkDenon, spk_avr: ntSpkAvr, spk_wiim_amp: ntSpkWiim, spk_smart_clock: ntSpkClock, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+// A water dispenser, chiller and carbonator (#140). Under the sink: its
+// steel box seen three quarters, the CO2 cylinder with its gauge, the
+// three-way tap on the worktop over a glass. Or a standing column with its
+// display and the niche with three spouts. Cooling frosts the panel while the
+// compressor blows its heat out of the grille; carbonating sends bubbles up
+// and the gauge twitches; dispensing fills the glass, fizzing when sparkling.
+const wdBub = (cx, y0, y1, n, dur, r = .7, col = "#fff") => Array.from({ length: n }, (_, i) => {
+  const x = cx + ((i * 37) % 7 - 3) * .7, d = (i * dur / n).toFixed(2);
+  return `<circle cx="${x.toFixed(1)}" cy="${y0}" r="${r}" fill="${col}" opacity="0"><animate attributeName="cy" values="${y0};${y1}" dur="${dur}s" begin="${d}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.9;0" dur="${dur}s" begin="${d}s" repeatCount="indefinite"/></circle>`;
+}).join("");
+// The glass and what pours into it.
+function wdGlass(x, y, c, w = 11, h = 15) {
+  const pour = c.mode === "dispensing";
+  const sparkling = c.water === "sparkling";
+  // Cold water a deeper blue than still water; the glass's own shape holds it.
+  const water = c.water === "cold" ? "#4fb3ec" : sparkling ? "#9fd6f3" : "#c4e6f7";
+  const cid = `wg${Math.round(x * 10)}_${Math.round(y * 10)}`;
+  const inside = `M${x + .5} ${y} L${x + 1.4} ${y + h - .5} H${x + w - 1.4} L${x + w - .5} ${y} Z`;
+  const fill = pour ? `<clipPath id="${cid}"><path d="${inside}"/></clipPath><g clip-path="url(#${cid})"><rect x="${x}" y="${y + h}" width="${w}" height="${h}" fill="${water}" opacity=".85"><animate attributeName="y" values="${y + h};${y + 3.5};${y + 3.5}" keyTimes="0;.85;1" dur="4s" repeatCount="indefinite"/></rect></g>` : "";
+  const fizz = pour && sparkling ? wdBub(x + w / 2, y + h - 2, y + 5, 6, 1.4, .55) : "";
+  return `<path d="M${x} ${y} L${x + 1} ${y + h} H${x + w - 1} L${x + w} ${y}" fill="#e3f2fb" fill-opacity=".35" stroke="#9fb7c4" stroke-width=".7"/>${fill}${fizz}
+<path d="M${x + 1.6} ${y + 2} L${x + 2.3} ${y + h - 2}" stroke="#fff" stroke-width=".7" opacity=".7"/>`;
+}
+function wdStream(x, y0, y1, c) {
+  if (c.mode !== "dispensing") return "";
+  const col = c.water === "cold" ? "#6ec1ee" : "#9fd6f3";
+  return `<rect x="${x - .6}" y="${y0}" width="1.2" height="${y1 - y0}" fill="${col}" opacity=".9"/>
+<rect x="${x - .25}" y="${y0}" width=".5" height="${y1 - y0}" fill="#fff" opacity=".7"><animate attributeName="opacity" values=".2;.8;.2" dur=".4s" repeatCount="indefinite"/></rect>
+${c.water === "sparkling" ? wdBub(x, y1, y0, 4, .9, .35) : ""}`;
+}
+// Cold: a blue frost on the panel, little crystals coming and going.
+const wdFrost = (x, y, w, h) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#4fc3f7" opacity=".12"><animate attributeName="opacity" values=".06;.2;.06" dur="3s" repeatCount="indefinite"/></rect>`
+  + [[.2, .2], [.75, .3], [.45, .55], [.15, .8], [.8, .75], [.5, .12]].map(([fx, fy], i) =>
+    `<g opacity="0">${wdFlake(x + w * fx, y + h * fy, .55, "#29b6f6")}<animate attributeName="opacity" values="0;.9;0;0" keyTimes="0;.15;.4;1" dur="3.6s" begin="${(i * .6).toFixed(1)}s" repeatCount="indefinite"/></g>`).join("");
+// The compressor's fan pushes its heat out of the grille.
+const wdExhaust = (x, y, h, dir = 1) => [0, 1, 2].map(i => `<path d="M${x} ${y + h * (i + .5) / 3} h${4 * dir}" stroke="#b0bec5" stroke-width=".8" stroke-linecap="round" opacity="0"><animate attributeName="opacity" values="0;.8;0" dur="1.2s" begin="${i * .4}s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="0 0;${3 * dir} 0" dur="1.2s" begin="${i * .4}s" repeatCount="indefinite"/></path>`).join("");
+const wdFlake = (x, y, s, col) => `<g transform="translate(${x} ${y}) scale(${s})" stroke="${col}" stroke-width=".9" stroke-linecap="round">${[0, 60, 120].map(a => `<path d="M0 -4 V4 M-1.2 -2.8 L0 -1.6 L1.2 -2.8 M-1.2 2.8 L0 1.6 L1.2 2.8" transform="rotate(${a})"/>`).join("")}</g>`;
+
+// 1. Under the sink: a steel box with its CO2 cylinder, the tap on the worktop.
+function ntWdUnderSink(c) {
+  const k = ntId();
+  const on = c.mode !== "off";
+  const cooling = c.mode === "cooling", carb = c.mode === "carbonating", refill = c.mode === "refilling";
+  const led = !on ? "#3a3f46" : c.alert ? "#ff9800" : cooling ? "#29b6f6" : carb ? "#80deea" : "#4caf50";
+  return `<g transform="translate(-2.4 -8) scale(1.3)"><defs>
+<linearGradient id="${k}wdSteel" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e9edf0"/><stop offset=".55" stop-color="#cfd6db"/><stop offset="1" stop-color="#aab3ba"/></linearGradient>
+<linearGradient id="${k}wdSide" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9aa3aa"/><stop offset="1" stop-color="#848d94"/></linearGradient>
+<linearGradient id="${k}wdChrome" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8d969d"/><stop offset=".4" stop-color="#f4f6f7"/><stop offset="1" stop-color="#8d969d"/></linearGradient>
+<linearGradient id="${k}wdCo2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3d4248"/><stop offset=".35" stop-color="#6b737b"/><stop offset="1" stop-color="#2d3136"/></linearGradient>
+<linearGradient id="${k}wdTop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3efe8"/><stop offset="1" stop-color="#ddd5c8"/></linearGradient><filter id="${k}wdSh" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="1.2"/></filter></defs>
+<path d="M35 95.6 H70 L75.4 91.4 H40.4 Z" fill="#000" opacity=".16" filter="url(#${k}wdSh)"/><path d="M19.4 95.4 Q27 97.6 34.6 95.4 Q27 93.6 19.4 95.4 Z" fill="#000" opacity=".2" filter="url(#${k}wdSh)"/>
+<path d="M4 34 H92 L88 39 H8 Z" fill="url(#${k}wdTop)"/><rect x="8" y="39" width="80" height="2.2" fill="#c8bfb1"/>
+<rect x="58" y="31" width="7" height="3.4" rx="1" fill="url(#${k}wdChrome)"/>
+<rect x="59.6" y="12" width="3.8" height="20" rx="1.6" fill="url(#${k}wdChrome)"/>
+<path d="M61.5 13 Q61.5 5 53 5 Q45 5 45 12 V15" stroke="url(#${k}wdChrome)" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+<path d="M61.5 13 Q61.5 5 53 5 Q45 5 45 12 V15" stroke="#fff" stroke-width=".5" fill="none" opacity=".6"/>
+<rect x="43.6" y="14.6" width="2.8" height="1.6" rx=".5" fill="#8d969d"/>
+${[0, 1, 2].map(i => { const y = 16 + i * 5; const open = c.mode === "dispensing" && ["still", "cold", "sparkling"].indexOf(c.water || "cold") === i;
+  return `<g transform="rotate(${open ? -28 : 0} 63.4 ${y})"><rect x="62.8" y="${y - .7}" width="6.4" height="1.4" rx=".7" fill="url(#${k}wdChrome)"/><circle cx="69.4" cy="${y}" r="1.25" fill="${["#9fd6f3", "#3a8fd0", "#80deea"][i]}" opacity="${on ? 1 : .55}"/></g>`; }).join("")}
+${wdStream(45, 16.3, 30.5, c)}
+${wdGlass(39.5, 18, c, 11, 15.5)}
+<path d="M61.5 41 V50 Q61.5 53 58 53 H52" stroke="#4fc3f7" stroke-width="1" fill="none" opacity=".8"/>
+<path d="M27 70 V58 Q27 54 31 54 H39" stroke="#b0bec5" stroke-width=".9" fill="none"/>
+<path d="M36 56 L41 52 H74 L69 56 Z" fill="#dfe4e7"/>
+<path d="M69 56 L74 52 V91 L69 95 Z" fill="url(#${k}wdSide)"/>
+${[0, 1, 2, 3, 4, 5, 6].map(i => `<path d="M70.2 ${62 + i * 3.6} l2.6 -2" stroke="#5f686f" stroke-width=".8"/>`).join("")}
+<rect x="36" y="56" width="33" height="39" fill="url(#${k}wdSteel)"/>
+<rect x="43" y="57" width="19" height="38" fill="#e2e7ea" stroke="#b6bec4" stroke-width=".4"/>
+<rect x="38.2" y="70" width="3.2" height="3.6" rx=".4" fill="${on ? "#2e7d32" : "#33691e"}"/><rect x="38.6" y="70.4" width="2.4" height="1.4" fill="${on ? "#8bc34a" : "#556b2f"}"/>
+<circle cx="65.5" cy="63" r="2.2" fill="#1a3a6b"/><path d="M65.5 63 l1.3 -.9" stroke="#fff" stroke-width=".5"/>
+<circle cx="65.5" cy="69" r=".9" fill="${led}">${cooling || carb ? `<animate attributeName="opacity" values="1;.4;1" dur="1.4s" repeatCount="indefinite"/>` : ""}</circle>
+<rect x="38" y="95" width="3" height="1.6" fill="#222"/><rect x="64" y="95" width="3" height="1.6" fill="#222"/>
+${c.mode === "dispensing" && (c.water || "cold") === "cold" ? [[47, 63], [57, 70], [50, 80], [59, 88]].map(([fx, fy], i) => `<g opacity="0">${wdFlake(fx, fy, .6, "#29b6f6")}<animate attributeName="opacity" values="0;1;0" dur="1.8s" begin="${(i * .45).toFixed(2)}s" repeatCount="indefinite"/></g>`).join("") : ""}
+${cooling ? wdFrost(43, 57, 19, 38) + wdExhaust(75, 62, 24) : ""}
+${refill ? `<path d="M90 84 H80 Q77 84 77 81 V78 H73" stroke="#0288d1" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M90 84 H80 Q77 84 77 81 V78 H73" stroke="#4fc3f7" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M90 84 H80 Q77 84 77 81 V78 H73" stroke="#e1f5fe" stroke-width=".6" fill="none" stroke-dasharray="1.4 1.8"><animate attributeName="stroke-dashoffset" values="8;0" dur=".5s" repeatCount="indefinite"/></path>
+<rect x="38.4" y="78" width="2.6" height="14" rx=".6" fill="#15202b" stroke="#78909c" stroke-width=".3"/><rect x="38.8" y="91.6" width="1.8" height="0" fill="#29b6f6"><animate attributeName="y" values="91.6;79;79" keyTimes="0;.85;1" dur="3s" repeatCount="indefinite"/><animate attributeName="height" values="0;12.6;12.6" keyTimes="0;.85;1" dur="3s" repeatCount="indefinite"/></rect>` : ""}
+${refill ? "" : `<path d="M90 84 H80 Q77 84 77 81 V78 H73" stroke="#90a4ae" stroke-width="1.3" fill="none"/>`}<rect x="86" y="82.4" width="3" height="3.2" rx=".5" fill="#78909c"/>
+<path d="M20 60 Q20 56 24 55.5 H30 Q34 56 34 60 V95 H20 Z" fill="url(#${k}wdCo2)"/>
+<rect x="20" y="66" width="14" height="5" fill="${c.co2Low ? "#ff9800" : "#c9d2d8"}" opacity=".9"/>
+<text x="27" y="70" font-size="3.4" text-anchor="middle" fill="#263238" font-family="sans-serif" font-weight="700">CO\u2082</text>
+<rect x="25.4" y="51.5" width="3.2" height="4.4" fill="#6d757c"/>
+<circle cx="27" cy="49.6" r="3" fill="#eceff1" stroke="#78909c" stroke-width=".6"/>
+<path d="M27 49.6 L${c.co2Low ? 25.2 : 28.6} ${c.co2Low ? 50.8 : 48}" stroke="${c.co2Low ? "#e53935" : "#263238"}" stroke-width=".6">${carb ? `<animateTransform attributeName="transform" type="rotate" values="0 27 49.6;-25 27 49.6;0 27 49.6" dur=".8s" repeatCount="indefinite"/>` : ""}</path>
+${carb ? wdBub(52.5, 90, 60, 7, 1.6, .7, "#80deea") : ""}
+${c.alert ? `<g transform="translate(78 62)"><circle r="5" fill="#ff9800"/><text y="2.1" font-size="6" text-anchor="middle" fill="#fff" font-weight="700" font-family="sans-serif">!</text></g>` : ""}
+</g>`;
+}
+
+// 2. A standing column, like an office water cooler: its display, the niche
+// with the taps, the drip tray.
+function ntWdColumn(c) {
+  const k = ntId();
+  const on = c.mode !== "off";
+  const cooling = c.mode === "cooling", carb = c.mode === "carbonating", refill = c.mode === "refilling";
+  const body = c.body || "#3a3f45", hi = c.hi || "#555b62";
+  const disp = on ? "#e0f7fa" : "#20242a";
+  return `<g transform="translate(-2.4 -8) scale(1.3)"><defs>
+<linearGradient id="${k}wcBody" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${hi}"/><stop offset=".6" stop-color="${body}"/><stop offset="1" stop-color="${body}"/></linearGradient>
+<linearGradient id="${k}wcNiche" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a1d21"/><stop offset="1" stop-color="#2c3137"/></linearGradient></defs>
+<filter id="${k}wcSh" x="-30%" y="-80%" width="160%" height="260%"><feGaussianBlur stdDeviation="1.2"/></filter><path d="M31.5 100.4 H60.5 L65 98 H36 Z" fill="#000" opacity=".2" filter="url(#${k}wcSh)"/>
+${(() => {
+  // The column as a rounded box seen three quarters: its top and right side
+  // follow the rounded corners, from the silhouette at the top left to the
+  // one at the bottom right.
+  const x0 = 32, x1 = 60, y0 = 8, y1 = 100, r = 3.5, dx = 4, dy = -2, f = (v) => +v.toFixed(2);
+  const t1 = [f(x0 + r - r * .447), f(y0 + r - r * .894)], t2 = [f(x1 - r + r * .447), f(y1 - r + r * .894)], m = [f(x1 - r + r * .707), f(y0 + r - r * .707)];
+  const b = ([x, y]) => `${f(x + dx)} ${f(y + dy)}`;
+  const top = `M${t1.join(" ")} A${r} ${r} 0 0 1 ${x0 + r} ${y0} H${x1 - r} A${r} ${r} 0 0 1 ${m.join(" ")} L${b(m)} A${r} ${r} 0 0 0 ${b([x1 - r, y0])} H${f(x0 + r + dx)} A${r} ${r} 0 0 0 ${b(t1)} Z`;
+  const side = `M${m.join(" ")} A${r} ${r} 0 0 1 ${x1} ${y0 + r} V${y1 - r} A${r} ${r} 0 0 1 ${t2.join(" ")} L${b(t2)} A${r} ${r} 0 0 0 ${b([x1, y1 - r])} V${f(y0 + r + dy)} A${r} ${r} 0 0 0 ${b(m)} Z`;
+  return `<path d="${side}" fill="${body}"/><path d="${side}" fill="#000" opacity=".22"/><path d="${top}" fill="${hi}"/><path d="${top}" fill="#fff" opacity=".12"/>`;
+})()}
+<rect x="32" y="8" width="28" height="92" rx="3.5" fill="url(#${k}wcBody)"/>
+<rect x="34.5" y="12" width="23" height="7" rx="1.2" fill="#0f1215"/>
+${on ? `<text x="46" y="17.5" font-size="4.6" text-anchor="middle" fill="${cooling ? "#4fc3f7" : "#e0f7fa"}" font-family="monospace" font-weight="700">${c.temp != null ? c.temp + "\u00b0" : "--"}</text>
+<g>${wdFlake(37.8, 15.5, .38, cooling ? "#4fc3f7" : "#607d8b")}${cooling ? `<animate attributeName="opacity" values="1;.35;1" dur="1.4s" repeatCount="indefinite"/>` : ""}</g>${carb ? wdBub(54.5, 17.4, 13.2, 4, 1, .55, "#80deea") : `<g fill="#607d8b"><circle cx="54" cy="16.6" r=".7"/><circle cx="55.4" cy="15" r=".55"/><circle cx="53.6" cy="14.3" r=".45"/></g>`}` : ""}
+<rect x="34.5" y="21" width="23" height="27" rx="1.5" fill="url(#${k}wcNiche)"/>
+<rect x="34.5" y="21" width="23" height="3.2" rx="1" fill="#0b0d10"/>
+${[40, 46, 52].map((x, i) => `<rect x="${x - 1.3}" y="23.5" width="2.6" height="2.6" rx=".6" fill="#b0bec5"/><circle cx="${x}" cy="22.4" r=".5" fill="${on ? ["#9fd6f3", "#3a8fd0", "#80deea"][i] : "#455a64"}"/>`).join("")}
+${wdStream(c.water === "still" ? 40 : c.water === "sparkling" ? 52 : 46, 26.1, 43.2, c)}
+${wdGlass((c.water === "still" ? 40 : c.water === "sparkling" ? 52 : 46) - 4.5, 31, c, 9, 12.4)}
+<rect x="35.5" y="43.5" width="21" height="2.6" rx=".8" fill="#5f6870"/>${[0, 1, 2, 3, 4, 5].map(i => `<rect x="${37 + i * 3.2}" y="44.2" width="1.6" height="1.2" fill="#3b4249"/>`).join("")}
+<path d="M34 54 H58" stroke="#000" stroke-width=".4" opacity=".35"/>
+<path d="M34 90 H58" stroke="#000" stroke-width=".4" opacity=".35"/>
+${c.mode === "dispensing" && (c.water || "cold") === "cold" ? [[38, 60], [52, 66], [42, 76], [54, 84]].map(([fx, fy], i) => `<g opacity="0">${wdFlake(fx, fy, .6, "#29b6f6")}<animate attributeName="opacity" values="0;1;0" dur="1.8s" begin="${(i * .45).toFixed(2)}s" repeatCount="indefinite"/></g>`).join("") : ""}
+${cooling ? wdFrost(34.5, 21, 23, 27) + wdExhaust(65, 70, 20) : ""}
+${refill ? `<rect x="40" y="58" width="12" height="26" rx="1.2" fill="#15202b" stroke="#78909c" stroke-width=".4"/><rect x="41" y="83" width="10" height="0" fill="#29b6f6" opacity=".9"><animate attributeName="y" values="83;60;60" keyTimes="0;.85;1" dur="3s" repeatCount="indefinite"/><animate attributeName="height" values="0;23;23" keyTimes="0;.85;1" dur="3s" repeatCount="indefinite"/></rect>` : ""}
+${c.co2Low ? `<g transform="translate(46 94)"><rect x="-8" y="-3" width="16" height="6" rx="1" fill="#ff9800"><animate attributeName="opacity" values="1;.5;1" dur="1.2s" repeatCount="indefinite"/></rect><text y="1.6" font-size="4" text-anchor="middle" fill="#fff" font-family="sans-serif" font-weight="700">CO\u2082</text></g>` : ""}
+<rect x="33" y="98" width="26" height="2" rx=".8" fill="#1d2024"/>
+${c.alert ? `<g transform="translate(70 22)"><circle r="5" fill="#ff9800"/><text y="2.1" font-size="6" text-anchor="middle" fill="#fff" font-weight="700" font-family="sans-serif">!</text></g>` : ""}
+</g>`;
+}
+
+// A 1970s jukebox (HACF #200) seen from the front: the header with its two
+// blocks of big blue selection keys on a curving surface, the trim arching
+// over the display, the keypad, the inclined glass of title cards, the
+// chrome bar with its blue letters, three grilles backlit blue. Playing, the
+// keys pulse like a VU meter and a red frame hops from card to card.
+function ntJukebox(c) {
+  const on = c.on, play = c.playing;
+  const body = ntId(), chrome = ntId(), glow = ntId(), grillPat = ntId(), glass = ntId(), soft = ntId(), grillGlow = ntId(), side = ntId();
+  const blue = "#3d8bff";
+  // The selection keys: big blue squares in two blocks on the header's
+  // shoulders, on a surface curving away, so each reads as a trapezoid,
+  // narrower and flatter towards the top; a VU meter while it plays.
+  const bil = (q, u, v) => { const [a, b, cc, d] = q; const top = [a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u], bot = [d[0] + (cc[0] - d[0]) * u, d[1] + (cc[1] - d[1]) * u]; return [arcN(top[0] + (bot[0] - top[0]) * v), arcN(top[1] + (bot[1] - top[1]) * v)]; };
+  const rowsV = [[.02, .24], [.32, .6], [.68, 1]];
+  const keys = (q, flip) => rowsV.map(([v0, v1], r) => [0, 1, 2, 3].map((k) => {
+    const kk = flip ? 3 - k : k, u0 = kk * .26 + .015, u1 = u0 + .21;
+    const p = [bil(q, u0, v0), bil(q, u1, v0), bil(q, u1, v1), bil(q, u0, v1)];
+    const lit = on && (play || r >= 1 || k % 2);
+    const anim = play ? `<animate attributeName="opacity" values="${[".35;1;.35", "1;.4;1", ".55;1;.3", "1;.6;1"][(r + k) % 4]}" dur="${(.5 + ((r * 3 + k) % 5) * .12).toFixed(2)}s" repeatCount="indefinite"/>` : "";
+    return `<path d="M${p.map((xy) => xy.join(" ")).join(" L")} Z" fill="${lit ? blue : "#1a2236"}">${anim}</path><path d="M${p[0][0]} ${p[0][1]} L${p[1][0]} ${p[1][1]}" stroke="#fff" stroke-width=".3" opacity="${lit ? .45 : .12}"/>`;
+  }).join("")).join("");
+  const qL = [[28.5, 3.2], [45, 2.6], [43.6, 14.6], [24.2, 14.6]], qR = [[75, 2.6], [91.5, 3.2], [95.8, 14.6], [76.4, 14.6]];
+  // The trim around them: orange outside, cyan inside, arching over the
+  // display between the two blocks.
+  const trim = (k) => `M${23.5 + k} ${16.4 - k} V${arcN(4 - k * .4)} Q${23.5 + k} ${1 + k} ${27 + k} ${1 + k} H${93 - k} Q${96.5 - k} ${1 + k} ${96.5 - k} ${arcN(4 - k * .4)} V${16.4 - k} M${23.5 + k} ${16.4 - k} H${45 - k} V${arcN(8.6 + k)} Q${45 - k} ${arcN(6.2 + k)} ${48 - k} ${arcN(6.2 + k)} H${72 + k} Q${75 + k} ${arcN(6.2 + k)} ${75 + k} ${arcN(8.6 + k)} V${16.4 - k} H${96.5 - k}`;
+  // Title cards: eight columns, five rows, laid on the inclined glass so
+  // each follows its trapezoid, the columns fanning out towards the bottom.
+  const gq = [[23.2, 27.4], [96.8, 27.4], [103.6, 48.8], [16.4, 48.8]];
+  const picks = [[0, 0], [2, 2], [5, 1], [3, 4], [6, 3]];
+  const quad = (u0, u1, v0, v1) => [bil(gq, u0, v0), bil(gq, u1, v0), bil(gq, u1, v1), bil(gq, u0, v1)];
+  const P = (p) => `M${p.map((xy) => xy.join(" ")).join(" L")} Z`;
+  const cards = [0, 1, 2, 3, 4].map((r) => [0, 1, 2, 3, 4, 5, 6, 7].map((k) => {
+    const u0 = k / 8 + .008, u1 = (k + 1) / 8 - .008, v0 = r / 5 + .02, v1 = (r + 1) / 5 - .03;
+    const top = (k + r) % 3 ? "#d8e46a" : "#8fd36a";
+    const pi = picks.findIndex(([pk, pr]) => pk === k && pr === r);
+    const hl = play && pi >= 0 ? `<path d="${P(quad(u0, u1, v0, v1))}" fill="none" stroke="#ff5252" stroke-width=".6" opacity="0"><animate attributeName="opacity" values="${picks.map((_, x) => (x === pi ? 1 : 0)).join(";")}" calcMode="discrete" dur="6s" repeatCount="indefinite"/></path>` : "";
+    return `<path d="${P(quad(u0, u1, v0, v1))}" fill="${on ? "#fbfbe6" : "#9a9c88"}"/><path d="${P(quad(u0, u1, v0, v0 + (v1 - v0) * .3))}" fill="${on ? top : "#6f7550"}"/><path d="${P(quad(u0 + .015, u1 - .015, v0 + (v1 - v0) * .55, v0 + (v1 - v0) * .65))}" fill="#7a7a6a" opacity=".5"/>${hl}`;
+  }).join("")).join("");
+  const pick = "";
+  const letters = "JUKEBOX".split("").map((ch, i) => { const x = arcN(26 + i * 11.3);
+    return `<rect x="${arcN(x - 3)}" y="53.2" width="6" height="4.2" rx=".6" fill="${on ? "#0a1f4a" : "#20242b"}" stroke="${on ? blue : "#3a3f48"}" stroke-width=".4"/>${on ? `<rect x="${arcN(x - 3)}" y="53.2" width="6" height="4.2" rx=".6" fill="${blue}" opacity=".35" filter="url(#${soft})"/>` : ""}<text x="${x}" y="56.5" font-size="3.3" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" fill="${on ? "#9cc4ff" : "#4a505a"}">${ch}${play ? `<animate attributeName="opacity" values="1;.45;1" dur="1.4s" begin="${(i * .2).toFixed(1)}s" repeatCount="indefinite"/>` : ""}</text>`; }).join("");
+  // Three grilles, rounded, the geometric cloth backlit blue.
+  const grille = (x, w) => { const y = 62, h = 50, gid = ntId();
+    const shape = `M${x + 3} ${y} H${x + w - 3} Q${x + w} ${y} ${x + w} ${y + 4} V${y + h - 6} Q${x + w} ${y + h} ${x + w - 4} ${y + h} H${x + 4} Q${x} ${y + h} ${x} ${y + h - 6} V${y + 4} Q${x} ${y} ${x + 3} ${y} Z`;
+    return `<clipPath id="${gid}"><path d="${shape}"/></clipPath><path d="${shape}" fill="${on ? "#0d2a5c" : "#1c232c"}" stroke="#7b838e" stroke-width="1"/>
+<g clip-path="url(#${gid})">${on ? `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${grillGlow})">${play ? `<animate attributeName="opacity" values=".7;1;.75;1;.7" dur="1.1s" repeatCount="indefinite"/>` : ""}</rect>` : ""}
+${Array.from({ length: 8 }, (_, i) => { const m = i * 2.6; return `<rect x="${arcN(x + 1.5 + m)}" y="${arcN(y + 2 + m * 1.6)}" width="${arcN(w - 3 - 2 * m)}" height="${arcN(h - 4 - 3.2 * m)}" fill="none" stroke="${on ? (i % 2 ? "#8fe0ff" : "#4f7fb8") : (i % 2 ? "#5e6e70" : "#3b464a")}" stroke-width="1.1" stroke-dasharray="1.6 1.2" opacity=".85"/>`; }).join("")}
+<path d="M${x} ${y} L${x + w} ${y + h}" stroke="#fff" stroke-width="4" opacity=".05"/></g>`; };
+  return `<defs><linearGradient id="${body}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1c1f24"/><stop offset=".5" stop-color="#2b2f36"/><stop offset="1" stop-color="#16181c"/></linearGradient>
+<linearGradient id="${chrome}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f6f8"/><stop offset=".45" stop-color="#9aa3ad"/><stop offset=".55" stop-color="#d9dee3"/><stop offset="1" stop-color="#7d858f"/></linearGradient>
+<radialGradient id="${grillGlow}" cx=".5" cy=".55" r=".7"><stop offset="0" stop-color="#5aa9ff"/><stop offset="1" stop-color="#0b2d6b"/></radialGradient>
+<linearGradient id="${glass}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".18"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<filter id="${soft}" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.2"/></filter>
+<filter id="${glow}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.5"/></filter></defs>
+<ellipse cx="60" cy="123" rx="50" ry="2.6" fill="#000" opacity=".18" filter="url(#${soft})"/>
+${on ? `<rect x="8" y="58" width="104" height="58" rx="8" fill="${blue}" opacity="${play ? .22 : .14}" filter="url(#${glow})">${play ? `<animate attributeName="opacity" values=".12;.28;.12" dur="1.1s" repeatCount="indefinite"/>` : ""}</rect>` : ""}
+<path d="M24 -2 H96 Q100 -2 100 2 V26 L106 50 H107 V120 Q107 122 105 122 H15 Q13 122 13 120 V50 H14 L20 26 V2 Q20 -2 24 -2 Z" fill="url(#${body})"/>
+<rect x="22.5" y="0" width="75" height="17" rx="1.2" fill="#0a0c10"/>
+<path d="${trim(0)}" fill="none" stroke="${on ? "#f2a33a" : "#5a4a2a"}" stroke-width=".7"/><path d="${trim(1)}" fill="none" stroke="${on ? "#4fd8e8" : "#2a4a50"}" stroke-width=".5"/>
+${keys(qL, false)}${keys(qR, true)}
+<path d="M53 3.2 Q60 1.9 67 3.2" stroke="${on ? "#ffd43a" : "#5a4a2a"}" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+<rect x="48.5" y="9" width="23" height="6" rx=".6" fill="${on ? "#262b31" : "#15181d"}" stroke="#3a404a" stroke-width=".3"/>
+<rect x="50" y="10.2" width="8" height="1" fill="#8a9099" opacity=".5"/><rect x="50" y="12.4" width="6" height="1" fill="#8a9099" opacity=".5"/><circle cx="60.5" cy="11.6" r=".5" fill="${on ? "#ff5252" : "#3a2020"}"/>
+${on ? `<text x="67" y="13.5" font-size="3" text-anchor="middle" font-family="monospace" font-weight="700" fill="#6ec1ff">${play ? "B7" : "--"}${play ? `<animate attributeName="opacity" values="1;.5;1" dur="1s" repeatCount="indefinite"/>` : ""}</text>` : ""}
+<rect x="22.5" y="18" width="75" height="6.6" rx=".6" fill="#aab2bb"/><rect x="22.5" y="18" width="75" height="1.1" fill="#eef1f4" opacity=".8"/>
+<rect x="24" y="19.4" width="14" height="3.8" rx=".5" fill="#12151a"/><rect x="25.5" y="20.6" width="7" height="1.4" rx=".3" fill="${on ? "#3d6dd8" : "#2a3040"}"/><rect x="32.8" y="20.6" width="3.6" height="1.4" rx=".3" fill="${on ? "#d8503d" : "#402a2a"}"/>
+<rect x="43.4" y="19.4" width="33.2" height="3.8" rx=".5" fill="#12151a"/>
+<rect x="44.2" y="19.9" width="2.4" height="2.8" rx=".5" fill="${on ? "#f0e6b0" : "#4a4636"}"/>
+${[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((d, k) => { const x = arcN(47.8 + k * 2.8); return `<rect x="${x}" y="19.9" width="2.3" height="2.8" rx=".5" fill="${on ? "#4d8cff" : "#232a36"}"/><rect x="${x}" y="19.9" width="2.3" height=".7" rx=".3" fill="#fff" opacity="${on ? .35 : .08}"/><text x="${arcN(x + 1.15)}" y="22.2" font-size="1.7" text-anchor="middle" font-family="Arial, sans-serif" fill="${on ? "#e3eeff" : "#4a5260"}">${d}</text>`; }).join("")}
+<rect x="81" y="19.4" width="9" height="3.8" rx=".5" fill="#12151a"/><rect x="82.4" y="20.6" width="5.5" height="1.2" rx=".3" fill="#c9ced6" opacity=".5"/>
+<rect x="91" y="19.2" width="1.4" height="4.2" rx=".4" fill="${on ? "#3fe0d0" : "#24403e"}"/><circle cx="95" cy="21.3" r="1.2" fill="#2b3038" stroke="#8a9099" stroke-width=".3"/>
+<path d="M21.5 25 H98.5 L106 50 H14 Z" fill="#0b0d11"/>
+${on ? `<path d="M21.5 27.5 H98.5 L103.5 49 H16.5 Z" fill="#f4ffb0" opacity=".25" filter="url(#${soft})"/>` : ""}
+${cards}${pick}
+<path d="M21.5 25 H98.5 L106 50 H14 Z" fill="url(#${glass})"/>
+<circle cx="60" cy="51.2" r=".9" fill="#c9ced6"/>
+<rect x="12" y="52" width="96" height="6.8" rx="1.6" fill="url(#${chrome})"/>${[53.6, 55.4, 57.2].map((y) => `<path d="M13 ${y} H107" stroke="#6d757e" stroke-width=".25" opacity=".6"/>`).join("")}
+${letters}
+${grille(17, 26)}${grille(47, 26)}${grille(77, 26)}
+<rect x="13" y="115" width="94" height="7" rx="1" fill="#101216"/>
+<path d="M13 50 V120 M107 50 V120" stroke="#3c414a" stroke-width=".8"/>`;
+}
+
+// A virtual pinball cabinet (pincab, HACF #203), three quarters from the
+// front left and drawn from a small 3D model, so each face, leg and button
+// sits in its own plane: the backbox with its backglass and score display,
+// the playfield screen under glass, the side art, the legs on the floor.
+// In its menu the lights chase; on a table, the ball runs and the flippers
+// strike, and the backglass shows the table's own picture.
+// The ball's run on the playfield, as [x, y, time] in the playfield's own
+// units (30 across, 60 from the back): struck by the left flipper, it hits
+// the left bumper, then the right one, rounds the top arch, comes down the
+// left lane onto the slingshot, rolls to the right flipper, is struck again,
+// hits the bottom bumper and falls back onto the left flipper. Each contact
+// is the bumper's radius plus the ball's away from its centre.
+const PB_DUR = 5;
+const PB_HIT = { a: .15, b: .24, sling: .55, right: .7, c: .8 };
+const PB_PATH = [[13.7, 51.5, 0], [13.7, 51.5, .02], [11.3, 18.2, .15], [17.8, 17.6, .24], [24, 10, .29], [20.5, 5.2, .32], [15, 4.4, .34], [9.5, 5.2, .36], [6, 9, .39], [5.2, 28, .46],
+  [8.6, 44, .55], [16.3, 51.5, .66], [16.3, 51.5, .7], [14.2, 25.6, .8], [13.7, 51.5, .97], [13.7, 51.5, 1]];
+const pbT = (v) => Math.max(0, Math.min(1, v)).toFixed(3);
+function arcPincab(c) {
+  const sideG = ntId(), glassG = ntId(), blur = ntId(), soft = ntId(), dots = ntId();
+  const on = c.on, play = c.playing;
+  const [edge] = ARC_COLORS[c.color] || ARC_COLORS.purple;
+  // The lit trim and side art: the frame colour, lighter.
+  const neon = "#" + [1, 3, 5].map((i) => Math.round((parseInt(edge.slice(i, i + 2), 16) + 255 * 1.2) / 2.2).toString(16).padStart(2, "0")).join("");
+  // x across (0 left, 30 right), y up from the floor, z along (0 back, 60 front).
+  const s = 1.06, ex = [s, -s / 3], ez = [s * .933, s * .433], ey = [0, -s], O = [16.4, 92.8];
+  const p = (x, y, z) => [arcN(O[0] + x * ex[0] + z * ez[0]), arcN(O[1] + x * ex[1] + z * ez[1] + y * ey[1])];
+  const P = (pts) => pts.map(([x, y], i) => `${i ? "L" : "M"}${x} ${y}`).join(" ") + " Z";
+  const poly = (pts, fill, extra = "") => `<path d="${P(pts.map((q) => p(...q)))}" fill="${fill}" ${extra}/>`;
+  // A plane through o spanned by u and v (3D), for drawing in its own units.
+  const plane = (o, u, v) => { const a = p(...o), b = p(o[0] + u[0], o[1] + u[1], o[2] + u[2]), d = p(o[0] + v[0], o[1] + v[1], o[2] + v[2]);
+    return `matrix(${arcN(b[0] - a[0])} ${arcN(b[1] - a[1])} ${arcN(d[0] - a[0])} ${arcN(d[1] - a[1])} ${a[0]} ${a[1]})`; };
+  const W = 30, L = 60, yb = 23, ytB = 41, ytF = 38, bbH = 38, bbD = 7;
+  const yt = (z) => ytB + (ytF - ytB) * z / L;
+  // A leg: a square tube from under the body to the floor, its leveler foot.
+  const leg = (x, z) => { const t = 1.6, y0 = yb - .2;
+    return poly([[x, y0, z + t], [x + t, y0, z + t], [x + t, 1.2, z + t], [x, 1.2, z + t]], "#2a2f38")
+      + poly([[x, y0, z], [x, y0, z + t], [x, 1.2, z + t], [x, 1.2, z]], "#1a1e25")
+      + `<g transform="${plane([x + t / 2, 1.2, z + t / 2], [1, 0, 0], [0, -1, 0])}"><rect x="-.5" y="0" width="1" height=".9" fill="#5b636e"/></g>`
+      + `<g transform="${plane([x + t / 2, 0, z + t / 2], [1, 0, 0], [0, 0, 1])}"><ellipse rx="1.3" ry="1.3" fill="#11141a"/></g>`; };
+  // Floor shadow under the cabinet and each foot.
+  const shadow = poly([[-1, 0, -1], [W + 1, 0, -1], [W + 1, 0, L + 1], [-1, 0, L + 1]], "#000", `opacity=".11" filter="url(#${blur})"`)
+    + [[1, 1], [W - 1, 1], [1, L - 1], [W - 1, L - 1]].map(([x, z]) => `<g transform="${plane([x, 0, z], [1, 0, 0], [0, 0, 1])}"><ellipse rx="2" ry="2" fill="#000" opacity=".3" filter="url(#${soft})"/></g>`).join("");
+  // Playfield, in its own frame: 30 across, 60 from the back.
+  const pfMat = plane([0, ytB, 0], [1, 0, 0], [0, (ytF - ytB) / L, 1]);
+  const playfield = `<g transform="${pfMat}">
+<rect x="1.4" y="1" width="27.2" height="57" fill="${on ? "#0d1430" : "#0b0e15"}"/>
+${on ? `<path d="M3 57 V18 Q3 4 15 4 Q27 4 27 18 V57" fill="none" stroke="${neon}" stroke-width=".8" opacity=".7"/>
+${[[9.5, 15, PB_HIT.a], [20.5, 15, PB_HIT.b], [15, 22, PB_HIT.c]].map(([x, y, hit], i) => `<circle cx="${x}" cy="${y}" r="2.6" fill="${["#ff5252", "#ffd740", "#40c4ff"][i]}">${play ? `<animate attributeName="opacity" values=".55;.55;1;.55;.55" keyTimes="0;${pbT(hit - .01)};${pbT(hit)};${pbT(hit + .05)};1" dur="${PB_DUR}s" repeatCount="indefinite"/><animate attributeName="r" values="2.6;2.6;3.2;2.6;2.6" keyTimes="0;${pbT(hit - .01)};${pbT(hit)};${pbT(hit + .05)};1" dur="${PB_DUR}s" repeatCount="indefinite"/>` : `<animate attributeName="opacity" values="1;.35;1" dur="1.6s" begin="${i * .3}s" repeatCount="indefinite"/>`}</circle><circle cx="${x}" cy="${y}" r="1.1" fill="#fff" opacity=".8"/>`).join("")}
+<path d="M5.5 40 L9.5 49 L5.5 47 Z" fill="${edge}" stroke="#fff" stroke-width=".3">${play ? `<animate attributeName="fill" values="${edge};${edge};#fff;${edge};${edge}" keyTimes="0;${pbT(PB_HIT.sling - .01)};${pbT(PB_HIT.sling)};${pbT(PB_HIT.sling + .04)};1" dur="${PB_DUR}s" repeatCount="indefinite"/>` : ""}</path><path d="M24.5 40 L20.5 49 L24.5 47 Z" fill="${edge}" stroke="#fff" stroke-width=".3"/>
+${[0, 1, 2, 3, 4].map(i => `<circle cx="${7 + i * 4}" cy="31" r=".9" fill="#ffd740"><animate attributeName="opacity" values="0;1;0" dur="1.5s" begin="${i * .3}s" repeatCount="indefinite"/></circle>`).join("")}
+${[0, 1, 2].map(i => `<path d="M${10 + i * 5} 36 l1.2 2.4 h-2.4 z" fill="${neon}"><animate attributeName="opacity" values=".2;1;.2" dur="1.2s" begin="${i * .4}s" repeatCount="indefinite"/></path>`).join("")}
+<path d="M9.5 51 L14 54" stroke="#fff" stroke-width="1.6" stroke-linecap="round">${play ? `<animateTransform attributeName="transform" type="rotate" values="0 9.5 51;-35 9.5 51;-35 9.5 51;0 9.5 51;0 9.5 51" keyTimes="0;.02;.05;.1;1" dur="${PB_DUR}s" repeatCount="indefinite"/>` : ""}</path>
+<path d="M20.5 51 L16 54" stroke="#fff" stroke-width="1.6" stroke-linecap="round">${play ? `<animateTransform attributeName="transform" type="rotate" values="0 20.5 51;0 20.5 51;35 20.5 51;35 20.5 51;0 20.5 51;0 20.5 51" keyTimes="0;${pbT(PB_HIT.right)};${pbT(PB_HIT.right + .02)};${pbT(PB_HIT.right + .05)};${pbT(PB_HIT.right + .1)};1" dur="${PB_DUR}s" repeatCount="indefinite"/>` : ""}</path>
+${play ? `<circle r="1.1" fill="#e8eef5" stroke="#9aa6b2" stroke-width=".25"><animateMotion values="${PB_PATH.map(([x, y]) => `${x},${y}`).join(";")}" keyTimes="${PB_PATH.map(([, , t]) => t).join(";")}" calcMode="linear" dur="${PB_DUR}s" repeatCount="indefinite"/></circle>` : ""}` : ""}
+<path d="M2 2 L12 2 L4 56 L2 56 Z" fill="#fff" opacity="${on ? .06 : .09}"/>
+</g>`;
+  // Backbox on the back of the cabinet: front face upright, side and top.
+  const bz0 = -bbD + 1, bz1 = 1;
+  const bbFront = plane([0, ytB + bbH, bz1], [1, 0, 0], [0, -1, 0]);
+  const bgArt = on ? (c.image ? `<image href="${esc(c.image)}" x="2" y="2" width="26" height="23" preserveAspectRatio="xMidYMid slice"/>`
+    : `<rect x="2" y="2" width="26" height="23" fill="#170a2e"/>
+<circle cx="15" cy="12" r="8" fill="${edge}" opacity=".5"><animate attributeName="r" values="7;9;7" dur="2s" repeatCount="indefinite"/></circle>
+<text x="15" y="14.5" font-size="6" text-anchor="middle" font-weight="900" font-style="italic" fill="#fff" stroke="${edge}" stroke-width=".4" font-family="Arial Black, Arial, sans-serif">PINBALL</text>
+${[0, 1, 2, 3, 4, 5, 6, 7].map(i => `<circle cx="${3.5 + i * 3.3}" cy="23" r=".7" fill="#ffd740"><animate attributeName="opacity" values="1;.1;1" dur=".9s" begin="${i * .11}s" repeatCount="indefinite"/></circle>`).join("")}`) : `<rect x="2" y="2" width="26" height="23" fill="#0c0f16"/>`;
+  const dmd = !on ? "" : play ? `<text x="15" y="31.2" font-size="3.4" text-anchor="middle" fill="#ff9f2e" font-family="monospace" font-weight="700">1,250,400<animate attributeName="opacity" values="1;.6;1" dur=".3s" repeatCount="indefinite"/></text>`
+    : `<text x="15" y="31" font-size="3" text-anchor="middle" fill="#ff9f2e" font-family="monospace" font-weight="700">PRESS START<animate attributeName="opacity" values="1;0;1" dur="1s" calcMode="discrete" repeatCount="indefinite"/></text>`;
+  const backbox = poly([[0, ytB, bz0], [0, ytB + bbH, bz0], [0, ytB + bbH, bz1], [0, ytB, bz1]], "#161b25")
+    + poly([[0, ytB + bbH, bz0], [W, ytB + bbH, bz0], [W, ytB + bbH, bz1], [0, ytB + bbH, bz1]], "#2a313d")
+    + `<g transform="${bbFront}"><rect width="30" height="${bbH}" fill="#0b0e14"/>${bgArt}<rect x="2" y="2" width="26" height="23" fill="url(#${glassG})"/>
+<rect x="5" y="27" width="20" height="5.6" rx=".4" fill="#1b0f05"/>${dmd}<rect x="5" y="27" width="20" height="5.6" fill="url(#${dots})"/>
+${[2.6, 27.4].map(x => `<circle cx="${x}" cy="29.8" r="1.6" fill="#2a2f3a" stroke="#454c58" stroke-width=".3"/><circle cx="${x}" cy="29.8" r=".6" fill="#14171d"/>`).join("")}
+<rect y="${bbH - 3}" width="30" height="3" fill="#151a23"/></g>`;
+  // Body: left side with its art, front with coin door and plunger, top rim.
+  const sideMat = plane([0, yb, 0], [0, 0, 1], [0, 1, 0]);
+  const side = poly([[0, yb, 0], [0, yb, L], [0, ytF, L], [0, ytB, 0]], `url(#${sideG})`)
+    + `<g transform="${sideMat}">
+<path d="M4 3 Q30 12 56 6" stroke="${neon}" stroke-width="1.4" fill="none" opacity="${on ? .9 : .4}"/>
+<path d="M8 6 l7 6 l-1 -5 l8 6" stroke="#ffd740" stroke-width=".9" fill="none" opacity="${on ? .9 : .35}"/>
+<path d="M28 4 Q40 9 50 4" stroke="${edge}" stroke-width="1" fill="none" opacity="${on ? .8 : .3}"/>
+<ellipse cx="56" cy="11.5" rx="1.1" ry="1.1" fill="#0b0d12"/><ellipse cx="56" cy="11.5" rx=".8" ry=".8" fill="${on ? "#ff5252" : "#5a2a2a"}"/></g>`;
+  const front = poly([[0, yb, L], [W, yb, L], [W, ytF, L], [0, ytF, L]], "#11151d")
+    + `<g transform="${plane([0, yb, L], [1, 0, 0], [0, 1, 0])}">
+${[11.5, 18.5].map(x => `<rect x="${x - 1.4}" y="3.5" width="2.8" height="5" rx=".4" fill="${on ? "#ff4d3d" : "#5a2a2a"}"/><rect x="${x - .25}" y="4.4" width=".5" height="3" fill="#15181d"/>`).join("")}
+<rect x="9" y="1.4" width="12" height="9" rx=".6" fill="none" stroke="#3a404a" stroke-width=".4"/>
+<circle cx="25.5" cy="11" r="1.1" fill="#c9ced6"/><circle cx="25.5" cy="11" r=".5" fill="#7d8591"/>
+<circle cx="4.5" cy="11.5" r="1" fill="${on ? "#ffd740" : "#6b5a20"}"/></g>`;
+  const rimTop = poly([[0, ytB, 0], [W, ytB, 0], [W, ytF, L], [0, ytF, L]], "#1b2029");
+  const lockdown = poly([[0, ytF, L - 1.6], [W, ytF, L - 1.6], [W, ytF + .9, L - .4], [0, ytF + .9, L - .4]], "#d5dbe2")
+    + poly([[0, ytF + .9, L - .4], [W, ytF + .9, L - .4], [W, ytF, L], [0, ytF, L]], "#8d969f");
+  const rimEdge = `<path d="${P([p(0, ytB, 0), p(0, ytF, L)])}" stroke="${edge}" stroke-width="1.1"/>`;
+  const inset = .6;
+  return `<defs>
+<linearGradient id="${sideG}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#151a3a"/><stop offset="1" stop-color="${on ? "#2b1450" : "#1a1328"}"/></linearGradient>
+<linearGradient id="${glassG}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".12"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<filter id="${blur}" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="2"/></filter><filter id="${soft}" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation=".7"/></filter>
+<pattern id="${dots}" width=".7" height=".7" patternUnits="userSpaceOnUse"><rect width=".7" height=".7" fill="#000" opacity=".35"/></pattern></defs>
+${shadow}${leg(W - 2.2, inset)}${leg(W - 2.2, L - 2.2)}
+${side}${front}${rimTop}${playfield}${lockdown}${rimEdge}
+${leg(inset, inset)}${leg(inset, L - 2.2)}
+${backbox}`;
+}
+
+const NT_DRAW = { spk_jukebox: (c) => ntJukebox({ on: c.st !== "off" && c.st !== undefined, playing: c.st === "playing" }), wd_under_sink: ntWdUnderSink, wd_column: ntWdColumn, con_pincab: (c) => arcPincab({ ...c, playing: c.st === "playing" }), con_arcade_bartop: (c) => arcBartop({ ...c, playing: c.st === "playing" }), con_arcade_upright: (c) => arcUpright({ ...c, playing: c.st === "playing" }), strip_shelly: ntStripShelly, strip_classic: ntStripClassic, gas_fireplace: ntGasFireplace, fp_tm31: ntFoodTm31, fp_tm6: ntFoodTm6, rack_box: ntRackBox, rack_accordion: ntRackAccordion, rack_frame: ntRackFrame, vlv_aqara: ntValveAqara, vlv_tuya: ntValveTuya,  fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_switchbot_co2: (c) => ntSbPro(c, true), ths_switchbot_pro: (c) => ntSbPro(c, false), ths_switchbot_meter: (c) => ntSbMeter(c, false), ths_switchbot_plus: (c) => ntSbMeter(c, true), ths_switchbot_outdoor: ntSbOutdoor, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, cov_curtain: ntCovCurtain, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, det_door: ntDetDoor, det_vibration: ntDetVibration, det_glass: ntDetGlass, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, spk_focal_bird: ntSpkFocalBird, spk_focal_od6: ntSpkFocalOd6, spk_denon_avr: ntSpkDenon, spk_avr: ntSpkAvr, spk_wiim_amp: ntSpkWiim, spk_smart_clock: ntSpkClock, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 // What a tint leaves alone: a part wrapped by ntKeep (an app's tile, a
 // display, a tyre).
 const ntKeep = (s) => `<!--k-->${s}<!--/k-->`;
 // The drawings a tint applies to: appliances, not the scenes around them
 // (a sump's pit, a floor, a garden, a pool, a roof).
-const NT_TINTED = /^(strip_|con_(?!arcade)|str_|spk_|lit_|det_|mob_|irr_tap$|dryer$|humidifier$|fws$|wood$|booster$|circulator$|pellet_grill$)/;
+const NT_TINTED = /^(strip_|con_(?!arcade|pincab)|str_|spk_(?!jukebox)|lit_|det_|mob_|irr_tap$|dryer$|humidifier$|fws$|wood$|booster$|circulator$|pellet_grill$|wd_column$)/;
 // Winter (dosing-tank-card #3): flakes falling slowly over a drawing, snow
 // lying on what it covers, a cover over a spa, a pool or a grill.
 function ntFlakes(n = 12) {
