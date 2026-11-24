@@ -397,6 +397,8 @@ const SECTIONS = [
   { field: "light_entity", types: ["oven", "hood", "printer_3d", "fan", "pool_pump", "diffuser", "spa"], labelKey: "section_light", includeDomains: ["light", "switch", "input_boolean", "binary_sensor"] },
   { field: "camera_entity", types: ["printer_3d", "robot", "pet_feeder"], labelKey: "type_camera", includeDomains: ["camera", "image"] },
   { field: "usb_entity", types: ["power_strip"], labelKey: "strip_usb", includeDomains: ["switch", "input_boolean"] },
+  { field: "system_entity", types: ["console"], labelKey: "con_system", includeDomains: ["sensor", "input_text", "select"] },
+  { field: "image_entity", types: ["console"], labelKey: "con_game_image", includeDomains: ["image", "camera", "sensor"] },
 
   // Cooktop
   { field: "child_lock_entity", types: ["cooktop"], labelKey: "section_child_lock", includeDomains: ["binary_sensor", "switch", "lock"] },
@@ -1806,6 +1808,10 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: Object.keys(NETATMO_COLORS).map((v) => ({ value: v, label: t(hass, `ntm_${v}`) })),
         }) : ""}
+        ${this._type === "console" && /^arcade_/.test(consoleLayoutOf(this._config, stateObj(hass, this._config.state_entity))) ? [["arcade_color", Object.keys(ARC_COLORS)], ["arcade_p1_color", Object.keys(ARC_BUTTONS)], ["arcade_p2_color", Object.keys(ARC_BUTTONS)]].map(([f, list]) => this._row(f, f, {
+          type: "select",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(list.map((v) => ({ value: v, label: t(hass, `color_${v}`) }))),
+        })).join("") : ""}
         ${this._type === "speaker" ? this._row("speaker_color", "speaker_color", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(SPK_COLORS.map((v) => ({ value: v, label: t(hass, `color_${v}`) }))),
@@ -2248,7 +2254,7 @@ class ApplianceCardEditor extends HTMLElement {
         if (field === "door_style" && value === "wood") delete this._config.door_style;
         if (field === "gate_leaves") { if (value === "1") delete this._config.gate_leaves; else this._config.gate_leaves = 2; }
         if (field === "gate_side" && value === "left") delete this._config.gate_side;
-        if ((field === "window_style" || field === "frame_color") && value === "auto") delete this._config[field];
+        if (["window_style", "frame_color", "arcade_color", "arcade_p1_color", "arcade_p2_color"].includes(field) && value === "auto") delete this._config[field];
         // No background is the default and is not written.
         if (field === "illustration_backdrop" && !illustrationBackdropOf(value)) delete this._config.illustration_backdrop;
         if (field === "compact") {

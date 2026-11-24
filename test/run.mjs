@@ -15759,4 +15759,35 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('multiprise : traduite', /Multiprise/.test(markup(newEditor({ state_entity: 'switch.strip_l1', appliance_type: 'power_strip', language: 'fr' })._root)), true);
 }
 
+// =============================================================================
+// Arcade cabinets (HACF #198): a console layout, the game's picture on screen.
+// =============================================================================
+{
+  const S = (v, a = {}) => ({ state: v, attributes: a });
+  const AR = (extra = {}, states = {}) => build({ appliance_type: 'console', console_layout: 'arcade_bartop', state_entity: 'switch.recalbox', ...extra }, { 'switch.recalbox': S('on'), ...states }).html;
+  check('arcade : dessinee', /nt-k-con_arcade_bartop/.test(AR()), true);
+  check('arcade : sans jeu, au menu', stateLine(AR()), 'On');
+  check('arcade : sur une prise qui consomme, toujours au menu', stateLine(AR({ power_entity: 'sensor.w', power_on_threshold: 20 }, { 'sensor.w': S('60', { unit_of_measurement: 'W' }) })), 'On');
+  const play = AR({ game_entity: 'sensor.recalbox_game', system_entity: 'sensor.recalbox_system' }, { 'sensor.recalbox_game': S('Galaxy Raiders'), 'sensor.recalbox_system': S('Neo Geo') });
+  check('arcade : un jeu, en jeu', stateLine(play), 'Playing');
+  check('arcade : le systeme', infoLine(play, 'System').replace(/\u00a0/g, ' '), 'Neo Geo');
+  check('arcade : en jeu, les manettes bougent', /type="rotate" values="0 [\d.]+ [\d.]+;-8 /.test(play), true);
+  check('arcade : au menu, elles ne bougent pas', /type="rotate" values="0 [\d.]+ [\d.]+;-8 /.test(AR()), false);
+  check('arcade : jeu indisponible, au menu', stateLine(AR({ game_entity: 'sensor.recalbox_game' }, { 'sensor.recalbox_game': S('unavailable') })), 'On');
+  const pic = AR({ game_entity: 'sensor.recalbox_game', image_entity: 'image.recalbox_gamepic' }, { 'sensor.recalbox_game': S('Sky Racer'), 'image.recalbox_gamepic': S('2026-11-24T10:00:00', { entity_picture: '/api/image_proxy/image.recalbox_gamepic?token=x' }) });
+  check('arcade : l image du jeu a l ecran', /<image href="\/api\/image_proxy\/image\.recalbox_gamepic\?token=x"/.test(pic), true);
+  check('arcade : au menu, pas d image', /<image href=/.test(AR({ image_entity: 'image.recalbox_gamepic' }, { 'image.recalbox_gamepic': S('2026', { entity_picture: '/p.png' }) })), false);
+  check('arcade : eteinte', stateLine(AR({}, { 'switch.recalbox': S('off') })), 'Off');
+  check('arcade : couleur du cadre', /stroke="#d32f2f"/.test(AR({ arcade_color: 'red' })), true);
+  check('arcade : couleur du joueur 1', /fill="#ffd35c"/.test(AR({ arcade_p1_color: 'yellow' })), true);
+  const arcSvg = (h) => (h.match(/<svg class="nt-svg"[\s\S]*?<\/svg>/) || [''])[0];
+  check('arcade : pas teintee par la couleur de la carte', arcSvg(AR({ illustration_color: 'red' })) === arcSvg(AR()), true);
+  check('arcade : debout', /nt-k-con_arcade_upright/.test(AR({ console_layout: 'arcade_upright' })), true);
+  check('arcade : reconnue par recalbox', /nt-k-con_arcade_bartop/.test(render({ appliance_type: 'console', state_entity: 'switch.recalbox' }, { 'switch.recalbox': S('on') })), true);
+  check('arcade : une console reste une console', /nt-k-con_ps5/.test(render({ appliance_type: 'console', state_entity: 'media_player.ps5' }, { 'media_player.ps5': S('on') })), true);
+  const edH = markup(newEditor({ state_entity: 'switch.recalbox', appliance_type: 'console', console_layout: 'arcade_bartop' })._root);
+  check('editeur arcade : les trois couleurs', ['arcade_color', 'arcade_p1_color', 'arcade_p2_color'].every((f) => new RegExp(`data-field="${f}"`).test(edH)), true);
+  check('editeur console : pas de couleurs d arcade', /data-field="arcade_color"/.test(markup(newEditor({ state_entity: 'media_player.ps5', appliance_type: 'console', console_layout: 'ps5' })._root)), false);
+}
+
 report();

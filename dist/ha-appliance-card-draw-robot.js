@@ -2,8 +2,8 @@
 // The robot drawing and its CSS, loaded by the card the first time it shows one.
 export default function defineDrawing(deps) {
 // A page still running the card of an earlier release: an arrow to reload.
-if (!deps || deps.__v !== "4.49.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
-let { BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, numberOrNull, shdBlur, t, thsColor, zoneColumns } = deps;
+if (!deps || deps.__v !== "4.50.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
+let { ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, numberOrNull, shdBlur, t, thsColor, zoneColumns } = deps;
 // The small screen and the air lines the dehumidifier and the two heaters
 // share. Warm air rises; the air a dehumidifier or a fan blows goes the other
 // way along the same lines.
@@ -4562,13 +4562,176 @@ function ntStripClassic(c) {
 ${ks.map((k, i) => stripSocket(k, 24 + i * gap, 60.5, 8, 45)).join("")}
 ${c.usb ? stripUsb(c.usb, w - 13, 52) : ""}</g>`;
 }
-const NT_DRAW = { strip_shelly: ntStripShelly, strip_classic: ntStripClassic, gas_fireplace: ntGasFireplace, fp_tm31: ntFoodTm31, fp_tm6: ntFoodTm6, rack_box: ntRackBox, rack_accordion: ntRackAccordion, rack_frame: ntRackFrame, vlv_aqara: ntValveAqara, vlv_tuya: ntValveTuya,  fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_switchbot_co2: (c) => ntSbPro(c, true), ths_switchbot_pro: (c) => ntSbPro(c, false), ths_switchbot_meter: (c) => ntSbMeter(c, false), ths_switchbot_plus: (c) => ntSbMeter(c, true), ths_switchbot_outdoor: ntSbOutdoor, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, cov_curtain: ntCovCurtain, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, det_door: ntDetDoor, det_vibration: ntDetVibration, det_glass: ntDetGlass, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, spk_focal_bird: ntSpkFocalBird, spk_focal_od6: ntSpkFocalOd6, spk_denon_avr: ntSpkDenon, spk_avr: ntSpkAvr, spk_wiim_amp: ntSpkWiim, spk_smart_clock: ntSpkClock, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+// An arcade cabinet (HACF #198): a bartop on a table, or a full-size
+// cabinet on the floor. Its T-molding and both players' buttons in the
+// colours chosen; on a game, the sticks move a little, buttons go down now
+// and then, and the screen shows the game's own picture or three small games.
+const arcN = (v) => +v.toFixed(2);
+const arcBtnColor = (name, def, on) => (ARC_BUTTONS[name] || ARC_BUTTONS[def])[on ? 0 : 1];
+// An arcade button seen from above and in front: its bezel, its dome, the
+// light inside it when the cabinet is on.
+function arcBtn(c, x, y, col, r = 2.2, gl = "", press = "") {
+  const dome = `<ellipse cx="${x}" cy="${arcN(y - r * .12)}" rx="${r}" ry="${arcN(r * .55)}" fill="${col}" opacity="${c.on ? 1 : .55}"/><ellipse cx="${arcN(x - r * .32)}" cy="${arcN(y - r * .3)}" rx="${arcN(r * .42)}" ry="${arcN(r * .17)}" fill="#fff" opacity="${c.on ? .75 : .35}"/>`;
+  const moving = c.playing && press ? `<animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 ${arcN(r * .22)};0 0" keyTimes="0;.7;.8;1" dur="${press}" repeatCount="indefinite"/>` : "";
+  const flash = c.playing && press ? `<ellipse cx="${x}" cy="${arcN(y - r * .12)}" rx="${r}" ry="${arcN(r * .55)}" fill="#fff" opacity="0"><animate attributeName="opacity" values="0;0;.55;0" keyTimes="0;.7;.8;1" dur="${press}" repeatCount="indefinite"/></ellipse>` : "";
+  return `${c.on ? `<ellipse cx="${x}" cy="${y}" rx="${arcN(r * 1.8)}" ry="${arcN(r * 1.15)}" fill="${col}" opacity=".4" filter="url(#${gl})"/>` : ""}<ellipse cx="${x}" cy="${arcN(y + r * .32)}" rx="${arcN(r * 1.14)}" ry="${arcN(r * .64)}" fill="#05070c"/><ellipse cx="${x}" cy="${y}" rx="${arcN(r * 1.14)}" ry="${arcN(r * .64)}" fill="#c9ced6"/><ellipse cx="${x}" cy="${arcN(y + r * .05)}" rx="${arcN(r * 1.02)}" ry="${arcN(r * .55)}" fill="#7d8591"/><g>${moving}${dome}${flash}</g>`;
+}
+function arcStick(c, x, y, col, gl = "", r = 2.3, k = 1) {
+  const sway = c.playing ? `<animateTransform attributeName="transform" type="rotate" values="0 ${x} ${y};-8 ${x} ${y};-8 ${x} ${y};0 ${x} ${y};6 ${x} ${y};0 ${x} ${y};0 ${x} ${y};-4 ${x} ${y};0 ${x} ${y}" keyTimes="0;.1;.22;.3;.42;.52;.7;.8;1" dur="${arcN(2.4 * k)}s" repeatCount="indefinite"/>` : "";
+  return `<ellipse cx="${x}" cy="${y}" rx="${arcN(r * 1.5)}" ry="${arcN(r * .66)}" fill="#05070c"/><ellipse cx="${x}" cy="${arcN(y - .3)}" rx="${arcN(r * 1.2)}" ry="${arcN(r * .48)}" fill="#3b414b"/><g>${sway}<path d="M${arcN(x - r * .22)} ${arcN(y - .4)} L${arcN(x - r * .18)} ${arcN(y - r * 2.4)} H${arcN(x + r * .18)} L${arcN(x + r * .22)} ${arcN(y - .4)} Z" fill="#aeb6c1"/>${c.on ? `<circle cx="${x}" cy="${arcN(y - r * 2.9)}" r="${arcN(r * 1.6)}" fill="${col}" opacity=".45" filter="url(#${gl})"/>` : ""}<circle cx="${x}" cy="${arcN(y - r * 2.9)}" r="${r}" fill="${col}" opacity="${c.on ? 1 : .6}"/><circle cx="${arcN(x - r * .35)}" cy="${arcN(y - r * 3.25)}" r="${arcN(r * .33)}" fill="#fff" opacity=".7"/></g>`;
+}
+// What the screen shows: a game list while it waits, a game while one runs,
+// a dark glass when off.
+function arcScreen(c, x, y, w, h, id) {
+  const glass = `<path d="M${x} ${y} H${arcN(x + w * .42)} L${x} ${arcN(y + h * .8)} Z" fill="#fff" opacity="${c.on ? .07 : .08}"/>`;
+  if (!c.on) return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx=".6" fill="#14181e"/>${glass}`;
+  const sx = (u) => arcN(x + w * u), sy = (v) => arcN(y + h * v), sw = (u) => arcN(w * u), sh = (v) => arcN(h * v);
+  const clip = `${id}c`;
+  const defs = `<defs><pattern id="${id}" width="2" height="1" patternUnits="userSpaceOnUse"><rect width="2" height=".45" fill="#000" opacity=".22"/></pattern><clipPath id="${clip}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx=".6"/></clipPath></defs>`;
+  const end = `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${id})"/>${glass}`;
+  // The game's own picture (Recalbox's Gamepic), filling the screen.
+  if (c.playing && c.image) {
+    return `${defs}<rect x="${x}" y="${y}" width="${w}" height="${h}" rx=".6" fill="#000"/><image href="${esc(c.image)}" x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice" clip-path="url(#${clip})"/>${end}`;
+  }
+  if (c.playing) {
+    // Three games in turn, four seconds each: a shooter, a race, a platformer.
+    const scene = (i, body) => `<g opacity="${i ? 0 : 1}"><animate attributeName="opacity" values="${["1;0;0", "0;1;0", "0;0;1"][i]}" keyTimes="0;.333;.667" calcMode="discrete" dur="12s" repeatCount="indefinite"/>${body}</g>`;
+    const shooter = `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#070a24"/>
+${[[.08, .12], [.3, .34], [.55, .08], [.75, .22], [.9, .44], [.18, .55], [.62, .5], [.4, .66]].map(([u, v], i) => `<rect x="${sx(u)}" y="${sy(v)}" width=".7" height=".7" fill="#fff"><animate attributeName="opacity" values="1;.2;1" dur="${1 + (i % 3) * .5}s" repeatCount="indefinite"/></rect>`).join("")}
+<g><animateTransform attributeName="transform" type="translate" values="0 0;${sw(.08)} 0;0 0;${-sw(.08)} 0;0 0" dur="2s" repeatCount="indefinite"/>
+${[0, 1].map((j) => [0, 1, 2, 3, 4].map((i) => `<ellipse cx="${sx(.235 + i * .13)}" cy="${sy(.2 + j * .13)}" rx="${sw(.04)}" ry="${sh(.025)}" fill="${j ? "#ff5ca8" : "#4fc3f7"}"/><ellipse cx="${sx(.235 + i * .13)}" cy="${sy(.18 + j * .13)}" rx="${sw(.018)}" ry="${sh(.025)}" fill="#e0f7fa" opacity=".8"/>`).join("")).join("")}</g>
+<g><animateTransform attributeName="transform" type="translate" values="0 0;${sw(.22)} 0;${-sw(.18)} 0;0 0" dur="3s" repeatCount="indefinite"/>
+<path d="M${sx(.46)} ${sy(.9)} l${sw(.04)} ${-sh(.1)} l${sw(.04)} ${sh(.1)} Z" fill="#69f0ae"/>
+<rect x="${sx(.495)}" y="${sy(.7)}" width=".7" height="${sh(.08)}" fill="#ffee58"><animate attributeName="y" values="${sy(.76)};${sy(.1)}" dur=".7s" repeatCount="indefinite"/></rect></g>
+<text x="${sx(.04)}" y="${sy(.09)}" font-size="${sh(.08)}" fill="#fff" font-family="monospace">1UP 04250</text>`;
+    const race = `<rect x="${x}" y="${y}" width="${w}" height="${sh(.42)}" fill="#5ec8ff"/><rect x="${x}" y="${sy(.42)}" width="${w}" height="${sh(.58)}" fill="#3e9b3e"/>
+<path d="M${sx(.47)} ${sy(.42)} H${sx(.53)} L${sx(.86)} ${sy(1)} H${sx(.14)} Z" fill="#5a5f6a"/>
+<g><animateTransform attributeName="transform" type="translate" values="0 0;0 ${sh(.18)}" dur=".45s" repeatCount="indefinite"/>${[0, 1, 2, 3].map((i) => `<rect x="${sx(.495)}" y="${sy(.32 + i * .18)}" width="${sw(.01 + i * .008)}" height="${sh(.06 + i * .02)}" fill="#fff"/>`).join("")}</g>
+<path d="M${sx(.2)} ${sy(.42)} q${sw(.08)} ${-sh(.18)} ${sw(.16)} 0 Z M${sx(.62)} ${sy(.42)} q${sw(.1)} ${-sh(.22)} ${sw(.2)} 0 Z" fill="#7d8aa6"/>
+<g><animateTransform attributeName="transform" type="translate" values="0 0;${-sw(.12)} 0;${sw(.1)} 0;0 0" dur="2.2s" repeatCount="indefinite"/>
+<rect x="${sx(.43)}" y="${sy(.74)}" width="${sw(.14)}" height="${sh(.12)}" rx=".8" fill="#e53935"/><rect x="${sx(.455)}" y="${sy(.7)}" width="${sw(.09)}" height="${sh(.06)}" rx=".5" fill="#ffcdd2"/>
+<rect x="${sx(.42)}" y="${sy(.85)}" width="${sw(.035)}" height="${sh(.04)}" fill="#111"/><rect x="${sx(.545)}" y="${sy(.85)}" width="${sw(.035)}" height="${sh(.04)}" fill="#111"/></g>`;
+    const platform = `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#7ec8ff"/>
+<circle cx="${sx(.82)}" cy="${sy(.2)}" r="${sh(.1)}" fill="#fff59d"/>
+<g><animateTransform attributeName="transform" type="translate" values="0 0;${-sw(.25)} 0" dur="1.6s" repeatCount="indefinite"/>${[0, 1, 2, 3, 4, 5].map((i) => `<rect x="${sx(i * .25)}" y="${sy(.82)}" width="${sw(.245)}" height="${sh(.18)}" fill="${i % 2 ? "#c46a2b" : "#d9803c"}"/>`).join("")}
+${[0, 1, 2].map((i) => `<rect x="${sx(.35 + i * .25)}" y="${sy(.5)}" width="${sw(.08)}" height="${sh(.1)}" fill="#ffb300" stroke="#8d5a00" stroke-width=".3"/>`).join("")}</g>
+<circle cx="${sx(.62)}" cy="${sy(.36)}" r="${sh(.05)}" fill="#ffd54f"><animate attributeName="rx" values="1;.2;1" dur=".8s" repeatCount="indefinite"/></circle>
+<g><animateTransform attributeName="transform" type="translate" values="0 0;0 ${-sh(.32)};0 0;0 0" keyTimes="0;.35;.7;1" dur="1.6s" repeatCount="indefinite"/>
+<rect x="${sx(.28)}" y="${sy(.66)}" width="${sw(.06)}" height="${sh(.16)}" rx=".5" fill="#e53935"/><rect x="${sx(.285)}" y="${sy(.6)}" width="${sw(.05)}" height="${sh(.07)}" rx=".5" fill="#ffcc80"/><rect x="${sx(.275)}" y="${sy(.59)}" width="${sw(.07)}" height="${sh(.03)}" fill="#e53935"/></g>`;
+    return `${defs}<g clip-path="url(#${clip})">${scene(0, shooter)}${scene(1, race)}${scene(2, platform)}</g>${end}`;
+  }
+  // Waiting: the game list, its cursor going down the systems, the art turning.
+  return `${defs}<rect x="${x}" y="${y}" width="${w}" height="${h}" rx=".6" fill="#1b2a8f"/><rect x="${x}" y="${y}" width="${sw(.22)}" height="${h}" fill="#101a5e"/>
+${["#ffcc33", "#ff6b6b", "#7fd1ff", "#c9a0ff", "#ff8c42", "#69f0ae"].map((col, i) => `<rect x="${sx(.03)}" y="${sy(.1 + i * .14)}" width="${sw(.15)}" height="${sh(.055)}" rx=".3" fill="${col}"/>`).join("")}
+<rect x="${sx(.02)}" y="${sy(.08)}" width="${sw(.17)}" height="${sh(.1)}" fill="none" stroke="#fff" stroke-width=".45"><animate attributeName="y" values="${[0, 1, 2, 3, 4, 5].map((i) => sy(.08 + i * .14)).join(";")}" calcMode="discrete" dur="4.8s" repeatCount="indefinite"/></rect>
+<rect x="${sx(.28)}" y="${sy(.1)}" width="${sw(.64)}" height="${sh(.05)}" fill="#fff" opacity=".55"/><rect x="${sx(.28)}" y="${sy(.19)}" width="${sw(.5)}" height="${sh(.035)}" fill="#fff" opacity=".35"/>
+<g><animateTransform attributeName="transform" type="rotate" values="0 ${sx(.42)} ${sy(.58)};360 ${sx(.42)} ${sy(.58)}" dur="4s" repeatCount="indefinite"/><circle cx="${sx(.42)}" cy="${sy(.58)}" r="${sh(.14)}" fill="none" stroke="#ffd54f" stroke-width="1.3" stroke-dasharray="2 1"/></g><path d="M${sx(.42)} ${sy(.5)} v${sh(.08)} h${sw(.04)}" stroke="#ffd54f" stroke-width=".9" fill="none"/>
+<g><animateTransform attributeName="transform" type="translate" values="0 0;0 ${-sh(.06)};0 0" dur="1.2s" repeatCount="indefinite"/><rect x="${sx(.62)}" y="${sy(.5)}" width="${sw(.08)}" height="${sh(.12)}" fill="#4fc3f7"/><rect x="${sx(.6)}" y="${sy(.62)}" width="${sw(.12)}" height="${sh(.14)}" fill="#ff5252"/></g><rect x="${sx(.78)}" y="${sy(.48)}" width="${sw(.07)}" height="${sh(.28)}" fill="#ffd54f"/>
+<text x="${sx(.6)}" y="${sy(.95)}" font-size="${sh(.07)}" text-anchor="middle" fill="#fff" font-family="monospace">PRESS START<animate attributeName="opacity" values="1;0;1" dur="1s" calcMode="discrete" repeatCount="indefinite"/></text>
+${end}`;
+}
+// A marquee lit from behind: its plain lettering in the light.
+function arcMarquee(c, x, y, w, h, gl) {
+  const g = ntId();
+  return `<defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.on ? "#fff3c4" : "#2a2f3a"}"/><stop offset=".5" stop-color="${c.on ? "#ffd35c" : "#1c2029"}"/><stop offset="1" stop-color="${c.on ? "#ff9f2e" : "#14171e"}"/></linearGradient></defs>
+<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${g})"/>
+<text x="${arcN(x + w / 2)}" y="${arcN(y + h * .72)}" font-size="${arcN(h * .62)}" font-weight="900" font-style="italic" text-anchor="middle" fill="${c.on ? "#c62828" : "#4a2a2a"}" stroke="${c.on ? "#fff" : "#2a2f3a"}" stroke-width=".35" font-family="Arial Black, Arial, sans-serif" letter-spacing=".6">ARCADE</text>
+<rect x="${x}" y="${y}" width="${w}" height="${arcN(h * .3)}" fill="#fff" opacity="${c.on ? .18 : .05}"/>`;
+}
+// The screen sunk into the cabinet: its four inner walls going back to the
+// bezel, lit from the left, the screen at the bottom of that well.
+function arcWell(c, o, i, sc) {
+  const [ox0, oy0, ox1, oy1] = o, [ix0, iy0, ix1, iy1] = i;
+  const l = ntId(), r = ntId(), t = ntId();
+  return `<defs><linearGradient id="${l}" x1="0" x2="1"><stop offset="0" stop-color="#2a3246"/><stop offset="1" stop-color="#151a26"/></linearGradient><linearGradient id="${r}" x1="1" x2="0"><stop offset="0" stop-color="#1a2030"/><stop offset="1" stop-color="#0c0f17"/></linearGradient>${ntV(t, "#05070b", "#111622")}</defs>
+<path d="M${ox0} ${oy0} H${ox1} L${ix1} ${iy0} H${ix0} Z" fill="url(#${t})"/>
+<path d="M${ox0} ${oy0} L${ix0} ${iy0} V${iy1} L${ox0} ${oy1} Z" fill="url(#${l})"/>
+<path d="M${ox1} ${oy0} L${ix1} ${iy0} V${iy1} L${ox1} ${oy1} Z" fill="url(#${r})"/>
+<path d="M${ix0} ${iy1} H${ix1} L${ox1} ${oy1} H${ox0} Z" fill="#1c2232"/>
+${c.on ? `<path d="M${ox0} ${oy0} L${ix0} ${iy0} V${iy1} L${ox0} ${oy1} Z M${ox1} ${oy0} L${ix1} ${iy0} V${iy1} L${ox1} ${oy1} Z" fill="#4f6bff" opacity=".12"/>` : ""}
+<path d="M${ox0} ${oy0} L${ix0} ${iy0} M${ox1} ${oy0} L${ix1} ${iy0} M${ox0} ${oy1} L${ix0} ${iy1} M${ox1} ${oy1} L${ix1} ${iy1}" stroke="#000" stroke-width=".4" opacity=".5"/>
+<rect x="${ix0}" y="${iy0}" width="${arcN(ix1 - ix0)}" height="${arcN(iy1 - iy0)}" rx=".8" fill="#06080d" stroke="#2b3346" stroke-width=".5"/>
+${arcScreen(c, arcN(ix0 + 1.6), arcN(iy0 + 1.6), arcN(ix1 - ix0 - 3.2), arcN(iy1 - iy0 - 3.2), sc)}`;
+}
+// The two side panels seen from the front: their outer sides straight, the
+// front edge with its T-molding following the cabinet's profile, set back
+// where the screen is and coming forward at the marquee and the panel, as
+// the eye sees what is further back closer in. prof is the left edge,
+// [[x, y], ...] from top to bottom; the right one mirrors it.
+function arcSides(x0, x1, prof, edge, fill) {
+  const y0 = prof[0][1], y1 = prof[prof.length - 1][1];
+  const mid = (x0 + x1) / 2, mx = (x) => arcN(2 * mid - x);
+  // Each bend rounded: the line stops short of the corner and curves round it.
+  const round = (pts, r = 3) => pts.map(([x, y], i) => {
+    if (i === 0) return `M${x} ${y}`;
+    if (i === pts.length - 1) return `L${x} ${y}`;
+    const [ax, ay] = pts[i - 1], [bx, by] = pts[i + 1];
+    const la = Math.hypot(x - ax, y - ay), lb = Math.hypot(bx - x, by - y), k = Math.min(r, la / 2, lb / 2);
+    return `L${arcN(x + (ax - x) * k / la)} ${arcN(y + (ay - y) * k / la)} Q${x} ${y} ${arcN(x + (bx - x) * k / lb)} ${arcN(y + (by - y) * k / lb)}`;
+  }).join(" ");
+  const lineL = round(prof), lineR = round(prof.map(([x, y]) => [mx(x), y]));
+  const left = `${lineL} L${x0} ${y1} L${x0} ${y0} Z`, right = `${lineR} L${x1} ${y1} L${x1} ${y0} Z`;
+  return `<path d="${left}" fill="${fill}"/><path d="${right}" fill="${fill}"/><path d="${left}" fill="#fff" opacity=".04"/>
+<path d="${lineL}" fill="none" stroke="${edge}" stroke-width="1.8" stroke-linejoin="round"/><path d="${lineR}" fill="none" stroke="${edge}" stroke-width="1.8" stroke-linejoin="round"/>`;
+}
+// A bartop (HACF #198): a cabinet on a table, its screen upright, the two
+// players' buttons on the panel, their start buttons in front.
+function arcBartop(c) {
+  const [edge] = ARC_COLORS[c.color] || ARC_COLORS.blue;
+  const side = ntId(), front = ntId(), panel = ntId(), gl = ntId(), sc = ntId(), base = ntId();
+  const p1 = arcBtnColor(c.p1, "green", c.on), p2 = arcBtnColor(c.p2, "blue", c.on);
+  return `<defs>${ntV(side, "#232a3a", "#121722")}${ntV(front, "#1d2333", "#0f131d")}${ntV(panel, "#2a3558", "#151c35")}${ntV(base, "#1a2030", "#0b0e16")}${ntBlur(gl, 1.6)}</defs>
+<ellipse cx="60" cy="113" rx="54" ry="3.2" fill="#000" opacity=".24" filter="url(#${gl})"/>
+<rect x="13" y="17.5" width="94" height="94.5" fill="url(#${front})"/>
+${arcMarquee(c, 13, 17.5, 94, 15.5, gl)}
+<path d="M13 33.5 H107" stroke="#06080d" stroke-width="1.4"/>
+${arcWell(c, [19, 40, 101, 82], [27, 44.5, 93, 79], sc)}
+<path d="M13 34 H107 L101 40 H19 Z" fill="#0d111a"/><path d="M19 82 H101 L107 97.5 H13 Z" fill="url(#${panel})"/>
+${c.on ? `<path d="M13 97.5 H107" stroke="${p1}" stroke-width="1" opacity=".9"/>` : ""}
+<path d="M20 83.2 H100" stroke="#fff" stroke-width=".4" opacity=".14"/>
+${arcStick(c, 26, 93, p1, gl, 2.8)}${[[34, 88.6], [41.4, 88.1], [48.8, 88.6], [34.8, 93.6], [42.2, 93.1], [49.6, 93.6]].map(([x, y], i) => arcBtn(c, x, y, p1, 2.9, gl, ["1.1s", "", "1.7s", "", "1.4s", ""][i])).join("")}
+${arcStick(c, 72, 93, p2, gl, 2.8, 1.3)}${[[80.6, 88.6], [88, 88.1], [95.4, 88.6], [81.4, 93.6], [88.8, 93.1], [96.2, 93.6]].map(([x, y], i) => arcBtn(c, x, y, p2, 2.9, gl, ["", "1.3s", "", "1.9s", "", ""][i])).join("")}
+<rect x="13" y="97.5" width="94" height="14.5" fill="url(#${base})"/>
+<path d="M50 99.6 h20 l-2.4 6 h-15.2 z" fill="#2b4fb8" opacity=".85"/><path d="M53 101.2 h14 l-1.3 3 h-11.4 z" fill="#0b0e16" opacity=".6"/>
+${arcBtn(c, 23, 104.4, p1, 2.9, gl)}${arcBtn(c, 31, 104.4, p1, 2.9, gl)}${arcBtn(c, 89, 104.4, p2, 2.9, gl)}${arcBtn(c, 97, 104.4, p2, 2.9, gl)}
+${arcSides(11.6, 108.4, [[13, 17.5], [13, 34], [19, 40], [19, 82], [13, 97.5], [13, 112.5]], edge, `url(#${side})`)}
+<rect x="11.2" y="17" width="97.6" height="95.8" rx="1.2" fill="none" stroke="#fff" stroke-width=".6" opacity=".22"/>`;
+}
+// A full-size cabinet standing on the floor: marquee, screen, the panel
+// jutting out, the coin door lit, the kick plate at the foot.
+function arcUpright(c) {
+  const [edge] = ARC_COLORS[c.color] || ARC_COLORS.blue;
+  const side = ntId(), front = ntId(), panel = ntId(), gl = ntId(), sc = ntId(), door = ntId();
+  const p1 = arcBtnColor(c.p1, "red", c.on), p2 = arcBtnColor(c.p2, "blue", c.on);
+  return `<defs>${ntV(side, "#1e2433", "#10141d")}${ntV(front, "#1b2130", "#0e1219")}${ntV(panel, "#2c3759", "#151c34")}${ntV(door, "#4b525e", "#262b33")}${ntBlur(gl, 1.4)}</defs>
+<ellipse cx="60" cy="122" rx="38" ry="3" fill="#000" opacity=".26" filter="url(#${gl})"/>
+<rect x="30" y="-7.5" width="60" height="128.5" fill="url(#${front})"/>
+${arcMarquee(c, 30, -7.5, 60, 15, gl)}
+<path d="M30 8.5 H90" stroke="#06080d" stroke-width="1.2"/>
+<path d="M30 8.5 H90 L85 13.5 H35 Z" fill="#0d111a"/>${arcWell(c, [35, 13.5, 85, 45], [41, 17.5, 79, 42.2], sc)}
+<path d="M35 45 H85 L90 57 H30 Z" fill="url(#${panel})"/>
+${c.on ? `<path d="M30 57 H90" stroke="#ffd35c" stroke-width=".7" opacity=".9"/>` : ""}
+${arcStick(c, 37.6, 53.6, p1, gl, 2)}${[[43, 49.8], [47.8, 49.4], [52.6, 49.8], [43.6, 53.8], [48.4, 53.4], [53.2, 53.8]].map(([x, y], i) => arcBtn(c, x, y, p1, 2, gl, ["1.1s", "", "1.6s", "", "", "1.3s"][i])).join("")}
+${arcStick(c, 68, 53.6, p2, gl, 2, 1.3)}${[[73.4, 49.8], [78.6, 49.4], [83.8, 49.8], [74, 53.8], [79.2, 53.4], [84.4, 53.8]].map(([x, y], i) => arcBtn(c, x, y, p2, 2, gl, ["", "1.4s", "", "1.8s", "", ""][i])).join("")}
+${arcBtn(c, 57.8, 48.6, "#ffd35c", 1.5, gl)}${arcBtn(c, 62.4, 48.6, "#ffd35c", 1.5, gl)}
+<rect x="30" y="57" width="60" height="6" fill="#0b0e16"/><path d="M30 57.4 H90" stroke="#fff" stroke-width=".4" opacity=".15"/>
+<rect x="30" y="63" width="60" height="1.6" fill="#06080d"/>
+<rect x="46" y="67" width="28" height="26" rx="1.2" fill="url(#${door})" stroke="#15181d" stroke-width=".6"/>
+<rect x="47.2" y="68.2" width="25.6" height="1.2" fill="#fff" opacity=".2"/>
+${[52, 68].map((x) => `${c.on ? `<rect x="${x - 3.4}" y="72" width="6.8" height="9" rx=".8" fill="#ff3b30" opacity=".5" filter="url(#${gl})"/>` : ""}<rect x="${x - 3}" y="72.5" width="6" height="8" rx=".8" fill="${c.on ? "#ff4d3d" : "#5a2a2a"}" stroke="#15181d" stroke-width=".4"/><rect x="${x - .5}" y="73.6" width="1" height="4.6" rx=".3" fill="#15181d"/>`).join("")}
+<rect x="50" y="84" width="20" height="5.6" rx=".6" fill="#15181d"/><rect x="56" y="85.8" width="8" height="2" rx=".6" fill="#3a404a"/>
+<rect x="30" y="104" width="60" height="17" fill="#0b0e16"/><path d="M30 104 H90" stroke="${edge}" stroke-width="1"/>
+${arcSides(28.6, 91.4, [[30, -7.5], [30, 8.5], [35, 13.5], [35, 45], [30, 57], [30, 121.5]], edge, `url(#${side})`)}
+<rect x="28.2" y="-7.6" width="63.6" height="129.4" rx="1.2" fill="none" stroke="#fff" stroke-width=".6" opacity=".22"/>`;
+}
+
+const NT_DRAW = { con_arcade_bartop: (c) => arcBartop({ ...c, playing: c.st === "playing" }), con_arcade_upright: (c) => arcUpright({ ...c, playing: c.st === "playing" }), strip_shelly: ntStripShelly, strip_classic: ntStripClassic, gas_fireplace: ntGasFireplace, fp_tm31: ntFoodTm31, fp_tm6: ntFoodTm6, rack_box: ntRackBox, rack_accordion: ntRackAccordion, rack_frame: ntRackFrame, vlv_aqara: ntValveAqara, vlv_tuya: ntValveTuya,  fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_switchbot_co2: (c) => ntSbPro(c, true), ths_switchbot_pro: (c) => ntSbPro(c, false), ths_switchbot_meter: (c) => ntSbMeter(c, false), ths_switchbot_plus: (c) => ntSbMeter(c, true), ths_switchbot_outdoor: ntSbOutdoor, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, cov_curtain: ntCovCurtain, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, det_door: ntDetDoor, det_vibration: ntDetVibration, det_glass: ntDetGlass, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, spk_focal_bird: ntSpkFocalBird, spk_focal_od6: ntSpkFocalOd6, spk_denon_avr: ntSpkDenon, spk_avr: ntSpkAvr, spk_wiim_amp: ntSpkWiim, spk_smart_clock: ntSpkClock, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 // What a tint leaves alone: a part wrapped by ntKeep (an app's tile, a
 // display, a tyre).
 const ntKeep = (s) => `<!--k-->${s}<!--/k-->`;
 // The drawings a tint applies to: appliances, not the scenes around them
 // (a sump's pit, a floor, a garden, a pool, a roof).
-const NT_TINTED = /^(strip_|con_|str_|spk_|lit_|det_|mob_|irr_tap$|dryer$|humidifier$|fws$|wood$|booster$|circulator$|pellet_grill$)/;
+const NT_TINTED = /^(strip_|con_(?!arcade)|str_|spk_|lit_|det_|mob_|irr_tap$|dryer$|humidifier$|fws$|wood$|booster$|circulator$|pellet_grill$)/;
 // Winter (dosing-tank-card #3): flakes falling slowly over a drawing, snow
 // lying on what it covers, a cover over a spa, a pool or a grill.
 function ntFlakes(n = 12) {
