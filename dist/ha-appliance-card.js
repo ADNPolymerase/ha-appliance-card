@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.47.0";
+const CARD_VERSION = "4.48.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -134,6 +134,7 @@ const T = {
     p3_file: "File", p3_printing: "Printing", p3_preparing: "Preparing",
     p3_cancelled: "Cancelled", p3_failed: "Failed", p3_offline: "Offline", p3_off: "Off",
     p3_attention: "Needs attention", p3_leveling: "Bed levelling", p3_filament: "Changing filament",
+    p3_reason_filament_runout: "Filament ran out", p3_reason_filament_jam: "Filament jam", p3_reason_filament_about_to_runout: "Filament running low", p3_reason_temp_error: "Temperature error", p3_reason_bed_adhesion_failed: "Print came off the bed",
     p3_cooling: "Cooling", p3_calibrating: "Calibrating", p3_homing: "Homing",
     section_printed_part: "Printed part", part_cube: "Cube", part_pyramid: "Pyramid", part_duck: "Rubber duck", part_benchy: "Benchy tugboat", part_figure: "Little figure", part_cat: "Cat", part_vase: "Vase", part_knight: "Chess knight", part_rocket: "Rocket",
     type_pet_feeder: "Pet feeder", type_pet_fountain: "Pet fountain", ft_flowing: "Flowing", ft_off: "Off", ft_filter_due: "Filter due", ft_pump_due: "Clean the pump", ft_low_water: "Low water", ft_line_pump: "Pump", ft_line_water: "Water", ft_pump_reset: "Reset pump", ft_last_pump: "Pump last ran", ft_pump_on: "Running", section_pump_clean: "Pump cleaning", section_pump_reset: "Reset pump button", section_pump_running: "Pump running", section_water_level: "Water level", filter_due_below: "Due at or below", filter_life_full: "Days of a new filter", feeder_ready: "Ready", feeder_feeding: "Dispensing", section_portions_today: "Portions today", section_weight_today: "Weight today", section_portion_weight: "Portion weight", section_serving_size: "Serving size", section_feeder_schedule: "Schedule", section_last_feed: "Last feed", section_error: "Error indicator", start_option: "Option to select", start_value: "Value to write", portions: "portions",
@@ -1491,10 +1492,13 @@ const NORM_PRINTER_MODES = { running: "printing", preheating: "preheating", paus
 // current stage, Elegoo in its print status, and a few printers in their
 // state itself (leveling, homing). A milestone such as preheating_completed
 // stays up for the whole job on an Elegoo, so it names no step at all.
+// Elegoo says pausing before paused, and filament_unload_abnormal when the
+// filament could not be pulled out: a pause and an error, not a step.
 function printerPhaseOf(raw) {
   const f = String(raw === undefined || raw === null ? "" : raw).trim().toLowerCase();
   if (!f || /_complete(d)?$/.test(f)) return "";
-  if (/pause/.test(f)) return "paused";
+  if (f === "error" || /_abnormal$/.test(f)) return "error";
+  if (/paus/.test(f)) return "paused";
   if (/preheat|heating_hotend|heating_chamber|waiting_for_heatbed|waiting_chamber|thermal_precondition|preparing_hotend/.test(f)) return "preheating";
   if (/cool/.test(f)) return "cooling";
   if (/level|scanning_bed|measuring_surface/.test(f)) return "leveling";
@@ -1514,10 +1518,23 @@ function printerModeOf(raw, stateMap) {
   const f = s.toLowerCase();
   let mode = Object.prototype.hasOwnProperty.call(PRINTER_STATES, f) ? PRINTER_STATES[f] : "";
   const phase = mode === "preheating" ? "" : printerPhaseOf(f);
-  if (!mode && phase) mode = phase === "paused" ? "paused" : "preparing";
+  if (!mode && phase) mode = phase === "paused" || phase === "error" ? phase : "preparing";
   // A milestone inside a job (Elegoo's preheating_completed): the job goes on.
   if (!mode && /_complete(d)?$/.test(f) && !/^(print|job)/.test(f)) mode = "printing";
-  return { mode, phase: phase === "paused" ? "" : phase };
+  return { mode, phase: phase === "paused" || phase === "error" ? "" : phase };
+}
+
+// A stage entity that says the job stopped (Elegoo's print status while its
+// machine state still reads printing, all night long): paused or error, or
+// nothing. An entry of state_map for the stage's word says what it is.
+function printerStageHold(raw, stateMap) {
+  if (raw === undefined || raw === null) return "";
+  const s = String(raw).trim();
+  if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, s)) {
+    return ["paused", "error"].includes(stateMap[s]) ? stateMap[s] : "";
+  }
+  const phase = printerPhaseOf(s);
+  return phase === "paused" || phase === "error" ? phase : "";
 }
 
 function printerNorm(raw, stateMap) {
@@ -2650,10 +2667,39 @@ function alertsCountLabel(hass, n) {
   return (tr[`alerts_n_${form}`] || tr.alerts_n_other || T.en.alerts_n_other).replace("{n}", n);
 }
 
+// A sensor that names its problem in its state, its list of states holding a
+// word for none (Elegoo's print error and error reason: none, ok): any other
+// word it reports is an alert, and the word is what the card shows. The word
+// for none, unknown and unavailable say there is nothing to report.
+const ALERT_HEALTHY_WORDS = ["ok", "none"];
+function alertWordOf(st) {
+  const options = st && st.attributes && st.attributes.options;
+  if (!Array.isArray(options) || !options.some((o) => ALERT_HEALTHY_WORDS.includes(String(o).toLowerCase()))) return "";
+  const v = String(st.state).trim().toLowerCase();
+  return ALERT_HEALTHY_WORDS.includes(v) || ["", "unknown", "unavailable"].includes(v) ? "" : v;
+}
+
+// The word in the card's own language when it knows it, then in the
+// integration's, then as the entity writes it.
+function alertWordLabel(hass, st, word) {
+  const key = `p3_reason_${word}`;
+  const own = t(hass, key);
+  if (own !== key) return own;
+  if (typeof hass.formatEntityState === "function") {
+    try {
+      const label = String(hass.formatEntityState(st) || "");
+      if (label && label.toLowerCase() !== word) return label;
+    } catch (e) { /* the raw word below */ }
+  }
+  const plain = word.replace(/_/g, " ");
+  return plain.charAt(0).toUpperCase() + plain.slice(1);
+}
+
 function raisedAlerts(hass, list) {
   return alertEntitiesList(list)
     .map((e) => ({ ...e, st: stateObj(hass, e.entity) }))
-    .filter((e) => e.st && ALERT_ON_STATES.includes(String(e.st.state).trim().toLowerCase()));
+    .map((e) => ({ ...e, word: alertWordOf(e.st) }))
+    .filter((e) => e.st && (e.word || ALERT_ON_STATES.includes(String(e.st.state).trim().toLowerCase())));
 }
 
 function humanizeEntityId(entityId) {
@@ -10190,6 +10236,16 @@ class ApplianceCard extends HTMLElement {
       }
     }
 
+    // A printer whose stage says the job stopped is stopped, whatever its
+    // state or its plug read: an Elegoo keeps its machine state at printing
+    // through a filament pause, and a bed held hot draws enough to look busy.
+    // An entry of state_map for the stage's word says what it is.
+    if (applianceType === "printer_3d" && cfg.phase_entity && isActiveState(norm)) {
+      const pst = stateObj(hass, cfg.phase_entity);
+      const hold = pst ? printerStageHold(pst.state, cfg.state_map) : "";
+      if (hold) norm = hold;
+    }
+
     // A delayed start counting down (#56): Home Connect's StartInRelative, or
     // any countdown in seconds, minutes or as a start time. While it runs the
     // machine waits, whatever word its state uses for waiting.
@@ -11033,7 +11089,9 @@ class ApplianceCard extends HTMLElement {
       const inJob = mode === "printing" || mode === "preparing";
       const stageSt = cfg.phase_entity ? stateObj(hass, cfg.phase_entity) : null;
       if (stageSt && (inJob || mode === "paused")) {
-        const staged = printerPhaseOf(stageSt.state);
+        const stageWord = String(stageSt.state).trim();
+        const staged = cfg.state_map && Object.prototype.hasOwnProperty.call(cfg.state_map, stageWord)
+          ? printerStageHold(stageWord, cfg.state_map) : printerPhaseOf(stageWord);
         if (staged) pPhase = staged;
       }
       const heater = (curEntity, targetEntity) => {
@@ -14158,7 +14216,7 @@ class ApplianceCard extends HTMLElement {
     const alertItems = alerts.map((key) => ({ entity: cfg.alerts_entity, label: key, icon: "mdi:alert-circle" }))
       .concat(raisedAlerts(hass, cfg.alerts_entities).map((a) => ({
         entity: a.entity,
-        label: a.label || stripNamePrefix(a.st.attributes.friendly_name, a.entity),
+        label: a.label || (a.word ? alertWordLabel(hass, a.st, a.word) : stripNamePrefix(a.st.attributes.friendly_name, a.entity)),
         icon: a.icon || a.st.attributes.icon || "mdi:alert-circle",
       })));
     if (alertItems.length < 2) this._alertsOpen = false;

@@ -874,6 +874,16 @@ class ApplianceCard extends HTMLElement {
       }
     }
 
+    // A printer whose stage says the job stopped is stopped, whatever its
+    // state or its plug read: an Elegoo keeps its machine state at printing
+    // through a filament pause, and a bed held hot draws enough to look busy.
+    // An entry of state_map for the stage's word says what it is.
+    if (applianceType === "printer_3d" && cfg.phase_entity && isActiveState(norm)) {
+      const pst = stateObj(hass, cfg.phase_entity);
+      const hold = pst ? printerStageHold(pst.state, cfg.state_map) : "";
+      if (hold) norm = hold;
+    }
+
     // A delayed start counting down (#56): Home Connect's StartInRelative, or
     // any countdown in seconds, minutes or as a start time. While it runs the
     // machine waits, whatever word its state uses for waiting.
@@ -1717,7 +1727,9 @@ class ApplianceCard extends HTMLElement {
       const inJob = mode === "printing" || mode === "preparing";
       const stageSt = cfg.phase_entity ? stateObj(hass, cfg.phase_entity) : null;
       if (stageSt && (inJob || mode === "paused")) {
-        const staged = printerPhaseOf(stageSt.state);
+        const stageWord = String(stageSt.state).trim();
+        const staged = cfg.state_map && Object.prototype.hasOwnProperty.call(cfg.state_map, stageWord)
+          ? printerStageHold(stageWord, cfg.state_map) : printerPhaseOf(stageWord);
         if (staged) pPhase = staged;
       }
       const heater = (curEntity, targetEntity) => {
@@ -4842,7 +4854,7 @@ class ApplianceCard extends HTMLElement {
     const alertItems = alerts.map((key) => ({ entity: cfg.alerts_entity, label: key, icon: "mdi:alert-circle" }))
       .concat(raisedAlerts(hass, cfg.alerts_entities).map((a) => ({
         entity: a.entity,
-        label: a.label || stripNamePrefix(a.st.attributes.friendly_name, a.entity),
+        label: a.label || (a.word ? alertWordLabel(hass, a.st, a.word) : stripNamePrefix(a.st.attributes.friendly_name, a.entity)),
         icon: a.icon || a.st.attributes.icon || "mdi:alert-circle",
       })));
     if (alertItems.length < 2) this._alertsOpen = false;

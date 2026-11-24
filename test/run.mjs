@@ -2723,6 +2723,11 @@ for (const [id, want, icon] of [
     ['towel_warmer', 'climate'], ['towel_warmer', 'select'], ['towel_warmer', 'switch'], ['iron', 'switch'], ['air_fryer', 'switch']])
     check(`editeur : ${type} propose ${dom} dans la liste`, domainsOf(type).includes(dom), true);
   check('editeur : un lave-linge ne propose pas humidifier', domainsOf('washer').includes('humidifier'), false);
+  // HACF #194: a freezer's plug switch, chosen in YAML, flagged as an unknown
+  // entity in red. The entity already chosen stays in the list.
+  const keptDomains = (cfg) => newEditor(cfg)._root.querySelector('[data-slot="state_entity"]')?.children.at(-1)?.includeDomains || [];
+  check('editeur : la prise d un congelateur reste dans la liste', keptDomains({ state_entity: 'switch.prise_congelateur', appliance_type: 'fridge', power_entity: 'sensor.w', source: 'integration' }).includes('switch'), true);
+  check('editeur : sans elle, le lave-linge ne propose pas climate', keptDomains({ state_entity: 'sensor.x', appliance_type: 'washer' }).includes('climate'), false);
   // A new card has no type yet: its main entity may be a fan, a thermostat or
   // a plug, and the type is then guessed from it.
   const freshDomains = newEditor({ state_entity: '' })._root.querySelector('[data-slot="state_entity"]')?.children.at(-1)?.includeDomains || [];
@@ -3764,6 +3769,56 @@ check('etape : ignoree hors d\'un travail', stateLine(staged('idle', 'auto_bed_l
 check('etape : ignoree une fois termine', stateLine(staged('finish', 'cooling_nozzle')), 'Finished');
 check('etape : une pause nommee ne met pas en pause une imprimante a l\'arret', stateLine(staged('idle', 'paused_user')), 'Idle');
 check('etape : en pause, la pause l\'emporte sur l\'etape', stateLine(staged('pause', 'cooling_nozzle')), 'Paused');
+
+// Elegoo (elegoo-homeassistant): the machine state reads printing all through
+// a filament pause, only the print status says paused. Seen on a Centauri
+// Carbon 2, 24/11/2026: printing for six hours with the job paused at 83 %.
+{
+  const EL = (stage, extra = {}, more = {}) => build({ ...P3, phase_entity: 'sensor.p3_stage', progress_entity: 'sensor.p3_pct', ...extra },
+    { 'sensor.p3_status': { state: 'printing', attributes: {} }, 'sensor.p3_stage': { state: stage, attributes: {} }, 'sensor.p3_pct': PCT(83), ...more }).html;
+  for (const v of ['pausing', 'paused', 'filament_unload_paused']) {
+    check(`elegoo : ${v}, en pause`, stateLine(EL(v)), 'Paused');
+    check(`elegoo : ${v}, le dessin s arrete`, /^paused /.test(machineCls(EL(v))), true);
+    check(`elegoo : ${v}, la progression reste`, barWidth(EL(v)), '83');
+  }
+  for (const v of ['error', 'filament_unload_abnormal']) check(`elegoo : ${v}, erreur`, stateLine(EL(v)), 'Error');
+  check('elegoo : resuming, impression', stateLine(EL('resuming')), 'Printing');
+  check('elegoo : printing, impression', stateLine(EL('printing')), 'Printing');
+  check('elegoo : un jalon ne met pas en pause', stateLine(EL('preheating_completed')), 'Printing');
+  // A bed held hot draws enough on the plug to look busy: the stage wins.
+  check('elegoo : la prise chaude ne relance pas', stateLine(EL('paused', { power_entity: 'sensor.p3_w', power_on_threshold: 20 },
+    { 'sensor.p3_w': { state: '90', attributes: { unit_of_measurement: 'W' } } })), 'Paused');
+  check('elegoo : state_map sur l etape garde la main', stateLine(EL('paused', { state_map: { paused: 'running' } })), 'Printing');
+  check('elegoo : state_map sur l etape', stateLine(EL('waiting_user', { state_map: { waiting_user: 'paused' } })), 'Paused');
+  check('elegoo : a l arret, une pause ne compte pas', stateLine(build({ ...P3, phase_entity: 'sensor.p3_stage' },
+    { 'sensor.p3_status': { state: 'idle', attributes: {} }, 'sensor.p3_stage': { state: 'paused', attributes: {} } }).html), 'Idle');
+  // The print status as the state entity reads the same.
+  for (const [v, want] of [['pausing', 'Paused'], ['filament_unload_paused', 'Paused'], ['filament_unload_abnormal', 'Error'], ['resuming', 'Printing']]) {
+    check(`elegoo etat : ${v}`, stateLine(p3(v)), want);
+  }
+  // The error reason and the print error: their word for none is quiet,
+  // any other is an alert under its own name.
+  const reason = ['ok', 'temp_error', 'filament_runout', 'filament_jam', 'level_failed', 'bed_adhesion_failed', 'filament_about_to_runout'];
+  const AL = (id, state, options, lang) => {
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', ...P3, alerts_entities: [id] });
+    c._hass = { ...HASS({ 'sensor.p3_status': { state: 'printing', attributes: {} }, [id]: { state, attributes: { friendly_name: 'Printer Reason', options } } }), ...(lang ? { language: lang, locale: { language: lang } } : {}) };
+    c._render();
+    return [...markup(c).matchAll(/class="alert-label">([^<]*)</g)].map((m) => m[1]).join('|');
+  };
+  for (const v of ['ok', 'unknown', 'unavailable']) check(`raison : ${v}, pas d alerte`, AL('sensor.p3_reason', v, reason), '');
+  for (const [v, want] of [['filament_runout', 'Filament ran out'], ['filament_jam', 'Filament jam'], ['filament_about_to_runout', 'Filament running low'],
+    ['temp_error', 'Temperature error'], ['bed_adhesion_failed', 'Print came off the bed'], ['level_failed', 'Level failed']]) {
+    check(`raison : ${v}`, AL('sensor.p3_reason', v, reason), want);
+  }
+  check('raison : en francais', AL('sensor.p3_reason', 'filament_runout', reason, 'fr'), 'Fin de filament');
+  const errs = ['none', 'check', 'fileio', 'invalid_resolution', 'unknown_format', 'unknown_model'];
+  for (const v of ['none', 'unknown']) check(`erreur d impression : ${v}, pas d alerte`, AL('sensor.p3_err', v, errs), '');
+  check('erreur d impression : check', AL('sensor.p3_err', 'check', errs), 'Check');
+  // A sensor with no word for none keeps the old rule: only on and the like.
+  check('alerte sans mot pour rien : un etat quelconque ne compte pas', AL('sensor.p3_x', 'filament_runout', ['idle', 'filament_runout']), '');
+  check('alerte sans options : on compte toujours', AL('sensor.p3_x', 'on'), 'Printer Reason');
+}
 
 // Most integrations report "printing" from the start code on: a heater still
 // well below its target at the start of a job is preheating.

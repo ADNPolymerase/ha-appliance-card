@@ -43,10 +43,13 @@ const NORM_PRINTER_MODES = { running: "printing", preheating: "preheating", paus
 // current stage, Elegoo in its print status, and a few printers in their
 // state itself (leveling, homing). A milestone such as preheating_completed
 // stays up for the whole job on an Elegoo, so it names no step at all.
+// Elegoo says pausing before paused, and filament_unload_abnormal when the
+// filament could not be pulled out: a pause and an error, not a step.
 function printerPhaseOf(raw) {
   const f = String(raw === undefined || raw === null ? "" : raw).trim().toLowerCase();
   if (!f || /_complete(d)?$/.test(f)) return "";
-  if (/pause/.test(f)) return "paused";
+  if (f === "error" || /_abnormal$/.test(f)) return "error";
+  if (/paus/.test(f)) return "paused";
   if (/preheat|heating_hotend|heating_chamber|waiting_for_heatbed|waiting_chamber|thermal_precondition|preparing_hotend/.test(f)) return "preheating";
   if (/cool/.test(f)) return "cooling";
   if (/level|scanning_bed|measuring_surface/.test(f)) return "leveling";
@@ -66,10 +69,23 @@ function printerModeOf(raw, stateMap) {
   const f = s.toLowerCase();
   let mode = Object.prototype.hasOwnProperty.call(PRINTER_STATES, f) ? PRINTER_STATES[f] : "";
   const phase = mode === "preheating" ? "" : printerPhaseOf(f);
-  if (!mode && phase) mode = phase === "paused" ? "paused" : "preparing";
+  if (!mode && phase) mode = phase === "paused" || phase === "error" ? phase : "preparing";
   // A milestone inside a job (Elegoo's preheating_completed): the job goes on.
   if (!mode && /_complete(d)?$/.test(f) && !/^(print|job)/.test(f)) mode = "printing";
-  return { mode, phase: phase === "paused" ? "" : phase };
+  return { mode, phase: phase === "paused" || phase === "error" ? "" : phase };
+}
+
+// A stage entity that says the job stopped (Elegoo's print status while its
+// machine state still reads printing, all night long): paused or error, or
+// nothing. An entry of state_map for the stage's word says what it is.
+function printerStageHold(raw, stateMap) {
+  if (raw === undefined || raw === null) return "";
+  const s = String(raw).trim();
+  if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, s)) {
+    return ["paused", "error"].includes(stateMap[s]) ? stateMap[s] : "";
+  }
+  const phase = printerPhaseOf(s);
+  return phase === "paused" || phase === "error" ? phase : "";
 }
 
 function printerNorm(raw, stateMap) {
@@ -1202,10 +1218,39 @@ function alertsCountLabel(hass, n) {
   return (tr[`alerts_n_${form}`] || tr.alerts_n_other || T.en.alerts_n_other).replace("{n}", n);
 }
 
+// A sensor that names its problem in its state, its list of states holding a
+// word for none (Elegoo's print error and error reason: none, ok): any other
+// word it reports is an alert, and the word is what the card shows. The word
+// for none, unknown and unavailable say there is nothing to report.
+const ALERT_HEALTHY_WORDS = ["ok", "none"];
+function alertWordOf(st) {
+  const options = st && st.attributes && st.attributes.options;
+  if (!Array.isArray(options) || !options.some((o) => ALERT_HEALTHY_WORDS.includes(String(o).toLowerCase()))) return "";
+  const v = String(st.state).trim().toLowerCase();
+  return ALERT_HEALTHY_WORDS.includes(v) || ["", "unknown", "unavailable"].includes(v) ? "" : v;
+}
+
+// The word in the card's own language when it knows it, then in the
+// integration's, then as the entity writes it.
+function alertWordLabel(hass, st, word) {
+  const key = `p3_reason_${word}`;
+  const own = t(hass, key);
+  if (own !== key) return own;
+  if (typeof hass.formatEntityState === "function") {
+    try {
+      const label = String(hass.formatEntityState(st) || "");
+      if (label && label.toLowerCase() !== word) return label;
+    } catch (e) { /* the raw word below */ }
+  }
+  const plain = word.replace(/_/g, " ");
+  return plain.charAt(0).toUpperCase() + plain.slice(1);
+}
+
 function raisedAlerts(hass, list) {
   return alertEntitiesList(list)
     .map((e) => ({ ...e, st: stateObj(hass, e.entity) }))
-    .filter((e) => e.st && ALERT_ON_STATES.includes(String(e.st.state).trim().toLowerCase()));
+    .map((e) => ({ ...e, word: alertWordOf(e.st) }))
+    .filter((e) => e.st && (e.word || ALERT_ON_STATES.includes(String(e.st.state).trim().toLowerCase())));
 }
 
 function humanizeEntityId(entityId) {

@@ -3,7 +3,7 @@
 export default function defineEditor(deps) {
 // A page still running the card of an earlier release, the files of this one
 // on the server: its helpers are not these, so say to reload the page.
-if (!deps || deps.__v !== "4.47.0") {
+if (!deps || deps.__v !== "4.48.0") {
   if (!customElements.get("ha-appliance-card-editor")) customElements.define("ha-appliance-card-editor", class extends HTMLElement {
     setConfig() {}
     connectedCallback() {
@@ -1185,7 +1185,13 @@ class ApplianceCardEditor extends HTMLElement {
     picker.hass = hass;
     picker.value = this._config[field] || "";
     picker.label = opts.label || t(this._l10n, "entity");
-    if (opts.includeDomains) picker.includeDomains = opts.includeDomains;
+    // The entity already chosen stays in the list whatever its domain: one
+    // written in YAML, or a plug's switch on a fridge, is not an unknown
+    // entity to flag in red.
+    if (opts.includeDomains) {
+      const kept = domainOf(this._config[field] || "");
+      picker.includeDomains = kept && !opts.includeDomains.includes(kept) ? opts.includeDomains.concat(kept) : opts.includeDomains;
+    }
     // A power field lists sensors in W, an energy field sensors in kWh (#76),
     // so one cannot end up in the other; the entity already chosen stays.
     // The other fields keep to the unit their name says (a temperature, a
