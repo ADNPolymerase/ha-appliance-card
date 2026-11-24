@@ -5180,6 +5180,11 @@ class ApplianceCard extends HTMLElement {
         return this._call(id);
       });
     });
+    // A power strip's sockets, each switched where it is drawn.
+    this._root.querySelectorAll("[data-outlet]").forEach((el) => {
+      const id = el.getAttribute("data-outlet");
+      this._wireControl(el, cfg.controls_activation, id, () => this._call(id));
+    });
     this._root.querySelectorAll("[data-alerts-toggle]").forEach((el) => {
       el.addEventListener("click", (ev) => {
         ev.stopPropagation();

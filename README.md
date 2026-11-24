@@ -361,7 +361,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. A drawing made after a real product (a console, a streaming box, a printer, a litter box…) is drawn in its real colours until a colour is chosen; its screen, app tile and tyres keep theirs. The scenes around a device (a sump's pit, a garden, a roof) and the lamps' light do not change. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 16 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`, `hu`, `zh-Hant`. `nb` and `nb-NO` give Norwegian. `zh` is Simplified Chinese; `zh-Hant`, `zh-TW` and `zh-HK` give Traditional Chinese. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `fingerbot` \| `valve` \| `drying_rack` \| `food_processor` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove` \| `gas_fireplace`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `fingerbot` \| `valve` \| `drying_rack` \| `power_strip` \| `food_processor` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove` \| `gas_fireplace`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `illustration_tap_action` | A tap on the drawing alone, the rest of the card keeping `tap_action`: `toggle` (a lamp lit by touching it), `more-info`, `none`, or any of Home Assistant's actions. Left out, the drawing does what the card does. With `toggle`, the drawing answers like the buttons, as `controls_activation` says: a tap, two taps or a long press. |
 | `show_light_button` | `false` hides the light button in the top left corner (oven, hood, 3D printer, pool pump, diffuser); the light still shows on the drawing. |
@@ -1657,6 +1657,9 @@ disk2_entity: sensor.nas_drive_2_status
 | `leak_entity` | valve | A leak sensor: going off, it is the card's alarm and the valve drips, whatever the valve says. |
 | `rack_layout` | drying rack | `box` (a box whose front drops onto its rods, the default) \| `accordion` (accordion arms under a shelf) \| `frame` (a wooden frame that tilts away from the wall). |
 | `rack_color` | drying rack | `white` \| `wood` \| `black`. White by default for the box and the accordion, wood for the frame. |
+| `outlets` | power strip | Up to 6 sockets, as `{ entity, power_entity?, name? }`: the socket's switch, its power and its name. A socket without `power_entity` takes `sensor.<switch>_power` when it exists. Left out, the state entity is the only socket. |
+| `usb_entity` | power strip | The switch of its USB ports, drawn at its end. |
+| `strip_layout` | power strip | `shelly` (Shelly's Power Strip 4, white, or black with `illustration_color: black`) \| `classic` (a plain strip with a lit switch, the default). Left out, a name with Shelly picks `shelly`. |
 | `bot_mode_entity` | finger bot | Its mode: Zigbee2MQTT's and Tuya BLE's select (`click`, `switch`, `program`), as a line. SwitchBot's `switch_mode` attribute is read without it. |
 | `lower_entity` / `upper_entity` / `sustain_entity` | finger bot | Its down and up positions and its hold time, as lines. |
 | `reverse_entity` / `touch_entity` | finger bot | Its reverse and touch switches, as *Yes* / *No* lines; the touch pad's ring lights blue when touch is on. |
@@ -1947,6 +1950,23 @@ rack_layout: accordion
 rack_color: wood
 state_entity: binary_sensor.drying_rack_contact
 battery_entity: sensor.drying_rack_contact_battery
+```
+
+A power strip with a switch per socket is a `power_strip`: each socket's ring lights while it is on and glows while it draws power, and a tap on a socket switches it (with `controls_activation: confirm`, a second tap within three seconds). A line per socket gives its power, *Off* or *Offline*, with the total above. The editor fills the sockets in from the strip's device, each with the power sensor that shares a word with it.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: power_strip
+strip_layout: shelly
+state_entity: switch.workshop_strip_printer
+outlets:
+  - entity: switch.workshop_strip_printer
+    power_entity: sensor.workshop_strip_printer_power
+    name: 3D printer
+  - entity: switch.workshop_strip_fridge
+    power_entity: sensor.workshop_strip_fridge_power
+    name: Fridge
+usb_entity: switch.workshop_strip_usb
 ```
 
 A Thermomix on a smart plug is a `food_processor`: *Off*, *Ready* on a few watts, *Mixing* while its blade turns, *Cooking* from 600 W, the steam rising from its bowl. Its screen shows the power the plug measures, the only thing a plug knows.

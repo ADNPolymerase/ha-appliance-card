@@ -3,7 +3,7 @@
 // sauna, an aquarium, a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
 // moves moves only on a machine carrying nt-on, staggered through --d0, and
 // the robot's cable and the sump's float follow their SMIL animations.
-const NT_TYPES = ["food_processor", "drying_rack", "valve", "fingerbot", "cover", "pellet_grill", "water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer", "gas_fireplace"];
+const NT_TYPES = ["power_strip", "food_processor", "drying_rack", "valve", "fingerbot", "cover", "pellet_grill", "water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer", "gas_fireplace"];
 // How many spools a filament dryer holds (#93).
 const FD_COUNTS = [1, 2, 4];
 const FD_COLORS = ["#43a047", "#fb8c00", "#8e24aa", "#eceff1"];
@@ -38,6 +38,14 @@ const VALVE_LAYOUTS = ["aqara", "tuya"];
 // A wall drying rack with a contact sensor (#124): a fold-down box, an
 // accordion under a shelf, or a tilting wooden frame.
 const RACK_LAYOUTS = ["box", "accordion", "frame"];
+// A power strip with a switch per socket: Shelly's Power Strip 4 (white or
+// black), or a plain one, its USB ports switched on their own when it has
+// them. Up to six sockets, one entity each.
+const STRIP_LAYOUTS = ["shelly", "classic"];
+const STRIP_MAX = 6;
+// A socket drawing a few watts is at work; below, it is only switched on.
+const STRIP_RUN_W = 2;
+const STRIP_NAME_RE = /multiprise|power.?strip|(^|[^a-z])pstrip|shellypstrip|s4pl|steckdosenleiste|mehrfachsteckdose|regleta|multipresa|ciabatta|stekkerdoos|grenuttag|grenuttak|stikdase|listwa.?zasil|prodluzovaci|elosztosor|socket.?strip|outlet.?strip/;
 // A kitchen robot on its plug (HACF #170): Thermomix TM31 or TM6.
 const FP_LAYOUTS = ["tm31", "tm6"];
 const FP_COOK_W = 600;
@@ -195,6 +203,7 @@ const NT_ONLY_FIELDS = {
   detector: ["detector_layout", "detector_model", "door_style", "window_style", "frame_color", "vibration_entity", "glass_break_entity", "co_level_entity", "co_entity", "tamper_entity"],
   valve: ["valve_layout", "valve_fluid", "valve_handle_color", "leak_entity"],
   drying_rack: ["rack_layout", "rack_color"],
+  power_strip: ["strip_layout", "outlets", "usb_entity"],
   food_processor: ["food_layout"],
   gas_fireplace: ["flame_entity", "flame_height_entity", "thermostat_entity", "pilot_entity"],
   fingerbot: ["fingerbot_layout", "fingerbot_color", "bot_mode_entity", "lower_entity", "upper_entity", "sustain_entity", "reverse_entity", "touch_entity"],
@@ -293,6 +302,7 @@ const NT_NAME_RES = [
   ["climate_sensor", THS_NAME_RE],
   ["litter_box", /scoopfree|purobot|litter|litiere|katzenklo|arenero|lettiera|kattlada|kuweta|kattebak|kattesand|(^|[^a-z])pura.?(x|max)/],
   ["irrigation", /arrosage|arroseur|watering|bhyve|netro|gardena(?!.?(sileno|mow))|irrigat|sprinkler|bewasserung|(^|[^a-z])riego|beregening|bevattning|vanning|vanding|nawadnian|zavlaz|opensprinkler|linktap|hydrawise|rachio|rain.?bird/],
+  ["power_strip", STRIP_NAME_RE],
   ["fingerbot", FINGERBOT_NAME_RE],
   ["valve", VALVE_NAME_RE],
   ["drying_rack", RACK_NAME_RE],
@@ -368,6 +378,21 @@ function fpLayoutOf(cfg, st) {
   if (FP_LAYOUTS.includes(cfg.food_layout)) return cfg.food_layout;
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   return /tm ?31|tm ?21|tm ?3/.test(hay) ? "tm31" : "tm6";
+}
+function stripLayoutOf(cfg, st) {
+  if (STRIP_LAYOUTS.includes(cfg.strip_layout)) return cfg.strip_layout;
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
+  return /shelly|pstrip|s4pl/.test(hay) ? "shelly" : "classic";
+}
+// The sockets: the list given, else the state entity alone. A socket without
+// a power entity of its own takes the sensor named after its switch, as
+// Zigbee2MQTT and Shelly name them (switch.x_l1, sensor.x_l1_power).
+function stripOutlets(hass, cfg) {
+  const list = Array.isArray(cfg.outlets) && cfg.outlets.length ? cfg.outlets : cfg.state_entity ? [{ entity: cfg.state_entity }] : [];
+  return list.slice(0, STRIP_MAX).map((o) => (typeof o === "string" ? { entity: o } : o || {})).filter((o) => o.entity).map((o) => {
+    const own = `sensor.${String(o.entity).split(".")[1] || ""}_power`;
+    return { ...o, power_entity: o.power_entity || (hass && hass.states && hass.states[own] ? own : "") };
+  });
 }
 function rackLayoutOf(cfg, st) {
   if (RACK_LAYOUTS.includes(cfg.rack_layout)) return cfg.rack_layout;
@@ -5520,7 +5545,90 @@ function ntPhoto(d) {
 <g clip-path="url(#${cp})"><rect x="0" y="-10" width="120" height="135" fill="#808080" opacity=".18"/><g class="ph-img">${ntPhotoImage(ph)}</g>${over ? ph.areas.map((a) => over[0]({ ...d, noArrow: true }, ntPhotoArea(a))).join("") + over[1](d) : ""}</g>
 <rect x=".3" y="-9.7" width="119.4" height="134.4" rx="7" fill="none" stroke="#000" stroke-opacity=".14" stroke-width=".6"/>`;
 }
-const NT_DRAW = { gas_fireplace: ntGasFireplace, fp_tm31: ntFoodTm31, fp_tm6: ntFoodTm6, rack_box: ntRackBox, rack_accordion: ntRackAccordion, rack_frame: ntRackFrame, vlv_aqara: ntValveAqara, vlv_tuya: ntValveTuya,  fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_switchbot_co2: (c) => ntSbPro(c, true), ths_switchbot_pro: (c) => ntSbPro(c, false), ths_switchbot_meter: (c) => ntSbMeter(c, false), ths_switchbot_plus: (c) => ntSbMeter(c, true), ths_switchbot_outdoor: ntSbOutdoor, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, cov_curtain: ntCovCurtain, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, det_door: ntDetDoor, det_vibration: ntDetVibration, det_glass: ntDetGlass, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, spk_focal_bird: ntSpkFocalBird, spk_focal_od6: ntSpkFocalOd6, spk_denon_avr: ntSpkDenon, spk_avr: ntSpkAvr, spk_wiim_amp: ntSpkWiim, spk_smart_clock: ntSpkClock, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+// A power strip (HACF): each socket on, off or offline, and what it draws;
+// the strip in use while one of them draws something.
+function stripReadOf(hass, cfg, st, lines) {
+  const sockets = stripOutlets(hass, cfg).map((o) => {
+    const s = stateObj(hass, o.entity);
+    const raw = s ? String(s.state).trim().toLowerCase() : "";
+    const dead = !s || HA_OFFLINE_STATES.includes(raw) || raw === "";
+    const on = !dead && NT_ON.includes(raw);
+    const w = o.power_entity ? wattsOf(hass, o.power_entity) : null;
+    return { entity: o.entity, name: o.name || (s ? stripDeviceName(hass, s.attributes.friendly_name, o.entity, cfg.name) : humanizeEntityId(o.entity)), dead, on, w: on ? w : null, run: on && w !== null && w >= STRIP_RUN_W };
+  });
+  const usbSt = cfg.usb_entity ? stateObj(hass, cfg.usb_entity) : null;
+  const usbDead = !usbSt || HA_OFFLINE_STATES.includes(String(usbSt.state).toLowerCase());
+  const usb = cfg.usb_entity ? { entity: cfg.usb_entity, dead: usbDead, on: !usbDead && ntOnOff(hass, cfg.usb_entity) } : null;
+  const metered = sockets.filter((k) => k.w !== null);
+  if (!cfg.power_entity && metered.length > 1) {
+    lines.push({ key: "strip_total", icon: "mdi:flash", label: t(hass, "history_total"), value: keepTogether(`${Math.round(metered.reduce((a, k) => a + k.w, 0))} W`), entity: metered[0].entity });
+  }
+  sockets.forEach((k, i) => lines.push({ key: `strip_${i + 1}`, icon: k.on ? "mdi:power-plug" : "mdi:power-plug-off-outline", label: k.name,
+    value: k.dead ? t(hass, "ev_offline") : !k.on ? t(hass, "strip_off") : k.w !== null ? keepTogether(`${Math.round(k.w)} W`) : t(hass, "strip_on"), entity: k.entity, open: true, dim: !k.on }));
+  if (usb) lines.push({ key: "strip_usb", icon: "mdi:usb-port", label: t(hass, "strip_usb"), value: usb.dead ? t(hass, "ev_offline") : t(hass, usb.on ? "strip_usb_on" : "strip_usb_off"), entity: usb.entity, open: true, dim: !usb.on });
+  const layout = stripLayoutOf(cfg, st);
+  const unav = !sockets.length || sockets.every((k) => k.dead);
+  const run = sockets.some((k) => k.run);
+  const draw = { kind: `strip_${layout}`, on: run, unav, sockets: sockets.map(({ entity, dead, on, run: r }) => ({ entity, dead, on, run: r })), usb };
+  const res = (mode, key, color) => ({ mode, label: t(hass, key), color, lines, draw });
+  if (unav) return res("unav", "ev_offline", NT_COLORS.unav);
+  if (run) return res("run", "strip_running", NT_COLORS.run);
+  if (sockets.some((k) => k.on) || (usb && usb.on)) return res("on", "strip_on", NT_COLORS.lit);
+  return res("off", "strip_off", NT_COLORS.off);
+}
+// A socket of the strip: its ring lit while it is on, a halo while it draws,
+// its button under it. A tap on it switches it (data-outlet).
+function stripSocket(k, x, y, r, rot) {
+  const ring = k.on ? "#4fc3f7" : "#d3d9de";
+  const id = String(k.entity || "").replace(/[^\w.]/g, "");
+  return `<g${k.dead ? "" : ` data-outlet="${id}" style="cursor:pointer"`}>
+${k.run ? `<circle cx="${x}" cy="${y}" r="${r + 1.6}" fill="none" stroke="#4fc3f7" stroke-width="2.4" opacity=".35"><animate attributeName="opacity" values=".12;.55;.12" dur="2s" repeatCount="indefinite"/></circle>` : ""}
+<circle cx="${x}" cy="${y}" r="${r}" fill="#eef1f3" stroke="${ring}" stroke-width="1.3"${k.dead ? ' stroke-dasharray="1.6 1.4"' : ""}/>
+<g transform="rotate(${rot} ${x} ${y})"><circle cx="${x}" cy="${y}" r="${(r * .8).toFixed(2)}" fill="#e5e9ec" stroke="#c9d0d6" stroke-width=".5"/>
+<circle cx="${(x - r * .3).toFixed(2)}" cy="${y}" r="${(r * .13).toFixed(2)}" fill="#5f6b74"/><circle cx="${(x + r * .3).toFixed(2)}" cy="${y}" r="${(r * .13).toFixed(2)}" fill="#5f6b74"/>
+<rect x="${(x - r * .1).toFixed(2)}" y="${(y - r * .84).toFixed(2)}" width="${(r * .2).toFixed(2)}" height="${(r * .18).toFixed(2)}" rx=".3" fill="#aab3ba"/><rect x="${(x - r * .1).toFixed(2)}" y="${(y + r * .66).toFixed(2)}" width="${(r * .2).toFixed(2)}" height="${(r * .18).toFixed(2)}" rx=".3" fill="#aab3ba"/></g></g>`;
+}
+// The strip's USB ports, lit when switched on.
+function stripUsb(u, x, y) {
+  const id = String(u.entity || "").replace(/[^\w.]/g, "");
+  return `<g${u.dead ? "" : ` data-outlet="${id}" style="cursor:pointer"`}>${[0, 1].map((i) => `<rect x="${x}" y="${y + i * 7}" width="9" height="4.4" rx=".6" fill="#3f474e" stroke="${u.on ? "#4fc3f7" : "#aab3ba"}" stroke-width=".8"/><rect x="${x + 1.6}" y="${y + i * 7 + 1.2}" width="5.8" height="1.3" fill="${u.on ? "#4fc3f7" : "#8a949c"}"/>`).join("")}
+<text x="${x + 4.5}" y="${y + 17.6}" font-size="3.2" text-anchor="middle" fill="#8a949c" ${NT_FONT}>USB</text></g>`;
+}
+// Shelly's Power Strip 4: an oblong white body, its sockets in a row with a
+// clear ring and a button under each, the S at the cable's end.
+function ntStripShelly(c) {
+  const ks = c.sockets && c.sockets.length ? c.sockets : [{}, {}, {}, {}];
+  const n = ks.length, gap = 23, w = 26 + n * gap + (c.usb ? 13 : 0), sc = Math.min(1.25, 128 / w), x0 = (120 - w * sc) / 2;
+  const g = `ntsb${ntN++}`;
+  return `<defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e3e7ea"/></linearGradient></defs>
+<g transform="rotate(-26 60 61) translate(${x0.toFixed(2)} ${(61 - 61 * sc).toFixed(2)}) scale(${sc.toFixed(3)})">
+<path d="M2 60 C-6 61 -8 70 -10 76" fill="none" stroke="#e6eaed" stroke-width="3.4" stroke-linecap="round"/><path d="M2 60 C-6 61 -8 70 -10 76" fill="none" stroke="#c4cbd1" stroke-width=".5"/>
+<rect x="-3" y="57.6" width="6" height="5" rx="1" fill="#e9edf0" stroke="#c4cbd1" stroke-width=".5"/>
+<ellipse cx="${w / 2}" cy="79" rx="${w / 2}" ry="3" fill="#000" opacity=".1"/>
+<rect x="0" y="44" width="${w}" height="33" rx="16.5" fill="url(#${g})" stroke="#c4cbd1" stroke-width=".7"/>
+<path d="M14 46.6 H${w - 14}" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".9"/>
+<circle cx="8.5" cy="60.5" r="3.6" fill="none" stroke="#c9d0d6" stroke-width=".7"/><text x="8.5" y="62.2" font-size="4.6" text-anchor="middle" fill="#b6bec5" font-family="Georgia, serif" font-style="italic">S</text>
+${ks.map((k, i) => `${stripSocket(k, 27 + i * gap, 56, 8.8, 0)}<circle cx="${27 + i * gap}" cy="69.6" r="1.8" fill="#fff" stroke="#c4cbd1" stroke-width=".5"/><circle cx="${27 + i * gap}" cy="69.6" r=".75" fill="${k.on ? "#29b6f6" : "#cfd6dc"}"/>`).join("")}
+${c.usb ? stripUsb(c.usb, w - 22, 50) : ""}</g>`;
+}
+// A plain strip: a long box, its sockets turned a quarter, a lit switch at
+// its end.
+function ntStripClassic(c) {
+  const ks = c.sockets && c.sockets.length ? c.sockets : [{}, {}, {}];
+  const n = ks.length, gap = 20, w = 22 + n * gap + (c.usb ? 14 : 0), sc = Math.min(1.25, 128 / w), x0 = (120 - w * sc) / 2;
+  const g = `ntsc${ntN++}`;
+  const on = ks.some((k) => k.on);
+  return `<defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbfcfd"/><stop offset="1" stop-color="#dde2e6"/></linearGradient></defs>
+<g transform="rotate(-26 60 61) translate(${x0.toFixed(2)} ${(61 - 61 * sc).toFixed(2)}) scale(${sc.toFixed(3)})">
+<path d="M0 62 C-8 63 -9 71 -11 77" fill="none" stroke="#e6eaed" stroke-width="3.2" stroke-linecap="round"/><path d="M0 62 C-8 63 -9 71 -11 77" fill="none" stroke="#c4cbd1" stroke-width=".5"/>
+<ellipse cx="${w / 2}" cy="78" rx="${w / 2 + 2}" ry="2.6" fill="#000" opacity=".1"/>
+<rect x="0" y="46" width="${w}" height="29" rx="5" fill="url(#${g})" stroke="#c4cbd1" stroke-width=".7"/>
+<path d="M4 48.4 H${w - 4}" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".9"/>
+<rect x="4.5" y="54" width="8" height="13" rx="1.6" fill="${on ? "#e53935" : "#b9c1c8"}" stroke="${on ? "#b71c1c" : "#9aa3aa"}" stroke-width=".5"/><path d="M5.6 ${on ? 56 : 62} h5.8" stroke="#fff" stroke-width="1" opacity=".7"/>
+${ks.map((k, i) => stripSocket(k, 24 + i * gap, 60.5, 8, 45)).join("")}
+${c.usb ? stripUsb(c.usb, w - 13, 52) : ""}</g>`;
+}
+const NT_DRAW = { strip_shelly: ntStripShelly, strip_classic: ntStripClassic, gas_fireplace: ntGasFireplace, fp_tm31: ntFoodTm31, fp_tm6: ntFoodTm6, rack_box: ntRackBox, rack_accordion: ntRackAccordion, rack_frame: ntRackFrame, vlv_aqara: ntValveAqara, vlv_tuya: ntValveTuya,  fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_switchbot_co2: (c) => ntSbPro(c, true), ths_switchbot_pro: (c) => ntSbPro(c, false), ths_switchbot_meter: (c) => ntSbMeter(c, false), ths_switchbot_plus: (c) => ntSbMeter(c, true), ths_switchbot_outdoor: ntSbOutdoor, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, cov_curtain: ntCovCurtain, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, det_door: ntDetDoor, det_vibration: ntDetVibration, det_glass: ntDetGlass, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, spk_focal_bird: ntSpkFocalBird, spk_focal_od6: ntSpkFocalOd6, spk_denon_avr: ntSpkDenon, spk_avr: ntSpkAvr, spk_wiim_amp: ntSpkWiim, spk_smart_clock: ntSpkClock, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 // The card's colour on a drawing made after a real product: its shell, the
 // greys, blacks and whites it is drawn in, takes the colour, lightest to
 // darkest as before; what has a colour of its own (a screen's glow, a
@@ -5539,7 +5647,7 @@ function ntHsl(hex) {
 const ntKeep = (s) => `<!--k-->${s}<!--/k-->`;
 // The drawings a tint applies to: appliances, not the scenes around them
 // (a sump's pit, a floor, a garden, a pool, a roof).
-const NT_TINTED = /^(con_|str_|spk_|lit_|det_|mob_|irr_tap$|dryer$|humidifier$|fws$|wood$|booster$|circulator$|pellet_grill$)/;
+const NT_TINTED = /^(strip_|con_|str_|spk_|lit_|det_|mob_|irr_tap$|dryer$|humidifier$|fws$|wood$|booster$|circulator$|pellet_grill$)/;
 function ntTint(svg, tint) {
   const T = NT_TINTS[tint];
   if (!T) return svg;
@@ -5835,6 +5943,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     : !detCo && running === null && !(type === "meter" && !dead) && !(type === "detector" && st && raw === "none");
   const tmp = ntTemp(hass, cfg, st);
   const out = (mode, labelKey, color, draw) => ({ mode, label: t(hass, labelKey), color, lines, draw: { ...draw, unav } });
+  if (type === "power_strip") return stripReadOf(hass, cfg, st, lines);
   if (unav) {
     const ml = meterLayoutOf(cfg, st);
     const kinds = { gas_fireplace: "gas_fireplace", pellet_grill: "pellet_grill", filament_dryer: "dryer", humidifier: "humidifier", water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree", mobility: `mob_${mobilityLayoutOf(cfg, st)}`,
@@ -6631,7 +6740,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
 function ntControls(hass, cfg, type) {
   const out = [];
   const st = stateObj(hass, cfg.state_entity);
-  if (st && !cfg.toggle_entity && type !== "meter" && type !== "fingerbot" && (["light", "switch", "input_boolean", "valve"].includes(domainOf(cfg.state_entity)) || (type === "humidifier" && domainOf(cfg.state_entity) === "humidifier"))) {
+  if (st && !cfg.toggle_entity && type !== "meter" && type !== "fingerbot" && type !== "power_strip" && (["light", "switch", "input_boolean", "valve"].includes(domainOf(cfg.state_entity)) || (type === "humidifier" && domainOf(cfg.state_entity) === "humidifier"))) {
     out.push({ key: "toggle", entity: cfg.state_entity, icon: type === "valve" ? (["on", "open", "opening"].includes(String(st.state).toLowerCase()) ? "mdi:valve-open" : "mdi:valve-closed") : type === "christmas_tree" ? "mdi:pine-tree" : type === "aquarium" ? "mdi:lightbulb" : type === "mobility" ? "mdi:power-plug" : "mdi:power", label: t(hass, "toggle"),
       on: ["on", "open", "opening"].includes(String(st.state).toLowerCase()) });
   }

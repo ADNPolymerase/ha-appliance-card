@@ -396,6 +396,7 @@ const SECTIONS = [
   // Oven + hood
   { field: "light_entity", types: ["oven", "hood", "printer_3d", "fan", "pool_pump", "diffuser", "spa"], labelKey: "section_light", includeDomains: ["light", "switch", "input_boolean", "binary_sensor"] },
   { field: "camera_entity", types: ["printer_3d", "robot", "pet_feeder"], labelKey: "type_camera", includeDomains: ["camera", "image"] },
+  { field: "usb_entity", types: ["power_strip"], labelKey: "strip_usb", includeDomains: ["switch", "input_boolean"] },
 
   // Cooktop
   { field: "child_lock_entity", types: ["cooktop"], labelKey: "section_child_lock", includeDomains: ["binary_sensor", "switch", "lock"] },
@@ -745,11 +746,15 @@ class ApplianceCardEditor extends HTMLElement {
         corners: alertsArray(this._config.corner_entities).length > 0,
         order: (this._config.lines_order || []).length > 0,
         zones: (this._config.zones || []).length > 0,
+        outlets: Array.isArray(this._config.outlets) && this._config.outlets.length > 0,
       };
     }
     if (this._infoCount === undefined) {
       const existing = (this._config.info_entities || []).length;
       this._infoCount = Math.min(INFO_MAX, existing || 3);
+    }
+    if (this._outletCount === undefined) {
+      this._outletCount = Math.max(1, Math.min(STRIP_MAX, (Array.isArray(this._config.outlets) ? this._config.outlets.length : 0) || 4));
     }
     if (this._zoneCount === undefined) {
       this._zoneCount = Math.min(6, (this._config.zones || []).length || 4);
@@ -862,6 +867,49 @@ class ApplianceCardEditor extends HTMLElement {
 
   _zonesList() {
     return (this._config.zones || []).map((z) => ({ ...z }));
+  }
+
+  // A power strip's sockets: a switch, its power and its name each.
+  _outletsList() {
+    return (Array.isArray(this._config.outlets) ? this._config.outlets : []).map((o) => (typeof o === "string" ? { entity: o } : { ...o }));
+  }
+
+  _updateOutlet(index, patch) {
+    const next = this._outletsList();
+    while (next.length <= index) next.push({});
+    next[index] = { ...next[index], ...patch };
+    for (const k of Object.keys(next[index])) if (next[index][k] === undefined || next[index][k] === "") delete next[index][k];
+    this._config = { ...this._config, outlets: next };
+    this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
+  }
+
+  _mountOutletPicker(slotEl, index, field, labelKey, includeDomains) {
+    if (!slotEl) return;
+    const hass = this._hass;
+    const current = this._outletsList()[index] || {};
+    const picker = document.createElement("ha-entity-picker");
+    picker.hass = hass;
+    picker.value = current[field] || "";
+    picker.label = `${t(this._l10n, labelKey)} ${index + 1}`;
+    const kept = domainOf(current[field] || "");
+    picker.includeDomains = kept && !includeDomains.includes(kept) ? includeDomains.concat(kept) : includeDomains;
+    if (field === "power_entity") picker.entityFilter = (st) => !!st && (st.entity_id === current[field] || unitFilterAccepts("power", st));
+    picker.addEventListener("value-changed", (ev) => {
+      const held = (this._outletsList()[index] || {})[field];
+      if (!this._acceptsPick(held, ev.detail.value)) return;
+      this._updateOutlet(index, { [field]: ev.detail.value || undefined });
+    });
+    slotEl.appendChild(picker);
+  }
+
+  _mountOutletName(slotEl, index) {
+    if (!slotEl) return;
+    const input = document.createElement("input");
+    input.type = "text";
+    input.placeholder = t(this._l10n, "outlet_name");
+    input.value = (this._outletsList()[index] || {}).name || "";
+    input.addEventListener("change", (ev) => this._updateOutlet(index, { name: ev.target.value.trim() || undefined }));
+    slotEl.appendChild(input);
   }
 
   _updateZone(index, patch) {
@@ -1690,7 +1738,7 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(CIRC_MODELS.map((v) => ({ value: v, label: v === "generic" ? t(hass, "circ_model_generic") : v === "dab" ? "DAB" : v[0].toUpperCase() + v.slice(1) }))),
         }) : "") : ""}
-        ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["pellet_grill", "grill_layout", GRILL_LAYOUTS, "pg"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"], ["streamer", "streamer_layout", STREAMER_LAYOUTS, "str"], ["climate_sensor", "climate_sensor_layout", THS_LAYOUTS, "ths"], ["cover", "cover_layout", COVER_LAYOUTS, "cov"], ["fingerbot", "fingerbot_layout", FINGERBOT_LAYOUTS, "fb"], ["valve", "valve_layout", VALVE_LAYOUTS, "vlv"], ["drying_rack", "rack_layout", RACK_LAYOUTS, "rack"], ["food_processor", "food_layout", FP_LAYOUTS, "fp"]]
+        ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["pellet_grill", "grill_layout", GRILL_LAYOUTS, "pg"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"], ["streamer", "streamer_layout", STREAMER_LAYOUTS, "str"], ["climate_sensor", "climate_sensor_layout", THS_LAYOUTS, "ths"], ["cover", "cover_layout", COVER_LAYOUTS, "cov"], ["fingerbot", "fingerbot_layout", FINGERBOT_LAYOUTS, "fb"], ["valve", "valve_layout", VALVE_LAYOUTS, "vlv"], ["drying_rack", "rack_layout", RACK_LAYOUTS, "rack"], ["power_strip", "strip_layout", STRIP_LAYOUTS, "strip"], ["food_processor", "food_layout", FP_LAYOUTS, "fp"]]
           .filter(([ty]) => this._type === ty).map(([, f, list, p]) => this._row("section_screen_layout", f, { type: "select",
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(list.map((v) => ({ value: v, label: t(hass, `layout_${p}_${v}`) }))) })).join("")}
         ${this._type === "detector" && DETECTOR_MODELS[detectorLayoutOf(this._config, stateObj(hass, this._config.state_entity))] ? this._row("det_model", "detector_model", {
@@ -2001,6 +2049,25 @@ class ApplianceCardEditor extends HTMLElement {
             <div class="picker-slot" data-slot="__zone_name_${i}"></div>
           </div>`).join("")}
       </details>` : ""}
+      ${this._type === "power_strip" ? `
+      <details class="group" data-panel="outlets" ${this._panelOpen.outlets ? "open" : ""}>
+        <summary>${t(hass, "section_outlets")}</summary>
+        <div class="section">
+          <div class="row">
+            <label>${t(hass, "outlets_count")}</label>
+            <select data-role="outlet-count-select">
+              ${Array.from({ length: STRIP_MAX }, (_, n) => n + 1).map((n) => `<option value="${n}" ${n === this._outletCount ? "selected" : ""}>${n}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+        ${Array.from({ length: this._outletCount }, (_, i) => `
+          <div class="section">
+            <h4>${t(hass, "outlet")} ${i + 1}</h4>
+            <div class="picker-slot" data-slot="__outlet_entity_${i}"></div>
+            <div class="picker-slot" data-slot="__outlet_power_${i}"></div>
+            <div class="picker-slot" data-slot="__outlet_name_${i}"></div>
+          </div>`).join("")}
+      </details>` : ""}
       <details class="group" data-panel="info" ${this._panelOpen.info ? "open" : ""}>
         <summary>${t(hass, "section_info")}</summary>
         <div class="section">
@@ -2070,6 +2137,23 @@ class ApplianceCardEditor extends HTMLElement {
           const count = parseInt(ev.target.value, 10);
           this._zoneCount = count;
           this._config = { ...this._config, zones: this._zonesList().slice(0, count) };
+          this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
+          this._build();
+        });
+      }
+    }
+    if (this._type === "power_strip") {
+      for (let i = 0; i < this._outletCount; i++) {
+        this._mountOutletPicker(this._root.querySelector(`[data-slot="__outlet_entity_${i}"]`), i, "entity", "outlet", ["switch", "input_boolean", "light"]);
+        this._mountOutletPicker(this._root.querySelector(`[data-slot="__outlet_power_${i}"]`), i, "power_entity", "outlet_power", ["sensor"]);
+        this._mountOutletName(this._root.querySelector(`[data-slot="__outlet_name_${i}"]`), i);
+      }
+      const outletCountSelect = this._root.querySelector('[data-role="outlet-count-select"]');
+      if (outletCountSelect) {
+        outletCountSelect.addEventListener("change", (ev) => {
+          const count = parseInt(ev.target.value, 10);
+          this._outletCount = count;
+          this._config = { ...this._config, outlets: this._outletsList().slice(0, count) };
           this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
           this._build();
         });

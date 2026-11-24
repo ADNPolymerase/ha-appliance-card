@@ -181,6 +181,8 @@ const T = {
     cam_person: "Person detected", cam_vehicle: "Vehicle detected", cam_animal: "Animal detected", cam_siren: "Siren", cam_line_spotlight: "Spotlight", cam_line_tracking: "Auto tracking", cam_v_lit: "On", cam_v_on: "On", cam_v_off: "Off", cam_sec_person: "Person detection", cam_sec_vehicle: "Vehicle detection", cam_sec_animal: "Animal detection", cam_sec_pan: "Pan position", cam_sec_tilt: "Tilt position",
     valve_fluid: "Fluid", vlv_f_water: "Water", vlv_f_gas: "Gas",
     type_drying_rack: "Wall drying rack", layout_rack_box: "Fold-down box", layout_rack_accordion: "Accordion under a shelf", layout_rack_frame: "Tilting wooden frame", rack_open: "Unfolded", rack_closed: "Folded",
+    type_power_strip: "Power strip", layout_strip_shelly: "Shelly Power Strip", layout_strip_classic: "Classic power strip", strip_on: "On", strip_off: "Off", strip_running: "In use", strip_usb: "USB ports", section_outlets: "Sockets", outlets_count: "Number of sockets", outlet: "Socket", outlet_power: "Socket power", outlet_name: "Socket name",
+    strip_usb_on: "On", strip_usb_off: "Off",
   },
   fr: {
     pg_large_temperature: "Temp\u00e9rature en grand sur le dessin",
@@ -364,6 +366,8 @@ const T = {
     cam_person: "Personne d\u00e9tect\u00e9e", cam_vehicle: "V\u00e9hicule d\u00e9tect\u00e9", cam_animal: "Animal d\u00e9tect\u00e9", cam_siren: "Sir\u00e8ne", cam_line_spotlight: "Projecteur", cam_line_tracking: "Suivi automatique", cam_v_lit: "Allum\u00e9", cam_v_on: "Activ\u00e9", cam_v_off: "D\u00e9sactiv\u00e9", cam_sec_person: "D\u00e9tection de personne", cam_sec_vehicle: "D\u00e9tection de v\u00e9hicule", cam_sec_animal: "D\u00e9tection d'animal", cam_sec_pan: "Position panoramique", cam_sec_tilt: "Position d'inclinaison",
     valve_fluid: "Fluide", vlv_f_water: "Eau", vlv_f_gas: "Gaz",
     type_drying_rack: "S\u00e9choir \u00e0 linge mural", layout_rack_box: "Caisson rabattable", layout_rack_accordion: "Accord\u00e9on sous \u00e9tag\u00e8re", layout_rack_frame: "Cadre en bois basculant", rack_open: "D\u00e9pli\u00e9", rack_closed: "Repli\u00e9",
+    type_power_strip: "Multiprise", layout_strip_shelly: "Shelly Power Strip", layout_strip_classic: "Multiprise classique", strip_on: "Allum\u00e9e", strip_off: "\u00c9teinte", strip_running: "En marche", strip_usb: "Ports USB", section_outlets: "Prises", outlets_count: "Nombre de prises", outlet: "Prise", outlet_power: "Puissance de la prise", outlet_name: "Nom de la prise",
+    strip_usb_on: "Allum\u00e9s", strip_usb_off: "\u00c9teints",
   },
   ru: {
     pg_large_temperature: "\u041a\u0440\u0443\u043f\u043d\u0430\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043d\u0430 \u0440\u0438\u0441\u0443\u043d\u043a\u0435",
@@ -547,6 +551,8 @@ const T = {
     cam_person: "\u041e\u0431\u043d\u0430\u0440\u0443\u0436\u0435\u043d \u0447\u0435\u043b\u043e\u0432\u0435\u043a", cam_vehicle: "\u041e\u0431\u043d\u0430\u0440\u0443\u0436\u0435\u043d \u0430\u0432\u0442\u043e\u043c\u043e\u0431\u0438\u043b\u044c", cam_animal: "\u041e\u0431\u043d\u0430\u0440\u0443\u0436\u0435\u043d\u043e \u0436\u0438\u0432\u043e\u0442\u043d\u043e\u0435", cam_siren: "\u0421\u0438\u0440\u0435\u043d\u0430", cam_line_spotlight: "\u041f\u0440\u043e\u0436\u0435\u043a\u0442\u043e\u0440", cam_line_tracking: "\u0410\u0432\u0442\u043e\u0441\u043b\u0435\u0436\u0435\u043d\u0438\u0435", cam_v_lit: "\u0412\u043a\u043b.", cam_v_on: "\u0412\u043a\u043b.", cam_v_off: "\u0412\u044b\u043a\u043b.", cam_sec_person: "\u041e\u0431\u043d\u0430\u0440\u0443\u0436\u0435\u043d\u0438\u0435 \u043b\u044e\u0434\u0435\u0439", cam_sec_vehicle: "\u041e\u0431\u043d\u0430\u0440\u0443\u0436\u0435\u043d\u0438\u0435 \u0430\u0432\u0442\u043e\u043c\u043e\u0431\u0438\u043b\u0435\u0439", cam_sec_animal: "\u041e\u0431\u043d\u0430\u0440\u0443\u0436\u0435\u043d\u0438\u0435 \u0436\u0438\u0432\u043e\u0442\u043d\u044b\u0445", cam_sec_pan: "\u041f\u043e\u043b\u043e\u0436\u0435\u043d\u0438\u0435 \u043f\u043e\u0432\u043e\u0440\u043e\u0442\u0430", cam_sec_tilt: "\u041f\u043e\u043b\u043e\u0436\u0435\u043d\u0438\u0435 \u043d\u0430\u043a\u043b\u043e\u043d\u0430",
     valve_fluid: "\u0421\u0440\u0435\u0434\u0430", vlv_f_water: "\u0412\u043e\u0434\u0430", vlv_f_gas: "\u0413\u0430\u0437",
     type_drying_rack: "\u041d\u0430\u0441\u0442\u0435\u043d\u043d\u0430\u044f \u0441\u0443\u0448\u0438\u043b\u043a\u0430 \u0434\u043b\u044f \u0431\u0435\u043b\u044c\u044f", layout_rack_box: "\u041e\u0442\u043a\u0438\u0434\u043d\u043e\u0439 \u043a\u043e\u0440\u043e\u0431", layout_rack_accordion: "\u0413\u0430\u0440\u043c\u043e\u0448\u043a\u0430 \u043f\u043e\u0434 \u043f\u043e\u043b\u043a\u043e\u0439", layout_rack_frame: "\u041e\u0442\u043a\u0438\u0434\u043d\u0430\u044f \u0434\u0435\u0440\u0435\u0432\u044f\u043d\u043d\u0430\u044f \u0440\u0430\u043c\u0430", rack_open: "\u0420\u0430\u0437\u043b\u043e\u0436\u0435\u043d\u0430", rack_closed: "\u0421\u043b\u043e\u0436\u0435\u043d\u0430",
+    type_power_strip: "\u0421\u0435\u0442\u0435\u0432\u043e\u0439 \u0443\u0434\u043b\u0438\u043d\u0438\u0442\u0435\u043b\u044c", layout_strip_shelly: "Shelly Power Strip", layout_strip_classic: "\u041e\u0431\u044b\u0447\u043d\u044b\u0439 \u0443\u0434\u043b\u0438\u043d\u0438\u0442\u0435\u043b\u044c", strip_on: "\u0412\u043a\u043b\u044e\u0447\u0451\u043d", strip_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d", strip_running: "\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442", strip_usb: "USB-\u043f\u043e\u0440\u0442\u044b", section_outlets: "\u0420\u043e\u0437\u0435\u0442\u043a\u0438", outlets_count: "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0440\u043e\u0437\u0435\u0442\u043e\u043a", outlet: "\u0420\u043e\u0437\u0435\u0442\u043a\u0430", outlet_power: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u0440\u043e\u0437\u0435\u0442\u043a\u0438", outlet_name: "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u0440\u043e\u0437\u0435\u0442\u043a\u0438",
+    strip_usb_on: "\u0412\u043a\u043b\u044e\u0447\u0435\u043d\u044b", strip_usb_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u044b",
   },
   de: {
     pg_large_temperature: "Gro\u00dfe Temperatur auf der Zeichnung",
@@ -730,6 +736,8 @@ const T = {
     cam_person: "Person erkannt", cam_vehicle: "Fahrzeug erkannt", cam_animal: "Tier erkannt", cam_siren: "Sirene", cam_line_spotlight: "Scheinwerfer", cam_line_tracking: "Automatische Verfolgung", cam_v_lit: "An", cam_v_on: "An", cam_v_off: "Aus", cam_sec_person: "Personenerkennung", cam_sec_vehicle: "Fahrzeugerkennung", cam_sec_animal: "Tiererkennung", cam_sec_pan: "Schwenkposition", cam_sec_tilt: "Neigeposition",
     valve_fluid: "Medium", vlv_f_water: "Wasser", vlv_f_gas: "Gas",
     type_drying_rack: "Wand-W\u00e4schest\u00e4nder", layout_rack_box: "Klappbox", layout_rack_accordion: "Ziehharmonika unter einem Regal", layout_rack_frame: "Kippbarer Holzrahmen", rack_open: "Ausgeklappt", rack_closed: "Eingeklappt",
+    type_power_strip: "Steckdosenleiste", layout_strip_shelly: "Shelly Power Strip", layout_strip_classic: "Klassische Steckdosenleiste", strip_on: "Ein", strip_off: "Aus", strip_running: "In Betrieb", strip_usb: "USB-Anschl\u00fcsse", section_outlets: "Steckdosen", outlets_count: "Anzahl der Steckdosen", outlet: "Steckdose", outlet_power: "Leistung der Steckdose", outlet_name: "Name der Steckdose",
+    strip_usb_on: "Ein", strip_usb_off: "Aus",
   },
   es: {
     pg_large_temperature: "Temperatura grande en el dibujo",
@@ -913,6 +921,8 @@ const T = {
     cam_person: "Persona detectada", cam_vehicle: "Veh\u00edculo detectado", cam_animal: "Animal detectado", cam_siren: "Sirena", cam_line_spotlight: "Foco", cam_line_tracking: "Seguimiento autom\u00e1tico", cam_v_lit: "Encendido", cam_v_on: "Activado", cam_v_off: "Desactivado", cam_sec_person: "Detecci\u00f3n de personas", cam_sec_vehicle: "Detecci\u00f3n de veh\u00edculos", cam_sec_animal: "Detecci\u00f3n de animales", cam_sec_pan: "Posici\u00f3n horizontal", cam_sec_tilt: "Posici\u00f3n de inclinaci\u00f3n",
     valve_fluid: "Fluido", vlv_f_water: "Agua", vlv_f_gas: "Gas",
     type_drying_rack: "Tendedero de pared", layout_rack_box: "Caja abatible", layout_rack_accordion: "Acorde\u00f3n bajo estante", layout_rack_frame: "Marco de madera abatible", rack_open: "Desplegado", rack_closed: "Plegado",
+    type_power_strip: "Regleta", layout_strip_shelly: "Shelly Power Strip", layout_strip_classic: "Regleta cl\u00e1sica", strip_on: "Encendida", strip_off: "Apagada", strip_running: "En uso", strip_usb: "Puertos USB", section_outlets: "Tomas", outlets_count: "N\u00famero de tomas", outlet: "Toma", outlet_power: "Potencia de la toma", outlet_name: "Nombre de la toma",
+    strip_usb_on: "Encendidos", strip_usb_off: "Apagados",
   },
   it: {
     pg_large_temperature: "Temperatura grande sul disegno",
@@ -1096,6 +1106,8 @@ const T = {
     cam_person: "Persona rilevata", cam_vehicle: "Veicolo rilevato", cam_animal: "Animale rilevato", cam_siren: "Sirena", cam_line_spotlight: "Faro", cam_line_tracking: "Tracciamento automatico", cam_v_lit: "Acceso", cam_v_on: "Attivo", cam_v_off: "Disattivo", cam_sec_person: "Rilevamento persone", cam_sec_vehicle: "Rilevamento veicoli", cam_sec_animal: "Rilevamento animali", cam_sec_pan: "Posizione orizzontale", cam_sec_tilt: "Posizione di inclinazione",
     valve_fluid: "Fluido", vlv_f_water: "Acqua", vlv_f_gas: "Gas",
     type_drying_rack: "Stendibiancheria a muro", layout_rack_box: "Box ribaltabile", layout_rack_accordion: "A fisarmonica sotto mensola", layout_rack_frame: "Telaio in legno ribaltabile", rack_open: "Aperto", rack_closed: "Chiuso",
+    type_power_strip: "Multipresa", layout_strip_shelly: "Shelly Power Strip", layout_strip_classic: "Multipresa classica", strip_on: "Accesa", strip_off: "Spenta", strip_running: "In uso", strip_usb: "Porte USB", section_outlets: "Prese", outlets_count: "Numero di prese", outlet: "Presa", outlet_power: "Potenza della presa", outlet_name: "Nome della presa",
+    strip_usb_on: "Accese", strip_usb_off: "Spente",
   },
   nl: {
     pg_large_temperature: "Grote temperatuur op de tekening",
@@ -1279,6 +1291,8 @@ const T = {
     cam_person: "Persoon gedetecteerd", cam_vehicle: "Voertuig gedetecteerd", cam_animal: "Dier gedetecteerd", cam_siren: "Sirene", cam_line_spotlight: "Spotlight", cam_line_tracking: "Automatisch volgen", cam_v_lit: "Aan", cam_v_on: "Aan", cam_v_off: "Uit", cam_sec_person: "Persoonsdetectie", cam_sec_vehicle: "Voertuigdetectie", cam_sec_animal: "Dierdetectie", cam_sec_pan: "Panpositie", cam_sec_tilt: "Kantelpositie",
     valve_fluid: "Medium", vlv_f_water: "Water", vlv_f_gas: "Gas",
     type_drying_rack: "Wanddroogrek", layout_rack_box: "Uitklapbare kast", layout_rack_accordion: "Harmonica onder een plank", layout_rack_frame: "Kantelend houten frame", rack_open: "Uitgeklapt", rack_closed: "Ingeklapt",
+    type_power_strip: "Stekkerdoos", layout_strip_shelly: "Shelly Power Strip", layout_strip_classic: "Klassieke stekkerdoos", strip_on: "Aan", strip_off: "Uit", strip_running: "In gebruik", strip_usb: "USB-poorten", section_outlets: "Stopcontacten", outlets_count: "Aantal stopcontacten", outlet: "Stopcontact", outlet_power: "Vermogen van het stopcontact", outlet_name: "Naam van het stopcontact",
+    strip_usb_on: "Aan", strip_usb_off: "Uit",
   },
   pt: {
     pg_large_temperature: "Temperatura grande no desenho",
@@ -1462,6 +1476,8 @@ const T = {
     cam_person: "Pessoa detetada", cam_vehicle: "Ve\u00edculo detetado", cam_animal: "Animal detetado", cam_siren: "Sirene", cam_line_spotlight: "Holofote", cam_line_tracking: "Seguimento autom\u00e1tico", cam_v_lit: "Ligado", cam_v_on: "Ativado", cam_v_off: "Desativado", cam_sec_person: "Dete\u00e7\u00e3o de pessoas", cam_sec_vehicle: "Dete\u00e7\u00e3o de ve\u00edculos", cam_sec_animal: "Dete\u00e7\u00e3o de animais", cam_sec_pan: "Posi\u00e7\u00e3o panor\u00e2mica", cam_sec_tilt: "Posi\u00e7\u00e3o de inclina\u00e7\u00e3o",
     valve_fluid: "Fluido", vlv_f_water: "\u00c1gua", vlv_f_gas: "G\u00e1s",
     type_drying_rack: "Estendal de parede", layout_rack_box: "Caixa rebat\u00edvel", layout_rack_accordion: "Acorde\u00e3o sob prateleira", layout_rack_frame: "Moldura de madeira basculante", rack_open: "Aberto", rack_closed: "Fechado",
+    type_power_strip: "R\u00e9gua de tomadas", layout_strip_shelly: "Shelly Power Strip", layout_strip_classic: "R\u00e9gua cl\u00e1ssica", strip_on: "Ligada", strip_off: "Desligada", strip_running: "Em uso", strip_usb: "Portas USB", section_outlets: "Tomadas", outlets_count: "N\u00famero de tomadas", outlet: "Tomada", outlet_power: "Pot\u00eancia da tomada", outlet_name: "Nome da tomada",
+    strip_usb_on: "Ligadas", strip_usb_off: "Desligadas",
   },
   sv: {
     pg_large_temperature: "Stor temperatur p\u00e5 bilden",
@@ -1645,6 +1661,8 @@ const T = {
     cam_person: "Person uppt\u00e4ckt", cam_vehicle: "Fordon uppt\u00e4ckt", cam_animal: "Djur uppt\u00e4ckt", cam_siren: "Siren", cam_line_spotlight: "Str\u00e5lkastare", cam_line_tracking: "Automatisk sp\u00e5rning", cam_v_lit: "P\u00e5", cam_v_on: "P\u00e5", cam_v_off: "Av", cam_sec_person: "Persondetektering", cam_sec_vehicle: "Fordonsdetektering", cam_sec_animal: "Djurdetektering", cam_sec_pan: "Panoreringsl\u00e4ge", cam_sec_tilt: "Lutningsl\u00e4ge",
     valve_fluid: "Medium", vlv_f_water: "Vatten", vlv_f_gas: "Gas",
     type_drying_rack: "V\u00e4ggmonterad torkst\u00e4llning", layout_rack_box: "F\u00e4llbar l\u00e5da", layout_rack_accordion: "Dragspel under en hylla", layout_rack_frame: "F\u00e4llbar tr\u00e4ram", rack_open: "Utf\u00e4lld", rack_closed: "Hopf\u00e4lld",
+    type_power_strip: "Grenuttag", layout_strip_shelly: "Shelly Power Strip", layout_strip_classic: "Klassiskt grenuttag", strip_on: "P\u00e5", strip_off: "Av", strip_running: "I bruk", strip_usb: "USB-portar", section_outlets: "Uttag", outlets_count: "Antal uttag", outlet: "Uttag", outlet_power: "Uttagets effekt", outlet_name: "Uttagets namn",
+    strip_usb_on: "P\u00e5", strip_usb_off: "Av",
   },
   no: {
     pg_large_temperature: "Stor temperatur p\u00e5 tegningen",
@@ -1828,6 +1846,8 @@ const T = {
     cam_person: "Person oppdaget", cam_vehicle: "Kj\u00f8ret\u00f8y oppdaget", cam_animal: "Dyr oppdaget", cam_siren: "Sirene", cam_line_spotlight: "Lyskaster", cam_line_tracking: "Automatisk sporing", cam_v_lit: "P\u00e5", cam_v_on: "P\u00e5", cam_v_off: "Av", cam_sec_person: "Persondeteksjon", cam_sec_vehicle: "Kj\u00f8ret\u00f8ydeteksjon", cam_sec_animal: "Dyredeteksjon", cam_sec_pan: "Panoreringsposisjon", cam_sec_tilt: "Vippeposisjon",
     valve_fluid: "Medium", vlv_f_water: "Vann", vlv_f_gas: "Gass",
     type_drying_rack: "Veggmontert t\u00f8rkestativ", layout_rack_box: "Nedfellbar boks", layout_rack_accordion: "Trekkspill under en hylle", layout_rack_frame: "Vippbar treramme", rack_open: "Utfelt", rack_closed: "Sammenfelt",
+    type_power_strip: "Grenuttak", layout_strip_shelly: "Shelly Power Strip", layout_strip_classic: "Klassisk grenuttak", strip_on: "P\u00e5", strip_off: "Av", strip_running: "I bruk", strip_usb: "USB-porter", section_outlets: "Uttak", outlets_count: "Antall uttak", outlet: "Uttak", outlet_power: "Uttakets effekt", outlet_name: "Uttakets navn",
+    strip_usb_on: "P\u00e5", strip_usb_off: "Av",
   },
   da: {
     pg_large_temperature: "Stor temperatur p\u00e5 tegningen",
@@ -2011,6 +2031,8 @@ const T = {
     cam_person: "Person registreret", cam_vehicle: "K\u00f8ret\u00f8j registreret", cam_animal: "Dyr registreret", cam_siren: "Sirene", cam_line_spotlight: "Projekt\u00f8r", cam_line_tracking: "Automatisk sporing", cam_v_lit: "T\u00e6ndt", cam_v_on: "Til", cam_v_off: "Fra", cam_sec_person: "Persondetektion", cam_sec_vehicle: "K\u00f8ret\u00f8jsdetektion", cam_sec_animal: "Dyredetektion", cam_sec_pan: "Panoreringsposition", cam_sec_tilt: "Vippeposition",
     valve_fluid: "Medie", vlv_f_water: "Vand", vlv_f_gas: "Gas",
     type_drying_rack: "V\u00e6gmonteret t\u00f8rrestativ", layout_rack_box: "Nedf\u00e6ldelig boks", layout_rack_accordion: "Harmonika under en hylde", layout_rack_frame: "Vipbar tr\u00e6ramme", rack_open: "Udfoldet", rack_closed: "Foldet sammen",
+    type_power_strip: "Stikd\u00e5se", layout_strip_shelly: "Shelly Power Strip", layout_strip_classic: "Klassisk stikd\u00e5se", strip_on: "T\u00e6ndt", strip_off: "Slukket", strip_running: "I brug", strip_usb: "USB-porte", section_outlets: "Stik", outlets_count: "Antal stik", outlet: "Stik", outlet_power: "Stikkets effekt", outlet_name: "Stikkets navn",
+    strip_usb_on: "T\u00e6ndt", strip_usb_off: "Slukket",
   },
   pl: {
     pg_large_temperature: "Du\u017ca temperatura na rysunku",
@@ -2194,6 +2216,8 @@ const T = {
     cam_person: "Wykryto osob\u0119", cam_vehicle: "Wykryto pojazd", cam_animal: "Wykryto zwierz\u0119", cam_siren: "Syrena", cam_line_spotlight: "Reflektor", cam_line_tracking: "Automatyczne \u015bledzenie", cam_v_lit: "W\u0142\u0105czony", cam_v_on: "W\u0142\u0105czone", cam_v_off: "Wy\u0142\u0105czone", cam_sec_person: "Wykrywanie os\u00f3b", cam_sec_vehicle: "Wykrywanie pojazd\u00f3w", cam_sec_animal: "Wykrywanie zwierz\u0105t", cam_sec_pan: "Pozycja obrotu", cam_sec_tilt: "Pozycja pochylenia",
     valve_fluid: "Medium", vlv_f_water: "Woda", vlv_f_gas: "Gaz",
     type_drying_rack: "\u015acienna suszarka na pranie", layout_rack_box: "Sk\u0142adana skrzynka", layout_rack_accordion: "Harmonijka pod p\u00f3\u0142k\u0105", layout_rack_frame: "Odchylana drewniana rama", rack_open: "Roz\u0142o\u017cona", rack_closed: "Z\u0142o\u017cona",
+    type_power_strip: "Listwa zasilaj\u0105ca", layout_strip_shelly: "Shelly Power Strip", layout_strip_classic: "Klasyczna listwa", strip_on: "W\u0142\u0105czona", strip_off: "Wy\u0142\u0105czona", strip_running: "W u\u017cyciu", strip_usb: "Porty USB", section_outlets: "Gniazda", outlets_count: "Liczba gniazd", outlet: "Gniazdo", outlet_power: "Moc gniazda", outlet_name: "Nazwa gniazda",
+    strip_usb_on: "W\u0142\u0105czone", strip_usb_off: "Wy\u0142\u0105czone",
   },
   zh: {
     pg_large_temperature: "\u56fe\u4e0a\u663e\u793a\u5927\u53f7\u6e29\u5ea6",
@@ -2377,6 +2401,8 @@ const T = {
     cam_person: "\u68c0\u6d4b\u5230\u4eba", cam_vehicle: "\u68c0\u6d4b\u5230\u8f66\u8f86", cam_animal: "\u68c0\u6d4b\u5230\u52a8\u7269", cam_siren: "\u8b66\u7b1b", cam_line_spotlight: "\u805a\u5149\u706f", cam_line_tracking: "\u81ea\u52a8\u8ddf\u8e2a", cam_v_lit: "\u5f00", cam_v_on: "\u5f00", cam_v_off: "\u5173", cam_sec_person: "\u4eba\u5f62\u68c0\u6d4b", cam_sec_vehicle: "\u8f66\u8f86\u68c0\u6d4b", cam_sec_animal: "\u52a8\u7269\u68c0\u6d4b", cam_sec_pan: "\u6c34\u5e73\u4f4d\u7f6e", cam_sec_tilt: "\u4fef\u4ef0\u4f4d\u7f6e",
     valve_fluid: "\u4ecb\u8d28", vlv_f_water: "\u6c34", vlv_f_gas: "\u71c3\u6c14",
     type_drying_rack: "\u58c1\u6302\u667e\u8863\u67b6", layout_rack_box: "\u7ffb\u76d6\u5f0f", layout_rack_accordion: "\u6401\u677f\u4e0b\u4f38\u7f29\u5f0f", layout_rack_frame: "\u53ef\u7ffb\u8f6c\u6728\u6846", rack_open: "\u5df2\u5c55\u5f00", rack_closed: "\u5df2\u6536\u8d77",
+    type_power_strip: "\u6392\u63d2", layout_strip_shelly: "Shelly Power Strip", layout_strip_classic: "\u666e\u901a\u6392\u63d2", strip_on: "\u5df2\u5f00\u542f", strip_off: "\u5df2\u5173\u95ed", strip_running: "\u4f7f\u7528\u4e2d", strip_usb: "USB \u63a5\u53e3", section_outlets: "\u63d2\u5ea7", outlets_count: "\u63d2\u5ea7\u6570\u91cf", outlet: "\u63d2\u5ea7", outlet_power: "\u63d2\u5ea7\u529f\u7387", outlet_name: "\u63d2\u5ea7\u540d\u79f0",
+    strip_usb_on: "\u5df2\u5f00\u542f", strip_usb_off: "\u5df2\u5173\u95ed",
   },
   cs: {
     pg_large_temperature: "Velk\u00e1 teplota na obr\u00e1zku",
@@ -2560,6 +2586,8 @@ const T = {
     cam_person: "Zji\u0161t\u011bna osoba", cam_vehicle: "Zji\u0161t\u011bno vozidlo", cam_animal: "Zji\u0161t\u011bno zv\u00ed\u0159e", cam_siren: "Sir\u00e9na", cam_line_spotlight: "Reflektor", cam_line_tracking: "Automatick\u00e9 sledov\u00e1n\u00ed", cam_v_lit: "Zapnuto", cam_v_on: "Zapnuto", cam_v_off: "Vypnuto", cam_sec_person: "Detekce osob", cam_sec_vehicle: "Detekce vozidel", cam_sec_animal: "Detekce zv\u00ed\u0159at", cam_sec_pan: "Poloha oto\u010den\u00ed", cam_sec_tilt: "Poloha n\u00e1klonu",
     valve_fluid: "M\u00e9dium", vlv_f_water: "Voda", vlv_f_gas: "Plyn",
     type_drying_rack: "N\u00e1st\u011bnn\u00fd su\u0161\u00e1k na pr\u00e1dlo", layout_rack_box: "Sklopn\u00fd box", layout_rack_accordion: "Harmonika pod polic\u00ed", layout_rack_frame: "Sklopn\u00fd d\u0159ev\u011bn\u00fd r\u00e1m", rack_open: "Rozlo\u017een\u00fd", rack_closed: "Slo\u017een\u00fd",
+    type_power_strip: "Prodlu\u017eovac\u00ed li\u0161ta", layout_strip_shelly: "Shelly Power Strip", layout_strip_classic: "Klasick\u00e1 li\u0161ta", strip_on: "Zapnuto", strip_off: "Vypnuto", strip_running: "V provozu", strip_usb: "USB porty", section_outlets: "Z\u00e1suvky", outlets_count: "Po\u010det z\u00e1suvek", outlet: "Z\u00e1suvka", outlet_power: "P\u0159\u00edkon z\u00e1suvky", outlet_name: "N\u00e1zev z\u00e1suvky",
+    strip_usb_on: "Zapnuto", strip_usb_off: "Vypnuto",
   },
   hu: {
     pg_large_temperature: "Nagy h\u0151m\u00e9rs\u00e9klet a rajzon",
@@ -2956,6 +2984,8 @@ const T = {
     cam_person: "Szem\u00e9ly \u00e9szlelve", cam_vehicle: "J\u00e1rm\u0171 \u00e9szlelve", cam_animal: "\u00c1llat \u00e9szlelve", cam_siren: "Szir\u00e9na", cam_line_spotlight: "Reflektor", cam_line_tracking: "Automatikus k\u00f6vet\u00e9s", cam_v_lit: "Be", cam_v_on: "Be", cam_v_off: "Ki", cam_sec_person: "Szem\u00e9ly\u00e9szlel\u00e9s", cam_sec_vehicle: "J\u00e1rm\u0171\u00e9szlel\u00e9s", cam_sec_animal: "\u00c1llat\u00e9szlel\u00e9s", cam_sec_pan: "Forgat\u00e1si poz\u00edci\u00f3", cam_sec_tilt: "D\u00f6nt\u00e9si poz\u00edci\u00f3",
     valve_fluid: "K\u00f6zeg", vlv_f_water: "V\u00edz", vlv_f_gas: "G\u00e1z",
     type_drying_rack: "Fali ruhasz\u00e1r\u00edt\u00f3", layout_rack_box: "Lehajthat\u00f3 doboz", layout_rack_accordion: "Harmonika polc alatt", layout_rack_frame: "Billen\u0151 fakeret", rack_open: "Kinyitva", rack_closed: "\u00d6sszecsukva",
+    type_power_strip: "Eloszt\u00f3", layout_strip_shelly: "Shelly Power Strip", layout_strip_classic: "Hagyom\u00e1nyos eloszt\u00f3", strip_on: "Bekapcsolva", strip_off: "Kikapcsolva", strip_running: "Haszn\u00e1latban", strip_usb: "USB-portok", section_outlets: "Aljzatok", outlets_count: "Aljzatok sz\u00e1ma", outlet: "Aljzat", outlet_power: "Az aljzat teljes\u00edtm\u00e9nye", outlet_name: "Az aljzat neve",
+    strip_usb_on: "Bekapcsolva", strip_usb_off: "Kikapcsolva",
   },
   "zh-Hant": {
     pg_large_temperature: "\u5716\u4e0a\u986f\u793a\u5927\u865f\u6eab\u5ea6",
@@ -3139,6 +3169,8 @@ const T = {
     cam_person: "\u5075\u6e2c\u5230\u4eba", cam_vehicle: "\u5075\u6e2c\u5230\u8eca\u8f1b", cam_animal: "\u5075\u6e2c\u5230\u52d5\u7269", cam_siren: "\u8b66\u7b1b", cam_line_spotlight: "\u805a\u5149\u71c8", cam_line_tracking: "\u81ea\u52d5\u8ffd\u8e64", cam_v_lit: "\u958b", cam_v_on: "\u958b", cam_v_off: "\u95dc", cam_sec_person: "\u4eba\u5f62\u5075\u6e2c", cam_sec_vehicle: "\u8eca\u8f1b\u5075\u6e2c", cam_sec_animal: "\u52d5\u7269\u5075\u6e2c", cam_sec_pan: "\u6c34\u5e73\u4f4d\u7f6e", cam_sec_tilt: "\u4fef\u4ef0\u4f4d\u7f6e",
     valve_fluid: "\u4ecb\u8cea", vlv_f_water: "\u6c34", vlv_f_gas: "\u71c3\u6c23",
     type_drying_rack: "\u58c1\u639b\u667e\u8863\u67b6", layout_rack_box: "\u7ffb\u84cb\u5f0f", layout_rack_accordion: "\u5c64\u677f\u4e0b\u4f38\u7e2e\u5f0f", layout_rack_frame: "\u53ef\u7ffb\u8f49\u6728\u6846", rack_open: "\u5df2\u5c55\u958b", rack_closed: "\u5df2\u6536\u8d77",
+    type_power_strip: "\u5ef6\u9577\u7dda", layout_strip_shelly: "Shelly Power Strip", layout_strip_classic: "\u4e00\u822c\u5ef6\u9577\u7dda", strip_on: "\u5df2\u958b\u555f", strip_off: "\u5df2\u95dc\u9589", strip_running: "\u4f7f\u7528\u4e2d", strip_usb: "USB \u9023\u63a5\u57e0", section_outlets: "\u63d2\u5ea7", outlets_count: "\u63d2\u5ea7\u6578\u91cf", outlet: "\u63d2\u5ea7", outlet_power: "\u63d2\u5ea7\u529f\u7387", outlet_name: "\u63d2\u5ea7\u540d\u7a31",
+    strip_usb_on: "\u5df2\u958b\u555f", strip_usb_off: "\u5df2\u95dc\u9589",
   },
 };
 

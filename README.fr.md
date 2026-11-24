@@ -361,7 +361,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. Un dessin fait d'après un vrai produit (console, boîtier de streaming, imprimante, litière…) garde ses vraies couleurs tant qu'aucune couleur n'est choisie ; son écran, la tuile de l'appli et ses pneus gardent les leurs. Les scènes autour d'un appareil (fosse de relevage, jardin, toit) et la lumière des lampes ne changent pas. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 16 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`, `hu`, `zh-Hant`. `nb` et `nb-NO` donnent le norvégien. `zh` est le chinois simplifié ; `zh-Hant`, `zh-TW` et `zh-HK` donnent le chinois traditionnel. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `fingerbot` \| `valve` \| `drying_rack` \| `food_processor` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove` \| `gas_fireplace`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `fingerbot` \| `valve` \| `drying_rack` \| `power_strip` \| `food_processor` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove` \| `gas_fireplace`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `illustration_tap_action` | Un appui sur le dessin seul, le reste de la carte gardant `tap_action` : `toggle` (une lampe allumée en la touchant), `more-info`, `none`, ou n'importe quelle action de Home Assistant. Sans lui, le dessin fait comme la carte. Avec `toggle`, le dessin répond comme les boutons, selon `controls_activation` : un appui, deux appuis ou un appui long. |
 | `show_light_button` | `false` cache le bouton de la lumière en haut à gauche (four, hotte, imprimante 3D, pompe de piscine, diffuseur) ; la lumière reste visible sur le dessin. |
@@ -1659,6 +1659,9 @@ disk2_entity: sensor.nas_drive_2_status
 | `leak_entity` | vanne | Un détecteur de fuite : déclenché, c'est l'alarme de la carte et la vanne goutte, quoi qu'elle dise. |
 | `rack_layout` | séchoir | `box` (caisson dont la façade se rabat sur ses barres, par défaut) \| `accordion` (bras en accordéon sous une étagère) \| `frame` (cadre en bois qui bascule du mur). |
 | `rack_color` | séchoir | `white` \| `wood` \| `black`. Par défaut blanc pour le caisson et l'accordéon, bois pour le cadre. |
+| `outlets` | multiprise | Jusqu'à 6 prises, en `{ entity, power_entity?, name? }` : l'interrupteur de la prise, sa puissance et son nom. Une prise sans `power_entity` prend `sensor.<interrupteur>_power` s'il existe. Sans liste, l'entité d'état est la seule prise. |
+| `usb_entity` | multiprise | L'interrupteur de ses ports USB, dessinés à son bout. |
+| `strip_layout` | multiprise | `shelly` (Power Strip 4 de Shelly, blanche, ou noire avec `illustration_color: black`) \| `classic` (multiprise simple avec interrupteur lumineux, par défaut). Sans réglage, un nom contenant Shelly choisit `shelly`. |
 | `bot_mode_entity` | pousse-bouton | Son mode : le select de Zigbee2MQTT et de Tuya BLE (`click`, `switch`, `program`), en ligne. L'attribut `switch_mode` de SwitchBot est lu sans lui. |
 | `lower_entity` / `upper_entity` / `sustain_entity` | pousse-bouton | Ses courses basse et haute et sa durée d'appui, en lignes. |
 | `reverse_entity` / `touch_entity` | pousse-bouton | Ses interrupteurs sens inversé et tactile, en lignes *Oui* / *Non* ; l'anneau du pavé tactile s'allume en bleu quand le tactile est actif. |
@@ -1949,6 +1952,23 @@ rack_layout: accordion
 rack_color: wood
 state_entity: binary_sensor.sechoir_contact
 battery_entity: sensor.sechoir_contact_battery
+```
+
+Une multiprise avec un interrupteur par prise est un `power_strip` : l'anneau de chaque prise s'allume quand elle est allumée et brille quand elle consomme, et un appui sur une prise la bascule (avec `controls_activation: confirm`, un second appui dans les trois secondes). Une ligne par prise donne sa puissance, *Éteinte* ou *Hors ligne*, avec le total au-dessus. L'éditeur remplit les prises depuis l'appareil de la multiprise, chacune avec le capteur de puissance qui partage un mot avec elle.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: power_strip
+strip_layout: shelly
+state_entity: switch.prises_atelier_imprimante
+outlets:
+  - entity: switch.prises_atelier_imprimante
+    power_entity: sensor.prises_atelier_imprimante_power
+    name: Imprimante 3D
+  - entity: switch.prises_atelier_prise_frigo
+    power_entity: sensor.prises_atelier_frigo_power
+    name: Frigo
+usb_entity: switch.multiprise_usb
 ```
 
 Un Thermomix sur une prise connectée est un `food_processor` : *Éteint*, *Prêt* sur quelques watts, *Mélange* quand sa lame tourne, *Cuisson* à partir de 600 W, la vapeur montant du bol. Son écran affiche la puissance mesurée par la prise, la seule chose qu'une prise connaît.

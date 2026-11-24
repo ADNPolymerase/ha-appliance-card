@@ -15687,4 +15687,76 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('photo tele : la photo', /<image href="\/local\/tv\.jpg"/.test(PS('off', 0)), true);
 }
 
+// =============================================================================
+// Power strip: a switch per socket, switched on the drawing.
+// =============================================================================
+{
+  const S = (v, a = {}) => ({ state: v, attributes: a });
+  const W = (v) => S(String(v), { unit_of_measurement: 'W', device_class: 'power' });
+  const ST = {
+    'switch.strip_l1': S('on', { friendly_name: 'Strip Printer' }), 'switch.strip_l2': S('on', { friendly_name: 'Strip Fridge' }),
+    'switch.strip_l3': S('off', { friendly_name: 'Strip Heater' }), 'switch.strip_l4': S('on', { friendly_name: 'Strip Dryer' }),
+    'sensor.strip_l1_power': W(7), 'sensor.strip_l2_power': W(19), 'sensor.strip_l3_power': W(0), 'sensor.strip_l4_power': W(131.4),
+    'switch.strip_usb': S('on'),
+  };
+  const OUT = ['switch.strip_l1', 'switch.strip_l2', 'switch.strip_l3', 'switch.strip_l4'].map((entity, i) => ({ entity, name: ['Printer', 'Fridge', 'Heater', 'Dryer'][i] }));
+  const PS = (extra = {}, states = ST) => build({ appliance_type: 'power_strip', state_entity: 'switch.strip_l1', outlets: OUT, ...extra }, states);
+  const h = PS().html;
+  check('multiprise : en marche', stateLine(h), 'In use');
+  check('multiprise : dessin shelly par le modele', /nt-k-strip_shelly/.test(PS({ strip_layout: 'shelly' }).html), true);
+  check('multiprise : classique par defaut', /nt-k-strip_classic/.test(h), true);
+  check('multiprise : une prise par entite', (h.match(/data-outlet="/g) || []).length, 4);
+  check('multiprise : le total', infoLine(h, 'Total').replace(/\u00a0/g, ' '), '157 W');
+  check('multiprise : la puissance trouvee par son nom', infoLine(h, 'Dryer').replace(/\u00a0/g, ' '), '131 W');
+  check('multiprise : une prise eteinte', infoLine(h, 'Heater'), 'Off');
+  check('multiprise : une prise allumee qui ne consomme pas', stateLine(PS({}, { ...ST, 'switch.strip_l2': S('off'), 'switch.strip_l4': S('off'), 'sensor.strip_l1_power': W(0) }).html), 'On');
+  check('multiprise : tout eteint', stateLine(PS({}, { ...ST, 'switch.strip_l1': S('off'), 'switch.strip_l2': S('off'), 'switch.strip_l4': S('off') }).html), 'Off');
+  const dead = PS({}, { ...ST, 'switch.strip_l2': S('unavailable') }).html;
+  check('multiprise : une prise hors ligne', infoLine(dead, 'Fridge'), 'Offline');
+  check('multiprise : hors ligne, pas cliquable', (dead.match(/data-outlet="/g) || []).length, 3);
+  check('multiprise : tout hors ligne', stateLine(PS({}, Object.fromEntries(Object.entries(ST).map(([k, v]) => [k, /^switch/.test(k) ? S('unavailable') : v]))).html), 'Offline');
+  check('multiprise : le halo seulement si elle consomme', (h.match(/<animate attributeName="opacity" values="\.12;\.55;\.12"/g) || []).length, 3);
+  const usb = PS({ usb_entity: 'switch.strip_usb' }).html;
+  check('multiprise : les ports USB', infoLine(usb, 'USB ports'), 'On');
+  check('multiprise : les ports USB se commandent', /data-outlet="switch\.strip_usb"/.test(usb), true);
+  check('multiprise : sans liste, l entite d etat seule', (build({ appliance_type: 'power_strip', state_entity: 'switch.strip_l1' }, ST).html.match(/data-outlet="/g) || []).length, 1);
+  check('multiprise : pas de bouton marche general', /data-action="toggle"/.test(h), false);
+  check('multiprise : six prises au plus', (PS({ outlets: [...OUT, ...OUT] }).html.match(/data-outlet="/g) || []).length, 6);
+  check('multiprise : sans nom, celui de l entite', infoLine(PS({ outlets: [{ entity: 'switch.strip_l1' }] }).html, 'Strip Printer').replace(/\u00a0/g, ' '), '7 W');
+  // A tap switches the socket, not the card.
+  const calls = [];
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'power_strip', state_entity: 'switch.strip_l1', outlets: OUT });
+  c._hass = { ...HASS(ST), callService: (domain, service, data) => calls.push(`${domain}.${service} ${data.entity_id}`) };
+  c._render();
+  const node = c._root.querySelectorAll('[data-outlet]').find((n) => n.getAttribute('data-outlet') === 'switch.strip_l3');
+  let stopped = false;
+  node?.__handlers?.click?.({ stopPropagation() { stopped = true; } });
+  check('multiprise : un appui bascule la prise', calls.at(-1), 'switch.toggle switch.strip_l3');
+  check('multiprise : un appui ne remonte pas a la carte', stopped, true);
+  // Found by its name, and its sockets suggested with their power.
+  check('multiprise : reconnue par son nom', /nt-k-strip_/.test(render({ state_entity: 'switch.multiprise_salon_l1' }, { 'switch.multiprise_salon_l1': S('on') })), true);
+  check('multiprise : shelly par son nom', /nt-k-strip_shelly/.test(render({ state_entity: 'switch.shellypstripg4_d885_switch_0' }, { 'switch.shellypstripg4_d885_switch_0': S('on') })), true);
+  const ids = ['switch.atelier_strip_imprimante', 'switch.atelier_strip_prise_frigo', 'switch.atelier_strip_usb', 'switch.atelier_strip_child_lock',
+    'sensor.atelier_strip_imprimante_power', 'sensor.atelier_strip_frigo_power'];
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'power_strip', state_entity: 'switch.atelier_strip_imprimante' });
+  ed.hass = { ...HASS(Object.fromEntries(ids.map((id) => [id, /^sensor/.test(id) ? W(5) : S('on')]))), entities: Object.fromEntries(ids.map((id) => [id, { device_id: 'strip' }])) };
+  const sug = ed.events.at(-1)?.detail?.config || {};
+  check('suggestion multiprise : les prises, sans le verrou ni l usb', JSON.stringify((sug.outlets || []).map((o) => o.entity)), JSON.stringify(['switch.atelier_strip_imprimante', 'switch.atelier_strip_prise_frigo']));
+  check('suggestion multiprise : la puissance par le mot commun', (sug.outlets || [])[1]?.power_entity, 'sensor.atelier_strip_frigo_power');
+  check('suggestion multiprise : l usb a part', sug.usb_entity, 'switch.atelier_strip_usb');
+  check('suggestion multiprise : pas de puissance generale', sug.power_entity, undefined);
+  // The editor: the sockets panel, its count and a switch, a power and a name each.
+  const edS = newEditor({ state_entity: 'switch.strip_l1', appliance_type: 'power_strip', outlets: OUT.slice(0, 2) });
+  const edH = markup(edS._root);
+  check('editeur multiprise : le panneau des prises', /data-panel="outlets"/.test(edH), true);
+  check('editeur multiprise : deux prises', (edH.match(/data-slot="__outlet_entity_/g) || []).length, 2);
+  check('editeur multiprise : le modele', /data-field="strip_layout"/.test(edH), true);
+  check('editeur multiprise : absent ailleurs', /data-panel="outlets"/.test(edHtml('washer')), false);
+  fire(edS._root.querySelector('[data-role="outlet-count-select"]'), 'change', { target: { value: '1' } });
+  check('editeur multiprise : moins de prises', JSON.stringify(edS.events.at(-1)?.detail?.config?.outlets), JSON.stringify(OUT.slice(0, 1)));
+  check('multiprise : traduite', /Multiprise/.test(markup(newEditor({ state_entity: 'switch.strip_l1', appliance_type: 'power_strip', language: 'fr' })._root)), true);
+}
+
 report();

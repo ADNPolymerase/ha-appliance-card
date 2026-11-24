@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.48.0";
+const CARD_VERSION = "4.49.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -194,6 +194,8 @@ const T = {
     cam_person: "Person detected", cam_vehicle: "Vehicle detected", cam_animal: "Animal detected", cam_siren: "Siren", cam_line_spotlight: "Spotlight", cam_line_tracking: "Auto tracking", cam_v_lit: "On", cam_v_on: "On", cam_v_off: "Off", cam_sec_person: "Person detection", cam_sec_vehicle: "Vehicle detection", cam_sec_animal: "Animal detection", cam_sec_pan: "Pan position", cam_sec_tilt: "Tilt position",
     valve_fluid: "Fluid", vlv_f_water: "Water", vlv_f_gas: "Gas",
     type_drying_rack: "Wall drying rack", layout_rack_box: "Fold-down box", layout_rack_accordion: "Accordion under a shelf", layout_rack_frame: "Tilting wooden frame", rack_open: "Unfolded", rack_closed: "Folded",
+    type_power_strip: "Power strip", layout_strip_shelly: "Shelly Power Strip", layout_strip_classic: "Classic power strip", strip_on: "On", strip_off: "Off", strip_running: "In use", strip_usb: "USB ports", section_outlets: "Sockets", outlets_count: "Number of sockets", outlet: "Socket", outlet_power: "Socket power", outlet_name: "Socket name",
+    strip_usb_on: "On", strip_usb_off: "Off",
   },
 };
 
@@ -3217,6 +3219,9 @@ const TYPE_AUTO_PATTERNS = {
   drying_rack: {
     battery_entity: /batter/i,
   },
+  power_strip: {
+    usb_entity: /^switch\..*usb/i,
+  },
   valve: {
     battery_entity: /batter/i,
     leak_entity: /^binary_sensor\..*(leak|fuite|water|wasser|flood)/i,
@@ -3429,6 +3434,27 @@ function childDeviceEntities(hass, entityId) {
   return Object.keys(hass.entities || {}).filter((id) => kids.has(hass.entities[id].device_id) && hass.states[id]);
 }
 
+// Words that say a switch is a setting of the strip, not one of its sockets.
+const STRIP_NOT_SOCKET_RE = /usb|lock|verrou|child|led|indicator|light|backlight|power_on|restore|countdown|overload|mode|identify/;
+function stripSuggest(hass, cfg, siblings, prefix) {
+  const bare = (id) => (id.split(".")[1] || "").slice(prefix && (id.split(".")[1] || "").startsWith(prefix) ? prefix.length : 0);
+  const words = (id) => bare(id).split("_").filter((w) => w.length >= 3 && !/^(power|prise|plug|socket|switch|outlet|puissance)$/.test(w) || /^(l|p)?\d+$/.test(w));
+  const ids = [cfg.state_entity].concat(siblings.filter((id) => id !== cfg.state_entity).sort());
+  const sockets = ids.filter((id) => domainOf(id) === "switch" && hass.states[id] && !STRIP_NOT_SOCKET_RE.test(bare(id))).slice(0, STRIP_MAX);
+  const powers = siblings.filter((id) => domainOf(id) === "sensor" && (hass.states[id].attributes || {}).device_class === "power");
+  const out = {};
+  if (sockets.length > 1) {
+    out.outlets = sockets.map((id) => {
+      const mine = words(id);
+      const pw = powers.find((p) => words(p).some((w) => mine.includes(w)));
+      return pw ? { entity: id, power_entity: pw } : { entity: id };
+    });
+  }
+  const usb = siblings.find((id) => domainOf(id) === "switch" && /usb/.test(bare(id)));
+  if (usb && !cfg.usb_entity) out.usb_entity = usb;
+  return out;
+}
+
 // The sections live in the editor, which is a file of its own in a release:
 // it hands them over, since only the editor ever asks for suggestions.
 function autoSuggest(hass, cfg, sectionsFor) {
@@ -3490,6 +3516,13 @@ function autoSuggest(hass, cfg, sectionsFor) {
     for (const [f, id] of Object.entries(found)) if (id && !cfg[f] && allowed.has(f)) patch[f] = id;
   }
   if (type === "network") Object.assign(patch, netSuggest(hass, cfg));
+  // A power strip's sockets: the device's switches, each with the power
+  // sensor that shares a word with it, and its USB switch on its own.
+  if (type === "power_strip") {
+    delete patch.power_entity;
+    delete patch.energy_entity;
+    if (!(Array.isArray(cfg.outlets) && cfg.outlets.length)) Object.assign(patch, stripSuggest(hass, cfg, siblings, prefix));
+  }
   // An entity already given a field of its own would only repeat itself.
   const takenIds = () => new Set(Object.values(patch).concat(Object.values(cfg)).flat());
   // Home Connect's alerts, on an empty list only.
@@ -3631,6 +3664,8 @@ const TYPE_CAPS = {
   valve: { ntValve: true },
   // A wall drying rack (#124), read from its contact sensor.
   drying_rack: { readOnly: true },
+  // A power strip: a switch per socket, each switched on the drawing.
+  power_strip: { ntStrip: true },
   // A kitchen robot, read from the plug it is on (HACF #170).
   food_processor: { ntFood: true },
   // A gas fireplace (#130): flame, fan, lights and pilot on their own.
@@ -3763,6 +3798,7 @@ const STATE_DOMAINS = {
   fingerbot: ["switch", "button", "input_boolean", "input_button", "script"],
   valve: ["valve", "switch", "binary_sensor", "input_boolean"],
   drying_rack: ["binary_sensor", "cover", "input_boolean", "switch", "sensor"],
+  power_strip: ["switch", "input_boolean", "light"],
   food_processor: ["switch", "sensor", "input_boolean", "binary_sensor"],
   gas_fireplace: ["switch", "binary_sensor", "climate", "input_boolean"],
   speaker: ["media_player"],
@@ -3893,7 +3929,7 @@ const TYPE_GROUPS = [
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster", "pellet_grill", "food_processor"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove", "gas_fireplace"]],
   ["air", ["air_conditioner", "dehumidifier", "humidifier", "air_purifier", "fan", "diffuser", "hrv", "climate_sensor"]],
-  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "fingerbot", "valve", "drying_rack", "speaker", "console", "streamer", "cover"]],
+  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "fingerbot", "valve", "drying_rack", "power_strip", "speaker", "console", "streamer", "cover"]],
   ["energy", ["solar", "solar_thermal", "home_battery", "ev_charger", "meter"]],
   ["pets", ["pet_feeder", "pet_fountain", "litter_box"]],
   ["network", ["network", "ups"]],
@@ -5882,7 +5918,7 @@ function lampSpotsOf(cfg, st) {
 // sauna, an aquarium, a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
 // moves moves only on a machine carrying nt-on, staggered through --d0, and
 // the robot's cable and the sump's float follow their SMIL animations.
-const NT_TYPES = ["food_processor", "drying_rack", "valve", "fingerbot", "cover", "pellet_grill", "water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer", "gas_fireplace"];
+const NT_TYPES = ["power_strip", "food_processor", "drying_rack", "valve", "fingerbot", "cover", "pellet_grill", "water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer", "gas_fireplace"];
 // How many spools a filament dryer holds (#93).
 const FD_COUNTS = [1, 2, 4];
 const FD_COLORS = ["#43a047", "#fb8c00", "#8e24aa", "#eceff1"];
@@ -5917,6 +5953,14 @@ const VALVE_LAYOUTS = ["aqara", "tuya"];
 // A wall drying rack with a contact sensor (#124): a fold-down box, an
 // accordion under a shelf, or a tilting wooden frame.
 const RACK_LAYOUTS = ["box", "accordion", "frame"];
+// A power strip with a switch per socket: Shelly's Power Strip 4 (white or
+// black), or a plain one, its USB ports switched on their own when it has
+// them. Up to six sockets, one entity each.
+const STRIP_LAYOUTS = ["shelly", "classic"];
+const STRIP_MAX = 6;
+// A socket drawing a few watts is at work; below, it is only switched on.
+const STRIP_RUN_W = 2;
+const STRIP_NAME_RE = /multiprise|power.?strip|(^|[^a-z])pstrip|shellypstrip|s4pl|steckdosenleiste|mehrfachsteckdose|regleta|multipresa|ciabatta|stekkerdoos|grenuttag|grenuttak|stikdase|listwa.?zasil|prodluzovaci|elosztosor|socket.?strip|outlet.?strip/;
 // A kitchen robot on its plug (HACF #170): Thermomix TM31 or TM6.
 const FP_LAYOUTS = ["tm31", "tm6"];
 const FP_COOK_W = 600;
@@ -6074,6 +6118,7 @@ const NT_ONLY_FIELDS = {
   detector: ["detector_layout", "detector_model", "door_style", "window_style", "frame_color", "vibration_entity", "glass_break_entity", "co_level_entity", "co_entity", "tamper_entity"],
   valve: ["valve_layout", "valve_fluid", "valve_handle_color", "leak_entity"],
   drying_rack: ["rack_layout", "rack_color"],
+  power_strip: ["strip_layout", "outlets", "usb_entity"],
   food_processor: ["food_layout"],
   gas_fireplace: ["flame_entity", "flame_height_entity", "thermostat_entity", "pilot_entity"],
   fingerbot: ["fingerbot_layout", "fingerbot_color", "bot_mode_entity", "lower_entity", "upper_entity", "sustain_entity", "reverse_entity", "touch_entity"],
@@ -6172,6 +6217,7 @@ const NT_NAME_RES = [
   ["climate_sensor", THS_NAME_RE],
   ["litter_box", /scoopfree|purobot|litter|litiere|katzenklo|arenero|lettiera|kattlada|kuweta|kattebak|kattesand|(^|[^a-z])pura.?(x|max)/],
   ["irrigation", /arrosage|arroseur|watering|bhyve|netro|gardena(?!.?(sileno|mow))|irrigat|sprinkler|bewasserung|(^|[^a-z])riego|beregening|bevattning|vanning|vanding|nawadnian|zavlaz|opensprinkler|linktap|hydrawise|rachio|rain.?bird/],
+  ["power_strip", STRIP_NAME_RE],
   ["fingerbot", FINGERBOT_NAME_RE],
   ["valve", VALVE_NAME_RE],
   ["drying_rack", RACK_NAME_RE],
@@ -6247,6 +6293,21 @@ function fpLayoutOf(cfg, st) {
   if (FP_LAYOUTS.includes(cfg.food_layout)) return cfg.food_layout;
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   return /tm ?31|tm ?21|tm ?3/.test(hay) ? "tm31" : "tm6";
+}
+function stripLayoutOf(cfg, st) {
+  if (STRIP_LAYOUTS.includes(cfg.strip_layout)) return cfg.strip_layout;
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
+  return /shelly|pstrip|s4pl/.test(hay) ? "shelly" : "classic";
+}
+// The sockets: the list given, else the state entity alone. A socket without
+// a power entity of its own takes the sensor named after its switch, as
+// Zigbee2MQTT and Shelly name them (switch.x_l1, sensor.x_l1_power).
+function stripOutlets(hass, cfg) {
+  const list = Array.isArray(cfg.outlets) && cfg.outlets.length ? cfg.outlets : cfg.state_entity ? [{ entity: cfg.state_entity }] : [];
+  return list.slice(0, STRIP_MAX).map((o) => (typeof o === "string" ? { entity: o } : o || {})).filter((o) => o.entity).map((o) => {
+    const own = `sensor.${String(o.entity).split(".")[1] || ""}_power`;
+    return { ...o, power_entity: o.power_entity || (hass && hass.states && hass.states[own] ? own : "") };
+  });
 }
 function rackLayoutOf(cfg, st) {
   if (RACK_LAYOUTS.includes(cfg.rack_layout)) return cfg.rack_layout;
@@ -6924,6 +6985,37 @@ async function photoShrink(file, max = 1600) {
     return file;
   }
 }
+// A power strip (HACF): each socket on, off or offline, and what it draws;
+// the strip in use while one of them draws something.
+function stripReadOf(hass, cfg, st, lines) {
+  const sockets = stripOutlets(hass, cfg).map((o) => {
+    const s = stateObj(hass, o.entity);
+    const raw = s ? String(s.state).trim().toLowerCase() : "";
+    const dead = !s || HA_OFFLINE_STATES.includes(raw) || raw === "";
+    const on = !dead && NT_ON.includes(raw);
+    const w = o.power_entity ? wattsOf(hass, o.power_entity) : null;
+    return { entity: o.entity, name: o.name || (s ? stripDeviceName(hass, s.attributes.friendly_name, o.entity, cfg.name) : humanizeEntityId(o.entity)), dead, on, w: on ? w : null, run: on && w !== null && w >= STRIP_RUN_W };
+  });
+  const usbSt = cfg.usb_entity ? stateObj(hass, cfg.usb_entity) : null;
+  const usbDead = !usbSt || HA_OFFLINE_STATES.includes(String(usbSt.state).toLowerCase());
+  const usb = cfg.usb_entity ? { entity: cfg.usb_entity, dead: usbDead, on: !usbDead && ntOnOff(hass, cfg.usb_entity) } : null;
+  const metered = sockets.filter((k) => k.w !== null);
+  if (!cfg.power_entity && metered.length > 1) {
+    lines.push({ key: "strip_total", icon: "mdi:flash", label: t(hass, "history_total"), value: keepTogether(`${Math.round(metered.reduce((a, k) => a + k.w, 0))} W`), entity: metered[0].entity });
+  }
+  sockets.forEach((k, i) => lines.push({ key: `strip_${i + 1}`, icon: k.on ? "mdi:power-plug" : "mdi:power-plug-off-outline", label: k.name,
+    value: k.dead ? t(hass, "ev_offline") : !k.on ? t(hass, "strip_off") : k.w !== null ? keepTogether(`${Math.round(k.w)} W`) : t(hass, "strip_on"), entity: k.entity, open: true, dim: !k.on }));
+  if (usb) lines.push({ key: "strip_usb", icon: "mdi:usb-port", label: t(hass, "strip_usb"), value: usb.dead ? t(hass, "ev_offline") : t(hass, usb.on ? "strip_usb_on" : "strip_usb_off"), entity: usb.entity, open: true, dim: !usb.on });
+  const layout = stripLayoutOf(cfg, st);
+  const unav = !sockets.length || sockets.every((k) => k.dead);
+  const run = sockets.some((k) => k.run);
+  const draw = { kind: `strip_${layout}`, on: run, unav, sockets: sockets.map(({ entity, dead, on, run: r }) => ({ entity, dead, on, run: r })), usb };
+  const res = (mode, key, color) => ({ mode, label: t(hass, key), color, lines, draw });
+  if (unav) return res("unav", "ev_offline", NT_COLORS.unav);
+  if (run) return res("run", "strip_running", NT_COLORS.run);
+  if (sockets.some((k) => k.on) || (usb && usb.on)) return res("on", "strip_on", NT_COLORS.lit);
+  return res("off", "strip_off", NT_COLORS.off);
+}
 // The card's colour on a drawing made after a real product: its shell, the
 // greys, blacks and whites it is drawn in, takes the colour, lightest to
 // darkest as before; what has a colour of its own (a screen's glow, a
@@ -7018,6 +7110,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     : !detCo && running === null && !(type === "meter" && !dead) && !(type === "detector" && st && raw === "none");
   const tmp = ntTemp(hass, cfg, st);
   const out = (mode, labelKey, color, draw) => ({ mode, label: t(hass, labelKey), color, lines, draw: { ...draw, unav } });
+  if (type === "power_strip") return stripReadOf(hass, cfg, st, lines);
   if (unav) {
     const ml = meterLayoutOf(cfg, st);
     const kinds = { gas_fireplace: "gas_fireplace", pellet_grill: "pellet_grill", filament_dryer: "dryer", humidifier: "humidifier", water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree", mobility: `mob_${mobilityLayoutOf(cfg, st)}`,
@@ -7814,7 +7907,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
 function ntControls(hass, cfg, type) {
   const out = [];
   const st = stateObj(hass, cfg.state_entity);
-  if (st && !cfg.toggle_entity && type !== "meter" && type !== "fingerbot" && (["light", "switch", "input_boolean", "valve"].includes(domainOf(cfg.state_entity)) || (type === "humidifier" && domainOf(cfg.state_entity) === "humidifier"))) {
+  if (st && !cfg.toggle_entity && type !== "meter" && type !== "fingerbot" && type !== "power_strip" && (["light", "switch", "input_boolean", "valve"].includes(domainOf(cfg.state_entity)) || (type === "humidifier" && domainOf(cfg.state_entity) === "humidifier"))) {
     out.push({ key: "toggle", entity: cfg.state_entity, icon: type === "valve" ? (["on", "open", "opening"].includes(String(st.state).toLowerCase()) ? "mdi:valve-open" : "mdi:valve-closed") : type === "christmas_tree" ? "mdi:pine-tree" : type === "aquarium" ? "mdi:lightbulb" : type === "mobility" ? "mdi:power-plug" : "mdi:power", label: t(hass, "toggle"),
       on: ["on", "open", "opening"].includes(String(st.state).toLowerCase()) });
   }
@@ -14542,6 +14635,11 @@ class ApplianceCard extends HTMLElement {
         return this._call(id);
       });
     });
+    // A power strip's sockets, each switched where it is drawn.
+    this._root.querySelectorAll("[data-outlet]").forEach((el) => {
+      const id = el.getAttribute("data-outlet");
+      this._wireControl(el, cfg.controls_activation, id, () => this._call(id));
+    });
     this._root.querySelectorAll("[data-alerts-toggle]").forEach((el) => {
       el.addEventListener("click", (ev) => {
         ev.stopPropagation();
@@ -14672,7 +14770,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ __v: CARD_VERSION, t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, illustrationBackdropOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, cameraLayoutOf, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, DETECTOR_MODELS, DOOR_STYLES, gateLeavesOf, gateSideOf, WINDOW_STYLES, FRAME_COLORS, FINGERBOT_LAYOUTS, VALVE_LAYOUTS, RACK_LAYOUTS, FP_LAYOUTS, FP_COOK_W, VALVE_HANDLE_COLORS, VALVE_FLUIDS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, doorStyleOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, CO2_WARN, CO2_ALERT, NETATMO_COLORS, COVER_LAYOUTS, CURTAIN_OPENINGS, curtainOpeningOf, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, PHOTO_TYPES, photoAreaFor, photoUrlOf, photoBoxOf, PHOTO_AREAS_MAX, photoAreasOf, photoAreasValue, photoCoverCrop, photoShrink, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
+      .then((m) => m.default({ __v: CARD_VERSION, t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, illustrationBackdropOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, cameraLayoutOf, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, DETECTOR_MODELS, DOOR_STYLES, gateLeavesOf, gateSideOf, WINDOW_STYLES, FRAME_COLORS, FINGERBOT_LAYOUTS, VALVE_LAYOUTS, RACK_LAYOUTS, STRIP_LAYOUTS, STRIP_MAX, FP_LAYOUTS, FP_COOK_W, VALVE_HANDLE_COLORS, VALVE_FLUIDS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, doorStyleOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, CO2_WARN, CO2_ALERT, NETATMO_COLORS, COVER_LAYOUTS, CURTAIN_OPENINGS, curtainOpeningOf, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, PHOTO_TYPES, photoAreaFor, photoUrlOf, photoBoxOf, PHOTO_AREAS_MAX, photoAreasOf, photoAreasValue, photoCoverCrop, photoShrink, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

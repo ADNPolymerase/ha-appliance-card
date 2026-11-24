@@ -422,6 +422,9 @@ const TYPE_AUTO_PATTERNS = {
   drying_rack: {
     battery_entity: /batter/i,
   },
+  power_strip: {
+    usb_entity: /^switch\..*usb/i,
+  },
   valve: {
     battery_entity: /batter/i,
     leak_entity: /^binary_sensor\..*(leak|fuite|water|wasser|flood)/i,
@@ -634,6 +637,27 @@ function childDeviceEntities(hass, entityId) {
   return Object.keys(hass.entities || {}).filter((id) => kids.has(hass.entities[id].device_id) && hass.states[id]);
 }
 
+// Words that say a switch is a setting of the strip, not one of its sockets.
+const STRIP_NOT_SOCKET_RE = /usb|lock|verrou|child|led|indicator|light|backlight|power_on|restore|countdown|overload|mode|identify/;
+function stripSuggest(hass, cfg, siblings, prefix) {
+  const bare = (id) => (id.split(".")[1] || "").slice(prefix && (id.split(".")[1] || "").startsWith(prefix) ? prefix.length : 0);
+  const words = (id) => bare(id).split("_").filter((w) => w.length >= 3 && !/^(power|prise|plug|socket|switch|outlet|puissance)$/.test(w) || /^(l|p)?\d+$/.test(w));
+  const ids = [cfg.state_entity].concat(siblings.filter((id) => id !== cfg.state_entity).sort());
+  const sockets = ids.filter((id) => domainOf(id) === "switch" && hass.states[id] && !STRIP_NOT_SOCKET_RE.test(bare(id))).slice(0, STRIP_MAX);
+  const powers = siblings.filter((id) => domainOf(id) === "sensor" && (hass.states[id].attributes || {}).device_class === "power");
+  const out = {};
+  if (sockets.length > 1) {
+    out.outlets = sockets.map((id) => {
+      const mine = words(id);
+      const pw = powers.find((p) => words(p).some((w) => mine.includes(w)));
+      return pw ? { entity: id, power_entity: pw } : { entity: id };
+    });
+  }
+  const usb = siblings.find((id) => domainOf(id) === "switch" && /usb/.test(bare(id)));
+  if (usb && !cfg.usb_entity) out.usb_entity = usb;
+  return out;
+}
+
 // The sections live in the editor, which is a file of its own in a release:
 // it hands them over, since only the editor ever asks for suggestions.
 function autoSuggest(hass, cfg, sectionsFor) {
@@ -695,6 +719,13 @@ function autoSuggest(hass, cfg, sectionsFor) {
     for (const [f, id] of Object.entries(found)) if (id && !cfg[f] && allowed.has(f)) patch[f] = id;
   }
   if (type === "network") Object.assign(patch, netSuggest(hass, cfg));
+  // A power strip's sockets: the device's switches, each with the power
+  // sensor that shares a word with it, and its USB switch on its own.
+  if (type === "power_strip") {
+    delete patch.power_entity;
+    delete patch.energy_entity;
+    if (!(Array.isArray(cfg.outlets) && cfg.outlets.length)) Object.assign(patch, stripSuggest(hass, cfg, siblings, prefix));
+  }
   // An entity already given a field of its own would only repeat itself.
   const takenIds = () => new Set(Object.values(patch).concat(Object.values(cfg)).flat());
   // Home Connect's alerts, on an empty list only.
@@ -836,6 +867,8 @@ const TYPE_CAPS = {
   valve: { ntValve: true },
   // A wall drying rack (#124), read from its contact sensor.
   drying_rack: { readOnly: true },
+  // A power strip: a switch per socket, each switched on the drawing.
+  power_strip: { ntStrip: true },
   // A kitchen robot, read from the plug it is on (HACF #170).
   food_processor: { ntFood: true },
   // A gas fireplace (#130): flame, fan, lights and pilot on their own.
@@ -968,6 +1001,7 @@ const STATE_DOMAINS = {
   fingerbot: ["switch", "button", "input_boolean", "input_button", "script"],
   valve: ["valve", "switch", "binary_sensor", "input_boolean"],
   drying_rack: ["binary_sensor", "cover", "input_boolean", "switch", "sensor"],
+  power_strip: ["switch", "input_boolean", "light"],
   food_processor: ["switch", "sensor", "input_boolean", "binary_sensor"],
   gas_fireplace: ["switch", "binary_sensor", "climate", "input_boolean"],
   speaker: ["media_player"],
@@ -1098,7 +1132,7 @@ const TYPE_GROUPS = [
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster", "pellet_grill", "food_processor"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove", "gas_fireplace"]],
   ["air", ["air_conditioner", "dehumidifier", "humidifier", "air_purifier", "fan", "diffuser", "hrv", "climate_sensor"]],
-  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "fingerbot", "valve", "drying_rack", "speaker", "console", "streamer", "cover"]],
+  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "fingerbot", "valve", "drying_rack", "power_strip", "speaker", "console", "streamer", "cover"]],
   ["energy", ["solar", "solar_thermal", "home_battery", "ev_charger", "meter"]],
   ["pets", ["pet_feeder", "pet_fountain", "litter_box"]],
   ["network", ["network", "ups"]],

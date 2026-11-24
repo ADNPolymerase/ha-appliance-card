@@ -3,7 +3,7 @@
 export default function defineEditor(deps) {
 // A page still running the card of an earlier release, the files of this one
 // on the server: its helpers are not these, so say to reload the page.
-if (!deps || deps.__v !== "4.48.0") {
+if (!deps || deps.__v !== "4.49.0") {
   if (!customElements.get("ha-appliance-card-editor")) customElements.define("ha-appliance-card-editor", class extends HTMLElement {
     setConfig() {}
     connectedCallback() {
@@ -13,7 +13,7 @@ if (!deps || deps.__v !== "4.48.0") {
   });
   return;
 }
-let { t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, illustrationBackdropOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, cameraLayoutOf, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, DETECTOR_MODELS, DOOR_STYLES, gateLeavesOf, gateSideOf, WINDOW_STYLES, FRAME_COLORS, FINGERBOT_LAYOUTS, VALVE_LAYOUTS, RACK_LAYOUTS, FP_LAYOUTS, FP_COOK_W, VALVE_HANDLE_COLORS, VALVE_FLUIDS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, doorStyleOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, CO2_WARN, CO2_ALERT, NETATMO_COLORS, COVER_LAYOUTS, CURTAIN_OPENINGS, curtainOpeningOf, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, PHOTO_TYPES, photoAreaFor, photoUrlOf, photoBoxOf, PHOTO_AREAS_MAX, photoAreasOf, photoAreasValue, photoCoverCrop, photoShrink, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource } = deps;
+let { t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, illustrationBackdropOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, cameraLayoutOf, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, DETECTOR_MODELS, DOOR_STYLES, gateLeavesOf, gateSideOf, WINDOW_STYLES, FRAME_COLORS, FINGERBOT_LAYOUTS, VALVE_LAYOUTS, RACK_LAYOUTS, STRIP_LAYOUTS, STRIP_MAX, FP_LAYOUTS, FP_COOK_W, VALVE_HANDLE_COLORS, VALVE_FLUIDS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, doorStyleOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, CO2_WARN, CO2_ALERT, NETATMO_COLORS, COVER_LAYOUTS, CURTAIN_OPENINGS, curtainOpeningOf, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, PHOTO_TYPES, photoAreaFor, photoUrlOf, photoBoxOf, PHOTO_AREAS_MAX, photoAreasOf, photoAreasValue, photoCoverCrop, photoShrink, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource } = deps;
 // ---------------------------------------------------------------------------
 // Editor
 // ---------------------------------------------------------------------------
@@ -405,6 +405,7 @@ const SECTIONS = [
   // Oven + hood
   { field: "light_entity", types: ["oven", "hood", "printer_3d", "fan", "pool_pump", "diffuser", "spa"], labelKey: "section_light", includeDomains: ["light", "switch", "input_boolean", "binary_sensor"] },
   { field: "camera_entity", types: ["printer_3d", "robot", "pet_feeder"], labelKey: "type_camera", includeDomains: ["camera", "image"] },
+  { field: "usb_entity", types: ["power_strip"], labelKey: "strip_usb", includeDomains: ["switch", "input_boolean"] },
 
   // Cooktop
   { field: "child_lock_entity", types: ["cooktop"], labelKey: "section_child_lock", includeDomains: ["binary_sensor", "switch", "lock"] },
@@ -754,11 +755,15 @@ class ApplianceCardEditor extends HTMLElement {
         corners: alertsArray(this._config.corner_entities).length > 0,
         order: (this._config.lines_order || []).length > 0,
         zones: (this._config.zones || []).length > 0,
+        outlets: Array.isArray(this._config.outlets) && this._config.outlets.length > 0,
       };
     }
     if (this._infoCount === undefined) {
       const existing = (this._config.info_entities || []).length;
       this._infoCount = Math.min(INFO_MAX, existing || 3);
+    }
+    if (this._outletCount === undefined) {
+      this._outletCount = Math.max(1, Math.min(STRIP_MAX, (Array.isArray(this._config.outlets) ? this._config.outlets.length : 0) || 4));
     }
     if (this._zoneCount === undefined) {
       this._zoneCount = Math.min(6, (this._config.zones || []).length || 4);
@@ -871,6 +876,49 @@ class ApplianceCardEditor extends HTMLElement {
 
   _zonesList() {
     return (this._config.zones || []).map((z) => ({ ...z }));
+  }
+
+  // A power strip's sockets: a switch, its power and its name each.
+  _outletsList() {
+    return (Array.isArray(this._config.outlets) ? this._config.outlets : []).map((o) => (typeof o === "string" ? { entity: o } : { ...o }));
+  }
+
+  _updateOutlet(index, patch) {
+    const next = this._outletsList();
+    while (next.length <= index) next.push({});
+    next[index] = { ...next[index], ...patch };
+    for (const k of Object.keys(next[index])) if (next[index][k] === undefined || next[index][k] === "") delete next[index][k];
+    this._config = { ...this._config, outlets: next };
+    this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
+  }
+
+  _mountOutletPicker(slotEl, index, field, labelKey, includeDomains) {
+    if (!slotEl) return;
+    const hass = this._hass;
+    const current = this._outletsList()[index] || {};
+    const picker = document.createElement("ha-entity-picker");
+    picker.hass = hass;
+    picker.value = current[field] || "";
+    picker.label = `${t(this._l10n, labelKey)} ${index + 1}`;
+    const kept = domainOf(current[field] || "");
+    picker.includeDomains = kept && !includeDomains.includes(kept) ? includeDomains.concat(kept) : includeDomains;
+    if (field === "power_entity") picker.entityFilter = (st) => !!st && (st.entity_id === current[field] || unitFilterAccepts("power", st));
+    picker.addEventListener("value-changed", (ev) => {
+      const held = (this._outletsList()[index] || {})[field];
+      if (!this._acceptsPick(held, ev.detail.value)) return;
+      this._updateOutlet(index, { [field]: ev.detail.value || undefined });
+    });
+    slotEl.appendChild(picker);
+  }
+
+  _mountOutletName(slotEl, index) {
+    if (!slotEl) return;
+    const input = document.createElement("input");
+    input.type = "text";
+    input.placeholder = t(this._l10n, "outlet_name");
+    input.value = (this._outletsList()[index] || {}).name || "";
+    input.addEventListener("change", (ev) => this._updateOutlet(index, { name: ev.target.value.trim() || undefined }));
+    slotEl.appendChild(input);
   }
 
   _updateZone(index, patch) {
@@ -1699,7 +1747,7 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(CIRC_MODELS.map((v) => ({ value: v, label: v === "generic" ? t(hass, "circ_model_generic") : v === "dab" ? "DAB" : v[0].toUpperCase() + v.slice(1) }))),
         }) : "") : ""}
-        ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["pellet_grill", "grill_layout", GRILL_LAYOUTS, "pg"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"], ["streamer", "streamer_layout", STREAMER_LAYOUTS, "str"], ["climate_sensor", "climate_sensor_layout", THS_LAYOUTS, "ths"], ["cover", "cover_layout", COVER_LAYOUTS, "cov"], ["fingerbot", "fingerbot_layout", FINGERBOT_LAYOUTS, "fb"], ["valve", "valve_layout", VALVE_LAYOUTS, "vlv"], ["drying_rack", "rack_layout", RACK_LAYOUTS, "rack"], ["food_processor", "food_layout", FP_LAYOUTS, "fp"]]
+        ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["pellet_grill", "grill_layout", GRILL_LAYOUTS, "pg"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"], ["streamer", "streamer_layout", STREAMER_LAYOUTS, "str"], ["climate_sensor", "climate_sensor_layout", THS_LAYOUTS, "ths"], ["cover", "cover_layout", COVER_LAYOUTS, "cov"], ["fingerbot", "fingerbot_layout", FINGERBOT_LAYOUTS, "fb"], ["valve", "valve_layout", VALVE_LAYOUTS, "vlv"], ["drying_rack", "rack_layout", RACK_LAYOUTS, "rack"], ["power_strip", "strip_layout", STRIP_LAYOUTS, "strip"], ["food_processor", "food_layout", FP_LAYOUTS, "fp"]]
           .filter(([ty]) => this._type === ty).map(([, f, list, p]) => this._row("section_screen_layout", f, { type: "select",
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(list.map((v) => ({ value: v, label: t(hass, `layout_${p}_${v}`) }))) })).join("")}
         ${this._type === "detector" && DETECTOR_MODELS[detectorLayoutOf(this._config, stateObj(hass, this._config.state_entity))] ? this._row("det_model", "detector_model", {
@@ -2010,6 +2058,25 @@ class ApplianceCardEditor extends HTMLElement {
             <div class="picker-slot" data-slot="__zone_name_${i}"></div>
           </div>`).join("")}
       </details>` : ""}
+      ${this._type === "power_strip" ? `
+      <details class="group" data-panel="outlets" ${this._panelOpen.outlets ? "open" : ""}>
+        <summary>${t(hass, "section_outlets")}</summary>
+        <div class="section">
+          <div class="row">
+            <label>${t(hass, "outlets_count")}</label>
+            <select data-role="outlet-count-select">
+              ${Array.from({ length: STRIP_MAX }, (_, n) => n + 1).map((n) => `<option value="${n}" ${n === this._outletCount ? "selected" : ""}>${n}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+        ${Array.from({ length: this._outletCount }, (_, i) => `
+          <div class="section">
+            <h4>${t(hass, "outlet")} ${i + 1}</h4>
+            <div class="picker-slot" data-slot="__outlet_entity_${i}"></div>
+            <div class="picker-slot" data-slot="__outlet_power_${i}"></div>
+            <div class="picker-slot" data-slot="__outlet_name_${i}"></div>
+          </div>`).join("")}
+      </details>` : ""}
       <details class="group" data-panel="info" ${this._panelOpen.info ? "open" : ""}>
         <summary>${t(hass, "section_info")}</summary>
         <div class="section">
@@ -2079,6 +2146,23 @@ class ApplianceCardEditor extends HTMLElement {
           const count = parseInt(ev.target.value, 10);
           this._zoneCount = count;
           this._config = { ...this._config, zones: this._zonesList().slice(0, count) };
+          this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
+          this._build();
+        });
+      }
+    }
+    if (this._type === "power_strip") {
+      for (let i = 0; i < this._outletCount; i++) {
+        this._mountOutletPicker(this._root.querySelector(`[data-slot="__outlet_entity_${i}"]`), i, "entity", "outlet", ["switch", "input_boolean", "light"]);
+        this._mountOutletPicker(this._root.querySelector(`[data-slot="__outlet_power_${i}"]`), i, "power_entity", "outlet_power", ["sensor"]);
+        this._mountOutletName(this._root.querySelector(`[data-slot="__outlet_name_${i}"]`), i);
+      }
+      const outletCountSelect = this._root.querySelector('[data-role="outlet-count-select"]');
+      if (outletCountSelect) {
+        outletCountSelect.addEventListener("change", (ev) => {
+          const count = parseInt(ev.target.value, 10);
+          this._outletCount = count;
+          this._config = { ...this._config, outlets: this._outletsList().slice(0, count) };
           this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
           this._build();
         });
