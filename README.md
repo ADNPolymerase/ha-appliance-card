@@ -1,7 +1,5 @@
 # HA Appliance Card
 
-<a href="https://github.com/ADNPolymerase/ha-appliance-card/blob/main/README.fr.md"><img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/lang-fr.svg" alt="Lire en français" height="60"></a>
-
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/integration)
 [![GitHub Release](https://img.shields.io/github/v/release/ADNPolymerase/ha-appliance-card?sort=semver)](https://github.com/ADNPolymerase/ha-appliance-card/releases)
 [![HACS Action](https://github.com/ADNPolymerase/ha-appliance-card/actions/workflows/hacs.yml/badge.svg)](https://github.com/ADNPolymerase/ha-appliance-card/actions/workflows/hacs.yml)
@@ -9,8 +7,17 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ADNPolymerase/ha-appliance-card/blob/main/LICENSE)
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support-yellow.svg?logo=buy-me-a-coffee)](https://buymeacoffee.com/adnpolymerase)
 
+<p>
+<a href="https://github.com/ADNPolymerase/ha-appliance-card/blob/main/README.fr.md"><img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/lang-fr.svg" alt="Lire en français" height="60"></a>
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Link to my github.io for my other projects" height="60"></a>
+</p>
+
+> [!IMPORTANT]
+> ## 🚨 Breaking news: v5.0.0, a brand new visual editor
+> Pick your appliance's entity (or just a plug 😉): the card suggests the type, then finds the device's other entities on its own. Everything else sits in five clear tabs. **[See the editor](#visual-editor)**
+>
+> It is a big rework: bug reports are more than welcome, in an [issue](https://github.com/ADNPolymerase/ha-appliance-card/issues) 🙏
 
 A Lovelace card that draws the appliances of your home and animates them from their real state: household appliances, heating, robots, pool, energy, network, lamps, cameras and many more.
 
@@ -28,7 +35,7 @@ A Lovelace card that draws the appliances of your home and animates them from th
 - **What matters for each appliance**: program, time left, door, alerts, levels, temperatures, energy and cost, today's running time.
 - **Controls** (start, pause, stop, switch on) with protection against stray taps.
 - **Full or compact**, in Home Assistant's light or dark theme.
-- **16 languages** and a visual editor that pre-fills the fields from the device.
+- **16 languages** and a visual editor in five tabs: pick the entity, the card suggests the type and fills in the rest from the device.
 
 ## Related projects
 
@@ -329,6 +336,22 @@ Click a family to see its appliances at work. The drawings are shown with `illus
 1. Download every file of the [latest release](https://github.com/ADNPolymerase/ha-appliance-card/releases/latest) (`ha-appliance-card.js`, its editor, its drawings and its language files) and drop them together in `config/www/`. Without the language files the card speaks English, and without a drawing's file the card shows no drawing.
 2. Add the resource `/local/ha-appliance-card.js`, type **JavaScript module**, under **Settings > Dashboards > Resources**.
 3. Add a `custom:ha-appliance-card` card. A manual install has to be repeated at every release.
+
+## Visual editor
+
+A new card asks for one thing: the main entity of your appliance (or just a plug 😉). The card suggests a type from it, to keep or change, then fills in the other entities it finds on the device.
+
+The editor then holds everything in five tabs:
+
+| Tab | What is in it |
+|---|---|
+| **Device** | The main entity, the name, the type, where it is read from (integration or smart plug) and the model. |
+| **Entities** | The entities in use, the others to add as chips, extra info lines, alerts, and the lines shown on the card (the eye hides one, the handle moves it). |
+| **Display** | Drawing, text and lines, layout. |
+| **Actions** | The buttons, how they are triggered, a tap on the drawing, the corner switches. |
+| **Advanced** | The language, the raw state, the state map. |
+
+The YAML editor keeps every option, for those who prefer it.
 
 ## Configuration
 
@@ -848,10 +871,11 @@ wood_blades: true
 
 ### Buffer tanks, circulators, solar thermal and wood stoves
 
-A buffer tank (`storage_tank`) fills with the colour of its layers, blue when cold and red when hot, one marker per probe at its height, its charge above it. The sources on its left (heat pump, boiler, solar, stove) and the consumers on its right (heating circuits, fresh water station) are piped in red for the flow and blue for the return, and the water moves in them while they run. A fresh water station (`fresh_water_station`) heats hot water on demand from the tank: the flow big on its screen while a tap is open, its pump turning. A heating circulator (`water_pump` with `pump_layout: circulator`, a Grundfos ALPHA, a Wilo Stratos and the like) sits on its flow pipe in the colour of its brand, its power on the display and its impeller turning at the speed it reports; a fault or a lost link (*No data*) shows on its display. Solar thermal collectors (`solar_thermal`), flat plates or evacuated tubes, send their heat down to the solar station and its pump; frost covers them below 0 °C, stagnation makes them shimmer. A log stove (`wood_stove`) burns, glows or stays cold by its temperature, with a dial on its flue and, with a water jacket, its flow and return and its pump.
-
 <details>
 <summary><b>Options</b></summary>
+
+A buffer tank (`storage_tank`) fills with the colour of its layers, blue when cold and red when hot, one marker per probe at its height, its charge above it. The sources on its left (heat pump, boiler, solar, stove) and the consumers on its right (heating circuits, fresh water station) are piped in red for the flow and blue for the return, and the water moves in them while they run. A fresh water station (`fresh_water_station`) heats hot water on demand from the tank: the flow big on its screen while a tap is open, its pump turning. A heating circulator (`water_pump` with `pump_layout: circulator`, a Grundfos ALPHA, a Wilo Stratos and the like) sits on its flow pipe in the colour of its brand, its power on the display and its impeller turning at the speed it reports; a fault or a lost link (*No data*) shows on its display. Solar thermal collectors (`solar_thermal`), flat plates or evacuated tubes, send their heat down to the solar station and its pump; frost covers them below 0 °C, stagnation makes them shimmer. A log stove (`wood_stove`) burns, glows or stays cold by its temperature, with a dial on its flue and, with a water jacket, its flow and return and its pump.
+
 
 | Option | Types | Description |
 |---|---|---|
@@ -936,6 +960,9 @@ valve_entity: cover.stove_mixer
 
 ### Gas fireplaces
 
+<details>
+<summary><b>Options</b></summary>
+
 A gas fireplace (`gas_fireplace`), IntelliFire or the like, burns behind its glass, its flames as tall as the flame setting, blue at the root. Its fan, its lights and its pilot light each run on their own: the fan blows warm air out of the louvre, the lights warm the firebox, the pilot keeps a small blue flame while the fire is out. An IntelliFire entity is recognised by its name and its siblings are filled in. A room temperature of 0 °C (32 °F) is IntelliFire saying the remote has no probe: that line is left out.
 
 ```yaml
@@ -949,6 +976,8 @@ light_entity: light.intellifire_lights
 thermostat_entity: climate.intellifire_thermostat
 pilot_entity: switch.intellifire_pilot_light
 ```
+
+</details>
 
 ### Pool, pumps, spa, sauna and aquarium
 
@@ -1542,17 +1571,6 @@ An entity named after a wallbox in the card's languages, after its maker or afte
 | `wifi_entity` | network (router) | The Wi-Fi, a switch: switched off, the waves stop rising from the antennas and the Wi-Fi light goes dark. |
 | `disk1_entity` … `disk8_entity` / `bays` | network | One entity per disk, any of its own: the card reads all of them. Its LED is green when fine, blue while it reads or writes, dim while asleep, orange when to watch, red when it fails. `bays`: `1`, `2`, `4` or `8` bays drawn on a NAS, an empty bay has no tray. |
 
-### Filament dryer
-
-A filament dryer from the front, its spools standing side by side on their rollers, as wide as it holds. *Drying* from a switch, a smart plug (`power_entity`, above 15 W) or a sensor that says it.
-
-| Option | Description |
-|---|---|
-| `spool_count` | How many spools it holds: `1`, `2` (default) or `4`. |
-| `spool_colors` | Their colors, as a list of hex values such as `"#43a047"`. |
-| `temperature_entity` / `humidity_entity` | Shown as lines and on its screen. |
-| `remaining_time_entity` | The time left, while it dries. |
-
 </details>
 
 <details>
@@ -1611,6 +1629,22 @@ disk2_entity: sensor.nas_drive_2_status
 
 </details>
 
+### Filament dryer
+
+<details>
+<summary><b>Options</b></summary>
+
+A filament dryer from the front, its spools standing side by side on their rollers, as wide as it holds. *Drying* from a switch, a smart plug (`power_entity`, above 15 W) or a sensor that says it.
+
+| Option | Description |
+|---|---|
+| `spool_count` | How many spools it holds: `1`, `2` (default) or `4`. |
+| `spool_colors` | Their colors, as a list of hex values such as `"#43a047"`. |
+| `temperature_entity` / `humidity_entity` | Shown as lines and on its screen. |
+| `remaining_time_entity` | The time left, while it dries. |
+
+</details>
+
 ### Around the house
 
 <details>
@@ -1660,7 +1694,7 @@ disk2_entity: sensor.nas_drive_2_status
 | `co_entity` | detector | The CO alarm of a combined smoke and CO detector (e.g. Nest Protect), a binary sensor (or a sensor, whose own value is shown unless it says an alarm): a *CO alarm* line, and the smoke detector raises the CO alarm when it goes off, even with the smoke sensor offline. It makes the card a smoke detector unless its device class or `detector_layout` says CO or leak, where it is ignored. |
 | `speaker_layout` | speaker | `jukebox` (a 1970s jukebox; on a plug, set `power_on_threshold` between its idle and playing draw) \| `smart` (HomePod) \| `homepod_mini` \| `sonos_one` \| `sonos_era100` \| `sonos_era300` \| `sonos_move` \| `soundbar` (Sonos Arc or Beam, under its TV) \| `bose_wave` (Wave SoundTouch) \| `bose_500` (Home Speaker 500) \| `bose_soundlink` (SoundLink Flex) \| `bose_soundbar` (Smart Soundbar, under its TV) \| `sonos_five` \| `sonos_play` \| `sonos_roam` \| `sonos_ray` (under its TV) \| `sonos_amp` \| `sonos_port` \| `bose_ultra` (Lifestyle Ultra) \| `bose_portable` (Portable Smart Speaker) \| `bose_amp` (Music Amplifier) \| `focal_bird` (Focal Bird on its tripod) \| `focal_od6` (Focal 100 OD6 outdoor speaker on its bracket) \| `denon_avr` (a Denon AV receiver: its display shows the source and the sound mode, the volume knob turns to the volume) \| `avr` (any other AV receiver, Yamaha, Onkyo, Pioneer..., the same front without a brand) \| `wiim_amp` (a WiiM Amp, its knob showing play or pause) \| `smart_clock` (a Lenovo Smart Clock, the time on its screen, or what is playing) \| `bookshelf` \| `echo_dot` \| `echo_dot_max` \| `nest_mini`. Left out, it is read in the name, then in the model of its device: HomePod mini, Era 100, Era 300, Move, Five, Play, Roam, Ray, Amp, Port, Arc, Beam, Lifestyle Ultra, Portable, Music Amplifier, Echo Dot Max, Wave, SoundLink, Flex, another Bose. The state is a `media_player`: what it plays, the artist, the source and the volume are lines. On a smart plug alone (`power_entity`), it plays from 3 W (`power_on_threshold`), is idle below and off when it draws nothing. |
 | `speaker_color` | speaker | `white` \| `black` \| `silver` \| `yellow` \| `orange` \| `blue`, each model in the colours it is sold in: a HomePod white or midnight, a Nest Mini white, black or blue, a HomePod mini in all five, a Sonos white or black, a Bose 500, Portable or Wave silver or black, a Lifestyle Ultra black or sand (`white`), an Echo Dot charcoal, white or blue, an Echo Dot Max white or black, a SoundLink black, white or blue, a Focal Bird or 100 OD6 white or black, a Denon receiver black or silver. Left out, a colour in the name picks it (a HomePod named *white*), then `illustration_color`; otherwise each model has its own. |
-| `media_entity` | speaker | A second media player of the same device, when its integration splits it in two: a Denon or Marantz receiver names its source, sound mode and volume, its HEOS entity what plays. The second gives the play state, the title and the artist; the `state_entity` keeps the rest. |
+| `media_entity` | speaker, streaming box | A second media player of the same device, when its integration splits it in two: a Denon or Marantz receiver names its source, sound mode and volume, its HEOS entity what plays. The second gives the play state, the title and the artist; the `state_entity` keeps the rest. On a streaming box read from its remote or its plug, its media player gives what plays, the app, the volume and play or pause. |
 | `alarms_entity` / `timers_entity` / `alarm_volume_entity` | speaker | A Google Home speaker's alarms and timers, from the sensors of [ha-google-home](https://github.com/leikoilja/ha-google-home), and its alarm volume as a slider. One line per alarm (its time, its days and its label, the icon lit while it is set, faded when it is off) and per timer (its label or its length, the time left as a bar and a countdown). A tap arms the line, a second one within three seconds deletes the alarm or the timer. The editor finds them when they carry the speaker's name (`media_player.bedroom_clock` and `sensor.bedroom_clock_alarms`); they sit on a device of their own, so pick them otherwise. |
 | `console_layout` | game console | `ps1` \| `ps2` \| `ps3` \| `ps4` \| `ps4_pro` \| `ps5` \| `xbox` \| `xbox_360` \| `xbox_one` \| `xbox_series_x` \| `xbox_series_s` \| `switch` \| `switch_2` \| `switch_lite` \| `ps_vita` \| `nes` \| `snes` \| `n64` \| `gamecube` \| `wii` \| `megadrive` \| `arcade_bartop` (an arcade cabinet on a table) \| `arcade_upright` (a full-size arcade cabinet) \| `pincab` (a virtual pinball cabinet). Left out, it is read in the name (PS4 Pro, Series S, Switch Lite, N64...), a brand alone drawing its latest. The state is a `media_player` (PlayStation Network, Xbox, the PS4 integration), PlayStation Network's online status, a smart plug, or anything on and off: *Playing* while a game runs, *On* in its menus, *Rest mode* on standby, *Off*. Sparks rise while it plays, its light is lit when on and amber at rest. |
 | `game_entity` | game console | The game being played, when the state does not say it (PlayStation Network's *Now playing* sensor). Without it, the media player's title. |
@@ -2095,6 +2129,9 @@ tracking_entity: switch.trackmix_auto_tracking
 
 ### Winter is coming
 
+<details>
+<summary><b>Options</b></summary>
+
 When the garden goes to sleep, the card puts it to bed too. Tick `winter`, or give it any on and off entity with `winter_entity` (an `input_boolean` turned on in October, an automation on the water temperature), and the appliance is drawn put away for the winter, under falling snow. It reads *Winter storage*.
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-winter.gif" alt="Winter is coming: appliances put away for the winter">
@@ -2116,6 +2153,8 @@ robot_winter_entity: input_boolean.winter  # mower, pool robot
 ```
 
 On a slower wall tablet, `winter_snowfall: false` keeps the snow lying on everything but stops the flakes falling.
+
+</details>
 
 ### Options shared by several families
 

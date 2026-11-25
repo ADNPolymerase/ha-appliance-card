@@ -1195,6 +1195,10 @@ const edLate = new Editor();
 edLate.setConfig({ type: 'custom:ha-appliance-card', state_entity: 'sensor.washer_state' });
 edLate.hass = HASS(LOSS_STATES);
 edLate._touched = true;
+// No info line until one is added with its chip.
+check('info : aucune ligne avant la pastille', edLate._root.querySelector('[data-slot="__info_0"]').children.length, 0);
+fire(edLate._root.querySelectorAll('[data-add-info]')[0], 'click', {});
+check('info : la pastille ajoute une ligne', edLate._infoCount, 1);
 const latePicker = edLate._root.querySelector('[data-slot="__info_0"]').children.at(-1);
 fire(latePicker, 'value-changed', { detail: { value: 'sensor.other_program' } });
 check('info : la selection est enregistree',
@@ -1498,7 +1502,8 @@ const infoOptions = config => {
   const sel = (/data-role="info-count-select">([\s\S]*?)<\/select>/.exec(html) || [, ''])[1];
   return { ed, values: [...sel.matchAll(/<option value="(\d+)"/g)].map(m => Number(m[1])) };
 };
-check('editeur : le nombre de lignes va de 0 a 8', infoOptions({}).values.join(','), '0,1,2,3,4,5,6,7,8');
+check('editeur : le nombre de lignes va de 0 a 8', infoOptions({ info_entities: [{ entity: 'sensor.a' }] }).values.join(','), '0,1,2,3,4,5,6,7,8');
+check('editeur : sans ligne d info, pas de panneau', /data-panel="info"/.test(markup(newEditor({ state_entity: 'sensor.oven_appliance_state' })._root)), false);
 check('editeur : huit lignes s\'ouvrent sur huit', infoOptions({ info_entities: nineInfo.slice(0, 8) }).ed._infoCount, 8);
 check('editeur : une liste plus longue s\'ouvre sur huit', infoOptions({ info_entities: nineInfo }).ed._infoCount, 8);
 
@@ -3283,7 +3288,7 @@ check('split : la case est dans l editeur',
 // against an English Home Assistant, so a French label can only come from the
 // card's own setting.
 contains('editeur : ses libelles suivent la langue choisie', edLang, "Type d'appareil");
-contains('editeur : jusque dans les sections depliantes', edLang, 'R\u00e9glages g\u00e9n\u00e9raux');
+contains('editeur : jusque dans les sections depliantes', edLang, 'Avanc\u00e9');
 check('editeur : sans option, il reste dans la langue de Home Assistant',
   /Type d'appareil/.test(markup(newEditor(base))), false);
 check('editeur : les seize langues et le mode auto sont listes',
@@ -15371,6 +15376,14 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('214 : ampli eteint, second au repos : eteint', stateLine(den({}, {}, 'off', 'idle')), 'Off');
   check('214 : play/pause vers le second lecteur quand il joue', /data-entity="media_player.denon_heos"/.test(both), true);
   check('214 : enceinte avec media_entity n est pas un ecran', kindOf(both), 'spk_denon_avr');
+  // A streaming box read from its remote, its media player beside it (#214).
+  const box = (rem, mp, mpa = {}) => render({ appliance_type: 'streamer', state_entity: 'remote.box', media_entity: 'media_player.box' }, { 'remote.box': s(rem), 'media_player.box': s(mp, mpa) });
+  const boxOn = box('on', 'playing', { media_title: 'Le journal', media_channel: 'TF1', volume_level: .2 });
+  check('214 : boitier, la lecture vient du lecteur', stateLine(boxOn), 'Playing');
+  check('214 : boitier, titre et chaine du lecteur', />Le journal</.test(boxOn) && />TF1</.test(boxOn), true);
+  check('214 : boitier, pause du lecteur', stateLine(box('on', 'paused', { media_title: 'X' })), 'Paused');
+  check('214 : boitier eteint, lecteur eteint : eteint', stateLine(box('off', 'off')), 'Off');
+  check('214 : boitier sans lecteur inchange', stateLine(render({ appliance_type: 'streamer', state_entity: 'remote.box' }, { 'remote.box': s('on') })), stateLine(box('on', 'unavailable')));
   check('172 : Focal blanche ou noire', [spk('media_player.focal_bird_blanc'), spk('media_player.focal_bird_noir')].map((h) => /#ffffff/.test(h) ? 'w' : 'b').join(''), 'wb');
 }
 

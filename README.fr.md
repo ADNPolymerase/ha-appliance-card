@@ -1,7 +1,5 @@
 # HA Appliance Card
 
-<a href="https://github.com/ADNPolymerase/ha-appliance-card/blob/main/README.md"><img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/lang-en.svg" alt="Read in English" height="60"></a>
-
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/integration)
 [![GitHub Release](https://img.shields.io/github/v/release/ADNPolymerase/ha-appliance-card?sort=semver)](https://github.com/ADNPolymerase/ha-appliance-card/releases)
 [![HACS Action](https://github.com/ADNPolymerase/ha-appliance-card/actions/workflows/hacs.yml/badge.svg)](https://github.com/ADNPolymerase/ha-appliance-card/actions/workflows/hacs.yml)
@@ -9,8 +7,17 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ADNPolymerase/ha-appliance-card/blob/main/LICENSE)
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support-yellow.svg?logo=buy-me-a-coffee)](https://buymeacoffee.com/adnpolymerase)
 
+<p>
+<a href="https://github.com/ADNPolymerase/ha-appliance-card/blob/main/README.md"><img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/lang-en.svg" alt="Read in English" height="60"></a>
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Lien vers mon github.io pour mes autres projets" height="60"></a>
+</p>
+
+> [!IMPORTANT]
+> ## 🚨 Breaking news : v5.0.0, l'éditeur visuel entièrement repensé
+> Choisis l'entité de ton appareil (ou juste une prise 😉) : la carte propose le type, puis va chercher toute seule les autres entités de l'appareil. Tout le reste se règle dans cinq onglets clairs. **[Voir l'éditeur](#éditeur-visuel)**
+>
+> C'est une grosse refonte : vos retours sur les bugs sont attendus, dans une [issue](https://github.com/ADNPolymerase/ha-appliance-card/issues) 🙏
 
 Une carte Lovelace qui dessine les appareils de la maison et les anime selon leur état réel : électroménager, chauffage, robots, piscine, énergie, réseau, lampes, caméras et bien d'autres.
 
@@ -28,7 +35,7 @@ Une carte Lovelace qui dessine les appareils de la maison et les anime selon leu
 - **Ce qui compte pour chaque appareil** : programme, temps restant, porte, alertes, niveaux, températures, énergie et coût, marche du jour.
 - **Des commandes** (démarrer, pause, stop, allumer) avec protection contre les appuis accidentels.
 - **Complète ou compacte**, au thème clair ou sombre de Home Assistant.
-- **16 langues** et un éditeur visuel qui pré-remplit les champs depuis l'appareil.
+- **16 langues** et un éditeur visuel en cinq onglets : on choisit l'entité, la carte propose le type et remplit le reste depuis l'appareil.
 
 ## Projets liés
 
@@ -329,6 +336,22 @@ Clique sur une famille pour voir ses appareils en marche. Les dessins sont montr
 1. Télécharge tous les fichiers de la [dernière release](https://github.com/ADNPolymerase/ha-appliance-card/releases/latest) (`ha-appliance-card.js`, son éditeur, ses dessins et ses fichiers de langue) et dépose-les ensemble dans `config/www/`. Sans les fichiers de langue, la carte s'affiche en anglais, et sans le fichier d'un dessin, elle s'affiche sans dessin.
 2. Ajoute la ressource `/local/ha-appliance-card.js`, type **Module JavaScript**, dans **Paramètres > Tableaux de bord > Ressources**.
 3. Ajoute une carte `custom:ha-appliance-card`. Une installation manuelle est à refaire à chaque release.
+
+## Éditeur visuel
+
+Une nouvelle carte ne demande qu'une chose : l'entité principale de l'appareil (ou juste une prise 😉). La carte en déduit un type, à garder ou à changer, puis remplit les autres entités qu'elle trouve sur l'appareil.
+
+L'éditeur range ensuite tout en cinq onglets :
+
+| Onglet | Ce qu'il contient |
+|---|---|
+| **Appareil** | L'entité principale, le nom, le type, la source (intégration ou prise connectée) et le modèle. |
+| **Entités** | Les entités utilisées, les autres à ajouter en pastilles, les lignes d'info en plus, les alertes, et les lignes affichées sur la carte (l'œil en masque une, la poignée la déplace). |
+| **Affichage** | Dessin, texte et lignes, mise en page. |
+| **Actions** | Les boutons, leur déclenchement, l'appui sur le dessin, les interrupteurs dans les coins. |
+| **Avancé** | La langue, le texte brut, la correspondance des valeurs. |
+
+L'éditeur YAML garde toutes les options, pour ceux qui le préfèrent.
 
 ## Configuration
 
@@ -848,10 +871,11 @@ wood_blades: true
 
 ### Ballons tampons, circulateurs, solaire thermique et poêles à bois
 
-Un ballon tampon (`storage_tank`) prend la couleur de ses couches, bleu à froid et rouge à chaud, avec une pastille par sonde à sa hauteur et sa charge au-dessus. Les sources à sa gauche (pompe à chaleur, chaudière, solaire, poêle) et les consommateurs à sa droite (circuits de chauffage, station d'eau fraîche) sont raccordés en rouge pour le départ et en bleu pour le retour, et l'eau y circule quand ils tournent. Une station d'eau fraîche (`fresh_water_station`) produit l'eau chaude à la demande à partir du ballon : le débit en grand sur son écran quand un robinet est ouvert, sa pompe qui tourne. Un circulateur de chauffage (`water_pump` avec `pump_layout: circulator`, un Grundfos ALPHA, un Wilo Stratos…) est posé sur son tuyau de départ aux couleurs de sa marque, sa puissance sur l'écran et sa roue qui tourne à la vitesse qu'il remonte ; un défaut ou une liaison perdue (*Pas de données*) s'affichent sur son écran. Des capteurs solaires thermiques (`solar_thermal`), plans ou à tubes sous vide, envoient leur chaleur à la station solaire et à sa pompe ; le givre les couvre sous 0 °C, la stagnation les fait onduler. Un poêle à bois (`wood_stove`) brûle, rougeoie ou reste froid selon sa température, avec un cadran sur son conduit et, avec un bouilleur, son départ, son retour et sa pompe.
-
 <details>
 <summary><b>Options</b></summary>
+
+Un ballon tampon (`storage_tank`) prend la couleur de ses couches, bleu à froid et rouge à chaud, avec une pastille par sonde à sa hauteur et sa charge au-dessus. Les sources à sa gauche (pompe à chaleur, chaudière, solaire, poêle) et les consommateurs à sa droite (circuits de chauffage, station d'eau fraîche) sont raccordés en rouge pour le départ et en bleu pour le retour, et l'eau y circule quand ils tournent. Une station d'eau fraîche (`fresh_water_station`) produit l'eau chaude à la demande à partir du ballon : le débit en grand sur son écran quand un robinet est ouvert, sa pompe qui tourne. Un circulateur de chauffage (`water_pump` avec `pump_layout: circulator`, un Grundfos ALPHA, un Wilo Stratos…) est posé sur son tuyau de départ aux couleurs de sa marque, sa puissance sur l'écran et sa roue qui tourne à la vitesse qu'il remonte ; un défaut ou une liaison perdue (*Pas de données*) s'affichent sur son écran. Des capteurs solaires thermiques (`solar_thermal`), plans ou à tubes sous vide, envoient leur chaleur à la station solaire et à sa pompe ; le givre les couvre sous 0 °C, la stagnation les fait onduler. Un poêle à bois (`wood_stove`) brûle, rougeoie ou reste froid selon sa température, avec un cadran sur son conduit et, avec un bouilleur, son départ, son retour et sa pompe.
+
 
 | Option | Types | Description |
 |---|---|---|
@@ -936,6 +960,9 @@ valve_entity: cover.vanne_poele
 
 ### Cheminées au gaz
 
+<details>
+<summary><b>Options</b></summary>
+
 Une cheminée au gaz (`gas_fireplace`), IntelliFire ou autre, brûle derrière sa vitre, ses flammes aussi hautes que le réglage de flamme, bleues à la base. Son ventilateur, son éclairage et sa veilleuse marchent chacun de leur côté : le ventilateur souffle l'air chaud par la grille, l'éclairage réchauffe le foyer, la veilleuse garde une petite flamme bleue quand le feu est éteint. Une entité IntelliFire est reconnue à son nom et ses voisines sont remplies. Une température de pièce à 0 °C (32 °F), c'est IntelliFire qui dit que la télécommande n'a pas de sonde : la ligne n'est pas affichée.
 
 ```yaml
@@ -949,6 +976,8 @@ light_entity: light.intellifire_lights
 thermostat_entity: climate.intellifire_thermostat
 pilot_entity: switch.intellifire_pilot_light
 ```
+
+</details>
 
 ### Piscine, pompes, spa, sauna et aquarium
 
@@ -1544,17 +1573,6 @@ Une entité qui porte le nom d'une wallbox dans les langues de la carte, de son 
 | `wifi_entity` | réseau (routeur) | Le Wi-Fi, un interrupteur : coupé, les ondes ne montent plus des antennes et le voyant Wi-Fi s'éteint. |
 | `disk1_entity` … `disk8_entity` / `bays` | réseau | Une entité par disque, n'importe laquelle des siennes : la carte les lit toutes. Sa diode est verte quand tout va bien, bleue quand il lit ou écrit, faible quand il dort, orange quand il est à surveiller, rouge quand il est en panne. `bays` : `1`, `2`, `4` ou `8` baies dessinées sur un NAS, une baie vide n'a pas de tiroir. |
 
-### Sécheur de filament
-
-Un sécheur de filament vu de face, ses bobines côte à côte sur leurs rouleaux, aussi large que ce qu'il contient. *Séchage* d'après un interrupteur, une prise connectée (`power_entity`, au-dessus de 15 W) ou un capteur qui le dit.
-
-| Option | Description |
-|---|---|
-| `spool_count` | Le nombre de bobines : `1`, `2` (défaut) ou `4`. |
-| `spool_colors` | Leurs couleurs, en liste de valeurs hexadécimales comme `"#43a047"`. |
-| `temperature_entity` / `humidity_entity` | En lignes et sur son écran. |
-| `remaining_time_entity` | Le temps restant, pendant le séchage. |
-
 </details>
 
 <details>
@@ -1613,6 +1631,22 @@ disk2_entity: sensor.nas_drive_2_status
 
 </details>
 
+### Sécheur de filament
+
+<details>
+<summary><b>Options</b></summary>
+
+Un sécheur de filament vu de face, ses bobines côte à côte sur leurs rouleaux, aussi large que ce qu'il contient. *Séchage* d'après un interrupteur, une prise connectée (`power_entity`, au-dessus de 15 W) ou un capteur qui le dit.
+
+| Option | Description |
+|---|---|
+| `spool_count` | Le nombre de bobines : `1`, `2` (défaut) ou `4`. |
+| `spool_colors` | Leurs couleurs, en liste de valeurs hexadécimales comme `"#43a047"`. |
+| `temperature_entity` / `humidity_entity` | En lignes et sur son écran. |
+| `remaining_time_entity` | Le temps restant, pendant le séchage. |
+
+</details>
+
 ### Autour de la maison
 
 <details>
@@ -1662,7 +1696,7 @@ disk2_entity: sensor.nas_drive_2_status
 | `co_entity` | détecteur | L'alarme CO d'un détecteur combiné fumée et CO (par exemple Nest Protect), un capteur binaire (ou un capteur, dont la valeur s'affiche sauf s'il dit une alarme) : une ligne *Alarme CO*, et le détecteur de fumée donne l'alarme CO quand il se déclenche, même capteur de fumée hors ligne. Il fait de la carte un détecteur de fumée, sauf si sa classe d'appareil ou `detector_layout` dit CO ou fuite : il est alors ignoré. |
 | `speaker_layout` | enceinte | `jukebox` (jukebox années 70 ; sur une prise, régler `power_on_threshold` entre sa consommation au repos et en lecture) \| `smart` (HomePod) \| `homepod_mini` \| `sonos_one` \| `sonos_era100` \| `sonos_era300` \| `sonos_move` \| `soundbar` (Sonos Arc ou Beam, sous sa télé) \| `bose_wave` (Wave SoundTouch) \| `bose_500` (Home Speaker 500) \| `bose_soundlink` (SoundLink Flex) \| `bose_soundbar` (Smart Soundbar, sous sa télé) \| `sonos_five` \| `sonos_play` \| `sonos_roam` \| `sonos_ray` (sous sa télé) \| `sonos_amp` \| `sonos_port` \| `bose_ultra` (Lifestyle Ultra) \| `bose_portable` (Portable Smart Speaker) \| `bose_amp` (Music Amplifier) \| `focal_bird` (Focal Bird sur son trépied) \| `focal_od6` (enceinte extérieure Focal 100 OD6 sur son étrier) \| `denon_avr` (ampli home cinéma Denon : son écran affiche la source et le mode son, le bouton de volume tourne avec le volume) \| `avr` (tout autre ampli audio-vidéo, Yamaha, Onkyo, Pioneer..., la même façade sans marque) \| `wiim_amp` (un WiiM Amp, son bouton affichant lecture ou pause) \| `smart_clock` (un Lenovo Smart Clock, l'heure sur son écran, ou ce qui joue) \| `bookshelf` \| `echo_dot` \| `echo_dot_max` \| `nest_mini`. Non renseigné, il se lit dans le nom, puis dans le modèle de son appareil : HomePod mini, Era 100, Era 300, Move, Five, Play, Roam, Ray, Amp, Port, Arc, Beam, Lifestyle Ultra, Portable, Music Amplifier, Echo Dot Max, Wave, SoundLink, Flex, une autre Bose. L'état est un `media_player` : le titre, l'artiste, la source et le volume sont des lignes. Sur une simple prise connectée (`power_entity`), elle joue à partir de 3 W (`power_on_threshold`), attend en dessous et est éteinte quand elle ne consomme rien. |
 | `speaker_color` | enceinte | `white` \| `black` \| `silver` \| `yellow` \| `orange` \| `blue`, chaque modèle dans les couleurs où il est vendu : un HomePod blanc ou minuit, une Nest Mini blanche, noire ou bleue, un HomePod mini dans les cinq, une Sonos blanche ou noire, une Bose 500, Portable ou Wave argent ou noire, une Lifestyle Ultra noire ou sable (`white`), un Echo Dot anthracite, blanc ou bleu, un Echo Dot Max blanc ou noir, une SoundLink noire, blanche ou bleue, une Focal Bird ou 100 OD6 blanche ou noire, un ampli Denon noir ou argent. Sans elle, une couleur dans le nom la choisit (un HomePod nommé *blanc*), puis `illustration_color` ; sinon chaque modèle a la sienne. |
-| `media_entity` | enceinte | Un second lecteur multimédia du même appareil, quand son intégration le coupe en deux : un ampli Denon ou Marantz donne sa source, son mode son et son volume, son entité HEOS ce qu'il joue. Le second donne la lecture, le titre et l'artiste ; `state_entity` garde le reste. |
+| `media_entity` | enceinte, boîtier TV | Un second lecteur multimédia du même appareil, quand son intégration le coupe en deux : un ampli Denon ou Marantz donne sa source, son mode son et son volume, son entité HEOS ce qu'il joue. Le second donne la lecture, le titre et l'artiste ; `state_entity` garde le reste. Sur un boîtier TV lu par sa télécommande ou sa prise, son lecteur donne ce qui est joué, l'appli, le volume et la lecture ou la pause. |
 | `alarms_entity` / `timers_entity` / `alarm_volume_entity` | enceinte | Les alarmes et minuteurs d'une enceinte Google Home, tirés des capteurs de [ha-google-home](https://github.com/leikoilja/ha-google-home), et le volume des alarmes en curseur. Une ligne par alarme (son heure, ses jours et son étiquette, l'icône allumée quand elle est réglée, estompée quand elle est désactivée) et par minuteur (son étiquette ou sa durée, le temps restant en barre et en compte à rebours). Un appui arme la ligne, un second dans les trois secondes supprime l'alarme ou le minuteur. L'éditeur les trouve quand ils portent le nom de l'enceinte (`media_player.chambre` et `sensor.chambre_alarms`) ; ils sont sur un appareil à part, sinon il faut les choisir. |
 | `console_layout` | console de jeu | `ps1` \| `ps2` \| `ps3` \| `ps4` \| `ps4_pro` \| `ps5` \| `xbox` \| `xbox_360` \| `xbox_one` \| `xbox_series_x` \| `xbox_series_s` \| `switch` \| `switch_2` \| `switch_lite` \| `ps_vita` \| `nes` \| `snes` \| `n64` \| `gamecube` \| `wii` \| `megadrive` \| `arcade_bartop` (borne d'arcade de table) \| `arcade_upright` (borne d'arcade debout) \| `pincab` (flipper virtuel). Non renseigné, il se lit dans le nom (PS4 Pro, Series S, Switch Lite, N64...), une marque seule dessinant sa dernière console. L'état est un `media_player` (PlayStation Network, Xbox, l'intégration PS4), le statut en ligne de PlayStation Network, une prise connectée, ou tout ce qui s'allume et s'éteint : *En jeu* pendant une partie, *Allumée* dans ses menus, *Mode repos* en veille, *Éteinte*. Des étincelles montent pendant le jeu, sa lumière est allumée en marche et orange au repos. |
 | `game_entity` | console de jeu | Le jeu en cours, quand l'état ne le dit pas (le capteur *Lecture en cours* de PlayStation Network). Sans lui, le titre du lecteur. |
@@ -2098,6 +2132,9 @@ tracking_entity: switch.trackmix_suivi_auto
 
 ### L'hiver arrive
 
+<details>
+<summary><b>Options</b></summary>
+
 Quand le jardin s'endort, la carte le couche aussi. Cochez `winter`, ou donnez une entité marche/arrêt avec `winter_entity` (un `input_boolean` allumé en octobre, une automatisation sur la température de l'eau), et l'appareil est dessiné rangé pour l'hiver, sous la neige qui tombe. Il affiche *Hivernage*.
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-winter.fr.gif" alt="L'hiver arrive : appareils rangés pour l'hiver">
@@ -2119,6 +2156,8 @@ robot_winter_entity: input_boolean.winter  # tondeuse, robot de piscine
 ```
 
 Sur une tablette murale un peu lente, `winter_snowfall: false` garde la neige posée partout mais arrête la chute des flocons.
+
+</details>
 
 ### Options communes à plusieurs familles
 

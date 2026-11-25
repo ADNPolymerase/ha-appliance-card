@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.61.0";
+const CARD_VERSION = "5.0.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -24,7 +24,7 @@ const T = {
     connected: "Connected", disconnected: "Disconnected",
     start: "Start", pause: "Pause", resume: "Resume", stop: "Stop",
     name: "Name", icon: "Icon", entity: "Entity",
-    group_general: "General settings",
+    tab_display: "Display", tab_actions: "Actions", tab_advanced: "Advanced", sub_drawing: "Drawing", sub_text: "Text and lines", sub_layout: "Layout", wiz_title: "New card", wiz_hint: "Pick your appliance's main entity: the card suggests a type from it.", wiz_proposed: "Suggested type", wiz_validate: "Use this type", wiz_other: "Choose another type", wiz_no_entity: "No main entity? Choose the type first", wiz_pick_type: "Appliance type", section_lines_shown: "Lines on the card", lines_shown_hint: "The eye hides a line, the handle moves it.", chip_info: "Extra info", tab_device: "Device", tab_more: "More", group_entities: "Entities", group_behaviour: "Behaviour", add_entity: "Add", group_general: "General settings",
     compact: "Compact mode (hide icon)",
     state_show_raw: "Always show the entity's raw text instead of the translated label",
     appliance_type: "Appliance type",
@@ -7745,13 +7745,22 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     // paused, on its home screen, on standby or off; the app it is in, what
     // it plays and the time left in the lines.
     const kind = `str_${streamerLayoutOf(cfg, st)}`;
-    const a = (st && st.attributes) || {};
+    // Its media player when the card reads its remote or its plug (HACF
+    // #214): what plays, the app, the volume, and play or pause.
+    const sm = cfg.media_entity && cfg.media_entity !== cfg.state_entity && domainOf(cfg.media_entity) === "media_player" ? stateObj(hass, cfg.media_entity) : null;
+    const smRaw = sm ? String(sm.state).toLowerCase() : "";
+    const smLive = !!sm && !["off", "unavailable", "unknown", "standby"].includes(smRaw);
+    const aid = smLive ? cfg.media_entity : cfg.state_entity;
+    const a = smLive ? { ...((st && st.attributes) || {}), ...Object.fromEntries(Object.entries(sm.attributes || {}).filter(([, v]) => v !== null && v !== undefined && v !== "")) } : (st && st.attributes) || {};
     const metered = cfg.power_entity && watts !== null && isFinite(threshold);
     const player = ["media_player", "remote"].includes(domainOf(cfg.state_entity));
     let mode = dead ? "off" : ["playing", "buffering"].includes(raw) ? "playing" : raw === "paused" ? "paused" : ["standby", "sleep", "sleeping"].includes(raw) ? "standby"
       : ["off", "false", "0", "no"].includes(raw) ? "off" : "home";
     // A plug says on, standby or off by what it draws, unless a player says more.
     if (metered && !(player && ["playing", "paused", "standby"].includes(mode))) mode = mode === "off" && !player && domainOf(cfg.state_entity) !== "sensor" ? "off" : watts >= threshold ? (mode === "off" ? "home" : mode) : watts > SCREEN_OFF_W ? "standby" : "off";
+    if (smRaw === "playing" || smRaw === "buffering") mode = "playing";
+    else if (smRaw === "paused") mode = "paused";
+    else if (smLive && (mode === "off" || mode === "standby") && !metered) mode = "home";
     const ast = cfg.app_entity ? stateObj(hass, cfg.app_entity) : null;
     const appOk = ast && !["unknown", "unavailable", "", "none", "off", "null", "idle"].includes(String(ast.state).trim().toLowerCase());
     const app = strAppName(appOk ? ast.state : a.app_name || a.app_id || "");
@@ -7760,22 +7769,22 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     if (live) {
       if (app && !STR_HOME_RE.test(stripAccents(app).toLowerCase())) lines.push({ key: "str_app", icon: "mdi:apps", label: t(hass, "str_app"), value: app, entity: appOk ? cfg.app_entity : cfg.state_entity });
       const title = a.media_title && !same(a.media_title, app) ? String(a.media_title) : "";
-      if (title) lines.push({ key: "str_title", icon: "mdi:filmstrip", label: t(hass, "spk_title"), value: title, entity: cfg.state_entity, wrap: true });
+      if (title) lines.push({ key: "str_title", icon: "mdi:filmstrip", label: t(hass, "spk_title"), value: title, entity: aid, wrap: true });
       if (a.media_series_title) {
         const se = [a.media_season ? `S${a.media_season}` : "", a.media_episode ? `E${a.media_episode}` : ""].filter(Boolean).join(" ");
-        lines.push({ key: "str_series", icon: "mdi:television-classic", label: t(hass, "str_series"), value: se ? `${a.media_series_title} \u00b7 ${se}` : String(a.media_series_title), entity: cfg.state_entity, wrap: true });
-      } else if (a.media_artist) lines.push({ key: "str_artist", icon: "mdi:account-music", label: t(hass, "spk_artist"), value: String(a.media_artist), entity: cfg.state_entity, wrap: true });
-      if (a.media_channel) lines.push({ key: "str_channel", icon: "mdi:numeric", label: t(hass, "str_channel"), value: String(a.media_channel), entity: cfg.state_entity });
-      if (a.source && !same(a.source, app) && !same(a.source, a.media_title) && !same(a.source, a.media_channel)) lines.push({ key: "str_source", icon: "mdi:import", label: t(hass, "spk_source"), value: String(a.source), entity: cfg.state_entity });
+        lines.push({ key: "str_series", icon: "mdi:television-classic", label: t(hass, "str_series"), value: se ? `${a.media_series_title} \u00b7 ${se}` : String(a.media_series_title), entity: aid, wrap: true });
+      } else if (a.media_artist) lines.push({ key: "str_artist", icon: "mdi:account-music", label: t(hass, "spk_artist"), value: String(a.media_artist), entity: aid, wrap: true });
+      if (a.media_channel) lines.push({ key: "str_channel", icon: "mdi:numeric", label: t(hass, "str_channel"), value: String(a.media_channel), entity: aid });
+      if (a.source && !same(a.source, app) && !same(a.source, a.media_title) && !same(a.source, a.media_channel)) lines.push({ key: "str_source", icon: "mdi:import", label: t(hass, "spk_source"), value: String(a.source), entity: aid });
       const dur = numberOrNull(a.media_duration), pos = numberOrNull(a.media_position);
       if (dur !== null && dur > 0 && pos !== null && (mode === "playing" || mode === "paused")) {
         const at = Date.parse(a.media_position_updated_at || "");
         const left = dur - pos - (mode === "playing" && isFinite(at) ? Math.max(0, (Date.now() - at) / 1000) : 0);
-        if (left > 0) lines.push({ key: "str_left", icon: "mdi:timer-sand", label: t(hass, "str_left"), value: keepTogether(formatDuration(left, hass)), entity: cfg.state_entity });
+        if (left > 0) lines.push({ key: "str_left", icon: "mdi:timer-sand", label: t(hass, "str_left"), value: keepTogether(formatDuration(left, hass)), entity: aid });
       }
       const vol = numberOrNull(a.volume_level);
       if (vol !== null) lines.push({ key: "str_volume", icon: a.is_volume_muted ? "mdi:volume-off" : vol < 0.34 ? "mdi:volume-low" : vol < 0.67 ? "mdi:volume-medium" : "mdi:volume-high", label: t(hass, "spk_volume"),
-        value: keepTogether(a.is_volume_muted ? t(hass, "spk_muted") : `${Math.round(vol * 100)} %`), entity: cfg.state_entity });
+        value: keepTogether(a.is_volume_muted ? t(hass, "spk_muted") : `${Math.round(vol * 100)} %`), entity: aid });
     }
     // A source is often the app (Android TV); a title never is.
     // An app named for itself in a word its package says better: Apple's own
@@ -9235,9 +9244,9 @@ const ENTITY_ID_RE = /^[a-z_]+\.[a-z0-9_]+$/;
 const UNWATCHED_LISTS = ["lines_order", "info_entities", "alerts_entities", "corner_entities", "zones"];
 class ApplianceCard extends HTMLElement {
   static getStubConfig(hass) {
-    const sensors = Object.keys(hass.states).filter((e) => e.startsWith("sensor."));
-    const guess = sensors.find((e) => /state/i.test(e) && /washer|wash|dry|dish|lave|linge/i.test(e));
-    return { type: "custom:ha-appliance-card", state_entity: guess || "" };
+    // A new card starts empty: its editor asks for the entity, then offers
+    // the type it guesses from it.
+    return { type: "custom:ha-appliance-card", state_entity: "" };
   }
 
   setConfig(config) {

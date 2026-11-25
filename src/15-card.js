@@ -4,9 +4,9 @@ const ENTITY_ID_RE = /^[a-z_]+\.[a-z0-9_]+$/;
 const UNWATCHED_LISTS = ["lines_order", "info_entities", "alerts_entities", "corner_entities", "zones"];
 class ApplianceCard extends HTMLElement {
   static getStubConfig(hass) {
-    const sensors = Object.keys(hass.states).filter((e) => e.startsWith("sensor."));
-    const guess = sensors.find((e) => /state/i.test(e) && /washer|wash|dry|dish|lave|linge/i.test(e));
-    return { type: "custom:ha-appliance-card", state_entity: guess || "" };
+    // A new card starts empty: its editor asks for the entity, then offers
+    // the type it guesses from it.
+    return { type: "custom:ha-appliance-card", state_entity: "" };
   }
 
   setConfig(config) {

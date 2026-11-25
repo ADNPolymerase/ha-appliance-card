@@ -116,7 +116,7 @@ const SECTIONS = [
   { field: "alarm_volume_entity", types: ["speaker"], labelKey: "section_alarm_volume", includeDomains: ["number", "input_number"] },
   // A screen: the players that show something on it, and on a computer the
   // lock of its session.
-  { field: "media_entity", types: ["screen", "speaker"], labelKey: "section_media", includeDomains: ["media_player"] },
+  { field: "media_entity", types: ["screen", "speaker", "streamer"], labelKey: "section_media", includeDomains: ["media_player"] },
   { field: "media2_entity", types: ["screen"], labelKey: "section_media2", includeDomains: ["media_player"] },
   { field: "media3_entity", types: ["screen"], labelKey: "section_media3", includeDomains: ["media_player"] },
   { field: "lock_entity", types: ["screen"], labelKey: "section_lock", includeDomains: ["binary_sensor", "sensor", "lock", "input_boolean"] },
@@ -753,27 +753,33 @@ class ApplianceCardEditor extends HTMLElement {
     // card beside its drawing, a plug's thresholds, custom fan speeds, a
     // model's own options. Without this the row only appears once the editor
     // is closed and opened again.
-    const form = [compactModeOf(this._config.compact), this._plug(), !!this._config.speed_power_custom, photoUrlOf(this._config.illustration_image), this._config.door_style || "", this._config.gate_leaves || "",
+    // A new card, with no entity and no type yet, opens on its entity, then
+    // the type the card guesses from it, to keep or change. Choosing a type
+    // ends it.
+    if (this._wizard === undefined) this._wizard = !config.appliance_type && !config.state_entity && Object.keys(config).every((k) => k === "type" || k === "state_entity");
+    if (this._wizard && this._config.appliance_type && this._config.appliance_type !== "auto") this._wizard = false;
+    const form = [this._wizard, !!this._config.state_entity, this._wizOther, this._wizSkip, compactModeOf(this._config.compact), this._plug(), !!this._config.speed_power_custom, photoUrlOf(this._config.illustration_image), this._config.door_style || "", this._config.gate_leaves || "",
       ...Object.keys(this._config).filter((k) => /_layout$/.test(k)).sort().map((k) => `${k}=${this._config[k]}`)].join("|");
     if (this._form !== form) {
       this._form = form;
       this._needsBuild = true;
     }
     this._open = newOpen;
+    if (!this._tab) this._tab = "device";
     if (!this._panelOpen) {
       this._panelOpen = {
         general: true,
         info: (this._config.info_entities || []).length > 0,
         alerts: alertsArray(this._config.alerts_entities).length > 0,
         corners: alertsArray(this._config.corner_entities).length > 0,
-        order: (this._config.lines_order || []).length > 0,
+        order: true,
         zones: (this._config.zones || []).length > 0,
         outlets: Array.isArray(this._config.outlets) && this._config.outlets.length > 0,
       };
     }
     if (this._infoCount === undefined) {
       const existing = (this._config.info_entities || []).length;
-      this._infoCount = Math.min(INFO_MAX, existing || 3);
+      this._infoCount = Math.min(INFO_MAX, existing);
     }
     if (this._outletCount === undefined) {
       this._outletCount = Math.max(1, Math.min(STRIP_MAX, (Array.isArray(this._config.outlets) ? this._config.outlets.length : 0) || 4));
@@ -1024,6 +1030,7 @@ class ApplianceCardEditor extends HTMLElement {
     if (Object.keys(patch).length > 0) {
       this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
     }
+    return Object.keys(patch).length;
   }
 
   _row(labelKey, field, opts) {
@@ -1509,6 +1516,99 @@ class ApplianceCardEditor extends HTMLElement {
     });
   }
 
+  // A new card's first screen: its entity, then the type it suggests.
+  _buildWizard(hass) {
+    const id = this._config.state_entity;
+    const st = id ? stateObj(this._hass, id) : null;
+    const guess = id ? detectApplianceType({ ...this._config, appliance_type: undefined }, st) : null;
+    const typeRow = this._row("wiz_pick_type", "appliance_type", {
+      type: "select",
+      options: [{ value: "", label: "" }],
+      groups: TYPE_GROUPS.map(([g, types]) => ({
+        label: t(hass, `group_${g}`),
+        options: types.map((v) => ({ value: v, label: t(hass, `type_${v}`) })).sort((a, b) => a.label.localeCompare(b.label, hass.language || undefined)),
+      })),
+    });
+    this._root.innerHTML = `
+      <style>
+        :host { font-size: 16px; }
+        .wiz { display: flex; flex-direction: column; gap: 12px; padding: 4px 0; }
+        .wiz-title { font-size: 1.15em; font-weight: 500; color: var(--primary-text-color, #1c1c1c); }
+        .wiz-hint { font-size: 0.95em; color: var(--secondary-text-color, #767676); line-height: 1.4; }
+        .wiz-guess { border: 1px solid var(--primary-color, #03a9f4); border-radius: 10px; padding: 12px 14px; }
+        .wiz-label { font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.04em; color: var(--secondary-text-color, #767676); }
+        .wiz-type { font-size: 1.2em; font-weight: 500; margin: 4px 0 10px; color: var(--primary-text-color, #1c1c1c); }
+        .wiz-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+        .wiz button { font: inherit; font-size: 0.95em; padding: 7px 14px; border-radius: 18px; cursor: pointer; border: 1px solid var(--primary-color, #03a9f4); background: none; color: var(--primary-color, #03a9f4); }
+        .wiz button.wiz-ok { background: var(--primary-color, #03a9f4); color: var(--text-primary-color, #fff); }
+        .wiz button.wiz-link { border: none; padding: 0; align-self: flex-start; text-decoration: underline; color: var(--secondary-text-color, #767676); }
+        .row { display: flex; flex-direction: column; margin: 4px 0; }
+        .row label { font-size: 0.95em; color: var(--secondary-text-color, #767676); margin-bottom: 4px; }
+        .row select { padding: 8px 10px; border-radius: 4px; border: 1px solid var(--divider-color, #ccc); background: var(--card-background-color, white); color: var(--primary-text-color, #1c1c1c); font: inherit; }
+      </style>
+      <div class="wiz">
+        <div class="wiz-title">${t(hass, "wiz_title")}</div>
+        <div class="wiz-hint">${t(hass, "wiz_hint")}</div>
+        <div class="picker-slot" data-slot="state_entity"></div>
+        ${guess && !this._wizOther ? `
+        <div class="wiz-guess">
+          <div class="wiz-label">${t(hass, "wiz_proposed")}</div>
+          <div class="wiz-type">${esc(t(hass, `type_${guess}`))}</div>
+          <div class="wiz-btns">
+            <button type="button" class="wiz-ok" data-wiz="ok">${t(hass, "wiz_validate")}</button>
+            <button type="button" data-wiz="other">${t(hass, "wiz_other")}</button>
+          </div>
+        </div>` : ""}
+        ${this._wizOther || (!id && this._wizSkip) ? typeRow : ""}
+        ${!id && !this._wizSkip ? `<button type="button" class="wiz-link" data-wiz="skip">${t(hass, "wiz_no_entity")}</button>` : ""}
+      </div>`;
+    this._mountPicker(this._root.querySelector('[data-slot="state_entity"]'), "state_entity", {
+      label: t(hass, "state_entity"),
+      includeDomains: [...new Set(["sensor", "binary_sensor"].concat(...Object.values(STATE_DOMAINS)))],
+    });
+    const choose = (type) => {
+      if (!type) return;
+      this._config = { ...this._config, appliance_type: type };
+      this._wizard = false;
+      this._needsBuild = true;
+      // The device's other entities, found as for a card opened with its
+      // entity already set: they show ticked in the Entities tab.
+      this._autoSuggested = true;
+      if (!this._config.state_entity || !this._applySuggestions()) {
+        this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
+        this._maybeBuild();
+      }
+    };
+    const again = () => { this._needsBuild = true; this._maybeBuild(); };
+    this._root.querySelectorAll("[data-wiz]").forEach((el) => el.addEventListener("click", () => {
+      const what = el.getAttribute("data-wiz");
+      if (what === "ok") choose(guess);
+      else if (what === "other") { this._wizOther = true; again(); }
+      else if (what === "skip") { this._wizSkip = true; again(); }
+    }));
+    const sel = this._root.querySelector('select[data-field="appliance_type"]');
+    if (sel) sel.addEventListener("change", (ev) => choose(ev.target.value));
+  }
+
+  // The entity sections in use, each with its picker, then the others as
+  // one line of chips to add: a long list of unticked boxes made the panel
+  // long for little (HACF #214).
+  _sectionsHtml() {
+    const hass = this._l10n;
+    const all = this._sections();
+    const off = all.filter((sec) => !this._open.has(sec.field));
+    // An extra info line is added the same way, one per tap.
+    const info = this._infoCount < INFO_MAX ? `<span class="chip" role="button" tabindex="0" data-add-info="1">${t(hass, "chip_info")}</span>` : "";
+    return all.filter((sec) => this._open.has(sec.field)).map((sec) => this._sectionHtml(sec)).join("")
+      + (off.length || info ? `
+      <div class="section adds"><span class="adds-label">${t(hass, "add_entity")}</span>${off.map((sec) =>
+        `<label class="chip"><input type="checkbox" data-toggle="${sec.field}" /> ${t(hass, this._sectionLabelKey(sec))}</label>`).join("")}${info}</div>` : "");
+  }
+
+  _sectionLabelKey(section) {
+    return typeof section.labelKey === "function" ? section.labelKey(this._type) : section.labelKey;
+  }
+
   _sectionHtml(section) {
     const hass = this._l10n;
     const open = this._open.has(section.field);
@@ -1542,6 +1642,10 @@ class ApplianceCardEditor extends HTMLElement {
       this._root = this.shadowRoot;
     }
 
+    if (this._wizard) {
+      this._buildWizard(hass);
+      return;
+    }
     this._root.innerHTML = `
       <style>
         :host { font-size: 16px; }
@@ -1554,6 +1658,25 @@ class ApplianceCardEditor extends HTMLElement {
           background: var(--card-background-color, white); color: var(--primary-text-color, #1c1c1c);
           font-size: 1em; font-family: inherit;
         }
+        .tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--divider-color, #ddd); margin: 4px 0 10px; overflow-x: auto; }
+        .tab { flex: 1 1 auto; min-width: 0; background: none; border: none; border-bottom: 2px solid transparent; padding: 8px 4px; font: inherit; font-size: 0.9em; color: var(--secondary-text-color, #767676); cursor: pointer; white-space: nowrap; }
+        .tab.on { color: var(--primary-color, #03a9f4); border-bottom-color: var(--primary-color, #03a9f4); font-weight: 500; }
+        .tabpane:not(.on) { display: none; }
+        details.group.solo > summary { display: none; }
+        details.group.solo { border: none; padding: 0; margin: 0; background: none; }
+        .section h4.sub { grid-column: 1 / -1; margin: 4px 0 2px; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.04em; color: var(--secondary-text-color, #767676); }
+        .lines-hint { font-size: 0.85em; color: var(--secondary-text-color, #767676); margin: 2px 0 6px; }
+        .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); column-gap: 14px; align-items: end; }
+        .grid2 > :not(.row), .grid2 > .row:has(input[type="range"]), .grid2 > .row:has(textarea), .grid2 > .row:has(.checks), .grid2 > .row:has(input[type="text"]) { grid-column: 1 / -1; }
+        .row.row-inline { flex-direction: row; justify-content: flex-start; margin: 4px 0; }
+        .grid2 > .row.row-inline { order: 3; align-self: start; }
+        .grid2 > .brk { order: 2; height: 0; }
+        .adds { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+        .adds-label { font-size: 0.95em; color: var(--secondary-text-color, #767676); margin-right: 2px; }
+        .chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border: 1px solid var(--divider-color, #ccc); border-radius: 14px; cursor: pointer; font-size: 0.9em; color: var(--primary-text-color, #1c1c1c); }
+        .chip:hover { border-color: var(--primary-color, #03a9f4); }
+        .chip input { display: none; }
+        .chip::before { content: "+"; font-weight: 600; color: var(--primary-color, #03a9f4); }
         .row-inline { display: flex; align-items: center; gap: 8px; font-size: 1.05em; color: var(--primary-text-color, #1c1c1c); cursor: pointer; }
         .row-inline input { width: auto; }
         .row-inline.checks { flex-wrap: wrap; gap: 4px 14px; }
@@ -1628,7 +1751,11 @@ class ApplianceCardEditor extends HTMLElement {
         details.group[open] summary::before { content: "\u25be "; }
         details.group .section:last-child { padding-bottom: 10px; }
       </style>
-      <div class="section" style="border-bottom:none;">
+      <div class="tabs" role="tablist">${["device", "entities", "display", "actions", "advanced"].map((k) =>
+        `<button type="button" role="tab" class="tab${this._tab === k ? " on" : ""}" data-tab="${k}">${t(hass, { device: "tab_device", entities: "group_entities", display: "tab_display", actions: "tab_actions", advanced: "tab_advanced" }[k])}</button>`).join("")}</div>
+      <div class="tabpane${this._tab === "device" ? " on" : ""}" data-pane="device">
+      <div class="section grid2" style="border-bottom:none;"><div class="brk"></div>
+        <div class="picker-slot" data-slot="state_entity"></div>
         ${this._row("name", "name")}
         ${this._row("appliance_type", "appliance_type", {
           type: "select",
@@ -2010,96 +2137,23 @@ class ApplianceCardEditor extends HTMLElement {
           options: ["random", ...PRINT_PARTS].map((v) => ({ value: v, label: t(hass, v === "random" ? "img_random" : `part_${v}`) })),
         }) : ""}
       </div>
-      <details class="group" data-panel="general" ${this._panelOpen.general ? "open" : ""}>
-        <summary>${t(hass, "group_general")}</summary>
-        <div class="section">
-          ${this._row("language", "language", {
-            type: "select",
-            options: [{ value: "auto", label: t(hass, "language_auto") }].concat(
-              Object.keys(LANGUAGE_NAMES).map((code) => ({ value: code, label: LANGUAGE_NAMES[code] }))
-            ),
-          })}
-          ${CYCLE_TYPES.includes(this._type) ? this._row("done_alert", "done_alert", { type: "checkbox" }) : ""}
-          ${this._row("state_show_raw", "state_show_raw", { type: "checkbox" })}
-          ${caps(this._type).readOnly && !this._config.toggle_entity ? "" : this._row("controls_activation", "controls_activation", {
-            type: "select",
-            value: activationOf(this._config.controls_activation),
-            options: ["tap", "confirm", "hold", "off"].map((v) => ({ value: v, label: t(hass, `activation_${v}`) })),
-          })}
-          ${caps(this._type).cycle ? this._row("controls_always", "controls_always", { type: "checkbox" }) : ""}
-          ${caps(this._type).light && this._config.light_entity ? this._row("show_light_button", "show_light_button", { type: "checkbox", defaultOn: true }) : ""}
-          ${this._row("illustration_tap_action", "illustration_tap_action", {
-            type: "select",
-            value: (illustrationTapOf(this._config) || {}).action || "default",
-            options: [["default", "pic_tap_default"], ["toggle", "pic_tap_toggle"], ["more-info", "pic_tap_more"], ["none", "pic_tap_none"]].map(([v, k]) => ({ value: v, label: t(hass, k) })),
-          })}
-          ${caps(this._type).readOnly && !this._config.toggle_entity ? "" : this._row("show_unavailable_controls", "show_unavailable_controls", { type: "checkbox" })}
-          ${LAST_CYCLE_TYPES.includes(this._type) ? this._row("show_last_cycle", "show_last_cycle", { type: "checkbox" }) : ""}
-          ${LAST_CYCLE_TYPES.includes(this._type) ? this._row("show_elapsed", "show_elapsed", { type: "checkbox" }) : ""}
-          ${["solar", "home_battery"].includes(this._type) ? "" : this._row("show_today", "show_today", { type: "checkbox" })}
-          ${this._row("show_history", "show_history", { type: "checkbox" })}
-        </div>
-        <div class="section">
-          <div class="picker-slot" data-slot="state_entity"></div>
-          ${this._plug() ? "" : `<div class="picker-slot" data-slot="__state_map"></div>`}
-        </div>
-        ${this._sections().map((s) => this._sectionHtml(s)).join("")}
+      </div>
+      <div class="tabpane${this._tab === "entities" ? " on" : ""}" data-pane="entities">
+      <details class="group solo" data-panel="general" open>
+        <summary>${t(hass, "group_entities")}</summary>
+        ${this._sectionsHtml()}
       </details>
-      <details class="group" data-panel="appearance" ${this._panelOpen.appearance ? "open" : ""}>
-        <summary>${t(hass, "group_appearance")}</summary>
-        <div class="section">
-          ${this._row("illustration_color", "illustration_color", {
-            type: "select",
-            options: [{ value: "auto", label: t(hass, "color_auto") }].concat(
-              Object.keys(BODY_COLORS).map((k) => ({ value: k, label: t(hass, `color_${k}`) }))
-            ),
-          })}
-          ${this._row("compact_mode", "compact", {
-            type: "select",
-            value: compactModeOf(this._config.compact) || "off",
-            options: [
-              { value: "off", label: t(hass, "compact_off") },
-              { value: "hide", label: t(hass, "compact_hide") },
-              { value: "side", label: t(hass, "compact_side") },
-            ],
-          })}
-          ${compactModeOf(this._config.compact) === "side" ? this._row("compact_lines", "compact_lines", {
-            type: "select",
-            value: ["beside", "toggle"].includes(this._config.compact_lines) ? this._config.compact_lines : "below",
-            options: ["below", "beside", "toggle"].map((v) => ({ value: v, label: t(hass, `lines_${v}`) })),
-          }) : ""}
-          ${this._row("illustration_size", "illustration_size", {
-            type: "range", min: 0.3, max: 1.6, step: 0.05, default: 1,
-            value: this._config.illustration_size === undefined ? "" : illustrationSizeOf(this._config.illustration_size),
-          })}
-          ${this._row("illustration_backdrop", "illustration_backdrop", {
-            type: "select",
-            value: illustrationBackdropOf(this._config.illustration_backdrop) || "none",
-            options: ["none", "neutral", "state"].map((v) => ({ value: v, label: t(hass, `backdrop_${v}`) })),
-          })}
-          ${this._row("font_scale", "font_scale", {
-            type: "range", min: 0.7, max: 1.4, step: 0.05, default: 1,
-            value: this._config.font_scale === undefined ? "" : fontScaleOf(this._config.font_scale),
-          })}
-          ${this._row("show_name", "show_name", { type: "checkbox", defaultOn: true })}
-          ${this._row("show_state", "show_state", { type: "checkbox", defaultOn: true })}
-          ${this._row("show_controls", "show_controls", { type: "checkbox", defaultOn: true })}
-          ${this._row("show_state_duration", "show_state_duration", { type: "checkbox" })}
-          ${this._row("transparent", "transparent", { type: "checkbox" })}
-          ${this._row("values_right", "values_right", { type: "checkbox" })}
-          ${tempPrecisionInAppearance(this._type) ? this._row("temperature_decimals", "temperature_decimals", {
-            type: "select",
-            options: [
-              { value: "0", label: t(hass, "precision_0") },
-              { value: "1", label: t(hass, "precision_1") },
-              { value: "auto", label: t(hass, "precision_auto") },
-            ],
-          }) : ""}
-          ${this._row("fill_height", "fill_height", { type: "checkbox" })}
-          ${this._row("illustration_frame", "illustration_frame", { type: "checkbox" })}
-          ${PHOTO_TYPES.includes(this._type) ? `<div class="picker-slot ph-slot" data-slot="__photo"></div>` : ""}
-        </div>
-      </details>
+      ${drawn.length ? `
+      <details class="group" data-panel="order" ${this._panelOpen.order ? "open" : ""}>
+        <summary>${t(hass, "section_lines_shown")}</summary>
+        <div class="lines-hint">${t(hass, "lines_shown_hint")}</div>
+        ${drawn.map((l, i) => `
+          <div class="section info-row" draggable="true" data-line-index="${i}">
+            <div class="info-row-handle" title="${t(hass, "info_drag")}">\u283f</div>
+            <div class="info-row-fields"><div class="order-line${l.hidden ? " off" : ""}">${esc(l.label)}</div></div>
+            <div class="line-eye" role="button" tabindex="0" data-line-hide="${esc(l.key)}" title="${esc(t(hass, l.hidden ? "line_show" : "line_hide"))}" aria-pressed="${!l.hidden}"><ha-icon icon="${l.hidden ? "mdi:eye-off-outline" : "mdi:eye-outline"}"></ha-icon></div>
+          </div>`).join("")}
+      </details>` : ""}
       ${caps(this._type).zones && !this._plug() ? `
       <details class="group" data-panel="zones" ${this._panelOpen.zones ? "open" : ""}>
         <summary>${t(hass, "section_zones")}</summary>
@@ -2138,6 +2192,7 @@ class ApplianceCardEditor extends HTMLElement {
             <div class="picker-slot" data-slot="__outlet_name_${i}"></div>
           </div>`).join("")}
       </details>` : ""}
+      ${this._infoCount ? `
       <details class="group" data-panel="info" ${this._panelOpen.info ? "open" : ""}>
         <summary>${t(hass, "section_info")}</summary>
         <div class="section">
@@ -2160,17 +2215,108 @@ class ApplianceCardEditor extends HTMLElement {
             </div>
           </div>`).join("")}
       </details>
-      ${ENTITY_LISTS.filter((list) => (!this._plug() || list.panel !== "alerts") && (!list.types || list.types.includes(this._type)) && (!list.when || list.when(this._config))).map((list) => this._listPanel(list)).join("")}
-      ${drawn.length > 1 ? `
-      <details class="group" data-panel="order" ${this._panelOpen.order ? "open" : ""}>
-        <summary>${t(hass, "section_lines_order")}</summary>
-        ${drawn.map((l, i) => `
-          <div class="section info-row" draggable="true" data-line-index="${i}">
-            <div class="info-row-handle" title="${t(hass, "info_drag")}">\u283f</div>
-            <div class="info-row-fields"><div class="order-line${l.hidden ? " off" : ""}">${esc(l.label)}</div></div>
-            <div class="line-eye" role="button" tabindex="0" data-line-hide="${esc(l.key)}" title="${esc(t(hass, l.hidden ? "line_show" : "line_hide"))}" aria-pressed="${!l.hidden}"><ha-icon icon="${l.hidden ? "mdi:eye-off-outline" : "mdi:eye-outline"}"></ha-icon></div>
-          </div>`).join("")}
-      </details>` : ""}
+      ` : ""}
+      ${ENTITY_LISTS.filter((list) => list.panel !== "corners" && (!this._plug() || list.panel !== "alerts") && (!list.types || list.types.includes(this._type)) && (!list.when || list.when(this._config))).map((list) => this._listPanel(list)).join("")}
+      </div>
+      <div class="tabpane${this._tab === "display" ? " on" : ""}" data-pane="display">
+      <details class="group solo" data-panel="appearance" open>
+        <summary>${t(hass, "group_appearance")}</summary>
+        <div class="section grid2"><div class="brk"></div>
+          <h4 class="sub">${t(hass, "sub_drawing")}</h4>
+          ${this._row("illustration_color", "illustration_color", {
+            type: "select",
+            options: [{ value: "auto", label: t(hass, "color_auto") }].concat(
+              Object.keys(BODY_COLORS).map((k) => ({ value: k, label: t(hass, `color_${k}`) }))
+            ),
+          })}
+          ${this._row("illustration_backdrop", "illustration_backdrop", {
+            type: "select",
+            value: illustrationBackdropOf(this._config.illustration_backdrop) || "none",
+            options: ["none", "neutral", "state"].map((v) => ({ value: v, label: t(hass, `backdrop_${v}`) })),
+          })}
+          ${this._row("illustration_size", "illustration_size", {
+            type: "range", min: 0.3, max: 1.6, step: 0.05, default: 1,
+            value: this._config.illustration_size === undefined ? "" : illustrationSizeOf(this._config.illustration_size),
+          })}
+          ${PHOTO_TYPES.includes(this._type) ? `<div class="picker-slot ph-slot" data-slot="__photo"></div>` : ""}
+        </div>
+        <div class="section grid2"><div class="brk"></div>
+          <h4 class="sub">${t(hass, "sub_text")}</h4>
+          ${this._row("font_scale", "font_scale", {
+            type: "range", min: 0.7, max: 1.4, step: 0.05, default: 1,
+            value: this._config.font_scale === undefined ? "" : fontScaleOf(this._config.font_scale),
+          })}
+          ${tempPrecisionInAppearance(this._type) ? this._row("temperature_decimals", "temperature_decimals", {
+            type: "select",
+            options: [
+              { value: "0", label: t(hass, "precision_0") },
+              { value: "1", label: t(hass, "precision_1") },
+              { value: "auto", label: t(hass, "precision_auto") },
+            ],
+          }) : ""}
+          ${this._row("show_name", "show_name", { type: "checkbox", defaultOn: true })}
+          ${this._row("show_state", "show_state", { type: "checkbox", defaultOn: true })}
+          ${this._row("show_state_duration", "show_state_duration", { type: "checkbox" })}
+          ${this._row("values_right", "values_right", { type: "checkbox" })}
+          ${["solar", "home_battery"].includes(this._type) ? "" : this._row("show_today", "show_today", { type: "checkbox" })}
+          ${this._row("show_history", "show_history", { type: "checkbox" })}
+          ${LAST_CYCLE_TYPES.includes(this._type) ? this._row("show_last_cycle", "show_last_cycle", { type: "checkbox" }) : ""}
+          ${LAST_CYCLE_TYPES.includes(this._type) ? this._row("show_elapsed", "show_elapsed", { type: "checkbox" }) : ""}
+          ${CYCLE_TYPES.includes(this._type) ? this._row("done_alert", "done_alert", { type: "checkbox" }) : ""}
+        </div>
+        <div class="section grid2"><div class="brk"></div>
+          <h4 class="sub">${t(hass, "sub_layout")}</h4>
+          ${this._row("compact_mode", "compact", {
+            type: "select",
+            value: compactModeOf(this._config.compact) || "off",
+            options: [
+              { value: "off", label: t(hass, "compact_off") },
+              { value: "hide", label: t(hass, "compact_hide") },
+              { value: "side", label: t(hass, "compact_side") },
+            ],
+          })}
+          ${compactModeOf(this._config.compact) === "side" ? this._row("compact_lines", "compact_lines", {
+            type: "select",
+            value: ["beside", "toggle"].includes(this._config.compact_lines) ? this._config.compact_lines : "below",
+            options: ["below", "beside", "toggle"].map((v) => ({ value: v, label: t(hass, `lines_${v}`) })),
+          }) : ""}
+          ${this._row("transparent", "transparent", { type: "checkbox" })}
+          ${this._row("fill_height", "fill_height", { type: "checkbox" })}
+          ${this._row("illustration_frame", "illustration_frame", { type: "checkbox" })}
+        </div>
+      </details>
+      </div>
+      <div class="tabpane${this._tab === "actions" ? " on" : ""}" data-pane="actions">
+        <div class="section grid2"><div class="brk"></div>
+          ${this._row("show_controls", "show_controls", { type: "checkbox", defaultOn: true })}
+          ${caps(this._type).readOnly && !this._config.toggle_entity ? "" : this._row("controls_activation", "controls_activation", {
+            type: "select",
+            value: activationOf(this._config.controls_activation),
+            options: ["tap", "confirm", "hold", "off"].map((v) => ({ value: v, label: t(hass, `activation_${v}`) })),
+          })}
+          ${this._row("illustration_tap_action", "illustration_tap_action", {
+            type: "select",
+            value: (illustrationTapOf(this._config) || {}).action || "default",
+            options: [["default", "pic_tap_default"], ["toggle", "pic_tap_toggle"], ["more-info", "pic_tap_more"], ["none", "pic_tap_none"]].map(([v, k]) => ({ value: v, label: t(hass, k) })),
+          })}
+          ${caps(this._type).cycle ? this._row("controls_always", "controls_always", { type: "checkbox" }) : ""}
+          ${caps(this._type).light && this._config.light_entity ? this._row("show_light_button", "show_light_button", { type: "checkbox", defaultOn: true }) : ""}
+          ${caps(this._type).readOnly && !this._config.toggle_entity ? "" : this._row("show_unavailable_controls", "show_unavailable_controls", { type: "checkbox" })}
+        </div>
+      ${ENTITY_LISTS.filter((list) => list.panel === "corners" && (!this._plug() || list.panel !== "alerts") && (!list.types || list.types.includes(this._type)) && (!list.when || list.when(this._config))).map((list) => this._listPanel(list)).join("")}
+      </div>
+      <div class="tabpane${this._tab === "advanced" ? " on" : ""}" data-pane="advanced">
+        <div class="section grid2"><div class="brk"></div>
+          ${this._row("language", "language", {
+            type: "select",
+            options: [{ value: "auto", label: t(hass, "language_auto") }].concat(
+              Object.keys(LANGUAGE_NAMES).map((code) => ({ value: code, label: LANGUAGE_NAMES[code] }))
+            ),
+          })}
+          ${this._row("state_show_raw", "state_show_raw", { type: "checkbox" })}
+        </div>
+        ${this._plug() ? "" : `<div class="section"><div class="picker-slot" data-slot="__state_map"></div></div>`}
+      </div>
     `;
 
     this._wireTouchTracking();
@@ -2262,6 +2408,15 @@ class ApplianceCardEditor extends HTMLElement {
       });
     }
 
+    this._root.querySelectorAll("[data-add-info]").forEach((el) => {
+      const add = () => {
+        this._infoCount = Math.min(INFO_MAX, (this._infoCount || 0) + 1);
+        this._panelOpen.info = true;
+        this._build();
+      };
+      el.addEventListener("click", add);
+      el.addEventListener("keydown", (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); add(); } });
+    });
     const infoCountSelect = this._root.querySelector('[data-role="info-count-select"]');
     if (infoCountSelect) {
       infoCountSelect.addEventListener("change", (ev) => {
@@ -2274,6 +2429,14 @@ class ApplianceCardEditor extends HTMLElement {
       });
     }
 
+    // The tabs only show one pane: the others stay built, their pickers too.
+    this._root.querySelectorAll("[data-tab]").forEach((el) => {
+      el.addEventListener("click", () => {
+        this._tab = el.getAttribute("data-tab");
+        this._root.querySelectorAll("[data-tab]").forEach((b) => b.classList.toggle("on", b.getAttribute("data-tab") === this._tab));
+        this._root.querySelectorAll("[data-pane]").forEach((p) => p.classList.toggle("on", p.getAttribute("data-pane") === this._tab));
+      });
+    });
     this._root.querySelectorAll("details.group").forEach((el) => {
       el.addEventListener("toggle", () => {
         this._panelOpen[el.getAttribute("data-panel")] = el.open;
