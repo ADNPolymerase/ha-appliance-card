@@ -3,7 +3,7 @@
 export default function defineEditor(deps) {
 // A page still running the card of an earlier release, the files of this one
 // on the server: its helpers are not these, so say to reload the page.
-if (!deps || deps.__v !== "4.60.0") {
+if (!deps || deps.__v !== "4.61.0") {
   if (!customElements.get("ha-appliance-card-editor")) customElements.define("ha-appliance-card-editor", class extends HTMLElement {
     setConfig() {}
     connectedCallback() {
@@ -125,7 +125,7 @@ const SECTIONS = [
   { field: "alarm_volume_entity", types: ["speaker"], labelKey: "section_alarm_volume", includeDomains: ["number", "input_number"] },
   // A screen: the players that show something on it, and on a computer the
   // lock of its session.
-  { field: "media_entity", types: ["screen"], labelKey: "section_media", includeDomains: ["media_player"] },
+  { field: "media_entity", types: ["screen", "speaker"], labelKey: "section_media", includeDomains: ["media_player"] },
   { field: "media2_entity", types: ["screen"], labelKey: "section_media2", includeDomains: ["media_player"] },
   { field: "media3_entity", types: ["screen"], labelKey: "section_media3", includeDomains: ["media_player"] },
   { field: "lock_entity", types: ["screen"], labelKey: "section_lock", includeDomains: ["binary_sensor", "sensor", "lock", "input_boolean"] },

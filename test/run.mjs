@@ -11878,6 +11878,13 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
       const { card: th } = build({ appliance_type: 'heat_pump', state_entity: 'climate.salon' }, { 'climate.salon': s('heat', { current_temperature: 19 }) });
       const tsig = (attrs) => th._stateSignature(HASS({ 'climate.salon': { state: 'heat', attributes: attrs, last_changed: at(0) } }));
       check('thermostat : la piece qui chauffe redessine', tsig({ current_temperature: 19 }) !== tsig({ current_temperature: 21 }), true);
+      // HACF #214: an AV receiver's volume and sound mode move alone.
+      const { card: av } = build({ appliance_type: 'speaker', state_entity: 'media_player.ampli', media_entity: 'media_player.ampli_heos' },
+        { 'media_player.ampli': s('on', { volume_level: .4 }), 'media_player.ampli_heos': s('playing', { media_artist: 'A' }) });
+      const asig = (attrs, heos = {}) => av._stateSignature(HASS({ 'media_player.ampli': { state: 'on', attributes: attrs, last_changed: at(0) }, 'media_player.ampli_heos': { state: 'playing', attributes: heos, last_changed: at(0) } }));
+      check('214 : un autre volume redessine', asig({ volume_level: .4 }) !== asig({ volume_level: .5 }), true);
+      check('214 : un autre mode son redessine', asig({ sound_mode: 'STEREO' }) !== asig({ sound_mode: 'DOLBY SURROUND' }), true);
+      check('214 : un autre artiste sur le second lecteur redessine', asig({}, { media_artist: 'A' }) !== asig({}, { media_artist: 'B' }), true);
     }
     check('compact side : les boutons a droite meme sous le nom', /\.cmp-side \.cmp-head \.cmp-icons \{ margin-left: auto; \}/.test(L({ compact: 'side' })), true);
     check('dessin : en compact aussi', /class="cmp-pic" data-pic-tap="1"/.test(L({ illustration_tap_action: 'toggle', compact: 'side' })), true);
@@ -15348,6 +15355,22 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('172 : ligne mode son', /Sound mode/.test(avr), true);
   check('172 : ampli eteint, ecran vide', />Blu-ray</.test(spk('media_player.denon_avr', { source: 'Blu-ray' }, 'off')), false);
   check('172 : une source echappee', /<script>/.test(spk('media_player.denon_avr', { source: '<script>' })), false);
+  // HACF #214: a Denon AVR on but silent says on, and its HEOS entity
+  // brings the play state and the track to the same card.
+  const den = (main, heos, mainState = 'on', heosState = 'playing') => render({ appliance_type: 'speaker', speaker_layout: 'denon_avr', state_entity: 'media_player.denon_avr', media_entity: 'media_player.denon_heos' },
+    { 'media_player.denon_avr': s(mainState, main), 'media_player.denon_heos': s(heosState, heos) });
+  check('214 : ampli allume sans lecture, On et pas Idle', stateLine(spk('media_player.denon_avr', { source: 'TV' }, 'on')), 'On');
+  check('214 : idle reste Idle', stateLine(spk('media_player.denon_avr', { source: 'TV' }, 'idle')), 'Idle');
+  const both = den({ source: 'HEOS Music', sound_mode: 'STEREO', volume_level: .35 }, { media_title: 'So What', media_artist: 'Miles Davis' });
+  check('214 : le second lecteur dit la lecture', stateLine(both), 'Playing');
+  check('214 : son titre et son artiste', />So What</.test(both) && />Miles Davis</.test(both), true);
+  check('214 : la source, le mode et le volume de l ampli', [/HEOS Music/.test(both), /STEREO/.test(both), /35(\s|&nbsp;|\u00a0)%/.test(both)].join(), 'true,true,true');
+  check('214 : pause sur le second lecteur', stateLine(den({ source: 'TV' }, { media_title: 'X' }, 'on', 'paused')), 'Paused');
+  const idleHeos = den({ source: 'TV', media_title: 'TV' }, { media_title: 'Old song', media_artist: 'Old' }, 'on', 'idle');
+  check('214 : second lecteur au repos, pas de vieux titre', />Old song</.test(idleHeos) || />Old</.test(idleHeos), false);
+  check('214 : ampli eteint, second au repos : eteint', stateLine(den({}, {}, 'off', 'idle')), 'Off');
+  check('214 : play/pause vers le second lecteur quand il joue', /data-entity="media_player.denon_heos"/.test(both), true);
+  check('214 : enceinte avec media_entity n est pas un ecran', kindOf(both), 'spk_denon_avr');
   check('172 : Focal blanche ou noire', [spk('media_player.focal_bird_blanc'), spk('media_player.focal_bird_noir')].map((h) => /#ffffff/.test(h) ? 'w' : 'b').join(''), 'wb');
 }
 

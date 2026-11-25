@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.60.0";
+const CARD_VERSION = "4.61.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -1346,7 +1346,7 @@ const LIVE_ATTRS = {
   humidifier: ["humidity", "current_humidity", "mode", "action"],
   vacuum: ["battery_level", "status", "fan_speed"],
   lawn_mower: ["battery_level", "activity"],
-  valve: ["current_position"],
+  media_player: ["volume_level", "sound_mode", "media_artist", "media_album_name", "media_channel", "media_content_type"],
 };
 // The status as the charger means it, or "" for a word the card does not know,
 // which then reads as on any other appliance. An entry of state_map wins, as
@@ -6962,6 +6962,23 @@ const DOOR_TRANS_S = 1.4;
 const SPK_COLORS = ["white", "black", "silver", "yellow", "orange", "blue"];
 // The colour a speaker is drawn in: speaker_color, else its name, else the
 // card's illustration_color.
+// The second media player of a speaker (HACF #214), or null: its play state
+// and, while it plays or is paused, its track, station and picture. The
+// main entity keeps its source, sound mode and volume.
+const SPK_TRACK_ATTRS = ["media_title", "media_artist", "media_album_name", "media_channel", "media_content_type", "media_content_id", "app_name", "entity_picture"];
+function speakerMediaOf(hass, cfg) {
+  const id = cfg && cfg.media_entity;
+  if (!id || id === cfg.state_entity || domainOf(id) !== "media_player") return null;
+  const m = stateObj(hass, id);
+  if (!m) return null;
+  const raw = String(m.state).toLowerCase();
+  const playing = raw === "playing" || raw === "buffering", paused = raw === "paused";
+  const track = {};
+  if (playing || paused) {
+    for (const k of SPK_TRACK_ATTRS) if (m.attributes && m.attributes[k] !== undefined && m.attributes[k] !== null && m.attributes[k] !== "") track[k] = m.attributes[k];
+  }
+  return { playing, paused, track };
+}
 function speakerColorOf(cfg, st) {
   if (SPK_COLORS.includes(cfg.speaker_color)) return cfg.speaker_color;
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
@@ -7775,15 +7792,21 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     // A media player: what it plays and how loud, in the lines.
     const layout = speakerLayoutOf(cfg, st);
     const kind = `spk_${layout}`;
-    const a = (st && st.attributes) || {};
+    // A second media player for the same device (HACF #214): a Denon AVR
+    // names its source, sound mode and volume, its HEOS entity what plays.
+    // The second gives the play state and the track while it plays or is
+    // paused, the first keeps the rest.
+    const med = speakerMediaOf(hass, cfg);
+    const a = med ? { ...((st && st.attributes) || {}), ...med.track } : (st && st.attributes) || {};
+    const mediaId = med ? cfg.media_entity : cfg.state_entity;
     // On a smart plug alone, what it draws says it: playing from its
     // threshold (3 W by default), idle below, off when it draws nothing or
     // its plug is off. A media player says more and keeps the say.
     const metered = !!cfg.power_entity && watts !== null && isFinite(threshold) && domainOf(cfg.state_entity) !== "media_player";
     const plugOff = metered && (dead || ["off", "false", "0", "no"].includes(raw) || watts <= SCREEN_OFF_W);
-    const playing = metered ? !plugOff && watts >= threshold : raw === "playing" || raw === "buffering";
-    const paused = !metered && raw === "paused";
-    const offish = metered ? plugOff : dead || ["off", "standby", "unavailable"].includes(raw);
+    const playing = metered ? !plugOff && watts >= threshold : raw === "playing" || raw === "buffering" || (!!med && med.playing);
+    const paused = !metered && !playing && (raw === "paused" || (!!med && med.paused));
+    const offish = metered ? plugOff : !playing && !paused && (dead || ["off", "standby", "unavailable"].includes(raw));
     if (!offish && !metered) {
       const same = (x, y) => String(x || "").trim().toLowerCase() === String(y || "").trim().toLowerCase();
       const src = a.app_name || a.source;
@@ -7794,9 +7817,9 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
       const stationTitle = radio && !!a.media_title && !a.media_artist && (!channel || same(channel, a.media_title));
       const inputTitle = !stationTitle && !!src && same(src, a.media_title);
       const station = stationTitle ? String(a.media_title) : channel;
-      const stationLine = station ? { key: "spk_station", icon: "mdi:radio", label: t(hass, "spk_station"), value: station, entity: cfg.state_entity, wrap: true } : null;
-      if (a.media_title && !stationTitle && !inputTitle) lines.push({ key: "spk_title", icon: "mdi:music-note", label: t(hass, "spk_title"), value: String(a.media_title), entity: cfg.state_entity, wrap: true });
-      if (a.media_artist) lines.push({ key: "spk_artist", icon: "mdi:account-music", label: t(hass, "spk_artist"), value: String(a.media_artist), entity: cfg.state_entity, wrap: true });
+      const stationLine = station ? { key: "spk_station", icon: "mdi:radio", label: t(hass, "spk_station"), value: station, entity: mediaId, wrap: true } : null;
+      if (a.media_title && !stationTitle && !inputTitle) lines.push({ key: "spk_title", icon: "mdi:music-note", label: t(hass, "spk_title"), value: String(a.media_title), entity: mediaId, wrap: true });
+      if (a.media_artist) lines.push({ key: "spk_artist", icon: "mdi:account-music", label: t(hass, "spk_artist"), value: String(a.media_artist), entity: mediaId, wrap: true });
       if (stationLine) lines.push(stationLine);
       if (src && !same(src, station) && (inputTitle || !same(src, a.media_title))) lines.push({ key: "spk_source", icon: "mdi:import", label: t(hass, "spk_source"), value: String(src), entity: cfg.state_entity });
       const vol = numberOrNull(a.volume_level);
@@ -7813,7 +7836,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const ga = speakerAlarmsOf(hass, cfg, t);
     lines.push(...ga.lines);
     const res = playing ? out("playing", "spk_playing", NT_COLORS.run, draw) : paused ? out("paused", "spk_paused", NT_COLORS.idle, draw)
-      : offish ? out("off", "spk_off", NT_COLORS.off, draw) : out("idle", "spk_idle", NT_COLORS.idle, draw);
+      : offish ? out("off", "spk_off", NT_COLORS.off, draw) : out("idle", !metered && raw === "on" ? "screen_on" : "spk_idle", NT_COLORS.idle, draw);
     return ga.sliders.length ? { ...res, sliders: ga.sliders } : res;
   }
   if (type === "mobility") {
@@ -8112,8 +8135,10 @@ function ntControls(hass, cfg, type) {
     if (cfg.light_entity && stateObj(hass, cfg.light_entity) && ["light", "switch", "input_boolean"].includes(domainOf(cfg.light_entity))) out.push({ key: "gf_light", entity: cfg.light_entity, icon: "mdi:lightbulb", label: t(hass, "section_light"), on: ntOnOff(hass, cfg.light_entity) });
   }
   if (type === "speaker" && st && ["playing", "paused", "buffering", "idle", "on"].includes(String(st.state).toLowerCase())) {
-    const playing = ["playing", "buffering"].includes(String(st.state).toLowerCase());
-    out.push({ key: "play_pause", entity: cfg.state_entity, icon: playing ? "mdi:pause" : "mdi:play", label: t(hass, "play_pause"), on: playing, service: "media_play_pause" });
+    // Play and pause go to the second media player while it plays (#214).
+    const med = speakerMediaOf(hass, cfg);
+    const playing = ["playing", "buffering"].includes(String(st.state).toLowerCase()) || (!!med && med.playing);
+    out.push({ key: "play_pause", entity: med && (med.playing || med.paused) ? cfg.media_entity : cfg.state_entity, icon: playing ? "mdi:pause" : "mdi:play", label: t(hass, "play_pause"), on: playing, service: "media_play_pause" });
   }
   // A finger bot's press (HACF #163): a press on a button, on in click mode
   // (it lifts its arm by itself), on and off in switch mode. And the plug
@@ -9180,7 +9205,7 @@ function stateFreeSource(config) {
   const asCharger = config && (config.appliance_type === "ev_charger" || EV_ONLY_FIELDS.some((f) => config[f]));
   const hasChargerSource = asCharger && !!(config.vehicle_entity || config.power_entity);
   // And for a screen: its plug's meter or one of its players is enough.
-  const asScreen = config && (config.appliance_type === "screen" || SCREEN_ONLY_FIELDS.some((f) => config[f]));
+  const asScreen = config && (config.appliance_type === "screen" || ((!config.appliance_type || config.appliance_type === "auto") && SCREEN_ONLY_FIELDS.some((f) => config[f])));
   const hasScreenSource = asScreen && !!(config.power_entity || SCREEN_MEDIA_FIELDS.some((f) => config[f]));
   // And for a pool pump on a smart plug: the meter says whether it filters.
   const asPool = config && (config.appliance_type === "pool_pump" || POOL_ONLY_FIELDS.some((f) => config[f]));

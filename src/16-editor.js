@@ -116,7 +116,7 @@ const SECTIONS = [
   { field: "alarm_volume_entity", types: ["speaker"], labelKey: "section_alarm_volume", includeDomains: ["number", "input_number"] },
   // A screen: the players that show something on it, and on a computer the
   // lock of its session.
-  { field: "media_entity", types: ["screen"], labelKey: "section_media", includeDomains: ["media_player"] },
+  { field: "media_entity", types: ["screen", "speaker"], labelKey: "section_media", includeDomains: ["media_player"] },
   { field: "media2_entity", types: ["screen"], labelKey: "section_media2", includeDomains: ["media_player"] },
   { field: "media3_entity", types: ["screen"], labelKey: "section_media3", includeDomains: ["media_player"] },
   { field: "lock_entity", types: ["screen"], labelKey: "section_lock", includeDomains: ["binary_sensor", "sensor", "lock", "input_boolean"] },

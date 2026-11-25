@@ -872,7 +872,7 @@ const LIVE_ATTRS = {
   humidifier: ["humidity", "current_humidity", "mode", "action"],
   vacuum: ["battery_level", "status", "fan_speed"],
   lawn_mower: ["battery_level", "activity"],
-  valve: ["current_position"],
+  media_player: ["volume_level", "sound_mode", "media_artist", "media_album_name", "media_channel", "media_content_type"],
 };
 // The status as the charger means it, or "" for a word the card does not know,
 // which then reads as on any other appliance. An entry of state_map wins, as

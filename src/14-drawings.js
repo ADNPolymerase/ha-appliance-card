@@ -728,7 +728,7 @@ function stateFreeSource(config) {
   const asCharger = config && (config.appliance_type === "ev_charger" || EV_ONLY_FIELDS.some((f) => config[f]));
   const hasChargerSource = asCharger && !!(config.vehicle_entity || config.power_entity);
   // And for a screen: its plug's meter or one of its players is enough.
-  const asScreen = config && (config.appliance_type === "screen" || SCREEN_ONLY_FIELDS.some((f) => config[f]));
+  const asScreen = config && (config.appliance_type === "screen" || ((!config.appliance_type || config.appliance_type === "auto") && SCREEN_ONLY_FIELDS.some((f) => config[f])));
   const hasScreenSource = asScreen && !!(config.power_entity || SCREEN_MEDIA_FIELDS.some((f) => config[f]));
   // And for a pool pump on a smart plug: the meter says whether it filters.
   const asPool = config && (config.appliance_type === "pool_pump" || POOL_ONLY_FIELDS.some((f) => config[f]));
