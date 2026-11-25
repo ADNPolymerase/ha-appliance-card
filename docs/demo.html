@@ -1358,6 +1358,15 @@ const poolLight = pool({}, [], "off", "on");
 const poolWintered = pool({ get name() { return L("Pool, winter", "Piscine, hivernage"); }, winter_entity: "input_boolean.pool_winter", air_temperature_entity: "sensor.pool_air" },
   [st("input_boolean.pool_winter", "on"), st("sensor.pool_air", -1, { unit_of_measurement: "\u00b0C" }), st("sensor.pool_water", 6, { unit_of_measurement: "\u00b0C" })], "off");
 const poolError = pool({ pressure_entity: "sensor.pool_pressure" }, [st("sensor.pool_pressure", 2.1, { unit_of_measurement: "bar" })]);
+// The pool itself (HACF #217): spots, floating cover, solar shower, winter.
+const BASIN = { pool_layout: "basin", cover_entity: "cover.pool_cover", shower_entity: "valve.pool_shower", ph_target_entity: "number.pool_ph_target", redox_target_entity: "number.pool_redox_target" };
+const basinStates = (pos, shower) => [st("cover.pool_cover", pos > 0 ? "open" : "closed", { current_position: pos }), st("valve.pool_shower", shower ? "open" : "closed"),
+  st("number.pool_ph_target", 7.2, { min: 6.8, max: 7.8, step: 0.05 }), st("number.pool_redox_target", 700, { unit_of_measurement: "mV", min: 600, max: 800, step: 10 })];
+const poolBasin = pool(BASIN, basinStates(100, true));
+const poolBasinNight = pool({ get name() { return L("Pool, evening", "Piscine, le soir"); }, ...BASIN, light_entity: "light.pool_spots", spot_count: 4 },
+  basinStates(60, false).concat([st("light.pool_spots", "on", { rgb_color: [80, 160, 255] }), st("sun.sun", "below_horizon"), st("sensor.pool_redox", 640, { unit_of_measurement: "mV" })]), "off");
+const poolBasinWinter = pool({ get name() { return L("Pool, winter", "Piscine, hivernage"); }, ...BASIN, winter_entity: "input_boolean.pool_winter" },
+  basinStates(100, false).concat([st("input_boolean.pool_winter", "on"), st("sensor.pool_water", 6, { unit_of_measurement: "\u00b0C" })]), "off");
 
 // Solar panels under the sun, the clouds and the moon, and home batteries
 // charging, discharging and running low.
@@ -1960,6 +1969,22 @@ Object.assign(EXTRA, {
     [st("switch.tm6_plug", "on"), st("sensor.tm6_power", 1050, { unit_of_measurement: "W", device_class: "power", min: 0, max: 1200, step: 10 })]),
   fp_tm6_ready: () => card({ name: L("Kitchen robot", "Robot cuiseur"), appliance_type: "food_processor", food_layout: "tm6", state_entity: "switch.tm6b_plug", power_entity: "sensor.tm6b_power" },
     [st("switch.tm6b_plug", "on"), st("sensor.tm6b_power", 1, { unit_of_measurement: "W", device_class: "power", min: 0, max: 1200, step: 10 })]),
+  ft_creami: () => card({ name: L("Ninja CREAMi", "Ninja CREAMi"), appliance_type: "frozen_treat", frozen_layout: "creami", frozen_flavor: "vanilla", state_entity: "switch.ft_creami_plug", power_entity: "sensor.ft_creami_power" },
+    [st("switch.ft_creami_plug", "on"), st("sensor.ft_creami_power", 800, { unit_of_measurement: "W", device_class: "power", min: 0, max: 1200, step: 10 })]),
+  ft_creami_bar: () => card({ name: L("Ninja CREAMi", "Ninja CREAMi"), appliance_type: "frozen_treat", frozen_layout: "creami_bar", frozen_flavor: "strawberry", state_entity: "switch.ft_creami_bar_plug", power_entity: "sensor.ft_creami_bar_power" },
+    [st("switch.ft_creami_bar_plug", "on"), st("sensor.ft_creami_bar_power", 1, { unit_of_measurement: "W", device_class: "power", min: 0, max: 1200, step: 10 })]),
+  ft_creami_deluxe: () => card({ name: L("Ninja CREAMi Deluxe", "Ninja CREAMi Deluxe"), appliance_type: "frozen_treat", frozen_layout: "creami_deluxe", frozen_flavor: "chocolate", state_entity: "switch.ft_creami_deluxe_plug", power_entity: "sensor.ft_creami_deluxe_power" },
+    [st("switch.ft_creami_deluxe_plug", "on"), st("sensor.ft_creami_deluxe_power", 900, { unit_of_measurement: "W", device_class: "power", min: 0, max: 1200, step: 10 })]),
+  ft_creami_xl: () => card({ name: L("Ninja CREAMi XL", "Ninja CREAMi XL"), appliance_type: "frozen_treat", frozen_layout: "creami_xl", frozen_flavor: "pistachio", state_entity: "switch.ft_creami_xl_plug", power_entity: "sensor.ft_creami_xl_power" },
+    [st("switch.ft_creami_xl_plug", "on"), st("sensor.ft_creami_xl_power", 900, { unit_of_measurement: "W", device_class: "power", min: 0, max: 1200, step: 10 })]),
+  ft_creami_swirl: () => card({ name: L("Ninja CREAMi Swirl", "Ninja CREAMi Swirl"), appliance_type: "frozen_treat", frozen_layout: "creami_swirl", frozen_flavor: "vanilla", state_entity: "switch.ft_creami_swirl_plug", power_entity: "sensor.ft_creami_swirl_power" },
+    [st("switch.ft_creami_swirl_plug", "on"), st("sensor.ft_creami_swirl_power", 1, { unit_of_measurement: "W", device_class: "power", min: 0, max: 1200, step: 10 })]),
+  ft_creami_scoop_swirl: () => card({ name: L("Ninja CREAMi Scoop & Swirl", "Ninja CREAMi Scoop & Swirl"), appliance_type: "frozen_treat", frozen_layout: "creami_scoop_swirl", frozen_flavor: "strawberry", state_entity: "switch.ft_creami_scoop_swirl_plug", power_entity: "sensor.ft_creami_scoop_swirl_power" },
+    [st("switch.ft_creami_scoop_swirl_plug", "on"), st("sensor.ft_creami_scoop_swirl_power", 800, { unit_of_measurement: "W", device_class: "power", min: 0, max: 1200, step: 10 })]),
+  ft_slushi: () => card({ name: L("Ninja SLUSHi", "Ninja SLUSHi"), appliance_type: "frozen_treat", frozen_layout: "slushi", frozen_flavor: "mango", state_entity: "switch.ft_slushi_plug", power_entity: "sensor.ft_slushi_power" },
+    [st("switch.ft_slushi_plug", "on"), st("sensor.ft_slushi_power", 300, { unit_of_measurement: "W", device_class: "power", min: 0, max: 1200, step: 10 })]),
+  ft_slushi_duo: () => card({ name: L("Ninja SLUSHi Duo", "Ninja SLUSHi Duo"), appliance_type: "frozen_treat", frozen_layout: "slushi_duo", frozen_flavor: "vanilla", state_entity: "switch.ft_slushi_duo_plug", power_entity: "sensor.ft_slushi_duo_power" },
+    [st("switch.ft_slushi_duo_plug", "on"), st("sensor.ft_slushi_duo_power", 300, { unit_of_measurement: "W", device_class: "power", min: 0, max: 1200, step: 10 })]),
   jukebox_play: () => card({ name: L("Jukebox", "Jukebox"), appliance_type: "speaker", speaker_layout: "jukebox", state_entity: "media_player.jukebox" },
     [st("media_player.jukebox", "playing", { media_title: "Golden Hour", media_artist: "The Night Owls", volume_level: .6 })]),
   jukebox_idle: () => card({ name: L("Jukebox", "Jukebox"), appliance_type: "speaker", speaker_layout: "jukebox", state_entity: "media_player.jukebox2" },
@@ -2086,8 +2111,8 @@ function liveGallery() {
   const wrap = document.getElementById("wrap");
   wrap.innerHTML = `<header>
     <h1>HA Appliance Card</h1>
-    <p>${L("A Lovelace card for 74 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
-      "Une carte Lovelace pour 74 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
+    <p>${L("A Lovelace card for 75 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
+      "Une carte Lovelace pour 75 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
     <nav>${link("lang", "en", "English", !fr)}${link("lang", "fr", "Français", fr)}<span></span>${link("theme", "light", L("Light", "Clair"), !dark)}${link("theme", "dark", L("Dark", "Sombre"), dark)}<span></span>${link("plug", "0", L("Integrations", "Intégrations"), !plugOnly)}${link("plug", "1", L("Smart plug only", "Prise connectée seule"), plugOnly)}<span></span>${link("color", "", L("Own colours", "Couleurs d'origine"), !demoColor)}${[["white", "White", "Blanc"], ["grey", "Grey", "Gris"], ["black", "Black", "Noir"], ["red", "Red", "Rouge"]].map(([v, en, f]) => link("color", v, L(en, f), demoColor === v)).join("")}<span></span><a href="https://github.com/ADNPolymerase/ha-appliance-card">GitHub</a></nav>
     <p class="hint">${plugOnly
       ? L("Each card below has nothing but a smart plug: its switch and its power meter. Open “Change the values” and move the power, or press the power button.",
@@ -2103,6 +2128,8 @@ function liveGallery() {
     [L("SwitchBot meters", "Thermom\u00e8tres SwitchBot"), [EXTRA.sb_co2, EXTRA.sb_co2_high, EXTRA.sb_pro, EXTRA.sb_meter, EXTRA.sb_plus, EXTRA.sb_outdoor]],
     [L("Your own photo (HACF #165)", "Votre photo (HACF #165)"), [EXTRA.photo_shutter, EXTRA.photo_garage, EXTRA.photo_gate, EXTRA.photo_washer, EXTRA.photo_tv]],
     [L("Gates", "Portails"), [EXTRA.gate_swing, EXTRA.gate_swing_open, EXTRA.gate_white, EXTRA.gate_white_open]],
+    [L("New: the pool itself, its spots, its floating cover, its solar shower and its winter tarp (HACF #217)", "Nouveau : le bassin, ses spots, son volet flottant, sa douche solaire et sa b\u00e2che d'hivernage (HACF #217)"), [poolBasin, poolBasinNight, poolBasinWinter], "new"],
+    [L("New: Ninja CREAMi and SLUSHi ice cream and slush makers (HACF #217)", "Nouveau : machines \u00e0 glace et granit\u00e9 Ninja CREAMi et SLUSHi (HACF #217)"), [EXTRA.ft_creami, EXTRA.ft_creami_bar, EXTRA.ft_creami_deluxe, EXTRA.ft_creami_xl, EXTRA.ft_creami_swirl, EXTRA.ft_creami_scoop_swirl, EXTRA.ft_slushi, EXTRA.ft_slushi_duo], "new"],
     [L("New: battery chargers, for a battery, a motorcycle, a car or a van (HACF #209)", "Nouveau : chargeurs de batterie, pour une batterie, une moto, une voiture ou une camionnette (HACF #209)"), [demo_chgBattery, demo_chgMoto, demo_chgCar, demo_chgVan, demo_chgOff], "new"],
     [L("New: a jukebox and a barrel bar (HACF #200)", "Nouveau : un jukebox et un bar tonneau (HACF #200)"), [EXTRA.jukebox_play, EXTRA.jukebox_idle, EXTRA.jukebox_off, EXTRA.barrel_open, EXTRA.barrel_closed, EXTRA.barrel_red], "new"],
     [L("New: water dispensers, chillers and carbonators (#140)", "Nouveau : distributeurs d'eau, refroidisseurs et gaz\u00e9ificateurs (#140)"), [EXTRA.wd_cooling, EXTRA.wd_sparkling, EXTRA.wd_carbonating, EXTRA.wd_co2_low, EXTRA.wd_column, EXTRA.wd_column_cool], "new"],

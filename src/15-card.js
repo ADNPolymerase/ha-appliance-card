@@ -3415,6 +3415,7 @@ class ApplianceCard extends HTMLElement {
       // Wintered, a pump at rest (or unplugged, its water drained) reads
       // Winter storage; one running for the frost keeps saying so.
       const wintered = poolWinter(hass, cfg);
+      const poolBasin = cfg.pool_layout === "basin";
       const pumpMode = poolModeOf(hass, cfg, st, watts);
       const mode = wintered && ["off", "unav"].includes(pumpMode) ? "winter" : pumpMode;
       poolWintered = wintered;
@@ -3447,6 +3448,27 @@ class ApplianceCard extends HTMLElement {
         reading("pool_air", "air_temperature_entity", "mdi:thermometer", t(hass, "pool_line_air"), 1, "\u00b0C");
         reading("pool_ph", "ph_entity", "mdi:ph", "pH", 2, "");
         reading("pool_redox", "redox_entity", "mdi:lightning-bolt-outline", "RedOx", 0, "mV");
+        // pH and RedOx against their range (HACF #217): green inside, red
+        // outside, once the basin is drawn or a range is given, and the
+        // setpoint after the value.
+        const ranged = poolBasin || ["ph_min", "ph_max", "redox_min", "redox_max"].some((k) => cfg[k] !== undefined);
+        [["pool_ph", "ph_entity", "ph_target_entity", "ph_min", "ph_max", POOL_PH_RANGE, 2], ["pool_redox", "redox_entity", "redox_target_entity", "redox_min", "redox_max", POOL_REDOX_RANGE, 0]].forEach(([key, field, target, lo, hi, def, digits]) => {
+          const line = extraLines.find((l) => l.key === key);
+          if (!line) return;
+          const v = numericState(hass, cfg[field]);
+          const min = numberOrNull(cfg[lo]) ?? def[0], max = numberOrNull(cfg[hi]) ?? def[1];
+          if (ranged && v !== null) { if (v >= min && v <= max) line.good = true; else line.bad = true; }
+          const aim = cfg[target] ? numericState(hass, cfg[target]) : null;
+          if (aim !== null) line.value = keepTogether(`${line.value} \u2192 ${netNumber(hass, aim, digits)}`);
+        });
+        if (poolBasin && cfg.cover_entity) {
+          const c = poolCoverOf(hass, cfg);
+          if (c) extraLines.push({ key: "pool_cover", icon: "mdi:window-shutter", label: t(hass, "pool_line_cover"), entity: cfg.cover_entity,
+            value: wintered ? t(hass, "pool_cover_tarp") : c.moving ? t(hass, c.moving === "opening" ? "pool_cover_opening" : "pool_cover_closing") : c.pos >= 100 ? t(hass, "pool_cover_closed") : c.pos <= 0 ? t(hass, "pool_cover_open") : keepTogether(t(hass, "pool_cover_part").replace("{p}", String(Math.round(100 - c.pos)))) });
+        }
+        if (poolBasin && cfg.shower_entity && stateObj(hass, cfg.shower_entity)) {
+          extraLines.push({ key: "pool_shower", icon: "mdi:shower-head", label: t(hass, "pool_line_shower"), entity: cfg.shower_entity, value: t(hass, poolOn(hass, cfg.shower_entity) && !wintered ? "pool_shower_on" : "pool_shower_off") });
+        }
         const ft = numericEntity(hass, cfg.filtration_time_entity);
         if (ft) {
           const u = String(ft.attributes.unit_of_measurement || "h").toLowerCase();
@@ -3473,6 +3495,12 @@ class ApplianceCard extends HTMLElement {
       const needle = pressure !== null && mode !== "unav"
         ? Math.round(-120 + Math.max(0, Math.min(1, pressure / POOL_GAUGE_MAX_BAR)) * 240) : null;
       pool = { mode, chlorine, dosing, lit, needle, can, winter: wintered };
+      if (poolBasin) {
+        const c = poolCoverOf(hass, cfg) || { pos: 0, moving: null };
+        const sun = stateObj(hass, "sun.sun");
+        pool.basin = { pos: c.pos, moving: c.moving, spots: cfg.spot_count, light: lit ? poolSpotLight(hass, cfg) : "off", night: !!sun && sun.state === "below_horizon",
+          shower: cfg.shower_entity ? poolOn(hass, cfg.shower_entity) : null, pump: ["running", "frost", "backwash"].includes(mode), winter: wintered };
+      }
     }
 
     // Solar panels: they produce, produce little, rest at night or are in
@@ -4521,6 +4549,9 @@ class ApplianceCard extends HTMLElement {
         /* Alarms and timers (#136): a set one's icon lit, a disabled one
            faded, a timer's bar between its label and its countdown. */
         .info-line.lit ha-icon { color: var(--primary-color, #03a9f4); }
+        /* A value inside its range in green, outside in red (pool pH, #217). */
+        .info-line.good > span:not(.label) { color: var(--success-color, #43a047); font-weight: 500; }
+        .info-line.bad > span:not(.label) { color: var(--error-color, #f44336); font-weight: 500; }
         .info-line.timed .label { color: var(--primary-text-color, #1c1c1c); font-weight: 500; }
         .info-line.dim { opacity: .55; }
         .info-line.has-bar > span:last-child { margin-left: auto; font-variant-numeric: tabular-nums; }
@@ -4835,7 +4866,7 @@ class ApplianceCard extends HTMLElement {
             const tick = l.tick ? ` data-fire="${l.tick.fire}" data-dur="${l.tick.dur}"` : "";
             if (tick) this._hasTick = true;
             const bar = !armed && l.bar !== undefined && l.bar !== null ? `<span class="lbar"><i${tick} style="width:${Math.round(l.bar * 10) / 10}%"></i></span>` : "";
-            return `<div class="info-line ${armed || l.warn ? "warn" : l.caution ? "caution" : ""}${l.open || l.menu || delKey ? " clickable" : ""}${l.menu ? " has-menu" : ""}${l.wrap && !bar ? " wrap" : ""}${l.lit ? " lit" : ""}${l.dim ? " dim" : ""}${l.del ? " timed" : ""}${armed ? " armed" : ""}${bar ? " has-bar" : ""}${!bar && !l.wrap && !l.bare && value && String(value).length <= 14 ? " fit" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""}${delKey ? ` data-del="${esc(delKey)}"` : ""}${l.menu ? ` data-line-menu="${l.menu}" aria-expanded="${this._lineMenu === l.menu}"` : ""} title="${esc(l.label)}"><ha-icon icon="${esc(armed ? "mdi:delete" : l.icon)}"></ha-icon>${l.bare && value ? "" : `<span class="label">${esc(l.label)}</span>`}${bar}${value ? `<span${!armed && tick ? ` class="cd"${tick}` : ""}>${esc(value)}</span>` : ""}${l.menu ? `<ha-icon class="chev" icon="mdi:chevron-${this._lineMenu === l.menu ? "up" : "down"}"></ha-icon>` : ""}</div>`;
+            return `<div class="info-line ${armed || l.warn ? "warn" : l.caution ? "caution" : ""}${l.open || l.menu || delKey ? " clickable" : ""}${l.menu ? " has-menu" : ""}${l.wrap && !bar ? " wrap" : ""}${l.lit ? " lit" : ""}${l.dim ? " dim" : ""}${l.good ? " good" : ""}${l.bad ? " bad" : ""}${l.del ? " timed" : ""}${armed ? " armed" : ""}${bar ? " has-bar" : ""}${!bar && !l.wrap && !l.bare && value && String(value).length <= 14 ? " fit" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""}${delKey ? ` data-del="${esc(delKey)}"` : ""}${l.menu ? ` data-line-menu="${l.menu}" aria-expanded="${this._lineMenu === l.menu}"` : ""} title="${esc(l.label)}"><ha-icon icon="${esc(armed ? "mdi:delete" : l.icon)}"></ha-icon>${l.bare && value ? "" : `<span class="label">${esc(l.label)}</span>`}${bar}${value ? `<span${!armed && tick ? ` class="cd"${tick}` : ""}>${esc(value)}</span>` : ""}${l.menu ? `<ha-icon class="chev" icon="mdi:chevron-${this._lineMenu === l.menu ? "up" : "down"}"></ha-icon>` : ""}</div>`;
           })
           .join("")}${lineMenuHtml}</div>`
       : "";

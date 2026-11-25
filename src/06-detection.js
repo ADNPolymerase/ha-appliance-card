@@ -894,6 +894,8 @@ const TYPE_CAPS = {
   power_strip: { ntStrip: true },
   // A kitchen robot, read from the plug it is on (HACF #170).
   food_processor: { ntFood: true },
+  // A Ninja CREAMi or SLUSHi (HACF #217), read from its plug.
+  frozen_treat: { ntTreat: true },
   // A water dispenser, chiller and carbonator (#140), mostly on a plug.
   water_dispenser: { ntWater: true },
   // A gas fireplace (#130): flame, fan, lights and pilot on their own.
@@ -1028,6 +1030,7 @@ const STATE_DOMAINS = {
   drying_rack: ["binary_sensor", "cover", "input_boolean", "switch", "sensor"],
   power_strip: ["switch", "input_boolean", "light"],
   food_processor: ["switch", "sensor", "input_boolean", "binary_sensor"],
+  frozen_treat: ["switch", "sensor", "input_boolean", "binary_sensor"],
   water_dispenser: ["switch", "sensor", "input_boolean", "binary_sensor"],
   gas_fireplace: ["switch", "binary_sensor", "climate", "input_boolean"],
   speaker: ["media_player"],
@@ -1155,7 +1158,7 @@ function compactModeOf(v) {
 // thirty types in one list were hard to find one's way in.
 const TYPE_GROUPS = [
   ["laundry", ["washer", "dryer"]],
-  ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster", "pellet_grill", "food_processor", "water_dispenser"]],
+  ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster", "pellet_grill", "food_processor", "frozen_treat", "water_dispenser"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove", "gas_fireplace"]],
   ["air", ["air_conditioner", "dehumidifier", "humidifier", "air_purifier", "fan", "diffuser", "hrv", "climate_sensor"]],
   ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "fingerbot", "valve", "drying_rack", "power_strip", "speaker", "console", "streamer", "cover"]],

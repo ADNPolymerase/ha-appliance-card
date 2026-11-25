@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "5.0.0";
+const CARD_VERSION = "5.1.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -189,7 +189,7 @@ const T = {
     type_cover: "Shutter, blind, pergola or awning", layout_cov_shutter: "Roller shutter", layout_cov_blind: "Roller blind", layout_cov_venetian: "Venetian blind", layout_cov_raffstore: "Exterior venetian blind", layout_cov_pergola: "Bioclimatic pergola", layout_cov_awning: "Awning", layout_cov_curtain: "Curtain", curtain_opening: "Opens", curtain_center: "From the middle", curtain_left: "To the left", curtain_right: "To the right", cov_open: "Open", cov_closed: "Closed", cov_open_at: "Open {pct} %", cov_opening: "Opening", cov_closing: "Closing", cov_deployed: "Extended", cov_retracted: "Retracted", cov_deployed_at: "Extended {pct} %", cov_deploying: "Extending", cov_retracting: "Retracting", cov_louvers_open: "Louvers open", cov_louvers_closed: "Louvers closed", cov_louvers_at: "Louvers {pct} %", cov_louvers_opening: "Opening the louvers", cov_louvers_closing: "Closing the louvers", cov_position: "Position", cov_tilt: "Slats", cov_light: "Light", cov_open_btn: "Open", cov_close_btn: "Close", cover_color: "Colour (apron, slats, frame)", fabric_color: "Fabric colour", fabric_stripes: "Striped fabric", cov_c_white: "White", cov_c_grey: "Grey", cov_c_anthracite: "Anthracite", cov_c_black: "Black", cov_c_beige: "Beige", cov_c_wood: "Wood", cov_c_brown: "Brown", cov_f_ecru: "Ecru", cov_f_white: "White", cov_f_linen: "Linen", cov_f_grey: "Grey", cov_f_anthracite: "Anthracite", cov_f_blue: "Blue", cov_f_petrol: "Petrol blue", cov_f_terracotta: "Terracotta", cov_f_green: "Green", layout_ths_co2_eink: "CO\u2082 monitor, e-ink (Aranet4)", layout_ths_co2_box: "CO\u2082 monitor, LED bar (AirGradient)", layout_ths_co2_netatmo: "Netatmo indoor station", layout_ths_co2_netatmo_module: "Netatmo additional indoor module", layout_ths_switchbot_co2: "SwitchBot Meter Pro CO\u2082", layout_ths_switchbot_pro: "SwitchBot Meter Pro", layout_ths_switchbot_meter: "SwitchBot Meter", layout_ths_switchbot_plus: "SwitchBot Meter Plus", layout_ths_switchbot_outdoor: "SwitchBot Indoor/Outdoor Meter", ths_co2: "CO\u2082", co2_good: "Air is fine", co2_ventilate: "Ventilation advised", co2_poor: "Ventilate now", co2_warning: "Orange from (ppm)", co2_alert: "Red from (ppm)", netatmo_color: "Netatmo colour", ntm_aluminium: "Aluminium", ntm_sand: "Sand", ntm_mint: "Mint", ntm_graphite: "Graphite",
     type_fingerbot: "Finger bot (Fingerbot, SwitchBot Bot)", layout_fb_plus: "Fingerbot Plus (Tuya, Adaprox, MOES)", layout_fb_switchbot: "SwitchBot Bot", layout_fb_classic: "Fingerbot, first model", fingerbot_color: "Colour", fb_ready: "Ready", fb_pressing: "Pressing", fb_held: "Held down", fb_released: "Released", fb_charging: "Charging", fb_charged: "Charged", fb_low: "Low battery", fb_press: "Press", fb_charge: "Charge", fb_mode: "Mode", fb_m_click: "Press", fb_m_switch: "Switch", fb_m_program: "Program", fb_lower: "Down position", fb_upper: "Up position", fb_sustain: "Hold time", fb_reverse: "Reversed", fb_touch: "Touch button", fb_yes: "Yes", fb_no: "No", fb_last: "Last press",
     type_valve: "Shut-off valve (Aqara T1, Tuya)", layout_vlv_aqara: "Aqara Valve Controller T1", layout_vlv_tuya: "Tuya valve controller", vlv_open: "Open", vlv_closed: "Closed", vlv_opening: "Opening", vlv_closing: "Closing", valve_handle_color: "Handle colour", vlv_h_red: "Red", vlv_h_blue: "Blue", vlv_h_yellow: "Yellow", vlv_h_black: "Black",
-    type_food_processor: "Thermomix", type_gas_fireplace: "Gas fireplace", gf_burning: "Burning", gf_pilot_on: "Pilot on", gf_flame_height: "Flame height", gf_flame: "Flame sensor", gf_pilot: "Pilot light", gf_on: "On", gf_error: "Error", photo_label: "Your own photo", photo_upload: "Upload a photo", photo_remove: "Remove the photo", photo_hint: "Drag the photo to frame it, then put the dashed frame over the window: the cover moves inside it. Take the photo with the cover open.", photo_reset: "Frame again", photo_uploading: "Uploading\u2026", photo_error: "Couldn't load the photo", photo_add_area: "Add an area", photo_remove_area: "Remove this area", door_style_gate: "Swing gate", door_style_sliding_gate: "Sliding gate", det_gate_leaves: "Gate leaves", gate_leaves_1: "One leaf", gate_leaves_2: "Two leaves", det_gate_side: "Opens to", gate_side_left: "Left", gate_side_right: "Right", photo_hint_door: "Drag the photo to frame it, then put the dashed frame on the door, the window or the gate: it opens inside it. Take the photo shut. A garage door or a gate: take it open, it is drawn over the photo.", photo_hint_laundry: "Drag the photo to frame it, then put the dashed frame on the porthole: the drum turns inside it. Take the photo door shut, machine off.", photo_hint_screen: "Drag the photo to frame it, then put the dashed frame on the screen: the picture shows inside it. Take the photo screen off.", layout_fp_tm31: "Thermomix TM31", layout_fp_tm6: "Thermomix TM6", fp_off: "Off", fp_ready: "Ready", fp_mixing: "Mixing", fp_cooking: "Cooking",
+    type_food_processor: "Thermomix", layout_pool_pump: "Pump and filter", layout_pool_basin: "Pool", pool_spots: "Number of spots", section_pool_cover: "Pool cover", section_shower: "Solar shower", section_ph_target: "pH setpoint", section_redox_target: "RedOx setpoint", pool_line_cover: "Cover", pool_line_shower: "Shower", pool_cover_open: "Open", pool_cover_closed: "Closed", pool_cover_part: "{p} % open", pool_cover_opening: "Opening", pool_cover_closing: "Closing", pool_cover_tarp: "Closed, winter tarp", pool_shower_on: "Running", pool_shower_off: "Off", type_frozen_treat: "Ice cream & slush maker", ft_churning: "Churning", ft_freezing: "Freezing", ft_done: "Done", ft_ready_serve: "Ready to serve", ft_flavor: "Flavour", ft_fl_vanilla: "Vanilla", ft_fl_strawberry: "Strawberry", ft_fl_chocolate: "Chocolate", ft_fl_pistachio: "Pistachio", ft_fl_mango: "Mango", ft_fl_blue_raspberry: "Blue raspberry", type_gas_fireplace: "Gas fireplace", gf_burning: "Burning", gf_pilot_on: "Pilot on", gf_flame_height: "Flame height", gf_flame: "Flame sensor", gf_pilot: "Pilot light", gf_on: "On", gf_error: "Error", photo_label: "Your own photo", photo_upload: "Upload a photo", photo_remove: "Remove the photo", photo_hint: "Drag the photo to frame it, then put the dashed frame over the window: the cover moves inside it. Take the photo with the cover open.", photo_reset: "Frame again", photo_uploading: "Uploading\u2026", photo_error: "Couldn't load the photo", photo_add_area: "Add an area", photo_remove_area: "Remove this area", door_style_gate: "Swing gate", door_style_sliding_gate: "Sliding gate", det_gate_leaves: "Gate leaves", gate_leaves_1: "One leaf", gate_leaves_2: "Two leaves", det_gate_side: "Opens to", gate_side_left: "Left", gate_side_right: "Right", photo_hint_door: "Drag the photo to frame it, then put the dashed frame on the door, the window or the gate: it opens inside it. Take the photo shut. A garage door or a gate: take it open, it is drawn over the photo.", photo_hint_laundry: "Drag the photo to frame it, then put the dashed frame on the porthole: the drum turns inside it. Take the photo door shut, machine off.", photo_hint_screen: "Drag the photo to frame it, then put the dashed frame on the screen: the picture shows inside it. Take the photo screen off.", layout_fp_tm31: "Thermomix TM31", layout_fp_tm6: "Thermomix TM6", fp_off: "Off", fp_ready: "Ready", fp_mixing: "Mixing", fp_cooking: "Cooking",
     det_tampered: "Tampered", det_sec_tamper: "Tamper",
     cam_person: "Person detected", cam_vehicle: "Vehicle detected", cam_animal: "Animal detected", cam_siren: "Siren", cam_line_spotlight: "Spotlight", cam_line_tracking: "Auto tracking", cam_v_lit: "On", cam_v_on: "On", cam_v_off: "Off", cam_sec_person: "Person detection", cam_sec_vehicle: "Vehicle detection", cam_sec_animal: "Animal detection", cam_sec_pan: "Pan position", cam_sec_tilt: "Tilt position",
     valve_fluid: "Fluid", vlv_f_water: "Water", vlv_f_gas: "Gas",
@@ -3727,6 +3727,8 @@ const TYPE_CAPS = {
   power_strip: { ntStrip: true },
   // A kitchen robot, read from the plug it is on (HACF #170).
   food_processor: { ntFood: true },
+  // A Ninja CREAMi or SLUSHi (HACF #217), read from its plug.
+  frozen_treat: { ntTreat: true },
   // A water dispenser, chiller and carbonator (#140), mostly on a plug.
   water_dispenser: { ntWater: true },
   // A gas fireplace (#130): flame, fan, lights and pilot on their own.
@@ -3861,6 +3863,7 @@ const STATE_DOMAINS = {
   drying_rack: ["binary_sensor", "cover", "input_boolean", "switch", "sensor"],
   power_strip: ["switch", "input_boolean", "light"],
   food_processor: ["switch", "sensor", "input_boolean", "binary_sensor"],
+  frozen_treat: ["switch", "sensor", "input_boolean", "binary_sensor"],
   water_dispenser: ["switch", "sensor", "input_boolean", "binary_sensor"],
   gas_fireplace: ["switch", "binary_sensor", "climate", "input_boolean"],
   speaker: ["media_player"],
@@ -3988,7 +3991,7 @@ function compactModeOf(v) {
 // thirty types in one list were hard to find one's way in.
 const TYPE_GROUPS = [
   ["laundry", ["washer", "dryer"]],
-  ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster", "pellet_grill", "food_processor", "water_dispenser"]],
+  ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster", "pellet_grill", "food_processor", "frozen_treat", "water_dispenser"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove", "gas_fireplace"]],
   ["air", ["air_conditioner", "dehumidifier", "humidifier", "air_purifier", "fan", "diffuser", "hrv", "climate_sensor"]],
   ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "fingerbot", "valve", "drying_rack", "power_strip", "speaker", "console", "streamer", "cover"]],
@@ -4401,7 +4404,7 @@ const PLUG_THRESHOLDS = {
   washer: 10, dryer: 10, dishwasher: 10, oven: 50, microwave: 50, cooker: 20, coffee: 200, rice_cooker: 100,
   air_fryer: 50, kettle: 50, toaster: 50, water_heater: 50, space_heater: 30, towel_warmer: 10, dehumidifier: 30, humidifier: 5,
   air_purifier: 3, fan: 3, hood: 5, pool_pump: 50, printer_3d: 30, filament_dryer: 15, cooktop: 50, pet_fountain: 1,
-  pellet_grill: 15, spa: 50, sauna: 100, aquarium: 3, water_pump: 30, floor_heating: 30, christmas_tree: 2, iron: 10, mobility: 40, irrigation: 3, litter_box: 5, speaker: 3, console: 8, streamer: 4, food_processor: 5, water_dispenser: 3,
+  pellet_grill: 15, spa: 50, sauna: 100, aquarium: 3, water_pump: 30, floor_heating: 30, christmas_tree: 2, iron: 10, mobility: 40, irrigation: 3, litter_box: 5, speaker: 3, console: 8, streamer: 4, food_processor: 5, frozen_treat: 20, water_dispenser: 3,
 };
 // A coffee machine or a rice cooker drawing more than this, under its
 // threshold, is keeping warm.
@@ -4988,7 +4991,7 @@ function robotBatteryIcon(pct, charging) {
 // rests, and sometimes it backwashes the filter into the drain or runs to
 // keep the pipes from freezing. A chlorine dosing pump is an option: its tank
 // and its long tube only show when one is given.
-const POOL_ONLY_FIELDS = ["water_temperature_entity", "air_temperature_entity", "ph_entity", "redox_entity",
+const POOL_ONLY_FIELDS = ["water_temperature_entity", "air_temperature_entity", "ph_entity", "redox_entity", "pool_layout", "shower_entity", "spot_count", "ph_target_entity", "redox_target_entity",
   "filtration_time_entity", "pressure_entity", "pressure_alert", "pool_mode_entity", "chlorine_pump_entity",
   "chlorine_level_entity", "backwash_entity", "frost_entity", "pool_alert_entity"];
 const POOL_NAME_RE = /pool.?pump|swimming.?pool|(^|[^a-z])pool([^a-z]|$)|piscine|pompe.?(de.?)?piscine|oklyn|neopool|iopool|flipr|hayward|pentair|filter.?pump|(^|[^a-z])(exo|intex)([^a-z]|$)|poolstation|(^|[^a-z])pisc|schwimmbad|poolpumpe|filterpumpe|bomba.?de.?(piscina|filtra)|piscina|pompa.?(piscina|filtraz)|zwembad|zwempomp|bassengpump|poolpump|pompa.?basen|basen|baz(e|\u00e9)n|\u6cf3\u6c60|\u0431\u0430\u0441\u0441\u0435\u0439\u043d/;
@@ -5037,6 +5040,37 @@ function poolOn(hass, entityId) {
   const n = Number(v);
   return Number.isFinite(n) && n > 0;
 }
+
+// The pool's cover (HACF #217): how far it is closed, 0 to 100, and whether
+// it is moving. A cover gives its position (100 is open in Home Assistant);
+// without one, open or closed; a binary sensor is on when open.
+function poolCoverOf(hass, cfg) {
+  const s = cfg.cover_entity ? stateObj(hass, cfg.cover_entity) : null;
+  if (!s) return null;
+  const v = String(s.state).trim().toLowerCase();
+  const moving = v === "opening" || v === "closing" ? v : null;
+  const p = numberOrNull((s.attributes || {}).current_position);
+  if (p !== null) return { pos: Math.max(0, Math.min(100, 100 - p)), moving };
+  if (domainOf(cfg.cover_entity) === "sensor" || domainOf(cfg.cover_entity) === "number" || domainOf(cfg.cover_entity) === "input_number") {
+    const n = numberOrNull(s.state);
+    if (n !== null) return { pos: Math.max(0, Math.min(100, 100 - n)), moving };
+  }
+  const open = ["open", "on", "true", "opening"].includes(v);
+  return { pos: open ? 0 : 100, moving };
+}
+// The spots' light: their colour when the light has one, white otherwise,
+// shifting colours when its effect says so.
+function poolSpotLight(hass, cfg) {
+  const s = cfg.light_entity ? stateObj(hass, cfg.light_entity) : null;
+  const a = (s && s.attributes) || {};
+  if (/random|rainbow|cycle|multi|party|disco|aleat|zufall|arc.?en.?ciel|regenbogen/i.test(String(a.effect || ""))) return "random";
+  const rgb = Array.isArray(a.rgb_color) && a.rgb_color.length === 3 ? a.rgb_color.map(Number) : null;
+  if (rgb && rgb.every((n) => Number.isFinite(n)) && !(rgb[0] > 235 && rgb[1] > 235 && rgb[2] > 235)) return `rgb(${rgb.map((n) => Math.round(n)).join(",")})`;
+  return "#fff3c4";
+}
+// The ranges a pool's water is in: pH 7.0 to 7.6, RedOx 650 to 750 mV.
+const POOL_PH_RANGE = [7.0, 7.6];
+const POOL_REDOX_RANGE = [650, 750];
 
 // An appliance put away for the winter (a pool, a spa, the garden watering,
 // a grill under its cover; dosing-tank-card #3, like the mower's #80):
@@ -6019,7 +6053,7 @@ function lampSpotsOf(cfg, st) {
 // sauna, an aquarium, a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
 // moves moves only on a machine carrying nt-on, staggered through --d0, and
 // the robot's cable and the sump's float follow their SMIL animations.
-const NT_TYPES = ["water_dispenser", "power_strip", "food_processor", "drying_rack", "valve", "fingerbot", "cover", "pellet_grill", "water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer", "gas_fireplace"];
+const NT_TYPES = ["water_dispenser", "power_strip", "food_processor", "frozen_treat", "drying_rack", "valve", "fingerbot", "cover", "pellet_grill", "water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer", "gas_fireplace"];
 // How many spools a filament dryer holds (#93).
 const FD_COUNTS = [1, 2, 4];
 const FD_COLORS = ["#43a047", "#fb8c00", "#8e24aa", "#eceff1"];
@@ -6075,6 +6109,8 @@ const WD_LAYOUTS = ["under_sink", "column"];
 const WD_COOL_W = 30;
 const WD_CARB_W = 150;
 const WD_NAME_RE = /water.?(dispenser|cooler|chiller)|erogatore|refrigeratore.?(d.?)?acqua|gasatore|frigogasatore|fontaine.?(a.?eau|d.?eau)|distributeur.?(d.?)?eau|refroidisseur.?d.?eau|wasserspender|wassersprudler|sprudler|dispensador.?de.?agua|enfriador.?de.?agua|waterdispenser|waterkoeler|vattenautomat|vattenkylare|dystrybutor.?wody|vodni.?automat|vizadagolo|carbonat|selfizz|glacier.?box/;
+// A Ninja CREAMi or SLUSHi, or any ice cream or slush maker (HACF #217).
+const FT_NAME_RE = /creami|slushi|ice.?cream.?maker|soft.?serve|slush(ie|y)?.?(machine|maker)|sorbeti?ere|turbine.?a.?glace|machine.?a.?(glace|granite)|eismaschine|softeis|heladera|maquina.?de.?helado|gelatiera|ijsmachine|glassmaskin|granizad/;
 const FP_NAME_RE = /thermomix|(^|[^a-z])tm ?(31|5|6|7)([^0-9]|$)|monsieur.?cuisine|robot.?cuiseur|robot.?menager|kuchenmaschine|food.?processor|kitchen.?robot|cook.?expert|i.?companion|cookeo/;
 const RACK_NAME_RE = /^(?!.*(filament|cheveux|hair|tumble|seche.?linge)).*(drying.?rack|clothes.?(rack|horse|airer|dryer.?rack)|(^|[^a-z])airer|etendoir|etendage|sechoir.?(mural|a.?linge)|waschestander|trockengestell|tendedero|stendibiancheria|stendino|droogrek|torkstall|torkstallning|t\u00f8rkestativ|torkestativ|torrestativ|suszarka.?(na.?pranie|scienna))/;
 const VALVE_HANDLE_COLORS = ["red", "blue", "yellow", "black"];
@@ -6231,6 +6267,7 @@ const NT_ONLY_FIELDS = {
   drying_rack: ["rack_layout", "rack_color"],
   power_strip: ["strip_layout", "strip_orientation", "outlets", "usb_entity"],
   food_processor: ["food_layout"],
+  frozen_treat: ["frozen_layout", "frozen_flavor"],
   water_dispenser: ["water_dispenser_layout", "dispensing_entity", "dispense_mode_entity", "refill_entity", "water_total_entity", "co2_cylinder_entity", "maintenance_entity", "cooling_threshold", "carbonation_threshold"],
   gas_fireplace: ["flame_entity", "flame_height_entity", "thermostat_entity", "pilot_entity"],
   fingerbot: ["fingerbot_layout", "fingerbot_color", "bot_mode_entity", "lower_entity", "upper_entity", "sustain_entity", "reverse_entity", "touch_entity"],
@@ -6335,6 +6372,7 @@ const NT_NAME_RES = [
   ["drying_rack", RACK_NAME_RE],
   ["water_dispenser", WD_NAME_RE],
   ["speaker", /(^|[^a-z])juke.?box|rock.?ola|wurlitzer|seeburg/],
+  ["frozen_treat", FT_NAME_RE],
   ["food_processor", FP_NAME_RE],
   ["detector", /x.?sense|smoke|fumee|detecteur.?(de.?)?(fumee|co|fuite)|monoxyde|carbon.?monoxide|(^|[^a-z])co.?(alarm|detector)|rauchmelder|detector.?de.?humo|rilevatore|rookmelder|brandvarnare|roykvarsler|roegalarm|czujnik.?dymu|water.?leak|fuite.?d.?eau|wassermelder|leak.?sensor/],
   ["christmas_tree", /christmas|xmas|(^|[^a-z])sapin|(^|[^a-z])noel([^a-z]|$)|weihnacht|tannenbaum|navidad|natale|kerstboom|julgran|juletre|juletrae|choink|vanocni.?strom/],
@@ -6407,6 +6445,15 @@ function wdLayoutOf(cfg, st) {
   if (WD_LAYOUTS.includes(cfg.water_dispenser_layout)) return cfg.water_dispenser_layout;
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   return /column|colonne|cooler|fontaine|freestanding|standing|colonna|saule|columna|zuil/.test(hay) ? "column" : "under_sink";
+}
+function ftLayoutOf(cfg, st) {
+  if (FT_LAYOUTS.includes(cfg.frozen_layout)) return cfg.frozen_layout;
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.power_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
+  if (/slushi|slush/.test(hay)) return /duo|double|twin|fs4/.test(hay) ? "slushi_duo" : "slushi";
+  if (/swirl|nc7/.test(hay)) return /scoop|nc702/.test(hay) ? "creami_scoop_swirl" : "creami_swirl";
+  if (/(^|[^a-z])xl|nc6/.test(hay)) return "creami_xl";
+  if (/deluxe|nc5/.test(hay)) return "creami_deluxe";
+  return /nc302/.test(hay) ? "creami_bar" : "creami";
 }
 function fpLayoutOf(cfg, st) {
   if (FP_LAYOUTS.includes(cfg.food_layout)) return cfg.food_layout;
@@ -7183,6 +7230,19 @@ function stripReadOf(hass, cfg, st, lines) {
 const ARC_COLORS = { blue: ["#2f5bd3", "#1a3584"], red: ["#d32f2f", "#7f1414"], green: ["#2fae5c", "#17602f"], yellow: ["#f2c230", "#8a6a0b"], orange: ["#f57c1f", "#8a3f08"], purple: ["#8e4fd6", "#4b2385"], white: ["#e8ecf0", "#9aa3ad"], black: ["#3a3f47", "#16191e"] };
 // The players' buttons and sticks: lit, and at rest.
 const ARC_BUTTONS = { green: ["#38e07b", "#2c9a5c"], blue: ["#4d7dff", "#3258b8"], red: ["#ff4d4d", "#a33a3a"], yellow: ["#ffd35c", "#b08a1e"], orange: ["#ff9a3c", "#a85a1a"], purple: ["#b46bff", "#6c3aa8"], white: ["#f5f7fa", "#9aa3ad"] };
+// Ninja CREAMi and SLUSHi (HACF #217), drawn from each model's photos. Read
+// from the plug: off, ready, the motor (or the compressor) at work, done.
+// FTS holds the phase and the flavour while one drawing is built.
+const FT_LAYOUTS = ["creami", "creami_bar", "creami_deluxe", "creami_xl", "creami_swirl", "creami_scoop_swirl", "slushi", "slushi_duo"];
+const FT_LAYOUT_NAMES = { creami: "CREAMi (NC300)", creami_bar: "CREAMi (NC302)", creami_deluxe: "CREAMi Deluxe", creami_xl: "CREAMi XL", creami_swirl: "CREAMi Swirl", creami_scoop_swirl: "CREAMi Scoop & Swirl", slushi: "SLUSHi", slushi_duo: "SLUSHi Duo" };
+// [light, dark, slush] colour of each flavour.
+const FT_FLAVORS = { vanilla: ["#f7eccd", "#e6d3a1", "#f2e2b3"], strawberry: ["#f8c9d3", "#e1879c", "#ef3d5a"], chocolate: ["#a37557", "#6e4631", "#7b4a2f"], pistachio: ["#dfe9b8", "#a9c06a", "#9cc24a"], mango: ["#ffd48a", "#f4a12d", "#ff9416"], blue_raspberry: ["#bfe3ff", "#5aa7ef", "#2f8cf2"] };
+// When each machine last ran, by its plug: a CREAMi says done for ten minutes
+// after its program, a SLUSHi ready to serve for half an hour after its
+// compressor stops. Seen while the page is open only.
+const FT_LAST_RUN = new Map();
+const FT_DONE_MS = 10 * 60 * 1000;
+const FT_HOLD_MS = 30 * 60 * 1000;
 // The card's colour on a drawing made after a real product: its shell, the
 // greys, blacks and whites it is drawn in, takes the colour, lightest to
 // darkest as before; what has a colour of its own (a screen's glow, a
@@ -7281,7 +7341,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
   if (unav) {
     const ml = meterLayoutOf(cfg, st);
     const kinds = { gas_fireplace: "gas_fireplace", pellet_grill: "pellet_grill", filament_dryer: "dryer", humidifier: "humidifier", water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree", mobility: `mob_${mobilityLayoutOf(cfg, st)}`,
-      irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, fingerbot: `fb_${fingerbotLayoutOf(cfg, st)}`, valve: `vlv_${valveLayoutOf(cfg, st)}`, drying_rack: `rack_${rackLayoutOf(cfg, st)}`, water_dispenser: `wd_${wdLayoutOf(cfg, st)}`, food_processor: `fp_${fpLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}`, console: `con_${consoleLayoutOf(cfg, st)}`, streamer: `str_${streamerLayoutOf(cfg, st)}`, climate_sensor: `ths_${thsLayoutOf(cfg, st)}`, cover: `cov_${coverLayoutOf(cfg, st)}` };
+      irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, fingerbot: `fb_${fingerbotLayoutOf(cfg, st)}`, valve: `vlv_${valveLayoutOf(cfg, st)}`, drying_rack: `rack_${rackLayoutOf(cfg, st)}`, water_dispenser: `wd_${wdLayoutOf(cfg, st)}`, food_processor: `fp_${fpLayoutOf(cfg, st)}`, frozen_treat: `ft_${ftLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}`, console: `con_${consoleLayoutOf(cfg, st)}`, streamer: `str_${streamerLayoutOf(cfg, st)}`, climate_sensor: `ths_${thsLayoutOf(cfg, st)}`, cover: `cov_${coverLayoutOf(cfg, st)}` };
     return out("unav", "ev_offline", NT_COLORS.unav, { kind: kinds[type], on: false, electric: floorLayoutOf(cfg) === "electric", model: type === "water_pump" ? circModelOf(cfg, st) : "",
       palette: cfg.tree_palette, ...(type === "pellet_grill" ? { layout: grillLayoutOf(cfg, st) } : {}), ...(type === "filament_dryer" ? fdLook(cfg) : {}), presents: type === "christmas_tree" && treePresents(cfg), color: type === "speaker" ? speakerColorOf(cfg, st) : type === "cover" ? cvColor(cfg.cover_color, COVER_COLORS) : "",
       ...(type === "cover" ? { p: 100, tilt: 60, fabric: cvColor(cfg.fabric_color, FABRIC_COLORS), stripes: cfg.fabric_stripes !== false } : {}), ...(type === "climate_sensor" ? { co2: null, body: cfg.netatmo_color } : {}), ...(type === "fingerbot" ? { layout: fingerbotLayoutOf(cfg, st), body: cfg.fingerbot_color } : {}), ...(type === "valve" ? { handle: valveHandleOf(cfg, st), fluid: valveFluidOf(cfg, st) } : {}), ...(type === "drying_rack" ? { color: cfg.rack_color } : {}) });
@@ -7554,6 +7614,24 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     if (heat) return out("heat", "fp_cooking", NT_COLORS.heat, draw);
     if (running) return out("run", "fp_mixing", NT_COLORS.run, draw);
     return ready ? out("on", "fp_ready", NT_COLORS.idle, draw) : out("off", "fp_off", NT_COLORS.off, draw);
+  }
+  if (type === "frozen_treat") {
+    // A CREAMi or a SLUSHi on its plug: off, ready on a few watts, churning
+    // (freezing, for a SLUSHi) while the motor or the compressor draws, then
+    // done (ready to serve) for a while after it stops. Without a meter the
+    // plug only says on or off.
+    const layout = ftLayoutOf(cfg, st), slush = /^slushi/.test(layout);
+    const metered = !!cfg.power_entity && watts !== null;
+    const plugOn = !!st && NT_ON.includes(raw);
+    const key = cfg.power_entity || cfg.state_entity;
+    const now = Date.now();
+    if (running && metered) FT_LAST_RUN.set(key, now);
+    const last = FT_LAST_RUN.get(key);
+    const ph = !plugOn && !(metered && running) ? "off" : metered && running ? "run" : metered && last && now - last < (slush ? FT_HOLD_MS : FT_DONE_MS) ? "done" : "idle";
+    const draw = { kind: `ft_${layout}`, on: ph === "run", ph, flavor: cfg.frozen_flavor };
+    if (ph === "run") return out("run", slush ? "ft_freezing" : "ft_churning", NT_COLORS.run, draw);
+    if (ph === "done") return out("on", slush ? "ft_ready_serve" : "ft_done", NT_COLORS.lit, draw);
+    return ph === "idle" ? out("on", "fp_ready", NT_COLORS.idle, draw) : out("off", "fp_off", NT_COLORS.off, draw);
   }
   if (type === "drying_rack") {
     // A wall drying rack (#124): its contact sensor says unfolded or folded,
@@ -9164,7 +9242,7 @@ function requestDrawing(key) {
   drawState[key] = "loading";
   import(assetUrl(`ha-appliance-card-draw-${key}.js`))
     .then((m) => {
-      if (!drawDeps) drawDeps = { __v: CARD_VERSION, ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CHARGER_MODES, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntTint, numberOrNull, t, thsColor, zoneColumns };
+      if (!drawDeps) drawDeps = { __v: CARD_VERSION, ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CHARGER_MODES, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FT_FLAVORS, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntTint, numberOrNull, t, thsColor, zoneColumns };
       drawn[key] = m.default(drawDeps);
       drawState[key] = "ready";
       for (const fn of Array.from(langListeners)) {
@@ -12655,6 +12733,7 @@ class ApplianceCard extends HTMLElement {
       // Wintered, a pump at rest (or unplugged, its water drained) reads
       // Winter storage; one running for the frost keeps saying so.
       const wintered = poolWinter(hass, cfg);
+      const poolBasin = cfg.pool_layout === "basin";
       const pumpMode = poolModeOf(hass, cfg, st, watts);
       const mode = wintered && ["off", "unav"].includes(pumpMode) ? "winter" : pumpMode;
       poolWintered = wintered;
@@ -12687,6 +12766,27 @@ class ApplianceCard extends HTMLElement {
         reading("pool_air", "air_temperature_entity", "mdi:thermometer", t(hass, "pool_line_air"), 1, "\u00b0C");
         reading("pool_ph", "ph_entity", "mdi:ph", "pH", 2, "");
         reading("pool_redox", "redox_entity", "mdi:lightning-bolt-outline", "RedOx", 0, "mV");
+        // pH and RedOx against their range (HACF #217): green inside, red
+        // outside, once the basin is drawn or a range is given, and the
+        // setpoint after the value.
+        const ranged = poolBasin || ["ph_min", "ph_max", "redox_min", "redox_max"].some((k) => cfg[k] !== undefined);
+        [["pool_ph", "ph_entity", "ph_target_entity", "ph_min", "ph_max", POOL_PH_RANGE, 2], ["pool_redox", "redox_entity", "redox_target_entity", "redox_min", "redox_max", POOL_REDOX_RANGE, 0]].forEach(([key, field, target, lo, hi, def, digits]) => {
+          const line = extraLines.find((l) => l.key === key);
+          if (!line) return;
+          const v = numericState(hass, cfg[field]);
+          const min = numberOrNull(cfg[lo]) ?? def[0], max = numberOrNull(cfg[hi]) ?? def[1];
+          if (ranged && v !== null) { if (v >= min && v <= max) line.good = true; else line.bad = true; }
+          const aim = cfg[target] ? numericState(hass, cfg[target]) : null;
+          if (aim !== null) line.value = keepTogether(`${line.value} \u2192 ${netNumber(hass, aim, digits)}`);
+        });
+        if (poolBasin && cfg.cover_entity) {
+          const c = poolCoverOf(hass, cfg);
+          if (c) extraLines.push({ key: "pool_cover", icon: "mdi:window-shutter", label: t(hass, "pool_line_cover"), entity: cfg.cover_entity,
+            value: wintered ? t(hass, "pool_cover_tarp") : c.moving ? t(hass, c.moving === "opening" ? "pool_cover_opening" : "pool_cover_closing") : c.pos >= 100 ? t(hass, "pool_cover_closed") : c.pos <= 0 ? t(hass, "pool_cover_open") : keepTogether(t(hass, "pool_cover_part").replace("{p}", String(Math.round(100 - c.pos)))) });
+        }
+        if (poolBasin && cfg.shower_entity && stateObj(hass, cfg.shower_entity)) {
+          extraLines.push({ key: "pool_shower", icon: "mdi:shower-head", label: t(hass, "pool_line_shower"), entity: cfg.shower_entity, value: t(hass, poolOn(hass, cfg.shower_entity) && !wintered ? "pool_shower_on" : "pool_shower_off") });
+        }
         const ft = numericEntity(hass, cfg.filtration_time_entity);
         if (ft) {
           const u = String(ft.attributes.unit_of_measurement || "h").toLowerCase();
@@ -12713,6 +12813,12 @@ class ApplianceCard extends HTMLElement {
       const needle = pressure !== null && mode !== "unav"
         ? Math.round(-120 + Math.max(0, Math.min(1, pressure / POOL_GAUGE_MAX_BAR)) * 240) : null;
       pool = { mode, chlorine, dosing, lit, needle, can, winter: wintered };
+      if (poolBasin) {
+        const c = poolCoverOf(hass, cfg) || { pos: 0, moving: null };
+        const sun = stateObj(hass, "sun.sun");
+        pool.basin = { pos: c.pos, moving: c.moving, spots: cfg.spot_count, light: lit ? poolSpotLight(hass, cfg) : "off", night: !!sun && sun.state === "below_horizon",
+          shower: cfg.shower_entity ? poolOn(hass, cfg.shower_entity) : null, pump: ["running", "frost", "backwash"].includes(mode), winter: wintered };
+      }
     }
 
     // Solar panels: they produce, produce little, rest at night or are in
@@ -13761,6 +13867,9 @@ class ApplianceCard extends HTMLElement {
         /* Alarms and timers (#136): a set one's icon lit, a disabled one
            faded, a timer's bar between its label and its countdown. */
         .info-line.lit ha-icon { color: var(--primary-color, #03a9f4); }
+        /* A value inside its range in green, outside in red (pool pH, #217). */
+        .info-line.good > span:not(.label) { color: var(--success-color, #43a047); font-weight: 500; }
+        .info-line.bad > span:not(.label) { color: var(--error-color, #f44336); font-weight: 500; }
         .info-line.timed .label { color: var(--primary-text-color, #1c1c1c); font-weight: 500; }
         .info-line.dim { opacity: .55; }
         .info-line.has-bar > span:last-child { margin-left: auto; font-variant-numeric: tabular-nums; }
@@ -14075,7 +14184,7 @@ class ApplianceCard extends HTMLElement {
             const tick = l.tick ? ` data-fire="${l.tick.fire}" data-dur="${l.tick.dur}"` : "";
             if (tick) this._hasTick = true;
             const bar = !armed && l.bar !== undefined && l.bar !== null ? `<span class="lbar"><i${tick} style="width:${Math.round(l.bar * 10) / 10}%"></i></span>` : "";
-            return `<div class="info-line ${armed || l.warn ? "warn" : l.caution ? "caution" : ""}${l.open || l.menu || delKey ? " clickable" : ""}${l.menu ? " has-menu" : ""}${l.wrap && !bar ? " wrap" : ""}${l.lit ? " lit" : ""}${l.dim ? " dim" : ""}${l.del ? " timed" : ""}${armed ? " armed" : ""}${bar ? " has-bar" : ""}${!bar && !l.wrap && !l.bare && value && String(value).length <= 14 ? " fit" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""}${delKey ? ` data-del="${esc(delKey)}"` : ""}${l.menu ? ` data-line-menu="${l.menu}" aria-expanded="${this._lineMenu === l.menu}"` : ""} title="${esc(l.label)}"><ha-icon icon="${esc(armed ? "mdi:delete" : l.icon)}"></ha-icon>${l.bare && value ? "" : `<span class="label">${esc(l.label)}</span>`}${bar}${value ? `<span${!armed && tick ? ` class="cd"${tick}` : ""}>${esc(value)}</span>` : ""}${l.menu ? `<ha-icon class="chev" icon="mdi:chevron-${this._lineMenu === l.menu ? "up" : "down"}"></ha-icon>` : ""}</div>`;
+            return `<div class="info-line ${armed || l.warn ? "warn" : l.caution ? "caution" : ""}${l.open || l.menu || delKey ? " clickable" : ""}${l.menu ? " has-menu" : ""}${l.wrap && !bar ? " wrap" : ""}${l.lit ? " lit" : ""}${l.dim ? " dim" : ""}${l.good ? " good" : ""}${l.bad ? " bad" : ""}${l.del ? " timed" : ""}${armed ? " armed" : ""}${bar ? " has-bar" : ""}${!bar && !l.wrap && !l.bare && value && String(value).length <= 14 ? " fit" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""}${delKey ? ` data-del="${esc(delKey)}"` : ""}${l.menu ? ` data-line-menu="${l.menu}" aria-expanded="${this._lineMenu === l.menu}"` : ""} title="${esc(l.label)}"><ha-icon icon="${esc(armed ? "mdi:delete" : l.icon)}"></ha-icon>${l.bare && value ? "" : `<span class="label">${esc(l.label)}</span>`}${bar}${value ? `<span${!armed && tick ? ` class="cd"${tick}` : ""}>${esc(value)}</span>` : ""}${l.menu ? `<ha-icon class="chev" icon="mdi:chevron-${this._lineMenu === l.menu ? "up" : "down"}"></ha-icon>` : ""}</div>`;
           })
           .join("")}${lineMenuHtml}</div>`
       : "";
@@ -14596,7 +14705,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ __v: CARD_VERSION, t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, illustrationBackdropOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, ST_READY_C, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, cameraLayoutOf, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, CURTAIN_COLORS, lampColorOf, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, DETECTOR_MODELS, DOOR_STYLES, gateLeavesOf, gateSideOf, WINDOW_STYLES, FRAME_COLORS, FINGERBOT_LAYOUTS, VALVE_LAYOUTS, RACK_LAYOUTS, STRIP_LAYOUTS, STRIP_ORIENTATIONS, STRIP_MAX, FP_LAYOUTS, FP_COOK_W, WD_LAYOUTS, WD_COOL_W, WD_CARB_W, VALVE_HANDLE_COLORS, VALVE_FLUIDS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, NT_ONLY_FIELDS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, doorStyleOf, consoleLayoutOf, mobilityLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, CHARGER_TARGETS, CHARGER_MODES, SPK_COLORS, CO2_WARN, CO2_ALERT, NETATMO_COLORS, COVER_LAYOUTS, CURTAIN_OPENINGS, curtainOpeningOf, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, PHOTO_TYPES, photoAreaFor, photoUrlOf, photoBoxOf, PHOTO_AREAS_MAX, photoAreasOf, photoAreasValue, photoCoverCrop, photoShrink, ARC_COLORS, ARC_BUTTONS, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
+      .then((m) => m.default({ __v: CARD_VERSION, t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, illustrationBackdropOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, ST_READY_C, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, cameraLayoutOf, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, CURTAIN_COLORS, lampColorOf, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, DETECTOR_MODELS, DOOR_STYLES, gateLeavesOf, gateSideOf, WINDOW_STYLES, FRAME_COLORS, FINGERBOT_LAYOUTS, VALVE_LAYOUTS, RACK_LAYOUTS, STRIP_LAYOUTS, STRIP_ORIENTATIONS, STRIP_MAX, FP_LAYOUTS, FP_COOK_W, WD_LAYOUTS, WD_COOL_W, WD_CARB_W, VALVE_HANDLE_COLORS, VALVE_FLUIDS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, NT_ONLY_FIELDS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, doorStyleOf, consoleLayoutOf, mobilityLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, CHARGER_TARGETS, CHARGER_MODES, SPK_COLORS, CO2_WARN, CO2_ALERT, NETATMO_COLORS, COVER_LAYOUTS, CURTAIN_OPENINGS, curtainOpeningOf, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, PHOTO_TYPES, photoAreaFor, photoUrlOf, photoBoxOf, PHOTO_AREAS_MAX, photoAreasOf, photoAreasValue, photoCoverCrop, photoShrink, ARC_COLORS, ARC_BUTTONS, FT_LAYOUTS, FT_LAYOUT_NAMES, FT_FLAVORS, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

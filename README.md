@@ -29,7 +29,7 @@ A Lovelace card that draws the appliances of your home and animates them from th
 
 ## Features
 
-- **74 appliance types, more than 170 models drawn**, animated while they work and still when they stop. The type is detected on its own, from the entity and from the maker and model of its device, or set with `appliance_type`.
+- **75 appliance types, more than 180 models drawn**, animated while they work and still when they stop. The type is detected on its own, from the entity and from the maker and model of its device, or set with `appliance_type`.
 - **Any integration**: every field is an entity you pick. A plain smart plug is enough, its power tells whether the appliance heats, washes or spins.
 - **State understood**: `Idle`, `RUNNING`, `wash`… become idle, running, paused, finished, delayed or error, with the step of the cycle (wash, rinse, spin…).
 - **What matters for each appliance**: program, time left, door, alerts, levels, temperatures, energy and cost, today's running time.
@@ -384,7 +384,7 @@ Only `state_entity` is required, except where another entity says enough on its 
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. A drawing made after a real product (a console, a streaming box, a printer, a litter box…) is drawn in its real colours until a colour is chosen; its screen, app tile and tyres keep theirs. The scenes around a device (a sump's pit, a garden, a roof) and the lamps' light do not change. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 16 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`, `hu`, `zh-Hant`. `nb` and `nb-NO` give Norwegian. `zh` is Simplified Chinese; `zh-Hant`, `zh-TW` and `zh-HK` give Traditional Chinese. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `fingerbot` \| `valve` \| `drying_rack` \| `power_strip` \| `food_processor` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove` \| `gas_fireplace` \| `water_dispenser`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `fingerbot` \| `valve` \| `drying_rack` \| `power_strip` \| `food_processor` \| `frozen_treat` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove` \| `gas_fireplace` \| `water_dispenser`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `illustration_tap_action` | A tap on the drawing alone, the rest of the card keeping `tap_action`: `toggle` (a lamp lit by touching it), `more-info`, `none`, or any of Home Assistant's actions. Left out, the drawing does what the card does. With `toggle`, the drawing answers like the buttons, as `controls_activation` says: a tap, two taps or a long press. |
 | `show_light_button` | `false` hides the light button in the top left corner (oven, hood, 3D printer, pool pump, diffuser); the light still shows on the drawing. |
@@ -585,6 +585,8 @@ phase_entity: sensor.washer_dryer_program_phase
 | `plug_entity` | fridge | The smart plug's switch. Off reads *Unplugged* at once. Unplugged or drawing nothing, the light inside goes out. |
 | `kettle_layout` | kettle | `classic` (default, a jug in the appliance's colour) \| `steel` (a stainless steel kettle with a black handle). |
 | `food_layout` | kitchen robot | `tm6` (a Thermomix TM6 or TM7, its touch screen) \| `tm31` (a Thermomix TM31, its dial and LCD). Left out, a name that says TM31, TM21 or TM3 picks `tm31`. |
+| `frozen_layout` | ice cream and slush maker | `creami` (a Ninja CREAMi NC300) \| `creami_bar` (an NC302, its progress bar) \| `creami_deluxe` \| `creami_xl` \| `creami_swirl` \| `creami_scoop_swirl` \| `slushi` \| `slushi_duo`. Left out, the name picks it (Slushi, Duo, Swirl, Scoop, Deluxe, XL, NC302), else `creami`. |
+| `frozen_flavor` | ice cream and slush maker | The colour of the ice cream or the slush: `vanilla` (default) \| `strawberry` \| `chocolate` \| `pistachio` \| `mango` \| `blue_raspberry`. |
 | `water_dispenser_layout` | water dispenser | `under_sink` (default, a chiller and carbonator box under the sink with its CO2 cylinder and three-way tap) \| `column` (a standing water cooler). Left out, a name that says column, cooler or fontaine picks `column`. |
 | `cooling_threshold` / `carbonation_threshold` | water dispenser | Watts from which its plug says *Cooling* (30 by default, the compressor) and *Carbonating* (150 by default, the carbonator pump on top). |
 | `dispensing_entity` / `dispense_mode_entity` / `refill_entity` | water dispenser | What a plug cannot see: water being poured (a binary sensor, a switch or a flow above 0), still, cold or sparkling (a select or sensor, read in any language), and the tank refilling. |
@@ -996,6 +998,12 @@ pilot_entity: switch.intellifire_pilot_light
 | `winter` / `winter_entity` | pool pump, watering, spa, pellet grill | Winter storage: ticked, or an on and off entity (an `input_boolean` turned on for the winter). A pool under its cover with snow on the pump and filter; a spa under its insulated cover; the tap drained, the timer taken in, snow on the lawn and beds; a grill under its cover. It reads *Winter storage*; a pool pump that runs for the frost keeps saying so. |
 | `pool_alert_entity` | pool pump | Anything that should raise the *Error*: the pump smokes and the gauge's needle swings. |
 | `light_entity` | pool pump | The pool's light: it shines on the far wall, and the light switch sits in the corner of the card. |
+| `pool_layout` | pool pump | `pump` (default, the sand filter and the pump) \| `basin` (the pool itself in 3/4: its spots on the far wall, its floating cover and its roller, its solar shower, the water moving while the pump runs). |
+| `spot_count` | pool pump (basin) | The underwater spots, 1 to 6 (3 by default). They take the colour of `light_entity`, white otherwise, and change colour when its effect is a random or rainbow one. |
+| `cover_entity` | pool pump (basin) | The floating cover: a `cover` (its position), a binary sensor (on when open) or a percentage open. The slats go under the roller as it opens, and it is a line: *Open*, *Closed*, *40 % open*, *Opening*. |
+| `shower_entity` | pool pump (basin) | The solar shower's valve: the shower is drawn on the deck only when it is given, the water runs while it is open. |
+| `ph_target_entity` / `redox_target_entity` | pool pump | The setpoints, written after the value: *7.42 → 7.2*. |
+| `ph_min` / `ph_max` / `redox_min` / `redox_max` | pool pump | The range the water should be in, pH 7.0 to 7.6 and RedOx 650 to 750 mV by default: the value in green inside it, in red outside it. Always on with the basin, on with the pump once one of them is given. |
 | `pump_layout` | water_pump | `booster` (a pump on its pressure tank, with its controller) \| `sump` (a sump pit in cross-section, its float on its cable) \| `circulator` (a heating circulator, see *Buffer tanks, circulators, solar thermal and wood stoves*). Left out, a `level_entity`, a `high_level_entity` or a name that says sump makes a sump pump. On a smart plug left on with its `power_entity`, the pump pumps above `power_on_threshold`, waits below it, and reads *Switched off* once the plug is cut, in red on a sump pump. Without a power meter, the switch is the pump's own and off is only waiting. |
 | `pressure_entity` | water_pump (booster) | The pressure, on the controller's display and as a line. Without it, the display shows the plug's power. |
 | `level_entity` / `level_max` | water_pump (sump) | The water level, on the display, as a line and as the height of the water in the pit: a percentage, or a value out of `level_max`. From 90 % it reads *High level*. |
@@ -1022,6 +1030,24 @@ ph_entity: sensor.pool_ph
 redox_entity: sensor.pool_redox
 filtration_time_entity: sensor.pool_filtration_today
 chlorine_pump_entity: binary_sensor.pool_chlorine_pump
+```
+
+The pool itself, `pool_layout: basin`: the spots shine in the water at night, the cover winds onto its roller, the shower runs while its valve is open, and in winter (`winter_entity`) the cover stays shut under its tarp with snow on it, the shower closed. pH and RedOx turn green or red against their range.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: pool_pump
+pool_layout: basin
+state_entity: switch.pool_pump
+light_entity: light.pool_spots
+spot_count: 4
+cover_entity: cover.pool_cover
+shower_entity: valve.pool_shower
+ph_entity: sensor.pool_ph
+ph_target_entity: number.pool_ph_target
+redox_entity: sensor.pool_redox
+redox_target_entity: number.pool_redox_target
+winter_entity: input_boolean.pool_winter
 ```
 
 </details>
@@ -2109,6 +2135,17 @@ appliance_type: food_processor
 food_layout: tm6
 state_entity: switch.thermomix_plug
 power_entity: sensor.thermomix_plug_power
+```
+
+A Ninja CREAMi or SLUSHi on a smart plug is a `frozen_treat`: *Off*, *Ready* on a few watts, *Churning* while the paddle goes down into the pint and turns (*Freezing* for a SLUSHi, its auger turning in the slush), then *Done* for ten minutes (*Ready to serve* for half an hour on a SLUSHi). These machines have no Wi-Fi: the plug's power is all the card reads.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: frozen_treat
+frozen_layout: creami_deluxe
+frozen_flavor: strawberry
+state_entity: switch.creami_plug
+power_entity: sensor.creami_plug_power
 ```
 
 A Reolink TrackMix with its AI detections, spotlight, siren and tracking:

@@ -168,6 +168,10 @@ const SECTIONS = [
   { field: "air_temperature_entity", types: ["pool_pump"], labelKey: "section_air_temperature", includeDomains: ["sensor"] },
   { field: "ph_entity", types: ["pool_pump"], labelKey: "section_ph", includeDomains: ["sensor"] },
   { field: "redox_entity", types: ["pool_pump"], labelKey: "section_redox", includeDomains: ["sensor"] },
+  { field: "ph_target_entity", types: ["pool_pump"], labelKey: "section_ph_target", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "redox_target_entity", types: ["pool_pump"], labelKey: "section_redox_target", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "cover_entity", types: ["pool_pump"], labelKey: "section_pool_cover", includeDomains: ["cover", "binary_sensor", "sensor", "number", "input_number"] },
+  { field: "shower_entity", types: ["pool_pump"], labelKey: "section_shower", includeDomains: ["valve", "switch", "binary_sensor", "input_boolean"] },
   { field: "filtration_time_entity", types: ["pool_pump"], labelKey: "section_filtration_time", includeDomains: ["sensor"] },
   { field: "pressure_entity", types: ["pool_pump"], labelKey: "section_filter_pressure", includeDomains: ["sensor"], extra: (c) =>
       c._row("pool_pressure_alert", "pressure_alert", { placeholder: String(POOL_PRESSURE_ALERT) }) },
@@ -1903,6 +1907,9 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: MAILBOX_COLORS_3D.map((v) => ({ value: v, label: t(hass, `mb_color_${v}`) })),
         }) : "") : ""}
+        ${this._type === "pool_pump" ? this._row("section_screen_layout", "pool_layout", { type: "select", value: this._config.pool_layout || "pump",
+          options: [{ value: "pump", label: t(hass, "layout_pool_pump") }, { value: "basin", label: t(hass, "layout_pool_basin") }] })
+          + (this._config.pool_layout === "basin" ? this._row("pool_spots", "spot_count", { type: "range", min: 1, max: 6, step: 1, default: 3 }) : "") : ""}
         ${this._type === "water_pump" ? this._row("section_screen_layout", "pump_layout", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(PUMP_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_pump_${v}`) }))),
@@ -1910,9 +1917,10 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(CIRC_MODELS.map((v) => ({ value: v, label: v === "generic" ? t(hass, "circ_model_generic") : v === "dab" ? "DAB" : v[0].toUpperCase() + v.slice(1) }))),
         }) : "") : ""}
-        ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["pellet_grill", "grill_layout", GRILL_LAYOUTS, "pg"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"], ["streamer", "streamer_layout", STREAMER_LAYOUTS, "str"], ["climate_sensor", "climate_sensor_layout", THS_LAYOUTS, "ths"], ["cover", "cover_layout", COVER_LAYOUTS, "cov"], ["fingerbot", "fingerbot_layout", FINGERBOT_LAYOUTS, "fb"], ["valve", "valve_layout", VALVE_LAYOUTS, "vlv"], ["drying_rack", "rack_layout", RACK_LAYOUTS, "rack"], ["power_strip", "strip_layout", STRIP_LAYOUTS, "strip"], ["water_dispenser", "water_dispenser_layout", WD_LAYOUTS, "wd"], ["food_processor", "food_layout", FP_LAYOUTS, "fp"]]
+        ${[["frozen_treat", "frozen_layout", FT_LAYOUTS, "ft"], ["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["pellet_grill", "grill_layout", GRILL_LAYOUTS, "pg"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"], ["streamer", "streamer_layout", STREAMER_LAYOUTS, "str"], ["climate_sensor", "climate_sensor_layout", THS_LAYOUTS, "ths"], ["cover", "cover_layout", COVER_LAYOUTS, "cov"], ["fingerbot", "fingerbot_layout", FINGERBOT_LAYOUTS, "fb"], ["valve", "valve_layout", VALVE_LAYOUTS, "vlv"], ["drying_rack", "rack_layout", RACK_LAYOUTS, "rack"], ["power_strip", "strip_layout", STRIP_LAYOUTS, "strip"], ["water_dispenser", "water_dispenser_layout", WD_LAYOUTS, "wd"], ["food_processor", "food_layout", FP_LAYOUTS, "fp"]]
           .filter(([ty]) => this._type === ty).map(([, f, list, p]) => this._row("section_screen_layout", f, { type: "select",
-            options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(list.map((v) => ({ value: v, label: t(hass, `layout_${p}_${v}`) }))) })).join("")}
+            options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(list.map((v) => ({ value: v, label: p === "ft" ? FT_LAYOUT_NAMES[v] : t(hass, `layout_${p}_${v}`) }))) })).join("")}
+        ${this._type === "frozen_treat" ? this._row("ft_flavor", "frozen_flavor", { type: "select", value: this._config.frozen_flavor || "vanilla", options: Object.keys(FT_FLAVORS).map((v) => ({ value: v, label: t(hass, `ft_fl_${v}`) })) }) : ""}
         ${this._type === "detector" && DETECTOR_MODELS[detectorLayoutOf(this._config, stateObj(hass, this._config.state_entity))] ? this._row("det_model", "detector_model", {
           type: "select",
           value: this._config.detector_model || "auto",

@@ -118,7 +118,7 @@ const PLUG_THRESHOLDS = {
   washer: 10, dryer: 10, dishwasher: 10, oven: 50, microwave: 50, cooker: 20, coffee: 200, rice_cooker: 100,
   air_fryer: 50, kettle: 50, toaster: 50, water_heater: 50, space_heater: 30, towel_warmer: 10, dehumidifier: 30, humidifier: 5,
   air_purifier: 3, fan: 3, hood: 5, pool_pump: 50, printer_3d: 30, filament_dryer: 15, cooktop: 50, pet_fountain: 1,
-  pellet_grill: 15, spa: 50, sauna: 100, aquarium: 3, water_pump: 30, floor_heating: 30, christmas_tree: 2, iron: 10, mobility: 40, irrigation: 3, litter_box: 5, speaker: 3, console: 8, streamer: 4, food_processor: 5, water_dispenser: 3,
+  pellet_grill: 15, spa: 50, sauna: 100, aquarium: 3, water_pump: 30, floor_heating: 30, christmas_tree: 2, iron: 10, mobility: 40, irrigation: 3, litter_box: 5, speaker: 3, console: 8, streamer: 4, food_processor: 5, frozen_treat: 20, water_dispenser: 3,
 };
 // A coffee machine or a rice cooker drawing more than this, under its
 // threshold, is keeping warm.
@@ -705,7 +705,7 @@ function robotBatteryIcon(pct, charging) {
 // rests, and sometimes it backwashes the filter into the drain or runs to
 // keep the pipes from freezing. A chlorine dosing pump is an option: its tank
 // and its long tube only show when one is given.
-const POOL_ONLY_FIELDS = ["water_temperature_entity", "air_temperature_entity", "ph_entity", "redox_entity",
+const POOL_ONLY_FIELDS = ["water_temperature_entity", "air_temperature_entity", "ph_entity", "redox_entity", "pool_layout", "shower_entity", "spot_count", "ph_target_entity", "redox_target_entity",
   "filtration_time_entity", "pressure_entity", "pressure_alert", "pool_mode_entity", "chlorine_pump_entity",
   "chlorine_level_entity", "backwash_entity", "frost_entity", "pool_alert_entity"];
 const POOL_NAME_RE = /pool.?pump|swimming.?pool|(^|[^a-z])pool([^a-z]|$)|piscine|pompe.?(de.?)?piscine|oklyn|neopool|iopool|flipr|hayward|pentair|filter.?pump|(^|[^a-z])(exo|intex)([^a-z]|$)|poolstation|(^|[^a-z])pisc|schwimmbad|poolpumpe|filterpumpe|bomba.?de.?(piscina|filtra)|piscina|pompa.?(piscina|filtraz)|zwembad|zwempomp|bassengpump|poolpump|pompa.?basen|basen|baz(e|\u00e9)n|\u6cf3\u6c60|\u0431\u0430\u0441\u0441\u0435\u0439\u043d/;
@@ -754,6 +754,37 @@ function poolOn(hass, entityId) {
   const n = Number(v);
   return Number.isFinite(n) && n > 0;
 }
+
+// The pool's cover (HACF #217): how far it is closed, 0 to 100, and whether
+// it is moving. A cover gives its position (100 is open in Home Assistant);
+// without one, open or closed; a binary sensor is on when open.
+function poolCoverOf(hass, cfg) {
+  const s = cfg.cover_entity ? stateObj(hass, cfg.cover_entity) : null;
+  if (!s) return null;
+  const v = String(s.state).trim().toLowerCase();
+  const moving = v === "opening" || v === "closing" ? v : null;
+  const p = numberOrNull((s.attributes || {}).current_position);
+  if (p !== null) return { pos: Math.max(0, Math.min(100, 100 - p)), moving };
+  if (domainOf(cfg.cover_entity) === "sensor" || domainOf(cfg.cover_entity) === "number" || domainOf(cfg.cover_entity) === "input_number") {
+    const n = numberOrNull(s.state);
+    if (n !== null) return { pos: Math.max(0, Math.min(100, 100 - n)), moving };
+  }
+  const open = ["open", "on", "true", "opening"].includes(v);
+  return { pos: open ? 0 : 100, moving };
+}
+// The spots' light: their colour when the light has one, white otherwise,
+// shifting colours when its effect says so.
+function poolSpotLight(hass, cfg) {
+  const s = cfg.light_entity ? stateObj(hass, cfg.light_entity) : null;
+  const a = (s && s.attributes) || {};
+  if (/random|rainbow|cycle|multi|party|disco|aleat|zufall|arc.?en.?ciel|regenbogen/i.test(String(a.effect || ""))) return "random";
+  const rgb = Array.isArray(a.rgb_color) && a.rgb_color.length === 3 ? a.rgb_color.map(Number) : null;
+  if (rgb && rgb.every((n) => Number.isFinite(n)) && !(rgb[0] > 235 && rgb[1] > 235 && rgb[2] > 235)) return `rgb(${rgb.map((n) => Math.round(n)).join(",")})`;
+  return "#fff3c4";
+}
+// The ranges a pool's water is in: pH 7.0 to 7.6, RedOx 650 to 750 mV.
+const POOL_PH_RANGE = [7.0, 7.6];
+const POOL_REDOX_RANGE = [650, 750];
 
 // An appliance put away for the winter (a pool, a spa, the garden watering,
 // a grill under its cover; dosing-tank-card #3, like the mower's #80):

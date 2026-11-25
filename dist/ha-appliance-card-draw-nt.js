@@ -2,8 +2,8 @@
 // The nt drawing and its CSS, loaded by the card the first time it shows one.
 export default function defineDrawing(deps) {
 // A page still running the card of an earlier release: an arrow to reload.
-if (!deps || deps.__v !== "5.0.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
-let { ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CHARGER_MODES, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntTint, numberOrNull, t, thsColor, zoneColumns } = deps;
+if (!deps || deps.__v !== "5.1.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
+let { ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CHARGER_MODES, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FT_FLAVORS, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntTint, numberOrNull, t, thsColor, zoneColumns } = deps;
 // A soft shadow on the floor, blurred so it reads as the object standing on
 // the floor rather than a grey plate laid under it. footPath takes the outline
 // of the footprint itself, for an appliance drawn in three-quarter view.
@@ -5205,7 +5205,336 @@ ${leg(inset, inset)}${leg(inset, L - 2.2)}
 ${backbox}`;
 }
 
-const NT_DRAW = { spk_jukebox: (c) => ntJukebox({ on: c.st !== "off" && c.st !== undefined, playing: c.st === "playing" }), wd_under_sink: ntWdUnderSink, wd_column: ntWdColumn, con_pincab: (c) => arcPincab({ ...c, playing: c.st === "playing" }), con_arcade_bartop: (c) => arcBartop({ ...c, playing: c.st === "playing" }), con_arcade_upright: (c) => arcUpright({ ...c, playing: c.st === "playing" }), strip_shelly: ntStripShelly, strip_classic: ntStripClassic, gas_fireplace: ntGasFireplace, fp_tm31: ntFoodTm31, fp_tm6: ntFoodTm6, rack_box: ntRackBox, rack_accordion: ntRackAccordion, rack_frame: ntRackFrame, vlv_aqara: ntValveAqara, vlv_tuya: ntValveTuya,  fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_switchbot_co2: (c) => ntSbPro(c, true), ths_switchbot_pro: (c) => ntSbPro(c, false), ths_switchbot_meter: (c) => ntSbMeter(c, false), ths_switchbot_plus: (c) => ntSbMeter(c, true), ths_switchbot_outdoor: ntSbOutdoor, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, cov_curtain: ntCovCurtain, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, det_door: ntDetDoor, det_vibration: ntDetVibration, det_glass: ntDetGlass, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, spk_focal_bird: ntSpkFocalBird, spk_focal_od6: ntSpkFocalOd6, spk_denon_avr: ntSpkDenon, spk_avr: ntSpkAvr, spk_wiim_amp: ntSpkWiim, spk_smart_clock: ntSpkClock, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, mob_charger: mobBatCharger, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+let FTS = { st: "off", fl: "vanilla" };
+const ftOff = () => FTS.st === "off";
+const ftRun = () => FTS.st === "run";
+const ftServe = () => FTS.st === "serve";
+const ftDone = () => FTS.st === "done";
+const FT_LOGO = `font-family="'Arial Black', Arial, sans-serif" font-weight="900"`;
+function ftDraw(c, fn) {
+  FTS = { st: c.unav ? "off" : ["idle", "run", "serve", "done"].includes(c.ph) ? c.ph : "off", fl: FT_FLAVORS[c.flavor] ? c.flavor : "vanilla" };
+  return `<g transform="translate(0 -8)">${fn()}</g>`;
+}
+// ---------------------------------------------------------------- helpers
+const ftGrad = (id, stops, h = false) => `<linearGradient id="${id}" ${h ? 'x1="0" x2="1" y1="0" y2="0"' : 'x1="0" x2="0" y1="0" y2="1"'}>${stops.map(([o, c, a]) => `<stop offset="${o}" stop-color="${c}"${a !== undefined ? ` stop-opacity="${a}"` : ""}/>`).join("")}</linearGradient>`;
+const ftSteel = (id, tint = ["#5c6369", "#a9b0b6", "#eef1f3", "#ffffff", "#c9cfd4", "#7c848a", "#4f565b"]) => ftGrad(id, tint.map((c, i) => [i / (tint.length - 1), c]), true);
+const ftGlassG = (id) => ftGrad(id, [[0, "#b8c4cc", .55], [.12, "#ffffff", .5], [.3, "#e9eff3", .18], [.75, "#dfe7ec", .15], [.9, "#ffffff", .38], [1, "#9fadb7", .55]], true);
+const ftLogo = (x, y, s, fill, anchor = "middle") => `<text x="${x}" y="${y}" font-size="${s}" ${FT_LOGO} letter-spacing="${(s * .05).toFixed(2)}" text-anchor="${anchor}" fill="${fill}">NINJA</text>`;
+const ftTxt = (x, y, s, t, fill, anchor = "middle", w = 600) => `<text x="${x}" y="${y}" font-size="${s}" font-weight="${w}" text-anchor="${anchor}" fill="${fill}" ${NT_FONT}>${t}</text>`;
+const ftShadow = (cx, y, rx) => `<ellipse cx="${cx}" cy="${y}" rx="${rx}" ry="2.8" fill="#000" opacity=".14"/><ellipse cx="${cx}" cy="${y}" rx="${rx * .7}" ry="1.6" fill="#000" opacity=".12"/>`;
+// Seven segment digit, h tall.
+const FT_SEG = { 0: "abcdef", 1: "bc", 2: "abged", 3: "abgcd", 4: "fgbc", 5: "afgcd", 6: "afgedc", 7: "abc", 8: "abcdefg", 9: "abcdfg", "-": "g" };
+function ftSeg7(x, y, h, d, on, dim = "#1f2a33") {
+  const w = h * .52, t = h * .11, hh = h / 2;
+  const P = { a: [x + t, y, w - 2 * t, t], d: [x + t, y + h - t, w - 2 * t, t], g: [x + t, y + hh - t / 2, w - 2 * t, t], f: [x, y + t, t, hh - 1.5 * t], b: [x + w - t, y + t, t, hh - 1.5 * t], e: [x, y + hh + t / 2, t, hh - 1.5 * t], c: [x + w - t, y + hh + t / 2, t, hh - 1.5 * t] };
+  const lit = FT_SEG[d] || "";
+  return Object.entries(P).map(([k, [a, b, c, e]]) => `<rect x="${a.toFixed(2)}" y="${b.toFixed(2)}" width="${c.toFixed(2)}" height="${e.toFixed(2)}" rx="${(t / 2).toFixed(2)}" fill="${lit.includes(k) ? on : dim}"/>`).join("");
+}
+// Little program icons from the Ninja panels.
+const FT_ICON = {
+  cone: (x, y, c) => `<path d="M${x - 1.2} ${y - .2} L${x} ${y + 2.4} L${x + 1.2} ${y - .2} Z" fill="none" stroke="${c}" stroke-width=".35"/><circle cx="${x}" cy="${y - 1}" r="1.1" fill="none" stroke="${c}" stroke-width=".35"/>`,
+  bowl: (x, y, c) => `<path d="M${x - 1.7} ${y} Q${x} ${y + 2.6} ${x + 1.7} ${y} Z" fill="none" stroke="${c}" stroke-width=".35"/><path d="M${x - 1} ${y - .2} q1 -1.8 2 0" fill="none" stroke="${c}" stroke-width=".35"/>`,
+  glass: (x, y, c) => `<path d="M${x - 1.3} ${y - 1.4} L${x - .9} ${y + 1.8} H${x + .9} L${x + 1.3} ${y - 1.4} Z M${x + .5} ${y - 1.4} l.8 -1.2" fill="none" stroke="${c}" stroke-width=".35"/>`,
+  scoop: (x, y, c) => `<circle cx="${x}" cy="${y}" r="1.3" fill="none" stroke="${c}" stroke-width=".35"/><path d="M${x + .9} ${y + .9} l1 1" stroke="${c}" stroke-width=".45"/>`,
+  power: (x, y, c, r = 1.6) => `<path d="M${x - r * .62} ${y - r * .55} A${r} ${r} 0 1 0 ${x + r * .62} ${y - r * .55}" fill="none" stroke="${c}" stroke-width="${r * .26}" stroke-linecap="round"/><path d="M${x} ${y - r * 1.05} V${y - r * .1}" stroke="${c}" stroke-width="${r * .26}" stroke-linecap="round"/>`,
+  respin: (x, y, c) => `<path d="M${x + 1.3} ${y - .2} A1.3 1.3 0 1 1 ${x + .6} ${y - 1.2}" fill="none" stroke="${c}" stroke-width=".35"/><path d="M${x + .2} ${y - 1.7} l.6 .5 l-.6 .5" fill="none" stroke="${c}" stroke-width=".35"/>`,
+  mixin: (x, y, c) => `<path d="M${x - 1.5} ${y + .2} Q${x} ${y + 2.2} ${x + 1.5} ${y + .2} Z" fill="none" stroke="${c}" stroke-width=".35"/><circle cx="${x - .5}" cy="${y - .6}" r=".35" fill="${c}"/><circle cx="${x + .6}" cy="${y - 1}" r=".35" fill="${c}"/><circle cx="${x + .1}" cy="${y - 1.7}" r=".35" fill="${c}"/>`,
+  pint: (x, y, c, lvl) => `<path d="M${x - 1.4} ${y - 1.8} H${x + 1.4} L${x + 1.2} ${y + 1.8} H${x - 1.2} Z" fill="none" stroke="${c}" stroke-width=".35"/>${lvl === "top" ? `<rect x="${x - 1.2}" y="${y - 1.6}" width="2.4" height="1.2" fill="${c}"/>` : lvl === "bottom" ? `<rect x="${x - 1.1}" y="${y + .5}" width="2.2" height="1.2" fill="${c}"/>` : `<rect x="${x - 1.2}" y="${y - 1.6}" width="2.4" height="3.3" fill="${c}"/>`}`,
+};
+
+// Contents of a CREAMi pint: frozen block with frost when ready, churned
+// while the paddle works, smooth and creamy with a swirl once done.
+function ftPint(x, y, w, h, fl, clip) {
+  const [lt, dk] = FT_FLAVORS[fl];
+  const top = y + h * .14;
+  let s = `<g clip-path="url(#${clip})">`;
+  const g = ntId();
+  s += `<defs>${ftGrad(g, [[0, lt], [1, dk]])}</defs>`;
+  if (ftRun()) {
+    s += `<path d="M${x} ${top + 3} Q${x + w * .25} ${top + 1} ${x + w * .5} ${top + 7} Q${x + w * .75} ${top + 1} ${x + w} ${top + 3} V${y + h} H${x} Z" fill="url(#${g})"/>`;
+    for (let k = 0; k < 4; k++) s += `<path d="M${x - 6} ${top + 10 + k * 6} q${w * .3} -3 ${w * .55} 0 t${w * .55} 0" stroke="#fff" stroke-opacity=".45" stroke-width=".9" fill="none"><animateTransform attributeName="transform" type="translate" values="0 0;${(w * .55).toFixed(1)} 0" dur="${(.8 + k * .15).toFixed(2)}s" repeatCount="indefinite"/></path>`;
+  } else if (ftDone() || ftServe()) {
+    s += `<path d="M${x} ${top + 2} Q${x + w * .5} ${top - 4} ${x + w} ${top + 2} V${y + h} H${x} Z" fill="url(#${g})"/>`;
+    s += `<path d="M${x + w * .22} ${top + 1} q${w * .28} -3.2 ${w * .56} 0 M${x + w * .32} ${top + 3.2} q${w * .18} -2 ${w * .36} 0" stroke="#fff" stroke-opacity=".7" stroke-width=".8" fill="none"/>`;
+    for (let k = 0; k < 5; k++) s += `<path d="M${x + 2 + k * w / 5} ${top + 8 + (k % 2) * 5} q2 -1 4 0" stroke="${dk}" stroke-opacity=".6" stroke-width=".7" fill="none"/>`;
+  } else {
+    s += `<rect x="${x}" y="${top}" width="${w}" height="${y + h - top}" fill="url(#${g})" opacity=".95"/><rect x="${x}" y="${top}" width="${w}" height="${y + h - top}" fill="#e9f6ff" opacity=".35"/>`;
+    s += `<path d="M${x} ${top} H${x + w}" stroke="#fff" stroke-width="1.2" opacity=".9"/>`;
+    for (let k = 0; k < 16; k++) { const cx = x + 2 + (k * 7.3) % (w - 4), cy = top + 3 + (k * 4.7) % (h * .8); s += `<path d="M${cx - .7} ${cy} h1.4 M${cx} ${cy - .7} v1.4" stroke="#fff" stroke-width=".35" opacity=".85"/>`; }
+  }
+  return s + "</g>";
+}
+// The CREAMi paddle: a twisted two-blade auger on a shaft. While it runs it
+// goes down into the pint and turns (the blade flips through its width).
+function ftPaddle(cx, y0, depth, col = "#3d4348") {
+  const blade = `<path d="M-11 0 Q-5 -3 0 -1.2 Q5 3 11 0 Q5 1.6 0 1.2 Q-5 -1.6 -11 0 Z" fill="${col}" stroke="#1c1f22" stroke-width=".3"/><path d="M-9 -.3 Q-4 -2.2 0 -1" stroke="#fff" stroke-opacity=".35" stroke-width=".5" fill="none"/>`;
+  if (!ftRun()) return `<rect x="${cx - 1.4}" y="${y0 - 2}" width="2.8" height="4.5" rx=".6" fill="${col}"/><g transform="translate(${cx} ${y0 + 3})"><path d="M-6 0 Q-2 -1.6 0 -.6 Q2 1.6 6 0 Q2 .9 0 .6 Q-2 -.9 -6 0Z" fill="${col}"/></g>`;
+  return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 ${depth};0 ${depth};0 ${depth}" keyTimes="0;.35;.92;1" dur="6s" repeatCount="indefinite"/>
+    <rect x="${cx - 1.4}" y="${y0 - 2 - depth}" width="2.8" height="${depth + 6}" rx=".6" fill="${col}"/><rect x="${cx - .5}" y="${y0 - 2 - depth}" width=".6" height="${depth + 6}" fill="#fff" opacity=".25"/>
+    <g transform="translate(${cx} ${y0 + 5})"><g>${blade}<animateTransform attributeName="transform" type="scale" values="1 1;.08 1;-1 1;.08 1;1 1" dur=".55s" repeatCount="indefinite"/></g></g>
+    <g transform="translate(${cx} ${y0 + 9.5}) scale(.85)"><g>${blade}<animateTransform attributeName="transform" type="scale" values="-1 1;.08 1;1 1;.08 1;-1 1" dur=".55s" repeatCount="indefinite"/></g></g></g>`;
+}
+// Bowl assembly: lid with the LID lock tab, clear outer bowl with its
+// handle, the pint inside with the embossed NINJA badge, the paddle.
+function ftBowl(o) {
+  const { x, y, w, h, handle = ["#aeb5bb", "#e8ecef"], lid = ["#3b4045", "#1b1e21"], ribs = false, marks = false, fl = FTS.fl } = o;
+  const L = ntId(), G = ntId(), C = ntId();
+  const cx = x + w / 2, lidH = 6.5, by = y + lidH, bh = h - lidH - 4;
+  let s = `<defs>${ftGrad(L, [[0, lid[0]], [1, lid[1]]])}${ftGlassG(G)}<clipPath id="${C}"><rect x="${x + 5}" y="${by + 1.5}" width="${w - 10}" height="${bh - 3}" rx="2.2"/></clipPath></defs>`;
+  s += `<path d="M${x + w - 1.5} ${by + 4} H${x + w + 7} Q${x + w + 12.5} ${by + 4} ${x + w + 12.5} ${by + 9.5} V${by + bh - 11} Q${x + w + 12.5} ${by + bh - 5} ${x + w + 7} ${by + bh - 5} H${x + w - 1.5}" fill="none" stroke="${handle[0]}" stroke-width="4.4" stroke-linejoin="round"/>`;
+  s += `<path d="M${x + w} ${by + 2.6} H${x + w + 7} Q${x + w + 11.2} ${by + 2.6} ${x + w + 11.2} ${by + 7}" fill="none" stroke="${handle[1]}" stroke-width="1" stroke-linecap="round" opacity=".9"/>`;
+  s += `<path d="M${x + w + 8.6} ${by + 9.5} V${by + bh - 11}" stroke="#000" stroke-opacity=".18" stroke-width="1.2"/>`;
+  s += `<rect x="${x + 5}" y="${by + 1.5}" width="${w - 10}" height="${bh - 3}" rx="2.2" fill="#f4f7f9" opacity=".85"/>`;
+  s += ftPint(x + 5, by + 1.5, w - 10, bh - 3, fl, C);
+  if (ribs) for (let k = 1; k < 12; k++) s += `<path d="M${x + 5 + k * (w - 10) / 12} ${by + 3} V${by + bh - 3}" stroke="#fff" stroke-opacity=".35" stroke-width=".55"/>`;
+  if (marks) s += `<path d="M${x + 7} ${by + 6} H${cx - 2} M${cx + 2} ${by + 6} H${x + w - 7}" stroke="#fff" stroke-opacity=".8" stroke-width=".4" stroke-dasharray="1 .8"/>${ftTxt(cx - 6, by + 5.2, 1.5, "SCOOPABLE", "#5d6a74")}${ftTxt(cx + 6, by + 5.2, 1.5, "DRINKABLE", "#5d6a74")}`;
+  s += ftPaddle(cx, by - 1, bh * .52);
+  s += `<path d="M${x + 1} ${by} H${x + w - 1} L${x + w - 2} ${by + bh - 2} Q${x + w - 2.2} ${by + bh} ${x + w - 4.5} ${by + bh} H${x + 4.5} Q${x + 2.2} ${by + bh} ${x + 2} ${by + bh - 2} Z" fill="url(#${G})" stroke="#9aa8b2" stroke-width=".55"/>`;
+  s += `<path d="M${x + 4} ${by + 2} V${by + bh - 3} M${x + w - 4} ${by + 2} V${by + bh - 3}" stroke="#fff" stroke-width=".8" opacity=".6"/>`;
+  s += `<rect x="${cx - 9}" y="${by + bh * .55}" width="18" height="6.4" rx="3.2" fill="#fff" opacity=".22" stroke="#fff" stroke-opacity=".5" stroke-width=".35"/>${ftLogo(cx, by + bh * .55 + 4.7, 4.2, "#ffffff")}`;
+  s += `<rect x="${x}" y="${y}" width="${w}" height="${lidH}" rx="1.4" fill="url(#${L})"/><path d="M${x + 1} ${y + .7} H${x + w - 1}" stroke="#fff" stroke-opacity=".28" stroke-width=".7"/><path d="M${x} ${y + lidH - 1.4} H${x + w}" stroke="#000" stroke-opacity=".4" stroke-width=".8"/>`;
+  s += `<rect x="${x + w - .5}" y="${y + .8}" width="10.5" height="5" rx="1.2" fill="#c7ccd0" stroke="#8c949a" stroke-width=".4"/>${ftTxt(x + w + 3.4, y + 4.3, 2.5, "LID", "#3a4046", "middle", 800)}<rect x="${x + w + 6.4}" y="${y + 2.8}" width="2.2" height="1.8" rx=".3" fill="#3a4046"/><path d="M${x + w + 6.8} ${y + 2.8} v-.7 a.7 .7 0 0 1 1.4 0 v.7" fill="none" stroke="#3a4046" stroke-width=".35"/>`;
+  s += `<rect x="${x + 3}" y="${by + bh - .5}" width="${w - 6}" height="4.5" rx="1" fill="#1d2023"/><path d="M${x + 4} ${by + bh + .4} H${x + w - 4}" stroke="#fff" stroke-opacity=".18" stroke-width=".5"/>`;
+  return s;
+}
+
+// --------------------------------------------------------- CREAMi NC300/302
+function ftCreamiClassic(progress) {
+  const sg = ntId(), pg = ntId(), bp = ntId();
+  const dim = ftOff() ? "#3a4046" : "#7c868e", lit = ftOff() ? "#3a4046" : "#f1f4f6";
+  const sel = ftOff() ? "#3a4046" : "#ffffff";
+  const prog = (cx, y, ic, l1, l2, chosen) => {
+    const c = chosen && (ftRun() || ftDone() || ftServe()) ? sel : FTS.st === "idle" ? lit : dim;
+    return FT_ICON[ic](cx, y, c) + ftTxt(cx, y + 4.6, 1.75, l1, c) + (l2 ? ftTxt(cx, y + 6.6, 1.75, l2, c) : "") + (chosen && ftRun() ? `<circle cx="${cx - 5.2}" cy="${y}" r=".55" fill="#fff"><animate attributeName="opacity" values="1;.2;1" dur="1s" repeatCount="indefinite"/></circle>` : "");
+  };
+  let s = `<defs>${ftSteel(sg)}${ftGrad(pg, [[0, "#26292d"], [.08, "#15181b"], [1, "#0c0e10"]])}${ftGrad(bp, [[0, "#3c4146"], [1, "#22262a"]])}</defs>`;
+  s += ftShadow(58, 130, 42);
+  s += `<path d="M20 118 Q20 115 23 115 H89 Q92 115 92 118 V125 Q92 128 88 128 H24 Q20 128 20 125 Z" fill="url(#${sg})"/><rect x="22" y="114" width="68" height="5" rx="1.6" fill="url(#${bp})"/><path d="M23 114.6 H89" stroke="#fff" stroke-opacity=".2" stroke-width=".5"/>`;
+  s += ftBowl({ x: 29, y: 66, w: 52, h: 49 });
+  s += `<rect x="33" y="61" width="44" height="6" rx="1" fill="#1c1f22"/><rect x="33" y="61" width="44" height="1.4" fill="#000" opacity=".4"/>`;
+  s += `<path d="M24 62 V13 Q24 4 33 4 H77 Q86 4 86 13 V62 Z" fill="url(#${sg})"/><path d="M26 60 V14 Q26 6 33 6" fill="none" stroke="#fff" stroke-width="1" opacity=".6"/>`;
+  s += `<path d="M36 62 V9 Q36 5 40 5 H70 Q74 5 74 9 V62 Z" fill="url(#${pg})"/><path d="M37.5 8 Q38 6.4 40.5 6.4 H58" stroke="#fff" stroke-opacity=".18" stroke-width=".8" fill="none"/>`;
+  s += `<rect x="24" y="58.5" width="62" height="3.5" fill="url(#${sg})"/>`;
+  s += ftLogo(55, 13.4, 5, ftOff() ? "#c9ced2" : "#ffffff");
+  s += `<rect x="39" y="17" width="32" height="38" rx="1.6" fill="#0b0d0f" stroke="#2a2f34" stroke-width=".4"/>`;
+  if (progress) {
+    const n = ftRun() ? 2 : ftDone() || ftServe() ? 4 : 0;
+    for (let k = 0; k < 4; k++) s += `<rect x="${45 + k * 5.4}" y="19.6" width="4.4" height=".9" rx=".45" fill="${ftOff() ? "#2c3136" : k < n ? "#ffffff" : "#3b4248"}">${ftRun() && k === 2 ? `<animate attributeName="fill" values="#3b4248;#ffffff;#3b4248" dur="1.4s" repeatCount="indefinite"/>` : ""}</rect>`;
+    s += ftTxt(42, 20.4, 1.2, "INSTALL", dim, "start");
+  }
+  s += `<path d="M55 24 V45" stroke="#22272c" stroke-width=".4"/>`;
+  s += prog(47.5, 26, "cone", "ICE CREAM", "", true) + prog(62.5, 26, "bowl", "SORBET", "", false);
+  s += prog(47.5, 34, "cone", "LIGHT", "ICE CREAM", false) + prog(62.5, 34, "bowl", "SMOOTHIE", "BOWL", false);
+  s += prog(47.5, 42.5, "scoop", "GELATO", "", false) + prog(62.5, 42.5, "glass", "MILKSHAKE", "", false);
+  s += ftTxt(55, 49.6, 1.6, "+ EXTRAS", FTS.st === "idle" ? lit : dim);
+  s += `<circle cx="47.5" cy="52.4" r="2" fill="none" stroke="${ftOff() ? "#4a2626" : "#e53935"}" stroke-width=".55"/>` + FT_ICON.power(47.5, 52.5, ftOff() ? "#4a2626" : "#ff5a52", 1.05);
+  s += FT_ICON.respin(62.5, 52, dim) + ftTxt(62.5, 54.9, 1.3, "RE-SPIN", dim);
+  return s;
+}
+
+// ------------------------------------------------- CREAMi Deluxe / XL
+function ftCreamiDeluxe() {
+  const sg = ntId(), pg = ntId(), bp = ntId(), dg = ntId();
+  const dim = ftOff() ? "#30363b" : "#9aa3aa", lit = ftOff() ? "#30363b" : "#f1f4f6";
+  const on = (c) => (ftOff() ? "#30363b" : c);
+  let s = `<defs>${ftSteel(sg, ["#3d4348", "#666d73", "#9aa2a8", "#b6bdc2", "#8a9298", "#5a6167", "#363b40"])}${ftGrad(pg, [[0, "#1d2024"], [1, "#0b0d0f"]])}${ftGrad(bp, [[0, "#545b61"], [1, "#2f3439"]])}${ftSteel(dg, ["#7c848a", "#e6eaed", "#ffffff", "#b6bdc2", "#6f777d"])}</defs>`;
+  s += ftShadow(57, 130, 42);
+  s += `<path d="M19 118 Q19 114 23 114 H90 Q94 114 94 118 V125 Q94 128 90 128 H23 Q19 128 19 125 Z" fill="url(#${bp})"/><path d="M19 122 H94" stroke="#7c848a" stroke-width="1.4"/><path d="M22 114.6 H91" stroke="#fff" stroke-opacity=".2" stroke-width=".5"/>`;
+  s += ftBowl({ x: 28, y: 63, w: 54, h: 52 });
+  s += `<rect x="32" y="58" width="46" height="6" rx="1" fill="#1c1f22"/>`;
+  s += `<path d="M22 60 V12 Q22 3 31 3 H79 Q88 3 88 12 V60 Z" fill="url(#${sg})"/><path d="M24.5 58 V13 Q24.5 5.5 31 5.5" fill="none" stroke="#fff" stroke-width=".9" opacity=".45"/>`;
+  s += ftLogo(55, 11, 5.2, "#ffffff");
+  s += `<rect x="33" y="14" width="44" height="44" rx="2.4" fill="#aab2b8"/><rect x="34" y="15" width="42" height="42" rx="2" fill="url(#${pg})"/>`;
+  s += `<rect x="49.5" y="17" width="11" height="9" rx="1.6" fill="#050607" stroke="#2b3136" stroke-width=".4"/>`;
+  const dgt = ftRun() ? "2" : ftDone() || ftServe() ? "0" : FTS.st === "idle" ? "3" : "";
+  s += ftSeg7(52.6, 18.4, 6.2, dgt, ftOff() ? "#16191c" : "#e9f7ff", "#11161a");
+  s += `<circle cx="37.4" cy="20.6" r=".5" fill="${on("#4fc3f7")}"/>` + ftTxt(38.4, 21.1, 1.2, "INSTALL", dim, "start") + ftTxt(72.6, 21.1, 1.2, "EMPTY", dim, "end") + `<circle cx="73.6" cy="20.6" r=".5" fill="${ftOff() ? "#30363b" : "#5a6168"}"/>`;
+  s += `<rect x="36" y="27.6" width="38" height="2" rx=".4" fill="#1a1e22"/>` + ftTxt(55, 29.1, 1.15, "ADVANCED CREAMIFY TECHNOLOGY", dim, "middle", 700);
+  s += FT_ICON.pint(48, 33, dim, "top") + FT_ICON.pint(55, 33, on("#ffffff"), "full") + FT_ICON.pint(62, 33, dim, "bottom");
+  s += ftTxt(48, 37.6, 1.2, "TOP", dim) + ftTxt(55, 37.6, 1.2, "FULL", on("#ffffff")) + ftTxt(62, 37.6, 1.2, "BOTTOM", dim);
+  ["ICE CREAM", "LITE ICE CREAM", "SORBET", "GELATO", "FROZEN YOGURT"].forEach((l, k) => { s += ftTxt(36.4, 41.4 + k * 2.9, 1.3, l, k === 0 && !ftOff() && FTS.st !== "idle" ? "#ffffff" : FTS.st === "idle" ? lit : dim, "start"); });
+  ["FRAPP\u00c9", "FROZEN DRINK", "SLUSHI", "MILKSHAKE"].forEach((l, k) => { s += ftTxt(73.6, 41.4 + k * 2.9, 1.3, l, FTS.st === "idle" ? lit : dim, "end"); });
+  for (let k = 0; k < 9; k++) { const a = Math.PI * (.75 + k * .1875); s += `<circle cx="${55 + 7 * Math.cos(a)}" cy="${46 + 7 * Math.sin(a)}" r=".42" fill="${k === 0 && !ftOff() ? "#ffffff" : "#4d555c"}"/>`; }
+  s += `<circle cx="55" cy="46" r="5.4" fill="url(#${dg})" stroke="#5d656c" stroke-width=".4"/><circle cx="55" cy="46" r="5.4" fill="none" stroke="#565e65" stroke-width="1.1" stroke-dasharray=".35 .45" opacity=".8"/><circle cx="55" cy="46" r="3.6" fill="url(#${dg})"/><path d="M52 47.6 A3.4 3.4 0 0 1 52.5 43.3" stroke="#000" stroke-opacity=".5" stroke-width=".5" fill="none"/>`;
+  s += `<circle cx="41" cy="54" r="1.7" fill="none" stroke="${ftOff() ? "#4a2626" : "#e53935"}" stroke-width=".5"/>` + FT_ICON.power(41, 54.1, ftOff() ? "#4a2626" : "#ff5a52", .9);
+  s += FT_ICON.mixin(55, 54, dim) + ftTxt(55, 56.6, 1.05, "MIX-IN", dim) + FT_ICON.respin(69, 54, dim) + ftTxt(69, 56.6, 1.05, "RE-SPIN", dim);
+  return s;
+}
+function ftCreamiXL() {
+  const sg = ntId(), pg = ntId(), bp = ntId(), ch = ntId();
+  const W = (c) => (ftOff() ? "#34465f" : c);
+  const dim = W("#9bb0c9"), lit = W("#ffffff");
+  const navy = ["#14223a", "#1f3352", "#2e4a72", "#3b5a86", "#2d4870", "#1c2f4d", "#132038"];
+  let s = `<defs>${ftSteel(sg, navy)}${ftGrad(pg, [[0, "#3b5579"], [1, "#2c4363"]])}${ftGrad(bp, [[0, "#22344f"], [1, "#152238"]])}${ftSteel(ch, ["#a8926a", "#e8d7b4", "#fbf1dc", "#d6c099", "#9c865e"])}</defs>`;
+  s += ftShadow(57, 130, 42);
+  s += `<path d="M20 118 Q20 114 24 114 H90 Q94 114 94 118 V125 Q94 128 90 128 H24 Q20 128 20 125 Z" fill="url(#${bp})"/><rect x="20" y="119.4" width="74" height="2.6" fill="url(#${ch})"/>`;
+  s += `<rect x="21" y="122" width="3.5" height="4" rx=".6" fill="url(#${ch})"/>`;
+  s += ftBowl({ x: 28, y: 62, w: 54, h: 53, handle: ["#c9b28a", "#f3e6cb"], lid: ["#2c4060", "#17253b"], ribs: true, marks: true });
+  s += `<rect x="32" y="57" width="46" height="6" rx="1" fill="#16243a"/><rect x="31" y="56.2" width="48" height="1.6" fill="url(#${ch})"/>`;
+  s += `<path d="M22 57 V12 Q22 3 31 3 H79 Q88 3 88 12 V57 Z" fill="url(#${sg})"/><rect x="29" y="3.2" width="52" height="1.6" rx=".8" fill="url(#${ch})"/><path d="M24.5 55 V13 Q24.5 5.5 31 5.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".35"/>`;
+  s += ftLogo(55, 12.4, 5.4, "#ffffff");
+  s += `<rect x="35" y="16" width="40" height="38" rx="3" fill="url(#${pg})" stroke="#4f6a91" stroke-width=".4"/>`;
+  s += `<circle cx="39.4" cy="19.6" r="1.8" fill="none" stroke="${dim}" stroke-width=".35"/>` + FT_ICON.power(39.4, 19.7, dim, .9);
+  s += `<rect x="43.4" y="17.8" width="28.6" height="3.8" rx="1.9" fill="#23385a"/><path d="M53 18.2 v3 M62.4 18.2 v3" stroke="#3b5579" stroke-width=".3"/>`;
+  s += ftTxt(48.2, 20.3, 1.3, "Top", dim, "middle", 500) + FT_ICON.pint(57.7, 19.5, lit, "full").replace(/stroke-width=".35"/g, 'stroke-width=".25"') + ftTxt(57.7, 21.2, .9, "Full", lit, "middle", 500) + ftTxt(67.2, 20.3, 1.3, "Bottom", dim, "middle", 500);
+  ["Ice Cream", "Lite Ice Cream", "Gelato", "Sorbet", "Frozen Yogurt"].forEach((l, k) => { s += ftTxt(37.4, 26.4 + k * 3.2, 1.35, l, k === 0 && FTS.st !== "idle" && !ftOff() ? lit : FTS.st === "idle" ? lit : dim, "start", 500); });
+  s += `<circle cx="47.6" cy="25.9" r=".45" fill="${W("#ffffff")}"/>`;
+  ["Dairy Free", "Smoothie Bowl", "CreamiFit", "Frapp\u00e9", "Milkshake"].forEach((l, k) => { s += ftTxt(72.6, 26.4 + k * 3.2, 1.35, l, FTS.st === "idle" ? lit : dim, "end", 500); });
+  s += `<path d="M51.6 23 V39.5 M58.4 23 V39.5" stroke="#4f6a91" stroke-width=".25"/>`;
+  const dgt = ftRun() ? "2" : ftDone() || ftServe() ? "0" : FTS.st === "idle" ? "3" : "";
+  s += ftSeg7(53.2, 25, 7.4, dgt, W("#f4f8ff"), "#30496c");
+  s += `<rect x="51.8" y="35.4" width="6.4" height="2.6" rx="1.3" fill="#23385a"/>` + ftTxt(55, 37.2, 1.1, "Install", dim, "middle", 500);
+  s += `<circle cx="42" cy="47" r="3.2" fill="#2a4166" stroke="#5a7499" stroke-width=".4"/><circle cx="68" cy="47" r="3.2" fill="#2a4166" stroke="#5a7499" stroke-width=".4"/>` + FT_ICON.mixin(42, 47, dim) + FT_ICON.respin(68, 47, dim) + ftTxt(68, 52, 1.1, "Re-Spin", dim, "middle", 500);
+  s += `<circle cx="55" cy="47" r="5.2" fill="url(#${ch})" stroke="#8e7a55" stroke-width=".4"/><circle cx="55" cy="47" r="5.2" fill="none" stroke="#9c865e" stroke-width="1.2" stroke-dasharray=".35 .45"/><circle cx="55" cy="47" r="3.4" fill="url(#${ch})"/><path d="M53 45.4 A2.6 2.6 0 0 1 57.4 45.6" stroke="#fff" stroke-width=".5" fill="none" opacity=".8"/>`;
+  return s;
+}
+
+// ------------------------------------------- CREAMi Swirl / Scoop & Swirl
+function ftCreamiSwirl(blue) {
+  const tg = ntId(), sg = ntId(), pg = ntId(), dg = ntId(), cg = ntId(), rg = ntId();
+  const body = blue ? ["#5c7896", "#7b97b5", "#93aecb", "#86a1be", "#6d88a6"] : ["#7d858b", "#a2aaaf", "#bfc6ca", "#b0b7bc", "#8e969b"];
+  const dim = ftOff() ? "#3a4046" : "#8e979e", lit = ftOff() ? "#3a4046" : "#ffffff";
+  const [lt, dk] = FT_FLAVORS[FTS.fl];
+  let s = `<defs>${ftSteel(tg, body)}${ftSteel(sg)}${ftGrad(pg, [[0, "#1d2024"], [1, "#0b0d0f"]])}${ftSteel(dg, ["#c9d0d5", "#ffffff", "#eef2f5", "#d6dde2"])}${ftGrad(cg, [[0, "#f1c47c"], [1, "#c98b36"]])}${ftGrad(rg, [[0, lt], [1, dk]])}</defs>`;
+  s += ftShadow(60, 130, 54);
+  s += `<rect x="6" y="117" width="108" height="8" rx="2.4" fill="url(#${sg})"/><rect x="8" y="116" width="104" height="2" rx="1" fill="#2b2f33"/>`;
+  s += `<rect x="9" y="22" width="36" height="95" rx="3" fill="url(#${tg})"/>`;
+  for (let k = 0; k < 14; k++) s += `<path d="M${11.4 + k * 2.35} 60 V115" stroke="#000" stroke-opacity=".16" stroke-width=".8"/><path d="M${12.2 + k * 2.35} 60 V115" stroke="#fff" stroke-opacity=".18" stroke-width=".4"/>`;
+  s += `<path d="M9 58 H45" stroke="#000" stroke-opacity=".18" stroke-width=".6"/>`;
+  s += `<circle cx="27" cy="30" r="19" fill="${blue ? "#4b637d" : "#5d656b"}"/><circle cx="27" cy="30" r="17.6" fill="${blue ? "#8aa5c2" : "#c5cbcf"}"/><circle cx="27" cy="30" r="15.2" fill="url(#${dg})" stroke="#aeb6bc" stroke-width=".5"/>`;
+  let vanes = "";
+  for (let k = 0; k < 10; k++) { const a = k * Math.PI / 5; const p = (r, da) => `${(27 + r * Math.cos(a + da)).toFixed(2)} ${(30 + r * Math.sin(a + da)).toFixed(2)}`; vanes += `<path d="M${p(5, 0)} Q${p(10, .25)} ${p(14.5, .1)} L${p(14.5, .42)} Q${p(10, .5)} ${p(5, .3)} Z" fill="#dde3e7" stroke="#b5bdc3" stroke-width=".3"/>`; }
+  s += `<g>${vanes}${ftServe() ? `<animateTransform attributeName="transform" type="rotate" from="0 27 30" to="360 27 30" dur="3s" repeatCount="indefinite"/>` : ""}</g>`;
+  s += `<circle cx="27" cy="30" r="5" fill="#ffffff" stroke="#c3cad0" stroke-width=".4"/><path d="M25.6 30 L27 33.6 L28.4 30 Z" fill="#e0a65a"/><circle cx="27" cy="29" r="1.6" fill="${blue ? "#5c86b8" : "#7fa7d6"}"/>`;
+  s += `<path d="M23 47 H31 L30 52 H24 Z" fill="#eef1f3" stroke="#aab2b8" stroke-width=".4"/><rect x="25.4" y="52" width="3.2" height="2.2" rx=".5" fill="#d9dee2"/>`;
+  s += `<path d="M10 119 H44 L46 124 H8 Z" fill="#26292d"/><rect x="8" y="123.6" width="38" height="2" rx=".8" fill="#17191b"/><ellipse cx="27" cy="119.4" rx="6" ry="1.2" fill="#3b4045"/>`;
+  if (ftServe() || ftDone()) {
+    s += `<path d="M21.2 98 L27 119 L32.8 98 Z" fill="url(#${cg})" stroke="#b07a2f" stroke-width=".4"/>`;
+    for (let k = 0; k < 5; k++) s += `<path d="M${21.8 + k * 1.2} ${100 + k * 3.6} l${9.6 - k * 2.2} 0" stroke="#b07a2f" stroke-width=".35" opacity=".8"/><path d="M${22.5 + k * 2} 98 l${2.5 - k * .2} 14" stroke="#b07a2f" stroke-width=".3" opacity=".6"/>`;
+    const swirl = `<path d="M20.6 98.6 Q19.6 94.6 23.4 93.8 Q20.6 91 24.6 89.4 Q22.2 86.4 26 85.2 Q24.8 82.4 27.6 81.2 Q28.8 79.6 28.4 78 Q31 80.8 29.6 83.4 Q33 84.6 31 87.8 Q34.4 89.4 31.8 92.4 Q35 94 33.4 98.6 Z" fill="url(#${rg})" stroke="#fff" stroke-opacity=".7" stroke-width=".45"/><path d="M22 95.4 Q27 97 32 95.2 M23 91.4 Q27.4 93 31 91.2 M24.6 87.4 Q27.6 88.8 30.2 87.4" stroke="${dk}" stroke-opacity=".45" stroke-width=".5" fill="none"/>`;
+    s += ftServe() ? `<g>${swirl}<animateTransform attributeName="transform" type="matrix" values="1 0 0 .25 0 73.95;1 0 0 1 0 0;1 0 0 1 0 0" keyTimes="0;.8;1" dur="3s" repeatCount="indefinite"/></g><path d="M27 54 V82" stroke="${lt}" stroke-width="3.2" stroke-linecap="round"><animate attributeName="stroke-dasharray" values="0 40;28 40" dur="3s" repeatCount="indefinite"/></path>` : swirl;
+  }
+  s += `<path d="M50 62 V11 Q50 4 57 4 H90 Q97 4 97 11 V62 Z" fill="url(#${sg})"/>`;
+  s += ftLogo(73.5, 10.6, 4.4, "#7c848a");
+  s += `<rect x="56" y="13" width="35" height="44" rx="2" fill="url(#${pg})"/>`;
+  s += FT_ICON.power(59.6, 16.6, ftOff() ? "#4a2626" : "#ff5a52", 1) + `<circle cx="84.6" cy="16" r=".5" fill="${ftOff() ? "#30363b" : "#4fc3f7"}"/><circle cx="87.2" cy="16" r=".5" fill="${ftOff() ? "#30363b" : "#5a6168"}"/>`;
+  const soft = ftServe() || ftDone();
+  s += ftTxt(66.5, 20.2, 1.35, "SOFT SERVE", soft && !ftOff() ? lit : dim) + ftTxt(81.5, 20.2, 1.35, "SCOOP", !soft && ftRun() ? lit : dim);
+  s += FT_ICON.cone(66.5, 23, soft && !ftOff() ? lit : dim) + FT_ICON.scoop(81.5, 23.2, !soft && ftRun() ? lit : dim);
+  ["ICE CREAM", "LITE ICE CREAM", "FROZEN YOGURT", "FRUIT WHIP"].forEach((l, k) => { s += `<rect x="58" y="${28.4 + k * 4.6}" width="4" height=".6" fill="${dim}"/>` + ftTxt(58, 31.2 + k * 4.6, 1.15, l, FTS.st === "idle" ? lit : dim, "start"); });
+  ["CREAMIFIT", "MILKSHAKE", "SORBET", "GELATO"].forEach((l, k) => { s += `<rect x="85" y="${28.4 + k * 4.6}" width="4" height=".6" fill="${dim}"/>` + ftTxt(89, 31.2 + k * 4.6, 1.15, l, FTS.st === "idle" ? lit : dim, "end"); });
+  s += `<circle cx="73.5" cy="37" r="4.6" fill="#050607" stroke="${ftOff() ? "#2b3136" : "#cfd8dc"}" stroke-width=".5"/>`;
+  if (ftRun()) s += `<circle cx="73.5" cy="37" r="4.6" fill="none" stroke="#4fc3f7" stroke-width=".7" stroke-dasharray="6 23"><animateTransform attributeName="transform" type="rotate" from="0 73.5 37" to="360 73.5 37" dur="1.4s" repeatCount="indefinite"/></circle>`;
+  s += ftSeg7(71.9, 34.6, 4.8, ftRun() || FTS.st === "idle" ? "5" : ftDone() || ftServe() ? "0" : "", ftOff() ? "#16191c" : "#e9f7ff", "#11161a");
+  [["RETRACT", 62], ["MIX-IN", 73.5], ["RE-SPIN", 85]].forEach(([l, x]) => { s += `<rect x="${x - 3.6}" y="49" width="7.2" height="5.6" rx="1" fill="none" stroke="#2c3238" stroke-width=".35"/>` + ftTxt(x, 50.9, 1.05, l, dim); });
+  s += FT_ICON.mixin(73.5, 52.8, dim) + FT_ICON.respin(85, 53, dim) + `<path d="M61 53.4 h2 M62 52.4 v2" stroke="${dim}" stroke-width=".35"/>`;
+  s += `<path d="M103.2 5 V30" stroke="#8f979d" stroke-width="4" stroke-linecap="round"/><path d="M102.4 6 V29" stroke="#ffffff" stroke-width="1.1" opacity=".85"/>`;
+  s += `<path d="M97 30 H101 Q106 30 106 35 V38 H97 Z" fill="url(#${sg})" stroke="#8f979d" stroke-width=".4"/>`;
+  s += ftBowl({ x: 53, y: 66, w: 41, h: 50 });
+  s += `<rect x="56" y="61" width="35" height="6" rx="1" fill="#1c1f22"/>`;
+  return s;
+}
+
+// ---------------------------------------------------------------- SLUSHi
+function ftDrum(o) {
+  const { x, y, w, h, color, tap = true, k = 0 } = o;
+  const G = ntId(), C = ntId(), A = ntId();
+  const cx = x + w / 2, r = Math.min(w * .38, 15);
+  const shape = `M${x} ${y + h} V${y + r} Q${x} ${y} ${x + r} ${y} H${x + w - r} Q${x + w} ${y} ${x + w} ${y + r} V${y + h} Z`;
+  let s = `<defs>${ftGlassG(G)}<clipPath id="${C}"><path d="${shape}"/></clipPath><pattern id="${A}" width="10" height="${h}" patternUnits="userSpaceOnUse"><path d="M-2 ${h} L8 0 M8 ${h} L18 0" stroke="#fff" stroke-opacity=".5" stroke-width="1.6"/></pattern></defs>`;
+  s += `<path d="${shape}" fill="#e9f0f4" opacity=".45"/>`;
+  if (!ftOff()) {
+    const lvl = y + h * .26;
+    const frozen = ftRun() || ftServe() || ftDone();
+    s += `<g clip-path="url(#${C})"><path d="M${x} ${lvl + 1.2} Q${x + w * .25} ${lvl - 1} ${x + w * .5} ${lvl + .8} T${x + w} ${lvl} V${y + h} H${x} Z" fill="${color}" opacity="${frozen ? .95 : .78}"/>`;
+    if (frozen) {
+      for (let j = 0; j < 30; j++) { const px = x + 1.5 + (j * 6.7 + k * 3) % (w - 3), py = lvl + 2 + (j * 4.3) % (y + h - lvl - 3); s += `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="${.35 + (j % 3) * .2}" fill="#fff" opacity=".75"/>`; }
+      if (ftRun() || ftServe()) s += `<rect x="${x - 10}" y="${lvl - 2}" width="${w + 20}" height="${y + h - lvl + 2}" fill="url(#${A})"><animateTransform attributeName="transform" type="translate" values="0 0;10 0" dur=".7s" repeatCount="indefinite"/></rect>`;
+    }
+    s += `<path d="M${x + 2} ${y + h - 3} Q${cx} ${y + h + 1} ${x + w - 2} ${y + h - 3}" stroke="#fff" stroke-opacity=".3" stroke-width=".8" fill="none"/></g>`;
+  }
+  s += `<path d="${shape}" fill="url(#${G})" stroke="#8d9ba5" stroke-width=".6"/>`;
+  s += `<path d="M${x + w - 6} ${y + h * .2} h4 M${x + w - 6} ${y + h * .35} h3 M${x + w - 6} ${y + h * .5} h3" stroke="#fff" stroke-width=".4" opacity=".9"/>` + ftTxt(x + w - 6.4, y + h * .2 + .5, 1.35, "MAX FILL", "#ffffff", "end", 700);
+  s += `<path d="M${x + 2.6} ${y + h - 4} V${y + r} Q${x + 2.6} ${y + 2.6} ${x + r} ${y + 2.6}" stroke="#fff" stroke-width="1.2" fill="none" opacity=".7"/>`;
+  if (tap) {
+    const SG = ntId();
+    s += `<defs>${ftSteel(SG)}</defs>`;
+    const pull = ftServe() && k === 0;
+    s += `<g${pull ? ` transform="rotate(-9 ${cx} ${y + h * .78})"` : ""}><rect x="${cx - 2.6}" y="${y - 4}" width="5.2" height="${h * .72}" rx="2.6" fill="url(#${SG})" stroke="#7c848a" stroke-width=".35"/></g>`;
+    s += `<path d="M${cx - 6} ${y + h * .62} H${cx + 6} L${cx + 4.6} ${y + h + 4} H${cx - 4.6} Z" fill="#e5ecf0" opacity=".75" stroke="#9aa8b2" stroke-width=".45"/><path d="M${cx - 4.2} ${y + h * .66} V${y + h + 2}" stroke="#fff" stroke-width=".7" opacity=".8"/>`;
+    s += `<rect x="${cx - 2.2}" y="${y + h + 3.4}" width="4.4" height="2.4" rx=".6" fill="#3a4046"/>`;
+  }
+  return s;
+}
+function ftGlass(cx, base, color) {
+  const C = ntId(), G = ntId();
+  const top = base - 31;
+  const cup = `M${cx - 6.4} ${top} Q${cx - 7.8} ${top + 9} ${cx - 4.4} ${top + 14} Q${cx - 2.4} ${top + 17} ${cx - 4} ${top + 21} Q${cx - 3.4} ${top + 25} ${cx} ${top + 25} Q${cx + 3.4} ${top + 25} ${cx + 4} ${top + 21} Q${cx + 2.4} ${top + 17} ${cx + 4.4} ${top + 14} Q${cx + 7.8} ${top + 9} ${cx + 6.4} ${top} Z`;
+  let s = `<defs><clipPath id="${C}"><path d="${cup}"/></clipPath>${ftGlassG(G)}</defs>`;
+  const fill = ftDone() ? top + 1.2 : top + 12;
+  s += `<g clip-path="url(#${C})"><rect x="${cx - 9}" y="${fill}" width="18" height="30" fill="${color}">${ftServe() ? `<animate attributeName="y" values="${top + 25};${top + 3}" dur="3.5s" repeatCount="indefinite"/>` : ""}</rect>`;
+  for (let j = 0; j < 12; j++) s += `<circle cx="${cx - 5 + (j * 3.7) % 10}" cy="${top + 4 + (j * 2.9) % 20}" r=".35" fill="#fff" opacity=".7"/>`;
+  s += `</g><path d="${cup}" fill="url(#${G})" stroke="#9aa8b2" stroke-width=".45"/>`;
+  s += `<path d="M${cx - .9} ${top + 25} V${base - 2.5} H${cx + .9} V${top + 25}" fill="#dfe7ec" stroke="#9aa8b2" stroke-width=".35"/><ellipse cx="${cx}" cy="${base - 1.6}" rx="5" ry="1.2" fill="#dfe7ec" stroke="#9aa8b2" stroke-width=".35"/>`;
+  if (ftDone()) s += `<path d="M${cx + 2} ${top - 6} L${cx - .5} ${top + 10}" stroke="#e53935" stroke-width="1.1" stroke-linecap="round"/>`;
+  return s;
+}
+function ftSlushi() {
+  const bg = ntId(), sg = ntId(), tg = ntId();
+  const c = FT_FLAVORS[FTS.fl][2];
+  const dim = ftOff() ? "#3a4046" : "#9aa3aa", lit = ftOff() ? "#3a4046" : "#ffffff";
+  let s = `<defs>${ftGrad(bg, [[0, "#3a3f44"], [1, "#23272b"]])}${ftSteel(sg)}${ftSteel(tg, ["#5a6b80", "#7e94ad", "#94a9c0", "#7086a0", "#566679"])}</defs>`;
+  s += ftShadow(62, 130, 40);
+  s += `<path d="M27 64 V30 Q27 14 43 14 H81 Q97 14 97 30 V64 Z" fill="#2a2e32"/><path d="M30 60 V31 Q30 17 44 17" stroke="#fff" stroke-opacity=".1" stroke-width="1" fill="none"/>`;
+  s += `<path d="M25 62 H99 V122 Q99 126 95 126 H29 Q25 126 25 122 Z" fill="url(#${bg})"/>`;
+  s += `<path d="M25 62 H32 V126 H29 Q25 126 25 122 Z" fill="url(#${tg})"/><path d="M92 62 H99 V122 Q99 126 95 126 H92 Z" fill="url(#${tg})"/>`;
+  for (let r = 0; r < 16; r++) for (let q = 0; q < 2; q++) s += `<circle cx="${27.3 + q * 2.4}" cy="${66 + r * 3.6}" r=".55" fill="#2a3442"/>`;
+  s += `<rect x="35" y="66" width="13" height="44" rx="1.6" fill="#1b1e21"/>`;
+  s += `<circle cx="41.5" cy="70.4" r="2.2" fill="none" stroke="${ftOff() ? "#4a2626" : "#e53935"}" stroke-width=".5"/>` + FT_ICON.power(41.5, 70.5, ftOff() ? "#4a2626" : "#ff5a52", 1.1);
+  ["SLUSH", "SPIKED SLUSH", "FROZEN JUICE", "MILKSHAKE", "FRAPP\u00c9"].forEach((l, k) => { const chosen = k === 0 && !ftOff() && FTS.st !== "idle"; s += `<circle cx="37.4" cy="${76.6 + k * 5}" r=".55" fill="${chosen ? "#4fc3f7" : ftOff() ? "#2c3136" : "#4a5157"}"/>` + ftTxt(39, 77.1 + k * 5, 1.3, l, chosen ? lit : FTS.st === "idle" ? "#d5dbe0" : dim, "start"); });
+  s += `<rect x="37" y="101" width="9" height="4" rx="2" fill="none" stroke="${dim}" stroke-width=".35"/>` + ftTxt(41.5, 103.6, 1.2, "TEMP", dim);
+  s += ftLogo(80, 80, 5.2, "#e8eaec");
+  s += `<path d="M45 116 H79 Q82 116 82 119 V122 Q82 125 79 125 H45 Q42 125 42 122 V119 Q42 116 45 116 Z" fill="#26292d"/><ellipse cx="62" cy="117.4" rx="16" ry="1.8" fill="url(#${sg})"/>`;
+  for (let k = 0; k < 9; k++) s += `<path d="M${48.4 + k * 3.4} 116.2 v2.4" stroke="#6b7177" stroke-width=".5"/>`;
+  s += ftDrum({ x: 31, y: 16, w: 62, h: 47, color: c });
+  if (ftServe()) s += `<path d="M62 69 V96" stroke="${c}" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="3 1.6"><animate attributeName="stroke-dashoffset" values="0;-9.2" dur=".45s" repeatCount="indefinite"/></path>`;
+  if (ftServe() || ftDone()) s += ftGlass(62, 117, c);
+  return s;
+}
+function ftSlushiDuo() {
+  const bg = ntId(), fg = ntId(), sg = ntId();
+  const dim = ftOff() ? "#3a4046" : "#c8c1b6", lit = ftOff() ? "#3a4046" : "#ffffff";
+  let s = `<defs>${ftGrad(bg, [[0, "#3b3734"], [1, "#24211f"]])}${ftSteel(fg, ["#6d665e", "#968e83", "#aca397", "#8e877c", "#665f58"])}${ftSteel(sg)}</defs>`;
+  s += ftShadow(60, 130, 50);
+  s += `<path d="M13 62 V30 Q13 14 29 14 H91 Q107 14 107 30 V62 Z" fill="#2a2725"/>`;
+  s += `<path d="M14 62 H106 V121 Q106 126 101 126 H19 Q14 126 14 121 Z" fill="url(#${bg})"/>`;
+  s += `<path d="M18 66 H102 V96 Q102 100 98 100 H22 Q18 100 18 96 Z" fill="url(#${fg})"/><path d="M19 66.6 H101" stroke="#fff" stroke-opacity=".25" stroke-width=".5"/>`;
+  s += ftLogo(60, 74, 4.6, "#f3efe9");
+  s += `<circle cx="60" cy="86" r="6" fill="#2a2725" stroke="${ftOff() ? "#3d4a55" : "#64b5f6"}" stroke-width=".8"/>` + ftTxt(60, 84.8, 1.25, "SLUSH", lit) + ftTxt(60, 86.6, 1.25, "ASSIST", lit) + ftTxt(60, 88.4, 1.25, "DUO", lit);
+  if (ftRun()) s += `<circle cx="60" cy="86" r="6" fill="none" stroke="#64b5f6" stroke-width="1"><animate attributeName="stroke-opacity" values="1;.2;1" dur="1.6s" repeatCount="indefinite"/></circle>`;
+  [36, 84].forEach((x, k) => {
+    s += `<circle cx="${x}" cy="85" r="4.2" fill="#2a2725" stroke="#4a4540" stroke-width=".4"/>` + ftTxt(x, 84.6, 1.05, "SLUSH", lit) + ftTxt(x, 86.2, 1.05, "ASSIST", lit);
+    s += `<path d="M${x - 7} 78 h14" stroke="${dim}" stroke-width=".25"/>` + ftTxt(x, 77.4, 1.1, k ? "RIGHT" : "LEFT", dim) + `<rect x="${x - 3}" y="92.2" width="6" height="2.6" rx="1.3" fill="none" stroke="${dim}" stroke-width=".3"/>` + ftTxt(x, 94, 1, "Menu", dim);
+    s += `<circle cx="${x + (k ? 7 : -7)}" cy="85" r=".6" fill="${ftRun() || ftServe() || ftDone() ? "#64b5f6" : ftOff() ? "#2c3136" : "#5a5550"}"/>`;
+  });
+  s += FT_ICON.power(23, 71, ftOff() ? "#4a2626" : "#ff5a52", 1);
+  s += `<ellipse cx="60" cy="121" rx="17" ry="3.6" fill="#1a1817"/><ellipse cx="60" cy="119.6" rx="15" ry="2.6" fill="url(#${sg})"/>`;
+  for (let k = 0; k < 6; k++) s += `<ellipse cx="60" cy="119.6" rx="${13 - k * 2}" ry="${2.2 - k * .34}" fill="none" stroke="#7c848a" stroke-width=".3"/>`;
+  s += ftDrum({ x: 16, y: 16, w: 42, h: 46, color: "#e53935", tap: false, k: 0 }) + ftDrum({ x: 62, y: 16, w: 42, h: 46, color: "#fdd835", tap: false, k: 1 });
+  s += `<path d="M58 14 H62 V60 H58 Z" fill="#1d1b1a"/>`;
+  const tap = (cx, side) => {
+    const pull = false;
+    return `<g${pull ? ` transform="rotate(-8 ${cx} 52)"` : ""}><path d="M${60 + side * 1.5} 10 Q${cx} 9 ${cx} 18 V48" stroke="#8f979d" stroke-width="5.4" fill="none" stroke-linecap="round"/><path d="M${60 + side * 1.5} 9 Q${cx - side * 1} 8.4 ${cx - side * 1.3} 18 V47" stroke="#fff" stroke-width="1.2" fill="none" opacity=".8"/></g>` +
+      (() => { const tip = 60 + side * 7; return `<path d="M${cx - 5.4} 44 H${cx + 5.4} L${tip + 3.2} 65 H${tip - 3.2} Z" fill="#e5ecf0" opacity=".78" stroke="#9aa8b2" stroke-width=".45"/><path d="M${cx - side * 3.6} 46 L${tip - side * 1.8} 63" stroke="#fff" stroke-width=".7" opacity=".8"/><rect x="${tip - 2}" y="64.6" width="4" height="2.2" rx=".6" fill="#3a4046"/>`; })();
+  };
+  s += tap(37, -1) + tap(83, 1) + `<rect x="57" y="6.4" width="6" height="5" rx="1.6" fill="url(#${sg})"/>`;
+  if (ftServe()) s += `<path d="M53 67 Q55 78 59 95" stroke="#e53935" stroke-width="2.4" stroke-linecap="round" fill="none" stroke-dasharray="3 1.6"><animate attributeName="stroke-dashoffset" values="0;-9.2" dur=".45s" repeatCount="indefinite"/></path>`;
+  if (ftServe() || ftDone()) s += ftGlass(60, 119, "#e53935");
+  return s;
+}
+
+
+const NT_DRAW = { spk_jukebox: (c) => ntJukebox({ on: c.st !== "off" && c.st !== undefined, playing: c.st === "playing" }), wd_under_sink: ntWdUnderSink, wd_column: ntWdColumn, con_pincab: (c) => arcPincab({ ...c, playing: c.st === "playing" }), con_arcade_bartop: (c) => arcBartop({ ...c, playing: c.st === "playing" }), con_arcade_upright: (c) => arcUpright({ ...c, playing: c.st === "playing" }), strip_shelly: ntStripShelly, strip_classic: ntStripClassic, gas_fireplace: ntGasFireplace, fp_tm31: ntFoodTm31, fp_tm6: ntFoodTm6, ft_creami: (c) => ftDraw(c, () => ftCreamiClassic(false)), ft_creami_bar: (c) => ftDraw(c, () => ftCreamiClassic(true)), ft_creami_deluxe: (c) => ftDraw(c, ftCreamiDeluxe), ft_creami_xl: (c) => ftDraw(c, ftCreamiXL), ft_creami_swirl: (c) => ftDraw(c, () => ftCreamiSwirl(false)), ft_creami_scoop_swirl: (c) => ftDraw(c, () => ftCreamiSwirl(true)), ft_slushi: (c) => ftDraw(c, ftSlushi), ft_slushi_duo: (c) => ftDraw(c, ftSlushiDuo), rack_box: ntRackBox, rack_accordion: ntRackAccordion, rack_frame: ntRackFrame, vlv_aqara: ntValveAqara, vlv_tuya: ntValveTuya,  fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_switchbot_co2: (c) => ntSbPro(c, true), ths_switchbot_pro: (c) => ntSbPro(c, false), ths_switchbot_meter: (c) => ntSbMeter(c, false), ths_switchbot_plus: (c) => ntSbMeter(c, true), ths_switchbot_outdoor: ntSbOutdoor, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, cov_curtain: ntCovCurtain, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, det_door: ntDetDoor, det_vibration: ntDetVibration, det_glass: ntDetGlass, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, spk_focal_bird: ntSpkFocalBird, spk_focal_od6: ntSpkFocalOd6, spk_denon_avr: ntSpkDenon, spk_avr: ntSpkAvr, spk_wiim_amp: ntSpkWiim, spk_smart_clock: ntSpkClock, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, mob_charger: mobBatCharger, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 // What a tint leaves alone: a part wrapped by ntKeep (an app's tile, a
 // display, a tyre).
 const ntKeep = (s) => `<!--k-->${s}<!--/k-->`;

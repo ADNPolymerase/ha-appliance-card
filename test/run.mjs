@@ -10541,6 +10541,33 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     { 'binary_sensor.p': s('on'), 'sensor.p': s(1.25) })), true);
   check('piscine : l\'aiguille s\'affole en erreur', /class="pl-needle" style=/.test(render({ ...P, pressure_entity: 'sensor.p' },
     { 'binary_sensor.p': s('on'), 'sensor.p': s(2.4) })), false);
+  // The basin (HACF #217): spots, cover, shower, pH and RedOx in range.
+  const B = (cfg, more) => render({ ...P, pool_layout: 'basin', ...cfg }, { 'binary_sensor.p': s('on'), ...more });
+  check('217 : le bassin se dessine', /class="pl-pp pl-basin"/.test(B({}, {})), true);
+  check('217 : la pompe reste dessinee sans le bassin', /class="pl-pp pl-basin"/.test(render(P, { 'binary_sensor.p': s('on') })), false);
+  check('217 : nombre de spots', (B({ spot_count: 5, light_entity: 'light.spots' }, { 'light.spots': s('on') }).match(/class="pb-spot"/g) || []).length, 5);
+  check('217 : 3 spots par defaut', (B({}, {}).match(/class="pb-spot"/g) || []).length, 3);
+  check('217 : la couleur des spots', /fill="rgb\(255,0,0\)"/.test(B({ light_entity: 'light.spots' }, { 'light.spots': s('on', { rgb_color: [255, 0, 0] }) })), true);
+  check('217 : spots eteints', /fill="#78909c"/.test(B({ light_entity: 'light.spots' }, { 'light.spots': s('off') })), true);
+  check('217 : volet en partie ouvert', infoLine(B({ cover_entity: 'cover.v' }, { 'cover.v': s('open', { current_position: 40 }) }), 'Cover'), '40\u00a0%\u00a0open');
+  check('217 : volet ferme', infoLine(B({ cover_entity: 'cover.v' }, { 'cover.v': s('closed', { current_position: 0 }) }), 'Cover'), 'Closed');
+  check('217 : volet en mouvement', infoLine(B({ cover_entity: 'cover.v' }, { 'cover.v': s('opening', { current_position: 30 }) }), 'Cover'), 'Opening');
+  check('217 : hivernage, bache', infoLine(B({ cover_entity: 'cover.v', winter: true }, { 'cover.v': s('open', { current_position: 100 }) }), 'Cover'), 'Closed, winter tarp');
+  check('217 : hivernage, la bache se dessine', /fill="#2f5d50"/.test(B({ winter: true }, {})), true);
+  check('217 : la douche', infoLine(B({ shower_entity: 'valve.d' }, { 'valve.d': s('open') }), 'Shower'), 'Running');
+  check('217 : douche fermee en hivernage', infoLine(B({ shower_entity: 'valve.d', winter: true }, { 'valve.d': s('open') }), 'Shower'), 'Off');
+  check('217 : pas de douche dessinee sans entite', /url\(#pb-tank\)/.test(B({}, {})), false);
+  const phCls = (v, cfg = {}) => (/<div class="info-line ([^"]*)"[^>]*title="pH"/.exec(B({ ph_entity: 'sensor.ph', ...cfg }, { 'sensor.ph': s(v) })) || [, ''])[1];
+  check('217 : pH dans la plage en vert', / good/.test(phCls(7.4)), true);
+  check('217 : pH hors plage en rouge', / bad/.test(phCls(7.9)), true);
+  check('217 : plage choisie', / good/.test(phCls(7.9, { ph_max: 8 })), true);
+  check('217 : sans bassin ni plage, pas de couleur', /good|bad/.test((/<div class="info-line ([^"]*)"[^>]*title="pH"/.exec(render({ ...P, ph_entity: 'sensor.ph' }, { 'binary_sensor.p': s('on'), 'sensor.ph': s(7.4) })) || [, ''])[1]), false);
+  check('217 : consigne pH apres la valeur', /7\.42\s*\u2192\s*7\.2$/.test(infoLine(B({ ph_entity: 'sensor.ph', ph_target_entity: 'number.c' }, { 'sensor.ph': s(7.42), 'number.c': s(7.2) }), 'pH') || ''), true);
+  const orpCls = (v) => (/<div class="info-line ([^"]*)"[^>]*title="RedOx"/.exec(B({ redox_entity: 'sensor.orp' }, { 'sensor.orp': s(v, { unit_of_measurement: 'mV' }) })) || [, ''])[1];
+  check('217 : RedOx sous la plage en rouge', / bad/.test(orpCls(640)), true);
+  check('217 : RedOx dans la plage en vert', / good/.test(orpCls(700)), true);
+  check('217 : vagues quand la pompe tourne', /attributeName="opacity" values="0;1;1;0"/.test(B({}, {})), true);
+  check('217 : eau calme a l arret', /attributeName="opacity" values="0;1;1;0"/.test(render({ ...P, pool_layout: 'basin' }, { 'binary_sensor.p': s('off') })), false);
   check('piscine : niveau du bidon', /class="pl-can-l" x="68.1" y="56.5" width="11.8" height="3"/.test(render({ ...P, chlorine_pump_entity: 'binary_sensor.cl', chlorine_level_entity: 'sensor.cl' },
     { 'binary_sensor.p': s('on'), 'binary_sensor.cl': s('off'), 'sensor.cl': s(40, { unit_of_measurement: '%' }) })), true);
 
@@ -15323,6 +15350,25 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('170 : l ecran montre la puissance de la prise', [lcdOf(fp('tm31', 'on', 380)), lcdOf(fp('tm6', 'on', 1050)), lcdOf(fp('tm6', 'on', 1))].join('|'), '380 W|1050|1');
   check('170 : eteint, ecran vide', lcdOf(fp('tm31', 'off', 0)), '');
   check('170 : jamais d heure ni de degres', /\d\d:\d\d|\u00b0/.test(fp('tm6', 'on', 1050).split('<svg')[1] || ''), false);
+  // Ninja CREAMi and SLUSHi on a plug (HACF #217).
+  const ft = (extra, plug, w, id = 'switch.ninja_creami') => render({ state_entity: id, power_entity: 'sensor.ninja_w', ...extra }, { [id]: s(plug), 'sensor.ninja_w': s(w, { unit_of_measurement: 'W' }) });
+  check('217 : une CREAMi se reconnait a son nom', kindOf(ft({}, 'on', 1)), 'ft_creami');
+  check('217 : modeles par le nom', [kindOf(ft({}, 'on', 1, 'switch.ninja_slushi_duo')), kindOf(ft({}, 'on', 1, 'switch.ninja_slushi')), kindOf(ft({}, 'on', 1, 'switch.creami_scoop_swirl')), kindOf(ft({}, 'on', 1, 'switch.creami_swirl')), kindOf(ft({}, 'on', 1, 'switch.creami_deluxe')), kindOf(ft({}, 'on', 1, 'switch.creami_xl')), kindOf(ft({}, 'on', 1, 'switch.creami_nc302'))].join(' '),
+    'ft_slushi_duo ft_slushi ft_creami_scoop_swirl ft_creami_swirl ft_creami_deluxe ft_creami_xl ft_creami_bar');
+  check('217 : modele choisi', kindOf(ft({ frozen_layout: 'creami_xl' }, 'on', 1)), 'ft_creami_xl');
+  check('217 : eteint', stateLine(ft({}, 'off', 0, 'switch.creami_a')), 'Off');
+  check('217 : pret', stateLine(ft({}, 'on', 1, 'switch.creami_b')), 'Ready');
+  check('217 : turbinage', stateLine(ft({}, 'on', 800, 'switch.creami_c')), 'Churning');
+  check('217 : termine apres le turbinage', stateLine(ft({}, 'on', 1, 'switch.creami_c')), 'Done');
+  check('217 : SLUSHi en preparation', stateLine(ft({}, 'on', 300, 'switch.slushi_a')), 'Freezing');
+  check('217 : SLUSHi prete a servir apres le compresseur', (ft({}, 'on', 300, 'switch.slushi_b'), stateLine(ft({}, 'on', 1, 'switch.slushi_b'))), 'Ready to serve');
+  const ftNoMeter = render({ appliance_type: 'frozen_treat', state_entity: 'switch.glace' }, { 'switch.glace': s('on') });
+  check('217 : sans compteur, prise allumee = pret', stateLine(ftNoMeter), 'Ready');
+  check('217 : parfum fraise', /#f8c9d3/.test(ft({ frozen_flavor: 'strawberry' }, 'on', 1, 'switch.creami_d')), true);
+  check('217 : vanille par defaut', /#f7eccd/.test(ft({}, 'on', 1, 'switch.creami_e')), true);
+  check('217 : la palette tourne en marche seulement', [/animateTransform attributeName="transform" type="scale"/.test(ft({}, 'on', 800, 'switch.creami_f')), /animateTransform attributeName="transform" type="scale"/.test(ft({}, 'on', 1, 'switch.creami_g'))].join(' '), 'true false');
+  check('217 : le cornet au service du Swirl apres le turbinage', (ft({}, 'on', 800, 'switch.creami_swirl_h'), /#c98b36/.test(ft({}, 'on', 1, 'switch.creami_swirl_h'))), true);
+  check('217 : les 8 dessins existent', ['creami', 'creami_bar', 'creami_deluxe', 'creami_xl', 'creami_swirl', 'creami_scoop_swirl', 'slushi', 'slushi_duo'].every((l) => /NINJA/.test(ft({ frozen_layout: l }, 'on', 1, 'switch.glace_' + l))), true);
   check('170 : la cuisson fume', /nta-steam/.test(fp('tm6', 'on', 1000)), true);
   check('170 : detecte par son nom', kindOf(render({ state_entity: 'switch.thermomix' }, { 'switch.thermomix': s('on') })) !== null && /fp_/.test(kindOf(render({ state_entity: 'switch.thermomix' }, { 'switch.thermomix': s('on') }))), true);
 }

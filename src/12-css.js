@@ -1895,6 +1895,7 @@ const ILLUSTRATION_CSS = {
   pool_pump: () => `
         .machine.pl { --b: var(--ac-body, #3f4a54); --bh: var(--ac-body-hi, #62707c); --bl: var(--ac-body-lo, #252c33); }
         svg.pl-pp{position:absolute;left:0;top:0;width:96px;height:108px;overflow:visible}
+        .machine.pl-b,svg.pl-pp.pl-basin{width:184px;height:115px}
         .pl-body{fill:url(#pl-g-body)}
         .pl-body-d{fill:var(--bl)}
         .pl-ring{fill:none;stroke:var(--bl);stroke-width:1;opacity:.6}

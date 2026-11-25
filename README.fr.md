@@ -29,7 +29,7 @@ Une carte Lovelace qui dessine les appareils de la maison et les anime selon leu
 
 ## Fonctionnalités
 
-- **74 types d'appareils, plus de 170 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul, d'après l'entité et la marque et le modèle de son appareil, ou choisi avec `appliance_type`.
+- **75 types d'appareils, plus de 180 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul, d'après l'entité et la marque et le modèle de son appareil, ou choisi avec `appliance_type`.
 - **Toutes les intégrations** : chaque champ est une entité à choisir. Une simple prise connectée suffit, sa puissance dit si l'appareil chauffe, lave ou essore.
 - **L'état compris** : `Idle`, `RUNNING`, `En marche`… deviennent veille, en cours, pause, terminé, différé ou erreur, avec l'étape du cycle (lavage, rinçage, essorage…).
 - **Ce qui compte pour chaque appareil** : programme, temps restant, porte, alertes, niveaux, températures, énergie et coût, marche du jour.
@@ -384,7 +384,7 @@ Seule `state_entity` est obligatoire, sauf quand une autre entité en dit assez 
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. Un dessin fait d'après un vrai produit (console, boîtier de streaming, imprimante, litière…) garde ses vraies couleurs tant qu'aucune couleur n'est choisie ; son écran, la tuile de l'appli et ses pneus gardent les leurs. Les scènes autour d'un appareil (fosse de relevage, jardin, toit) et la lumière des lampes ne changent pas. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 16 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`, `hu`, `zh-Hant`. `nb` et `nb-NO` donnent le norvégien. `zh` est le chinois simplifié ; `zh-Hant`, `zh-TW` et `zh-HK` donnent le chinois traditionnel. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `fingerbot` \| `valve` \| `drying_rack` \| `power_strip` \| `food_processor` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove` \| `gas_fireplace` \| `water_dispenser`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `fingerbot` \| `valve` \| `drying_rack` \| `power_strip` \| `food_processor` \| `frozen_treat` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove` \| `gas_fireplace` \| `water_dispenser`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `illustration_tap_action` | Un appui sur le dessin seul, le reste de la carte gardant `tap_action` : `toggle` (une lampe allumée en la touchant), `more-info`, `none`, ou n'importe quelle action de Home Assistant. Sans lui, le dessin fait comme la carte. Avec `toggle`, le dessin répond comme les boutons, selon `controls_activation` : un appui, deux appuis ou un appui long. |
 | `show_light_button` | `false` cache le bouton de la lumière en haut à gauche (four, hotte, imprimante 3D, pompe de piscine, diffuseur) ; la lumière reste visible sur le dessin. |
@@ -585,6 +585,8 @@ phase_entity: sensor.lavante_sechante_phase
 | `plug_entity` | frigo | L'interrupteur de la prise connectée. Coupé, l'état passe tout de suite en *Débranché*. Débranché ou sans consommation, la lumière intérieure s'éteint. |
 | `kettle_layout` | bouilloire | `classic` (défaut, une bouilloire de la couleur de l'appareil) \| `steel` (une bouilloire en inox à poignée noire). |
 | `food_layout` | robot de cuisine | `tm6` (un Thermomix TM6 ou TM7, son écran tactile) \| `tm31` (un Thermomix TM31, son bouton et son écran LCD). Sans réglage, un nom qui dit TM31, TM21 ou TM3 donne `tm31`. |
+| `frozen_layout` | machine à glace et granité | `creami` (une Ninja CREAMi NC300) \| `creami_bar` (une NC302, sa barre de progression) \| `creami_deluxe` \| `creami_xl` \| `creami_swirl` \| `creami_scoop_swirl` \| `slushi` \| `slushi_duo`. Sans réglage, le nom le choisit (Slushi, Duo, Swirl, Scoop, Deluxe, XL, NC302), sinon `creami`. |
+| `frozen_flavor` | machine à glace et granité | La couleur de la glace ou du granité : `vanilla` (défaut) \| `strawberry` \| `chocolate` \| `pistachio` \| `mango` \| `blue_raspberry`. |
 | `water_dispenser_layout` | distributeur d'eau | `under_sink` (défaut, un frigogazéificateur sous l'évier avec sa bouteille de CO2 et son robinet trois voies) \| `column` (une fontaine à eau en colonne). Sans réglage, un nom qui dit colonne, cooler ou fontaine donne `column`. |
 | `cooling_threshold` / `carbonation_threshold` | distributeur d'eau | Watts à partir desquels sa prise dit *Refroidit* (30 par défaut, le compresseur) et *Gazéifie* (150 par défaut, la pompe du gazéificateur en plus). |
 | `dispensing_entity` / `dispense_mode_entity` / `refill_entity` | distributeur d'eau | Ce qu'une prise ne voit pas : l'eau qui coule (un capteur binaire, un interrupteur ou un débit au-dessus de 0), plate, fraîche ou gazeuse (un select ou un capteur, lu dans toutes les langues), et le réservoir qui se remplit. |
@@ -996,6 +998,12 @@ pilot_entity: switch.intellifire_pilot_light
 | `winter` / `winter_entity` | piscine, arrosage, spa, barbecue à pellets | Hivernage : coché, ou une entité allumée-éteinte (un `input_boolean` allumé pour l'hiver). Le bassin sous sa bâche, la neige sur la pompe et le filtre ; le spa sous sa couverture isolante ; le robinet purgé, le programmateur rentré, la neige sur la pelouse et les massifs ; le barbecue sous sa housse. La carte affiche *Hivernage* ; une pompe de piscine qui tourne pour le hors-gel le dit toujours. |
 | `pool_alert_entity` | piscine | Tout ce qui doit déclencher l'*Erreur* : la pompe fume et l'aiguille du manomètre s'affole. |
 | `light_entity` | piscine | Le projecteur du bassin : il éclaire la paroi du fond, et son interrupteur se met dans le coin de la carte. |
+| `pool_layout` | piscine | `pump` (défaut, le filtre à sable et la pompe) \| `basin` (le bassin en 3/4 : ses spots sur la paroi du fond, son volet flottant et son rouleau, sa douche solaire, l'eau qui bouge quand la pompe tourne). |
+| `spot_count` | piscine (bassin) | Les spots immergés, de 1 à 6 (3 par défaut). Ils prennent la couleur de `light_entity`, blanc sinon, et changent de couleur quand son effet est aléatoire ou arc-en-ciel. |
+| `cover_entity` | piscine (bassin) | Le volet flottant : un `cover` (sa position), un capteur binaire (allumé quand il est ouvert) ou un pourcentage d'ouverture. Les lames passent sous le rouleau quand il s'ouvre, et c'est une ligne : *Ouvert*, *Fermé*, *Ouvert à 40 %*, *Ouverture*. |
+| `shower_entity` | piscine (bassin) | L'électrovanne de la douche solaire : la douche n'est dessinée sur la plage que si elle est donnée, l'eau coule quand elle est ouverte. |
+| `ph_target_entity` / `redox_target_entity` | piscine | Les consignes, écrites après la valeur : *7,42 → 7,2*. |
+| `ph_min` / `ph_max` / `redox_min` / `redox_max` | piscine | La plage où l'eau doit être, pH 7,0 à 7,6 et RedOx 650 à 750 mV par défaut : la valeur en vert dedans, en rouge dehors. Toujours avec le bassin, avec la pompe dès que l'une d'elles est donnée. |
 | `pump_layout` | pompe à eau | `booster` (surpresseur sur son ballon, avec son contrôleur) \| `sump` (regard de relevage en coupe, son flotteur sur son câble) \| `circulator` (circulateur de chauffage, voir *Ballons tampons, circulateurs, solaire thermique et poêles à bois*). Sans réglage, un `level_entity`, un `high_level_entity` ou un nom qui dit relevage en fait une pompe de relevage. Sur une prise connectée laissée allumée avec son `power_entity`, elle pompe au-dessus de `power_on_threshold`, attend en dessous, et affiche *Éteinte* dès que la prise est coupée, en rouge sur une pompe de relevage. Sans mesure de puissance, le switch est celui de la pompe et coupé veut seulement dire qu'elle attend. |
 | `pressure_entity` | pompe à eau (surpresseur) | La pression, sur l'écran du contrôleur et en ligne. Sans elle, l'écran affiche la puissance de la prise. |
 | `level_entity` / `level_max` | pompe à eau (relevage) | Le niveau d'eau, sur l'écran, en ligne et comme hauteur d'eau dans le regard : un pourcentage, ou une valeur sur `level_max`. À partir de 90 %, *Niveau haut*. |
@@ -1022,6 +1030,24 @@ ph_entity: sensor.piscine_ph
 redox_entity: sensor.piscine_redox
 filtration_time_entity: sensor.piscine_filtration_aujourd_hui
 chlorine_pump_entity: binary_sensor.piscine_pompe_chlore
+```
+
+Le bassin lui-même, `pool_layout: basin` : les spots éclairent l'eau la nuit, le volet s'enroule sur son rouleau, la douche coule quand son électrovanne est ouverte, et en hivernage (`winter_entity`) le volet reste fermé sous sa bâche avec de la neige dessus, la douche fermée. Le pH et le RedOx passent en vert ou en rouge selon leur plage.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: pool_pump
+pool_layout: basin
+state_entity: switch.pompe_piscine
+light_entity: light.spots_piscine
+spot_count: 4
+cover_entity: cover.volet_piscine
+shower_entity: valve.douche_piscine
+ph_entity: sensor.piscine_ph
+ph_target_entity: number.piscine_consigne_ph
+redox_entity: sensor.piscine_redox
+redox_target_entity: number.piscine_consigne_redox
+winter_entity: input_boolean.piscine_hivernage
 ```
 
 </details>
@@ -2112,6 +2138,17 @@ appliance_type: food_processor
 food_layout: tm6
 state_entity: switch.prise_thermomix
 power_entity: sensor.prise_thermomix_puissance
+```
+
+Une Ninja CREAMi ou SLUSHi sur une prise connectée est un `frozen_treat` : *Éteint*, *Prêt* sur quelques watts, *Turbinage* pendant que la palette descend dans le pot et tourne (*Préparation* pour une SLUSHi, sa vis qui tourne dans le granité), puis *Terminé* pendant dix minutes (*Prêt à servir* pendant une demi-heure sur une SLUSHi). Ces machines n'ont pas de Wi-Fi : la puissance de la prise est tout ce que la carte lit.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: frozen_treat
+frozen_layout: creami_deluxe
+frozen_flavor: strawberry
+state_entity: switch.prise_creami
+power_entity: sensor.prise_creami_puissance
 ```
 
 Une Reolink TrackMix avec ses détections IA, son projecteur, sa sirène et son suivi :
