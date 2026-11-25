@@ -15852,6 +15852,37 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
 }
 
 // =============================================================================
+// A printer on a plug switched off: its integration reads unavailable, the
+// card reads Off, not Unknown.
+// =============================================================================
+{
+  const U = { state: 'unavailable', attributes: {} };
+  const ST = { 'sensor.p_status': U, 'sensor.p_stage': U, 'sensor.p_nozzle': U, 'sensor.p_err': U,
+    'switch.p_plug': { state: 'off', attributes: {} } };
+  const cfg = { appliance_type: 'printer_3d', state_entity: 'sensor.p_status', phase_entity: 'sensor.p_stage',
+    nozzle_temperature_entity: 'sensor.p_nozzle', toggle_entity: 'switch.p_plug', alerts_entities: ['sensor.p_err'] };
+  check('imprimante sur prise coupee : eteinte', stateLine(render(cfg, ST)), 'Off');
+  check('imprimante sur prise coupee : pas d alerte', /class="[^"]*alert/.test(render(cfg, ST)) && /Error/.test(stateLine(render(cfg, ST))), false);
+  check('imprimante sur prise allumee mais injoignable : pas eteinte', stateLine(render(cfg, { ...ST, 'switch.p_plug': { state: 'on', attributes: {} } })) === 'Off', false);
+  check('imprimante sur prise coupee, etat connu : garde son etat', stateLine(render(cfg, { ...ST, 'sensor.p_status': { state: 'printing', attributes: {} } })) === 'Off', false);
+}
+
+// =============================================================================
+// A socket switched off redraws the strip: the lists of entities are watched.
+// =============================================================================
+{
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'power_strip', outlets: ['switch.s1', { entity: 'switch.s2' }],
+    ams_entities: ['sensor.a1'] });
+  const on = { state: 'on', attributes: {}, last_changed: '1' };
+  const sig = (s2) => c._stateSignature({ states: { 'switch.s1': on, 'switch.s2': { ...on, state: s2, last_changed: s2 }, 'sensor.a1': on } });
+  check('multiprise : une prise qui s eteint change la signature', sig('on') !== sig('off'), true);
+  check('liste : les prises sont surveillees', c._watchedEntityIds().includes('switch.s2'), true);
+  check('liste : les bobines aussi', c._watchedEntityIds().includes('sensor.a1'), true);
+  check('liste : pas les mots de lines_order', new Card()._watchedEntityIds.call({ _config: { lines_order: ['layer.x'] } }).length, 0);
+}
+
+// =============================================================================
 // Temperature precision with the appearance, for the types whose room
 // temperature has no field to hang it on (HACF #205).
 // =============================================================================

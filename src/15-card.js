@@ -1,3 +1,7 @@
+// An entity id, as found in the card's lists.
+const ENTITY_ID_RE = /^[a-z_]+\.[a-z0-9_]+$/;
+// Lists watched on their own, up to the number drawn, or not entities at all.
+const UNWATCHED_LISTS = ["lines_order", "info_entities", "alerts_entities", "corner_entities", "zones"];
 class ApplianceCard extends HTMLElement {
   static getStubConfig(hass) {
     const sensors = Object.keys(hass.states).filter((e) => e.startsWith("sensor."));
@@ -83,7 +87,15 @@ class ApplianceCard extends HTMLElement {
       if (z && z.level_entity) ids.push(z.level_entity);
       if (z && z.residual_heat_entity) ids.push(z.residual_heat_entity);
     }
-    return ids;
+    // Every other list of entities: a strip's sockets, a printer's spools, a
+    // tank's probes. A socket switched from the drawing redraws at once.
+    const walk = (v, depth) => {
+      if (typeof v === "string") { if (ENTITY_ID_RE.test(v)) ids.push(v); return; }
+      if (depth > 2 || !v || typeof v !== "object") return;
+      for (const x of Array.isArray(v) ? v : Object.values(v)) walk(x, depth + 1);
+    };
+    for (const [k, v] of Object.entries(cfg)) if (Array.isArray(v) && !UNWATCHED_LISTS.includes(k)) walk(v, 0);
+    return [...new Set(ids)];
   }
 
   // A fingerprint of everything the rendered output depends on. Only the
@@ -900,6 +912,11 @@ class ApplianceCard extends HTMLElement {
     const toggleSt = cfg.toggle_entity ? stateObj(hass, cfg.toggle_entity) : null;
     const offHidden = !!cfg.hide_when_off && ((!!toggleSt && String(toggleSt.state).toLowerCase() === "off") || norm === "off");
     if (offHidden) { norm = "idle"; delaySec = null; }
+    // Its power switch off and its own sensors gone with it: an Elegoo on a
+    // plug switched off reads unavailable, and that is an appliance off, not
+    // an unknown state. Read as Off further down, with the plug cut.
+    const toggleCut = !offHidden && !!toggleSt && ["switch", "input_boolean"].includes(domainOf(cfg.toggle_entity))
+      && String(toggleSt.state).toLowerCase() === "off" && ["unknown", "unavailable", "none", ""].includes(String(rawState).trim().toLowerCase());
     let color = STATE_COLORS[norm] || STATE_COLORS.unknown;
     const rawIsMeaningless = ["unknown", "unavailable", "none", ""].includes(String(rawState).trim().toLowerCase());
     // When the raw state doesn't match any known vocabulary, show it as-is
@@ -3824,7 +3841,7 @@ class ApplianceCard extends HTMLElement {
     // A smart plug switched off: the appliance on it is off, whatever it
     // says at rest (a washer's Idle, a heater's Standby, a printer's
     // Offline). A fridge, a ride or a pump says it in words of its own.
-    if (plugState && ["switch", "input_boolean"].includes(domainOf(cfg.state_entity)) && st && String(st.state).toLowerCase() === "off"
+    if (((plugState && ["switch", "input_boolean"].includes(domainOf(cfg.state_entity)) && st && String(st.state).toLowerCase() === "off") || toggleCut)
       && !cfg.state_show_raw && !["fridge", "mobility", "water_pump"].includes(applianceType) && !poolWintered && !(ntDraw && ntDraw.winter)) {
       stateLabel = t(hass, ["printer_3d", "coffee", "air_fryer", "hood", "cooktop", "litter_box"].includes(applianceType) ? "p3_off" : "ac_off");
     }
