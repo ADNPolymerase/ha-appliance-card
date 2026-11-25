@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.53.2";
+const CARD_VERSION = "4.54.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -194,7 +194,7 @@ const T = {
     cam_person: "Person detected", cam_vehicle: "Vehicle detected", cam_animal: "Animal detected", cam_siren: "Siren", cam_line_spotlight: "Spotlight", cam_line_tracking: "Auto tracking", cam_v_lit: "On", cam_v_on: "On", cam_v_off: "Off", cam_sec_person: "Person detection", cam_sec_vehicle: "Vehicle detection", cam_sec_animal: "Animal detection", cam_sec_pan: "Pan position", cam_sec_tilt: "Tilt position",
     valve_fluid: "Fluid", vlv_f_water: "Water", vlv_f_gas: "Gas",
     type_drying_rack: "Wall drying rack", layout_rack_box: "Fold-down box", layout_rack_accordion: "Accordion under a shelf", layout_rack_frame: "Tilting wooden frame", rack_open: "Unfolded", rack_closed: "Folded",
-    type_power_strip: "Power strip", layout_strip_shelly: "Shelly Power Strip", layout_strip_classic: "Classic power strip", strip_on: "On", strip_off: "Off", strip_running: "In use", strip_usb: "USB ports", section_outlets: "Sockets", outlets_count: "Number of sockets", outlet: "Socket", outlet_power: "Socket power", outlet_name: "Socket name",
+    type_power_strip: "Power strip", layout_strip_shelly: "Shelly Power Strip", layout_strip_classic: "Classic power strip", strip_on: "On", strip_off: "Off", strip_running: "In use", strip_usb: "USB ports", strip_orientation: "Orientation", strip_or_horizontal: "Horizontal", strip_or_vertical: "Vertical, names beside the sockets", section_outlets: "Sockets", outlets_count: "Number of sockets", outlet: "Socket", outlet_power: "Socket power", outlet_name: "Socket name",
     layout_hd_straightener: "Hair straightener", st_heating: "Heating", st_ready: "Ready", st_on_for: "On for", straightener_ready_temperature: "Ready from (\u00b0C)",
     layout_spk_jukebox: "Jukebox", layout_lamp_barrel_bar: "Barrel bar", bar_open: "Open", bar_closed: "Closed", curtain_color: "Curtain colour", color_beige: "Beige",
     type_water_dispenser: "Water dispenser", layout_wd_under_sink: "Under the sink", layout_wd_column: "Standing column", wd_standby: "Standby", wd_cooling: "Cooling", wd_carbonating: "Carbonating", wd_dispensing_still: "Still water", wd_dispensing_cold: "Cold water", wd_dispensing_sparkling: "Sparkling water", wd_refilling: "Refilling", wd_dispensed: "Water dispensed", wd_co2: "CO\u2082", wd_maintenance: "Maintenance", wd_low: "Low", wd_due: "Due", wd_ok: "OK", wd_dispensing_entity: "Dispensing", wd_mode_entity: "Water selection", wd_refill_entity: "Tank refilling", cooling_threshold: "Cooling from (W)", carbonation_threshold: "Carbonating from (W)",
@@ -5984,6 +5984,8 @@ const RACK_LAYOUTS = ["box", "accordion", "frame"];
 // black), or a plain one, its USB ports switched on their own when it has
 // them. Up to six sockets, one entity each.
 const STRIP_LAYOUTS = ["shelly", "classic"];
+// The strip lying, or standing with each socket's name and state beside it.
+const STRIP_ORIENTATIONS = ["horizontal", "vertical"];
 const STRIP_MAX = 6;
 // A socket drawing a few watts is at work; below, it is only switched on.
 const STRIP_RUN_W = 2;
@@ -6153,7 +6155,7 @@ const NT_ONLY_FIELDS = {
   detector: ["detector_layout", "detector_model", "door_style", "window_style", "frame_color", "vibration_entity", "glass_break_entity", "co_level_entity", "co_entity", "tamper_entity"],
   valve: ["valve_layout", "valve_fluid", "valve_handle_color", "leak_entity"],
   drying_rack: ["rack_layout", "rack_color"],
-  power_strip: ["strip_layout", "outlets", "usb_entity"],
+  power_strip: ["strip_layout", "strip_orientation", "outlets", "usb_entity"],
   food_processor: ["food_layout"],
   water_dispenser: ["water_dispenser_layout", "dispensing_entity", "dispense_mode_entity", "refill_entity", "water_total_entity", "co2_cylinder_entity", "maintenance_entity", "cooling_threshold", "carbonation_threshold"],
   gas_fireplace: ["flame_entity", "flame_height_entity", "thermostat_entity", "pilot_entity"],
@@ -6345,9 +6347,13 @@ function stripLayoutOf(cfg, st) {
 // The sockets: the list given, else the state entity alone. A socket without
 // a power entity of its own takes the sensor named after its switch, as
 // Zigbee2MQTT and Shelly name them (switch.x_l1, sensor.x_l1_power).
+// A socket left empty in the list keeps its place, so the next ones stay
+// where they are on the strip.
 function stripOutlets(hass, cfg) {
-  const list = Array.isArray(cfg.outlets) && cfg.outlets.length ? cfg.outlets : cfg.state_entity ? [{ entity: cfg.state_entity }] : [];
-  return list.slice(0, STRIP_MAX).map((o) => (typeof o === "string" ? { entity: o } : o || {})).filter((o) => o.entity).map((o) => {
+  const given = (Array.isArray(cfg.outlets) ? cfg.outlets : []).slice(0, STRIP_MAX).map((o) => (typeof o === "string" ? { entity: o } : o || {}));
+  const list = given.some((o) => o.entity) ? given : cfg.state_entity ? [{ entity: cfg.state_entity }] : [];
+  return list.map((o) => {
+    if (!o.entity) return { empty: true };
     const own = `sensor.${String(o.entity).split(".")[1] || ""}_power`;
     return { ...o, power_entity: o.power_entity || (hass && hass.states && hass.states[own] ? own : "") };
   });
@@ -7033,7 +7039,8 @@ async function photoShrink(file, max = 1600) {
 // A power strip (HACF): each socket on, off or offline, and what it draws;
 // the strip in use while one of them draws something.
 function stripReadOf(hass, cfg, st, lines) {
-  const sockets = stripOutlets(hass, cfg).map((o) => {
+  const sockets = stripOutlets(hass, cfg).map((o, i) => {
+    if (o.empty) return { empty: true, name: `${t(hass, "outlet")} ${i + 1}` };
     const s = stateObj(hass, o.entity);
     const raw = s ? String(s.state).trim().toLowerCase() : "";
     const dead = !s || HA_OFFLINE_STATES.includes(raw) || raw === "";
@@ -7041,24 +7048,36 @@ function stripReadOf(hass, cfg, st, lines) {
     const w = o.power_entity ? wattsOf(hass, o.power_entity) : null;
     return { entity: o.entity, name: o.name || (s ? stripDeviceName(hass, s.attributes.friendly_name, o.entity, cfg.name) : humanizeEntityId(o.entity)), dead, on, w: on ? w : null, run: on && w !== null && w >= STRIP_RUN_W };
   });
+  const live = sockets.filter((k) => !k.empty);
   const usbSt = cfg.usb_entity ? stateObj(hass, cfg.usb_entity) : null;
   const usbDead = !usbSt || HA_OFFLINE_STATES.includes(String(usbSt.state).toLowerCase());
   const usb = cfg.usb_entity ? { entity: cfg.usb_entity, dead: usbDead, on: !usbDead && ntOnOff(hass, cfg.usb_entity) } : null;
-  const metered = sockets.filter((k) => k.w !== null);
+  const metered = live.filter((k) => k.w !== null);
   if (!cfg.power_entity && metered.length > 1) {
     lines.push({ key: "strip_total", icon: "mdi:flash", label: t(hass, "history_total"), value: keepTogether(`${Math.round(metered.reduce((a, k) => a + k.w, 0))} W`), entity: metered[0].entity });
   }
-  sockets.forEach((k, i) => lines.push({ key: `strip_${i + 1}`, icon: k.on ? "mdi:power-plug" : "mdi:power-plug-off-outline", label: k.name,
-    value: k.dead ? t(hass, "ev_offline") : !k.on ? t(hass, "strip_off") : k.w !== null ? keepTogether(`${Math.round(k.w)} W`) : t(hass, "strip_on"), entity: k.entity, open: true, dim: !k.on }));
-  if (usb) lines.push({ key: "strip_usb", icon: "mdi:usb-port", label: t(hass, "strip_usb"), value: usb.dead ? t(hass, "ev_offline") : t(hass, usb.on ? "strip_usb_on" : "strip_usb_off"), entity: usb.entity, open: true, dim: !usb.on });
+  const valueOf = (k) => (k.dead ? t(hass, "ev_offline") : !k.on ? t(hass, "strip_off") : k.w !== null ? `${Math.round(k.w)} W` : t(hass, "strip_on"));
+  const usbValue = usb ? (usb.dead ? t(hass, "ev_offline") : t(hass, usb.on ? "strip_usb_on" : "strip_usb_off")) : "";
+  // Standing, each socket's name and state are drawn beside it: no line of
+  // its own under the drawing.
+  const vertical = cfg.strip_orientation === "vertical";
+  if (!vertical) {
+    sockets.forEach((k, i) => { if (!k.empty) lines.push({ key: `strip_${i + 1}`, icon: k.on ? "mdi:power-plug" : "mdi:power-plug-off-outline", label: k.name, value: k.w !== null && k.on && !k.dead ? keepTogether(valueOf(k)) : valueOf(k), entity: k.entity, open: true, dim: !k.on }); });
+    if (usb) lines.push({ key: "strip_usb", icon: "mdi:usb-port", label: t(hass, "strip_usb"), value: usbValue, entity: usb.entity, open: true, dim: !usb.on });
+  }
   const layout = stripLayoutOf(cfg, st);
-  const unav = !sockets.length || sockets.every((k) => k.dead);
-  const run = sockets.some((k) => k.run);
-  const draw = { kind: `strip_${layout}`, on: run, unav, sockets: sockets.map(({ entity, dead, on, run: r }) => ({ entity, dead, on, run: r })), usb };
+  const unav = !live.length || live.every((k) => k.dead);
+  const run = live.some((k) => k.run);
+  const draw = { kind: `strip_${layout}`, on: run, unav, usb,
+    sockets: sockets.map((k) => (k.empty ? { empty: true, name: k.name } : { entity: k.entity, dead: k.dead, on: k.on, run: k.run, ...(vertical ? { name: k.name, value: valueOf(k) } : {}) })) };
+  if (vertical) {
+    draw.vertical = true;
+    if (usb) Object.assign(usb, { name: t(hass, "strip_usb"), value: usbValue });
+  }
   const res = (mode, key, color) => ({ mode, label: t(hass, key), color, lines, draw });
   if (unav) return res("unav", "ev_offline", NT_COLORS.unav);
   if (run) return res("run", "strip_running", NT_COLORS.run);
-  if (sockets.some((k) => k.on) || (usb && usb.on)) return res("on", "strip_on", NT_COLORS.lit);
+  if (live.some((k) => k.on) || (usb && usb.on)) return res("on", "strip_on", NT_COLORS.lit);
   return res("off", "strip_off", NT_COLORS.off);
 }
 // T-molding colours: the edge, its shade, and the colour of the lit buttons.
@@ -14905,7 +14924,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ __v: CARD_VERSION, t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, illustrationBackdropOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, ST_READY_C, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, cameraLayoutOf, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, CURTAIN_COLORS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, DETECTOR_MODELS, DOOR_STYLES, gateLeavesOf, gateSideOf, WINDOW_STYLES, FRAME_COLORS, FINGERBOT_LAYOUTS, VALVE_LAYOUTS, RACK_LAYOUTS, STRIP_LAYOUTS, STRIP_MAX, FP_LAYOUTS, FP_COOK_W, WD_LAYOUTS, WD_COOL_W, WD_CARB_W, VALVE_HANDLE_COLORS, VALVE_FLUIDS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, NT_ONLY_FIELDS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, doorStyleOf, consoleLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, CO2_WARN, CO2_ALERT, NETATMO_COLORS, COVER_LAYOUTS, CURTAIN_OPENINGS, curtainOpeningOf, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, PHOTO_TYPES, photoAreaFor, photoUrlOf, photoBoxOf, PHOTO_AREAS_MAX, photoAreasOf, photoAreasValue, photoCoverCrop, photoShrink, ARC_COLORS, ARC_BUTTONS, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
+      .then((m) => m.default({ __v: CARD_VERSION, t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, illustrationBackdropOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, ST_READY_C, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, cameraLayoutOf, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, CURTAIN_COLORS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, DETECTOR_MODELS, DOOR_STYLES, gateLeavesOf, gateSideOf, WINDOW_STYLES, FRAME_COLORS, FINGERBOT_LAYOUTS, VALVE_LAYOUTS, RACK_LAYOUTS, STRIP_LAYOUTS, STRIP_ORIENTATIONS, STRIP_MAX, FP_LAYOUTS, FP_COOK_W, WD_LAYOUTS, WD_COOL_W, WD_CARB_W, VALVE_HANDLE_COLORS, VALVE_FLUIDS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, NT_ONLY_FIELDS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, doorStyleOf, consoleLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, CO2_WARN, CO2_ALERT, NETATMO_COLORS, COVER_LAYOUTS, CURTAIN_OPENINGS, curtainOpeningOf, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, PHOTO_TYPES, photoAreaFor, photoUrlOf, photoBoxOf, PHOTO_AREAS_MAX, photoAreasOf, photoAreasValue, photoCoverCrop, photoShrink, ARC_COLORS, ARC_BUTTONS, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

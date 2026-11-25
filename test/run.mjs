@@ -8237,6 +8237,8 @@ for (const type of ['washer', 'oven', 'pellet_stove', 'air_conditioner', 'pet_fe
   for (const f of ['vehicle_entity', 'session_energy_entity', 'current_limit_entity'])
     check(`editeur ${type} : pas de ${f}`, html.includes(`data-toggle="${f}"`), false);
 }
+check('editeur : orientation de la multiprise', /data-field="strip_orientation"|strip_orientation/.test(markup(newEditor({ state_entity: 'switch.x', appliance_type: 'power_strip' }))), true);
+check('editeur : pas d orientation hors multiprise', /strip_orientation/.test(markup(newEditor({ state_entity: 'sensor.x', appliance_type: 'pellet_stove' }))), false);
 check('editeur : l erreur reste au poele', markup(newEditor({ state_entity: 'sensor.x', appliance_type: 'pellet_stove' })).includes('data-toggle="error_entity"'), true);
 check('editeur : pas d erreur sur un lave-linge', markup(newEditor({ state_entity: 'sensor.x', appliance_type: 'washer' })).includes('data-toggle="error_entity"'), false);
 check('editeur : le lave-linge garde ses commandes', ['start_entity', 'pause_entity', 'resume_entity', 'stop_entity']
@@ -15800,6 +15802,29 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('multiprise : pas de bouton marche general', /data-action="toggle"/.test(h), false);
   check('multiprise : six prises au plus', (PS({ outlets: [...OUT, ...OUT] }).html.match(/data-outlet="/g) || []).length, 6);
   check('multiprise : sans nom, celui de l entite', infoLine(PS({ outlets: [{ entity: 'switch.strip_l1' }] }).html, 'Strip Printer').replace(/\u00a0/g, ' '), '7 W');
+  // Standing (HACF #207): each socket's name and state beside it, a tap on
+  // the tag switches it, no line per socket under the drawing.
+  const up = PS({ strip_orientation: 'vertical', usb_entity: 'switch.strip_usb' }).html;
+  check('multiprise verticale : la prise et son etiquette se commandent', (up.match(/data-outlet="switch\.strip_l1"/g) || []).length, 2);
+  check('multiprise verticale : les noms sur le dessin', ['Printer', 'Fridge', 'Heater', 'Dryer', 'USB ports'].every((n) => up.includes(`>${n}</text>`)), true);
+  check('multiprise verticale : l etat sur le dessin', up.includes('>131 W</text>') && up.includes('>Off</text>'), true);
+  check('multiprise verticale : pas de ligne par prise', infoLine(up, 'Dryer'), null);
+  check('multiprise verticale : le total reste', infoLine(up, 'Total').replace(/\u00a0/g, ' '), '157 W');
+  check('multiprise verticale : la Shelly aussi', /data-outlet="switch\.strip_l3"[^>]*>\s*<rect/.test(PS({ strip_orientation: 'vertical', strip_layout: 'shelly' }).html), true);
+  const allOff = { ...ST, 'switch.strip_l1': S('off'), 'switch.strip_l2': S('off'), 'switch.strip_l4': S('off') };
+  check('multiprise verticale : interrupteur rouge si une prise allumee', /fill="#e53935"/.test(up), true);
+  check('multiprise verticale : interrupteur gris si tout eteint', /fill="#e53935"/.test(PS({ strip_orientation: 'vertical' }, allOff).html), false);
+  check('multiprise verticale : l interrupteur ne commande rien', (up.match(/data-outlet="/g) || []).length, 10);
+  check('multiprise verticale : un nom echappe', PS({ strip_orientation: 'vertical', outlets: [{ entity: 'switch.strip_l1', name: 'A<b>' }] }).html.includes('>A&lt;b&gt;</text>'), true);
+  // A socket left empty keeps its place: the fourth stays fourth.
+  const gap = PS({ outlets: [OUT[0], {}, '', OUT[3]] }).html;
+  check('multiprise : une prise vide garde sa place', (gap.match(/data-outlet="/g) || []).length, 2);
+  check('multiprise : quatre prises dessinees malgre deux vides', (gap.match(/<circle cx="[\d.]+" cy="[\d.]+" r="8" fill="#eef1f3"/g) || []).length, 4);
+  check('multiprise : pas de ligne pour une prise vide', infoLine(gap, 'Socket 2'), null);
+  const gapUp = PS({ strip_orientation: 'vertical', outlets: [OUT[0], {}, '', OUT[3]] }).html;
+  check('multiprise verticale : la prise vide nommee par son numero', gapUp.includes('>Socket 2</text>') && gapUp.includes('>Socket 3</text>'), true);
+  check('multiprise verticale : la 4e reste la 4e', gapUp.indexOf('>Socket 3</text>') < gapUp.indexOf('>Dryer</text>'), true);
+  check('multiprise : que des vides, l entite d etat seule', (PS({ outlets: [{}, ''] }).html.match(/data-outlet="/g) || []).length, 1);
   // A tap switches the socket, not the card.
   const calls = [];
   const c = new Card();

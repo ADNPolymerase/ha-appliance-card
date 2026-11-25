@@ -1676,9 +1676,10 @@ disk2_entity: sensor.nas_drive_2_status
 | `leak_entity` | valve | A leak sensor: going off, it is the card's alarm and the valve drips, whatever the valve says. |
 | `rack_layout` | drying rack | `box` (a box whose front drops onto its rods, the default) \| `accordion` (accordion arms under a shelf) \| `frame` (a wooden frame that tilts away from the wall). |
 | `rack_color` | drying rack | `white` \| `wood` \| `black`. White by default for the box and the accordion, wood for the frame. |
-| `outlets` | power strip | Up to 6 sockets, as `{ entity, power_entity?, name? }`: the socket's switch, its power and its name. A socket without `power_entity` takes `sensor.<switch>_power` when it exists. Left out, the state entity is the only socket. Given, no `state_entity` is needed: four plugs can make one strip. |
+| `outlets` | power strip | Up to 6 sockets, as `{ entity, power_entity?, name? }`: the socket's switch, its power and its name. A socket left empty (`{}` or `''`) keeps its place, so the next ones stay where they are on the strip. A socket without `power_entity` takes `sensor.<switch>_power` when it exists. Left out, the state entity is the only socket. Given, no `state_entity` is needed: four plugs can make one strip. |
 | `usb_entity` | power strip | The switch of its USB ports, drawn at its end. |
 | `strip_layout` | power strip | `shelly` (Shelly's Power Strip 4, white, or black with `illustration_color: black`) \| `classic` (a plain strip with a lit switch, the default). Left out, a name with Shelly picks `shelly`. |
+| `strip_orientation` | power strip | `horizontal` (the default) \| `vertical`: the strip stands, each socket's name and state beside it on a tag lit while it is on. A tap on the socket or its tag switches it, and the sockets get no line of their own under the drawing (the total stays). |
 | `bot_mode_entity` | finger bot | Its mode: Zigbee2MQTT's and Tuya BLE's select (`click`, `switch`, `program`), as a line. SwitchBot's `switch_mode` attribute is read without it. |
 | `lower_entity` / `upper_entity` / `sustain_entity` | finger bot | Its down and up positions and its hold time, as lines. |
 | `reverse_entity` / `touch_entity` | finger bot | Its reverse and touch switches, as *Yes* / *No* lines; the touch pad's ring lights blue when touch is on. |

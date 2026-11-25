@@ -42,6 +42,8 @@ const RACK_LAYOUTS = ["box", "accordion", "frame"];
 // black), or a plain one, its USB ports switched on their own when it has
 // them. Up to six sockets, one entity each.
 const STRIP_LAYOUTS = ["shelly", "classic"];
+// The strip lying, or standing with each socket's name and state beside it.
+const STRIP_ORIENTATIONS = ["horizontal", "vertical"];
 const STRIP_MAX = 6;
 // A socket drawing a few watts is at work; below, it is only switched on.
 const STRIP_RUN_W = 2;
@@ -211,7 +213,7 @@ const NT_ONLY_FIELDS = {
   detector: ["detector_layout", "detector_model", "door_style", "window_style", "frame_color", "vibration_entity", "glass_break_entity", "co_level_entity", "co_entity", "tamper_entity"],
   valve: ["valve_layout", "valve_fluid", "valve_handle_color", "leak_entity"],
   drying_rack: ["rack_layout", "rack_color"],
-  power_strip: ["strip_layout", "outlets", "usb_entity"],
+  power_strip: ["strip_layout", "strip_orientation", "outlets", "usb_entity"],
   food_processor: ["food_layout"],
   water_dispenser: ["water_dispenser_layout", "dispensing_entity", "dispense_mode_entity", "refill_entity", "water_total_entity", "co2_cylinder_entity", "maintenance_entity", "cooling_threshold", "carbonation_threshold"],
   gas_fireplace: ["flame_entity", "flame_height_entity", "thermostat_entity", "pilot_entity"],
@@ -403,9 +405,13 @@ function stripLayoutOf(cfg, st) {
 // The sockets: the list given, else the state entity alone. A socket without
 // a power entity of its own takes the sensor named after its switch, as
 // Zigbee2MQTT and Shelly name them (switch.x_l1, sensor.x_l1_power).
+// A socket left empty in the list keeps its place, so the next ones stay
+// where they are on the strip.
 function stripOutlets(hass, cfg) {
-  const list = Array.isArray(cfg.outlets) && cfg.outlets.length ? cfg.outlets : cfg.state_entity ? [{ entity: cfg.state_entity }] : [];
-  return list.slice(0, STRIP_MAX).map((o) => (typeof o === "string" ? { entity: o } : o || {})).filter((o) => o.entity).map((o) => {
+  const given = (Array.isArray(cfg.outlets) ? cfg.outlets : []).slice(0, STRIP_MAX).map((o) => (typeof o === "string" ? { entity: o } : o || {}));
+  const list = given.some((o) => o.entity) ? given : cfg.state_entity ? [{ entity: cfg.state_entity }] : [];
+  return list.map((o) => {
+    if (!o.entity) return { empty: true };
     const own = `sensor.${String(o.entity).split(".")[1] || ""}_power`;
     return { ...o, power_entity: o.power_entity || (hass && hass.states && hass.states[own] ? own : "") };
   });
@@ -5566,7 +5572,8 @@ function ntPhoto(d) {
 // A power strip (HACF): each socket on, off or offline, and what it draws;
 // the strip in use while one of them draws something.
 function stripReadOf(hass, cfg, st, lines) {
-  const sockets = stripOutlets(hass, cfg).map((o) => {
+  const sockets = stripOutlets(hass, cfg).map((o, i) => {
+    if (o.empty) return { empty: true, name: `${t(hass, "outlet")} ${i + 1}` };
     const s = stateObj(hass, o.entity);
     const raw = s ? String(s.state).trim().toLowerCase() : "";
     const dead = !s || HA_OFFLINE_STATES.includes(raw) || raw === "";
@@ -5574,24 +5581,36 @@ function stripReadOf(hass, cfg, st, lines) {
     const w = o.power_entity ? wattsOf(hass, o.power_entity) : null;
     return { entity: o.entity, name: o.name || (s ? stripDeviceName(hass, s.attributes.friendly_name, o.entity, cfg.name) : humanizeEntityId(o.entity)), dead, on, w: on ? w : null, run: on && w !== null && w >= STRIP_RUN_W };
   });
+  const live = sockets.filter((k) => !k.empty);
   const usbSt = cfg.usb_entity ? stateObj(hass, cfg.usb_entity) : null;
   const usbDead = !usbSt || HA_OFFLINE_STATES.includes(String(usbSt.state).toLowerCase());
   const usb = cfg.usb_entity ? { entity: cfg.usb_entity, dead: usbDead, on: !usbDead && ntOnOff(hass, cfg.usb_entity) } : null;
-  const metered = sockets.filter((k) => k.w !== null);
+  const metered = live.filter((k) => k.w !== null);
   if (!cfg.power_entity && metered.length > 1) {
     lines.push({ key: "strip_total", icon: "mdi:flash", label: t(hass, "history_total"), value: keepTogether(`${Math.round(metered.reduce((a, k) => a + k.w, 0))} W`), entity: metered[0].entity });
   }
-  sockets.forEach((k, i) => lines.push({ key: `strip_${i + 1}`, icon: k.on ? "mdi:power-plug" : "mdi:power-plug-off-outline", label: k.name,
-    value: k.dead ? t(hass, "ev_offline") : !k.on ? t(hass, "strip_off") : k.w !== null ? keepTogether(`${Math.round(k.w)} W`) : t(hass, "strip_on"), entity: k.entity, open: true, dim: !k.on }));
-  if (usb) lines.push({ key: "strip_usb", icon: "mdi:usb-port", label: t(hass, "strip_usb"), value: usb.dead ? t(hass, "ev_offline") : t(hass, usb.on ? "strip_usb_on" : "strip_usb_off"), entity: usb.entity, open: true, dim: !usb.on });
+  const valueOf = (k) => (k.dead ? t(hass, "ev_offline") : !k.on ? t(hass, "strip_off") : k.w !== null ? `${Math.round(k.w)} W` : t(hass, "strip_on"));
+  const usbValue = usb ? (usb.dead ? t(hass, "ev_offline") : t(hass, usb.on ? "strip_usb_on" : "strip_usb_off")) : "";
+  // Standing, each socket's name and state are drawn beside it: no line of
+  // its own under the drawing.
+  const vertical = cfg.strip_orientation === "vertical";
+  if (!vertical) {
+    sockets.forEach((k, i) => { if (!k.empty) lines.push({ key: `strip_${i + 1}`, icon: k.on ? "mdi:power-plug" : "mdi:power-plug-off-outline", label: k.name, value: k.w !== null && k.on && !k.dead ? keepTogether(valueOf(k)) : valueOf(k), entity: k.entity, open: true, dim: !k.on }); });
+    if (usb) lines.push({ key: "strip_usb", icon: "mdi:usb-port", label: t(hass, "strip_usb"), value: usbValue, entity: usb.entity, open: true, dim: !usb.on });
+  }
   const layout = stripLayoutOf(cfg, st);
-  const unav = !sockets.length || sockets.every((k) => k.dead);
-  const run = sockets.some((k) => k.run);
-  const draw = { kind: `strip_${layout}`, on: run, unav, sockets: sockets.map(({ entity, dead, on, run: r }) => ({ entity, dead, on, run: r })), usb };
+  const unav = !live.length || live.every((k) => k.dead);
+  const run = live.some((k) => k.run);
+  const draw = { kind: `strip_${layout}`, on: run, unav, usb,
+    sockets: sockets.map((k) => (k.empty ? { empty: true, name: k.name } : { entity: k.entity, dead: k.dead, on: k.on, run: k.run, ...(vertical ? { name: k.name, value: valueOf(k) } : {}) })) };
+  if (vertical) {
+    draw.vertical = true;
+    if (usb) Object.assign(usb, { name: t(hass, "strip_usb"), value: usbValue });
+  }
   const res = (mode, key, color) => ({ mode, label: t(hass, key), color, lines, draw });
   if (unav) return res("unav", "ev_offline", NT_COLORS.unav);
   if (run) return res("run", "strip_running", NT_COLORS.run);
-  if (sockets.some((k) => k.on) || (usb && usb.on)) return res("on", "strip_on", NT_COLORS.lit);
+  if (live.some((k) => k.on) || (usb && usb.on)) return res("on", "strip_on", NT_COLORS.lit);
   return res("off", "strip_off", NT_COLORS.off);
 }
 // A socket of the strip: its ring lit while it is on, a halo while it draws,
@@ -5599,7 +5618,7 @@ function stripReadOf(hass, cfg, st, lines) {
 function stripSocket(k, x, y, r, rot) {
   const ring = k.on ? "#4fc3f7" : "#d3d9de";
   const id = String(k.entity || "").replace(/[^\w.]/g, "");
-  return `<g${k.dead ? "" : ` data-outlet="${id}" style="cursor:pointer"`}>
+  return `<g${k.dead || k.empty || !id ? (k.empty ? ' opacity=".45"' : "") : ` data-outlet="${id}" style="cursor:pointer"`}>
 ${k.run ? `<circle cx="${x}" cy="${y}" r="${r + 1.6}" fill="none" stroke="#4fc3f7" stroke-width="2.4" opacity=".35"><animate attributeName="opacity" values=".12;.55;.12" dur="2s" repeatCount="indefinite"/></circle>` : ""}
 <circle cx="${x}" cy="${y}" r="${r}" fill="#eef1f3" stroke="${ring}" stroke-width="1.3"${k.dead ? ' stroke-dasharray="1.6 1.4"' : ""}/>
 <g transform="rotate(${rot} ${x} ${y})"><circle cx="${x}" cy="${y}" r="${(r * .8).toFixed(2)}" fill="#e5e9ec" stroke="#c9d0d6" stroke-width=".5"/>
@@ -5615,6 +5634,7 @@ function stripUsb(u, x, y) {
 // Shelly's Power Strip 4: an oblong white body, its sockets in a row with a
 // clear ring and a button under each, the S at the cable's end.
 function ntStripShelly(c) {
+  if (c.vertical) return ntStripStanding(c, "shelly");
   const ks = c.sockets && c.sockets.length ? c.sockets : [{}, {}, {}, {}];
   const n = ks.length, gap = 23, w = 26 + n * gap + (c.usb ? 13 : 0), sc = Math.min(1.25, 128 / w), x0 = (120 - w * sc) / 2;
   const g = `ntsb${ntN++}`;
@@ -5632,6 +5652,7 @@ ${c.usb ? stripUsb(c.usb, w - 22, 50) : ""}</g>`;
 // A plain strip: a long box, its sockets turned a quarter, a lit switch at
 // its end.
 function ntStripClassic(c) {
+  if (c.vertical) return ntStripStanding(c, "classic");
   const ks = c.sockets && c.sockets.length ? c.sockets : [{}, {}, {}];
   const n = ks.length, gap = 20, w = 22 + n * gap + (c.usb ? 14 : 0), sc = Math.min(1.25, 128 / w), x0 = (120 - w * sc) / 2;
   const g = `ntsc${ntN++}`;
@@ -5645,6 +5666,54 @@ function ntStripClassic(c) {
 <rect x="4.5" y="54" width="8" height="13" rx="1.6" fill="${on ? "#e53935" : "#b9c1c8"}" stroke="${on ? "#b71c1c" : "#9aa3aa"}" stroke-width=".5"/><path d="M5.6 ${on ? 56 : 62} h5.8" stroke="#fff" stroke-width="1" opacity=".7"/>
 ${ks.map((k, i) => stripSocket(k, 24 + i * gap, 60.5, 8, 45)).join("")}
 ${c.usb ? stripUsb(c.usb, w - 13, 52) : ""}</g>`;
+}
+// A strip standing (HACF #207): its sockets one under the other, each with
+// a tag beside it giving its name and state, lit while it is on. A tap on the
+// socket or on its tag switches it. The red switch of the plain strip only
+// shows whether anything is on; it does not switch the strip.
+function stripTag(k, x, y, w) {
+  const id = String(k.entity || "").replace(/[^\w.]/g, "");
+  const act = !k.dead && !k.empty && id;
+  const name = String(k.name || "");
+  const short = name.length > 15 ? `${name.slice(0, 14)}\u2026` : name;
+  const lit = k.on && !k.dead;
+  const box = lit ? 'fill="#4fc3f7" fill-opacity=".16" stroke="#4fc3f7"' : 'fill="#8a949c" fill-opacity=".12" stroke="#8a949c" stroke-opacity=".4"';
+  return `<!--k--><g${act ? ` data-outlet="${id}" style="cursor:pointer"` : ""}${k.empty ? ' opacity=".55"' : ""}>
+<rect x="${x}" y="${y - 9}" width="${w}" height="18" rx="9" ${box} stroke-width=".6"${k.empty || k.dead ? ' stroke-dasharray="1.6 1.4"' : ""}/>
+<circle cx="${x + 8}" cy="${y}" r="2.6" ${lit ? 'fill="#4fc3f7"' : 'style="fill:var(--disabled-text-color, #c4cbd1)"'}/>
+<text x="${x + 14}" y="${y - 0.8}" font-size="6.4" font-weight="600" style="fill:var(--primary-text-color, #1f2933)" ${NT_FONT}>${esc(short)}</text>
+<text x="${x + 14}" y="${y + 5.8}" font-size="5" ${lit ? 'fill="#29a8e0"' : 'style="fill:var(--secondary-text-color, #8a949c)"'} ${NT_FONT}>${esc(k.empty ? "\u2014" : k.value || "")}</text></g><!--/k-->`;
+}
+function ntStripStanding(c, layout) {
+  const ks = c.sockets && c.sockets.length ? c.sockets : [{}, {}, {}, {}];
+  const shelly = layout === "shelly";
+  const n = ks.length, gap = shelly ? 23 : 22, top = shelly ? 20 : 24, bx = shelly ? 17 : 18, bw = shelly ? 30 : 26;
+  const H = top + n * gap + (c.usb ? (shelly ? 26 : 22) : 6), tagX = 53, tagW = 74, W = tagX + tagW + 2, total = H + 12;
+  const sc = Math.min(120 / W, 135 / total), tx = (120 - W * sc) / 2, ty = -10 + (135 - total * sc) / 2;
+  const g = `ntsv${ntN++}`, mid = bx + bw / 2;
+  const on = ks.some((k) => k.on);
+  const lead = (x1, y) => `<!--k--><path d="M${x1} ${y} H${tagX}" style="stroke:var(--divider-color, #d6dbe0)" stroke-width=".6" stroke-dasharray="1.4 1.2"/><!--/k-->`;
+  const top0 = shelly
+    ? `<circle cx="${mid}" cy="13" r="3.6" fill="none" stroke="#c9d0d6" stroke-width=".7"/><text x="${mid}" y="14.7" font-size="4.6" text-anchor="middle" fill="#b6bec5" font-family="Georgia, serif" font-style="italic">S</text>`
+    : `<rect x="${bx + 7}" y="9" width="12" height="8" rx="1.6" fill="${on ? "#e53935" : "#b9c1c8"}" stroke="${on ? "#b71c1c" : "#9aa3aa"}" stroke-width=".5"/><path d="M${bx + 8.2} ${on ? 11 : 15} h9.6" stroke="#fff" stroke-width="1" opacity=".7"/>`;
+  const rows = ks.map((k, i) => {
+    const y = top + (shelly ? 10 : 8) + i * gap, x = shelly ? mid - 3 : mid;
+    const led = shelly ? `<circle cx="${x + 12}" cy="${y}" r="1.8" fill="#fff" stroke="#c4cbd1" stroke-width=".5"/><circle cx="${x + 12}" cy="${y}" r=".75" fill="${k.on ? "#29b6f6" : "#cfd6dc"}"/>` : "";
+    return stripSocket(k, x, y, shelly ? 8.6 : 8, shelly ? 90 : 45) + led + lead(x + (shelly ? 15 : 11), y) + stripTag(k, tagX, y, tagW);
+  }).join("");
+  let usb = "";
+  if (c.usb) {
+    const u = c.usb, uy = top + n * gap + (shelly ? 6 : 4), id = String(u.entity || "").replace(/[^\w.]/g, "");
+    usb = `<g${u.dead ? "" : ` data-outlet="${id}" style="cursor:pointer"`}>${[0, 1].map((i) => `<rect x="${bx + (shelly ? 6 : 4) + i * 10}" y="${uy}" width="8" height="4.2" rx=".6" fill="#3f474e" stroke="${u.on ? "#4fc3f7" : "#aab3ba"}" stroke-width=".8"/>`).join("")}</g>`
+      + lead(bx + bw + 1, uy + 2) + stripTag(u, tagX, uy + 2, tagW);
+  }
+  const cable = shelly ? `M${mid} ${H} C${mid} ${H + 6} ${mid - 6} ${H + 7} ${mid - 9} ${H + 12}` : `M${mid} ${H} C${mid} ${H + 6} ${mid + 6} ${H + 7} ${mid + 8} ${H + 12}`;
+  return `<defs><linearGradient id="${g}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${shelly ? "#ffffff" : "#fbfcfd"}"/><stop offset="1" stop-color="${shelly ? "#e3e7ea" : "#dde2e6"}"/></linearGradient></defs>
+<g transform="translate(${tx.toFixed(2)} ${ty.toFixed(2)}) scale(${sc.toFixed(3)})">
+<path d="${cable}" fill="none" stroke="#e6eaed" stroke-width="3.3" stroke-linecap="round"/><path d="${cable}" fill="none" stroke="#c4cbd1" stroke-width=".5"/>
+<rect x="${bx}" y="4" width="${bw}" height="${H - 4}" rx="${shelly ? 15 : 5}" fill="url(#${g})" stroke="#c4cbd1" stroke-width=".7"/>
+<path d="M${bx + 2.4} ${shelly ? 18 : 9} V${H - (shelly ? 14 : 5)}" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".9"/>
+${top0}${rows}${usb}</g>`;
 }
 // An arcade cabinet (HACF #198): a bartop on a table, or a full-size
 // cabinet on the floor. Its T-molding and both players' buttons in the
@@ -6247,7 +6316,7 @@ function ntSvg(d) {
   return `<svg class="nt-svg" viewBox="0 -10 120 135">${tint ? ntTint(body, tint) : body}</svg>`;
 }
 function ntHtml(cls, d) {
-  const flags = ["nt", `nt-k-${(d && d.kind) || "none"}`, d && /^(irr|lit|det|spk)_/.test(d.kind) ? "nt-c7" : "", d && d.on ? "nt-on" : "", d && d.unav ? "nt-unav" : "", d && d.photo ? "nt-photo" : ""].filter(Boolean).join(" ");
+  const flags = ["nt", `nt-k-${(d && d.kind) || "none"}`, d && /^(irr|lit|det|spk)_/.test(d.kind) ? "nt-c7" : "", d && d.on ? "nt-on" : "", d && d.unav ? "nt-unav" : "", d && d.photo ? "nt-photo" : "", d && d.vertical ? "nt-up" : ""].filter(Boolean).join(" ");
   return `
         <div class="machine ${cls} ${flags}">${ntSvg(d)}</div>`;
 }
@@ -6266,6 +6335,7 @@ const NT_CSS = `
         .fb-blink{animation:fb-blink 1s steps(2) infinite}@keyframes fb-blink{50%{opacity:.15}}
         .fb-bolt{animation:fb-bolt 1.6s ease-in-out infinite}@keyframes fb-bolt{0%,100%{opacity:.4}50%{opacity:1}}
         svg.nt-svg{position:absolute;left:0;top:0;width:96px;height:108px;overflow:visible}
+        .machine.nt-up,.nt-up svg.nt-svg{width:220px;height:248px}
         .ntfd-h{fill:none;stroke:#ff6d00;stroke-width:1.8;stroke-linecap:round;opacity:0;animation:ntfd-heat 2.4s ease-in-out infinite;animation-delay:calc(var(--d0,0s) + var(--anim-offset,0s))}
         @keyframes ntfd-heat{0%{opacity:0;transform:translateY(4px)}40%{opacity:1}100%{opacity:0;transform:translateY(-7px)}}
         .nt-on .ntfd-roll{animation:ntfd-roll 2.4s linear infinite;animation-delay:var(--anim-offset,0s)}

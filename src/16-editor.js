@@ -1815,6 +1815,11 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(VALVE_HANDLE_COLORS.map((v) => ({ value: v, label: t(hass, `vlv_h_${v}`) }))),
         }) : ""}
+        ${this._type === "power_strip" ? this._row("strip_orientation", "strip_orientation", {
+          type: "select",
+          value: STRIP_ORIENTATIONS.includes(this._config.strip_orientation) ? this._config.strip_orientation : "horizontal",
+          options: STRIP_ORIENTATIONS.map((v) => ({ value: v, label: t(hass, `strip_or_${v}`) })),
+        }) : ""}
         ${this._type === "cover" ? this._row("cover_color", "cover_color", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(Object.keys(COVER_COLORS).map((v) => ({ value: v, label: t(hass, `cov_c_${v}`) }))),
@@ -2292,6 +2297,7 @@ class ApplianceCardEditor extends HTMLElement {
         if (field === "illustration_backdrop" && !illustrationBackdropOf(value)) delete this._config.illustration_backdrop;
         // The whole degree is the default and is not written.
         if (field === "temperature_decimals" && value === "0") delete this._config.temperature_decimals;
+        if (field === "strip_orientation" && value === "horizontal") delete this._config.strip_orientation;
         if (field === "compact") {
           if (value === "side") this._config.compact = "side";
           else if (value === "hide") this._config.compact = true;
