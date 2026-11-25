@@ -22,7 +22,7 @@ A Lovelace card that draws the appliances of your home and animates them from th
 
 ## Features
 
-- **73 appliance types, more than 170 models drawn**, animated while they work and still when they stop. The type is detected on its own, from the entity and from the maker and model of its device, or set with `appliance_type`.
+- **74 appliance types, more than 170 models drawn**, animated while they work and still when they stop. The type is detected on its own, from the entity and from the maker and model of its device, or set with `appliance_type`.
 - **Any integration**: every field is an entity you pick. A plain smart plug is enough, its power tells whether the appliance heats, washes or spins.
 - **State understood**: `Idle`, `RUNNING`, `wash`… become idle, running, paused, finished, delayed or error, with the step of the cycle (wash, rinse, spin…).
 - **What matters for each appliance**: program, time left, door, alerts, levels, temperatures, energy and cost, today's running time.
@@ -332,14 +332,14 @@ Click a family to see its appliances at work. The drawings are shown with `illus
 
 ## Configuration
 
-Only `state_entity` is required, except on a fridge where a probe or a door contact is enough, and on an EV charger where its plug or its power meter is enough. In the visual editor, picking the state entity pre-fills the other fields.
+Only `state_entity` is required, except where another entity says enough on its own: a fridge (a probe or a door contact), an EV charger (its plug or its power meter), a pet feeder (its serve button or its counters), a screen, a pool pump, solar panels and the types drawn on a smart plug (their `power_entity`), a home battery or a UPS (its level, its power or its input voltage), a power strip (its `outlets`). In the visual editor, picking the state entity pre-fills the other fields.
 
 <details>
 <summary><b>Common options</b></summary>
 
 | Option | Description |
 |---|---|
-| `state_entity` | **Required**, except on a fridge or an EV charger. Entity carrying the appliance's state, any domain. |
+| `state_entity` | **Required**, except in the cases listed above (fridge, EV charger, feeder, screen, pool pump, solar, battery, UPS, power strip, types on a smart plug). Entity carrying the appliance's state, any domain. |
 | `state_map` | Map raw state → `idle` \| `running` \| `preheating` \| `keep_warm` \| `paused` \| `done` \| `delayed` \| `error`. Sets the label, the colour and the animation. The key `"*"` catches every state left over (see below), and on a washer, a dryer or a dishwasher the steps (`washing`, `spinning`...) are targets too. Also in the visual editor. |
 | `state_show_raw` | `true` shows the entity's own text instead of the card's label, as Home Assistant displays it (a climate reads `Cooling`, not `cool`). |
 | `controls_activation` | How the control buttons answer a finger: `tap` (default) runs them at once, `confirm` asks for a second tap within 3 seconds (the button turns red in between), `hold` runs them only after a long press, `off` never runs them from the card (a long press opens the entity). In YAML, write it in quotes, `controls_activation: "off"`: a bare `off` is read as `false` (the card still takes it as `off`). Handy against stray taps and small fingers. On a phone, the Companion app vibrates when a control acts. |
@@ -361,7 +361,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. A drawing made after a real product (a console, a streaming box, a printer, a litter box…) is drawn in its real colours until a colour is chosen; its screen, app tile and tyres keep theirs. The scenes around a device (a sump's pit, a garden, a roof) and the lamps' light do not change. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 16 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`, `hu`, `zh-Hant`. `nb` and `nb-NO` give Norwegian. `zh` is Simplified Chinese; `zh-Hant`, `zh-TW` and `zh-HK` give Traditional Chinese. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `fingerbot` \| `valve` \| `drying_rack` \| `power_strip` \| `food_processor` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove` \| `gas_fireplace`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `fingerbot` \| `valve` \| `drying_rack` \| `power_strip` \| `food_processor` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove` \| `gas_fireplace` \| `water_dispenser`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `illustration_tap_action` | A tap on the drawing alone, the rest of the card keeping `tap_action`: `toggle` (a lamp lit by touching it), `more-info`, `none`, or any of Home Assistant's actions. Left out, the drawing does what the card does. With `toggle`, the drawing answers like the buttons, as `controls_activation` says: a tap, two taps or a long press. |
 | `show_light_button` | `false` hides the light button in the top left corner (oven, hood, 3D printer, pool pump, diffuser); the light still shows on the drawing. |
@@ -2015,7 +2015,7 @@ state_entity: binary_sensor.drying_rack_contact
 battery_entity: sensor.drying_rack_contact_battery
 ```
 
-A power strip with a switch per socket is a `power_strip`: each socket's ring lights while it is on and glows while it draws power, and a tap on a socket switches it (with `controls_activation: confirm`, a second tap within three seconds). A line per socket gives its power, *Off* or *Offline*, with the total above. The editor fills the sockets in from the strip's device, each with the power sensor that shares a word with it.
+A power strip with a switch per socket is a `power_strip`: each socket's ring lights while it is on and glows while it draws power, and a tap on a socket switches it (with `controls_activation: confirm`, a second tap within three seconds). Standing, the default, each socket's name and its power, *Off* or *Offline* sit on a tag beside it; lying flat (`strip_orientation: horizontal`), a line per socket gives them under the drawing. The total is a line above. The editor fills the sockets in from the strip's device, each with the power sensor that shares a word with it.
 
 ```yaml
 type: custom:ha-appliance-card

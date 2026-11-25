@@ -308,7 +308,7 @@ const NT_NAME_RES = [
   // A gas fireplace (#130), before the wood stove that also says fireplace.
   ["gas_fireplace", /intellifire|gas.?fire.?place|fire.?place.?gas|heat.?(n|and|&).?glo|mertik|gaskamin|gas.?kamin|chemin\w*.?(au.?)?gaz|foyer.?(au.?)?gaz|insert.?gaz|haard.?gas|gashaard/],
   ["wood_stove", /^(?!.*(pellet|granul)).*((^|[^a-z])kamin|wood.?(stove|burner)|log.?(stove|burner)|poele.?(a.?)?bois|cheminee|holzofen|kachelofen|estufa.?de.?lena|stufa.?a.?legna|houtkachel|braskamin|vedovn|braendeovn|brandeovn|piec.?na.?drewno|fireplace)/],
-  ["console", /used.?screen.?time|suspend.?software|playstation|(^|[^a-z])ps[1-5]([^a-z0-9]|$)|xbox|nintendo|gamecube|(^|[^a-z])(n64|snes|nes|wii|switch.?lite|switch.?2)([^a-z0-9]|$)|mega.?drive|genesis|console|konsole|consola|konsol/],
+  ["console", /used.?screen.?time|suspend.?software|playstation|(^|[^a-z])ps[1-5]([^a-z0-9]|$)|xbox|nintendo|gamecube|(^|[^a-z])(n64|snes|nes|wii|switch.?lite)([^a-z0-9]|$)|nintendo.?switch.?2|switch.?2.?(console|oled)|mega.?drive|genesis|console|konsole|consola|konsol/],
   ["streamer", STREAMER_NAME_RE],
   ["climate_sensor", THS_NAME_RE],
   ["litter_box", /scoopfree|purobot|litter|litiere|katzenklo|arenero|lettiera|kattlada|kuweta|kattebak|kattesand|(^|[^a-z])pura.?(x|max)/],
@@ -6207,7 +6207,7 @@ function ntJukebox(c) {
     const shape = `M${x + 3} ${y} H${x + w - 3} Q${x + w} ${y} ${x + w} ${y + 4} V${y + h - 6} Q${x + w} ${y + h} ${x + w - 4} ${y + h} H${x + 4} Q${x} ${y + h} ${x} ${y + h - 6} V${y + 4} Q${x} ${y} ${x + 3} ${y} Z`;
     return `<clipPath id="${gid}"><path d="${shape}"/></clipPath><path d="${shape}" fill="${on ? "#0d2a5c" : "#1c232c"}" stroke="#7b838e" stroke-width="1"/>
 <g clip-path="url(#${gid})">${on ? `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${grillGlow})">${play ? `<animate attributeName="opacity" values=".7;1;.75;1;.7" dur="1.1s" repeatCount="indefinite"/>` : ""}</rect>` : ""}
-${Array.from({ length: 8 }, (_, i) => { const m = i * 2.6; return `<rect x="${arcN(x + 1.5 + m)}" y="${arcN(y + 2 + m * 1.6)}" width="${arcN(w - 3 - 2 * m)}" height="${arcN(h - 4 - 3.2 * m)}" fill="none" stroke="${on ? (i % 2 ? "#8fe0ff" : "#4f7fb8") : (i % 2 ? "#5e6e70" : "#3b464a")}" stroke-width="1.1" stroke-dasharray="1.6 1.2" opacity=".85"/>`; }).join("")}
+${Array.from({ length: 8 }, (_, i) => { const m = i * 2.6; if (w - 3 - 2 * m <= 0 || h - 4 - 3.2 * m <= 0) return ""; return `<rect x="${arcN(x + 1.5 + m)}" y="${arcN(y + 2 + m * 1.6)}" width="${arcN(w - 3 - 2 * m)}" height="${arcN(h - 4 - 3.2 * m)}" fill="none" stroke="${on ? (i % 2 ? "#8fe0ff" : "#4f7fb8") : (i % 2 ? "#5e6e70" : "#3b464a")}" stroke-width="1.1" stroke-dasharray="1.6 1.2" opacity=".85"/>`; }).join("")}
 <path d="M${x} ${y} L${x + w} ${y + h}" stroke="#fff" stroke-width="4" opacity=".05"/></g>`; };
   return `<defs><linearGradient id="${body}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1c1f24"/><stop offset=".5" stop-color="#2b2f36"/><stop offset="1" stop-color="#16181c"/></linearGradient>
 <linearGradient id="${chrome}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f6f8"/><stop offset=".45" stop-color="#9aa3ad"/><stop offset=".55" stop-color="#d9dee3"/><stop offset="1" stop-color="#7d858f"/></linearGradient>

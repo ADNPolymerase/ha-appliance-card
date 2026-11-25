@@ -166,7 +166,9 @@ const STRAIGHTENER_RE = /straighten|flat.?iron|lisseur|fer.?a.?lisser|glatteisen
 // A Nintendo Switch is a console, not a switch.
 const NET_LAYOUTS = ["switch", "server", "nas", "rack", "router", "mini_pc"];
 const NET_NAS_RE = /(^|[\s._-])(nas|synology|diskstation|qnap|ugreen|unraid|truenas|freenas|openmediavault|omv|asustor|terramaster|ds\d{3})/;
-const NET_SWITCH_RE = /(?<!nintendo.?)switch|(^|[\s._-])(usw|edgeswitch|poe)([\s._-]|$)/;
+// Not a relay's own switch_0 or switch_2 (Shelly, Tuya), nor a wall or light
+// switch; a switch named by its ports still is one.
+const NET_SWITCH_RE = /(?<!nintendo.?|wall.?|light.?|relay.?|power.?|smart.?)switch(?![\s._-]?\d)|(^|[^a-z])\d{1,2}.?ports?([^a-z]|$)|(^|[\s._-])(usw|edgeswitch|poe)([\s._-]|$)/;
 const NET_RACK_RE = /(^|[\s._-])(rack|baie|homelab)([\s._-]|$)/;
 // A mini PC (#129): a small box on a desk, Beelink, NUC and the like.
 const NET_MINIPC_RE = /(^|[\s._-])(mini.?pc|beelink|nuc|minisforum|geekom|gmktec|mele|chuwi|asrock.?deskmini|mac.?mini)([\s._-]|\d|$)/;
@@ -799,7 +801,7 @@ function poolModeOf(hass, cfg, st, watts) {
 // with their inverter. The sun shines, a few clouds pass, or the moon is up;
 // in production a gleam runs over the cells and the energy down the cable.
 const SOLAR_ONLY_FIELDS = ["solar_layout", "energy_today_entity", "peak_power", "solar_alert_entity"];
-const SOLAR_NAME_RE = /solar|photovolt|(^|[^a-z])pv([^a-z]|$)|panneaux?.?solaires?|powerstream|hoymiles|enphase|envoy|apsystems|fronius|solaredge|growatt|solax|solis|sungrow|goodwe|foxess|sunsynk|kostal|(^|[^a-z])(sma|deye|sofar|tigo)([^a-z]|$)|^(?!.*(heat.?pump|compress|wash|fridge)).*inverter|wechselrichter|zonnepane|fotovolt|fotowolt|solcell|solpanel|\u592a\u9633\u80fd|\u0441\u043e\u043b\u043d\u0435\u0447/;
+const SOLAR_NAME_RE = /solar|onduleur|photovolt|(^|[^a-z])pv([^a-z]|$)|panneaux?.?solaires?|powerstream|hoymiles|enphase|envoy|apsystems|fronius|solaredge|growatt|solax|solis|sungrow|goodwe|foxess|sunsynk|kostal|(^|[^a-z])(sma|deye|sofar|tigo)([^a-z]|$)|^(?!.*(heat.?pump|compress|wash|fridge)).*inverter|wechselrichter|zonnepane|fotovolt|fotowolt|solcell|solpanel|\u592a\u9633\u80fd|\u0441\u043e\u043b\u043d\u0435\u0447/;
 const SOLAR_LAYOUTS = ["ground", "roof"];
 // What an inverter says when it is in trouble.
 const ENERGY_ERROR_RE = /error|fault|alarm|defaut|panne|fehler|failure|storung|st\u00f6rung|guasto|averia|fout|abnormal/;

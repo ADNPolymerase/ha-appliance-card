@@ -12,7 +12,9 @@ const SCALE_FRESH_MS = 3600000;
 // words. On mains, on battery, in bypass, or off; a low battery, one to
 // replace and an overload are what it raises.
 const UPS_ONLY_FIELDS = ["runtime_entity", "load_entity", "input_voltage_entity", "nominal_power", "battery_low"];
-const UPS_NAME_RE = /(^|[^a-z])(ups|usv|onduleur|nobreak|\u0438\u0431\u043f)([^a-z]|$)|back.?ups|smart.?ups|\u4e0d\u95f4\u65ad\u7535\u6e90/;
+// "Onduleur" is a solar inverter as well in French: a UPS only when the name
+// says so (secouru, a UPS maker, its battery).
+const UPS_NAME_RE = /(^|[^a-z])(ups|usv|nobreak|\u0438\u0431\u043f)([^a-z]|$)|back.?ups|smart.?ups|onduleur.{0,24}(secour|ups|apc|eaton|nut|batter|line)|(secour|ups|apc|eaton|nut).{0,24}onduleur|\u4e0d\u95f4\u65ad\u7535\u6e90/;
 const UPS_CODES = ["OL", "OB", "LB", "HB", "RB", "CHRG", "DISCHRG", "BYPASS", "CAL", "OFF", "OVER", "TRIM", "BOOST", "FSD"];
 const UPS_LABELS = { online: "ups_online", battery: "ups_battery", bypass: "ups_bypass", off: "ac_off", unav: "ev_offline",
   low: "ups_low", replace: "ups_replace", overload: "ups_overload" };

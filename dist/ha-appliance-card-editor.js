@@ -3,7 +3,7 @@
 export default function defineEditor(deps) {
 // A page still running the card of an earlier release, the files of this one
 // on the server: its helpers are not these, so say to reload the page.
-if (!deps || deps.__v !== "4.55.0") {
+if (!deps || deps.__v !== "4.55.1") {
   if (!customElements.get("ha-appliance-card-editor")) customElements.define("ha-appliance-card-editor", class extends HTMLElement {
     setConfig() {}
     connectedCallback() {
@@ -178,7 +178,7 @@ const SECTIONS = [
   { field: "ph_entity", types: ["pool_pump"], labelKey: "section_ph", includeDomains: ["sensor"] },
   { field: "redox_entity", types: ["pool_pump"], labelKey: "section_redox", includeDomains: ["sensor"] },
   { field: "filtration_time_entity", types: ["pool_pump"], labelKey: "section_filtration_time", includeDomains: ["sensor"] },
-  { field: "pressure_entity", types: ["pool_pump"], labelKey: "section_pressure", includeDomains: ["sensor"], extra: (c) =>
+  { field: "pressure_entity", types: ["pool_pump"], labelKey: "section_filter_pressure", includeDomains: ["sensor"], extra: (c) =>
       c._row("pool_pressure_alert", "pressure_alert", { placeholder: String(POOL_PRESSURE_ALERT) }) },
   { field: "pool_mode_entity", types: ["pool_pump"], labelKey: "section_pool_mode", includeDomains: ["select", "input_select", "sensor"] },
   { field: "chlorine_pump_entity", types: ["pool_pump"], labelKey: "section_chlorine_pump", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
@@ -1101,7 +1101,7 @@ class ApplianceCardEditor extends HTMLElement {
     slot.innerHTML = `
       <label>${esc(t(hass, "photo_label"))}</label>
       <div class="ph-bar">
-        <input type="text" class="ph-url" value="${esc(typeof cfg.illustration_image === "string" ? cfg.illustration_image : href)}" placeholder="/local/volet.jpg" />
+        <input type="text" class="ph-url" value="${esc(typeof cfg.illustration_image === "string" ? cfg.illustration_image : href)}" placeholder="/local/photo.jpg" />
         <button type="button" class="ph-btn ph-up" title="${esc(t(hass, "photo_upload"))}"><ha-icon icon="mdi:image-plus"></ha-icon><span>${esc(t(hass, "photo_upload"))}</span></button>
         ${href ? `<button type="button" class="ph-btn ph-del" title="${esc(t(hass, "photo_remove"))}"><ha-icon icon="mdi:delete-outline"></ha-icon></button>` : ""}
         <input type="file" accept="image/*" class="ph-file" hidden />

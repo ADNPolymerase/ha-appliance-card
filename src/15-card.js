@@ -13,7 +13,7 @@ class ApplianceCard extends HTMLElement {
     // A new configuration may change what a tap does with the same markup.
     this._lastCardHtml = undefined;
     if (!config || (!config.state_entity && !stateFreeSource(config))) {
-      throw new Error("ha-appliance-card: 'state_entity' is required");
+      throw new Error("ha-appliance-card: 'state_entity' is required (or, for the types that can do without it, a power_entity, outlets or another source)");
     }
     this._config = config;
     // The release fetches each drawing on first use: ask for it now, while the

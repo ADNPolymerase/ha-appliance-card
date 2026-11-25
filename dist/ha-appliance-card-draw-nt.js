@@ -2,7 +2,7 @@
 // The nt drawing and its CSS, loaded by the card the first time it shows one.
 export default function defineDrawing(deps) {
 // A page still running the card of an earlier release: an arrow to reload.
-if (!deps || deps.__v !== "4.55.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
+if (!deps || deps.__v !== "4.55.1") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
 let { ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CHARGER_MODES, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, numberOrNull, shdBlur, t, thsColor, zoneColumns } = deps;
 const softShadow = (cx, cy, rx, ry, op = .26, b = 1.6) => { const id = `shd-${cx}-${cy}-${rx}`.replace(/\./g, "_"); return `${shdBlur(id, b)}<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#000" opacity="${op}" filter="url(#${id})"/>`; };
 // Drawing helpers
@@ -5060,7 +5060,7 @@ function ntJukebox(c) {
     const shape = `M${x + 3} ${y} H${x + w - 3} Q${x + w} ${y} ${x + w} ${y + 4} V${y + h - 6} Q${x + w} ${y + h} ${x + w - 4} ${y + h} H${x + 4} Q${x} ${y + h} ${x} ${y + h - 6} V${y + 4} Q${x} ${y} ${x + 3} ${y} Z`;
     return `<clipPath id="${gid}"><path d="${shape}"/></clipPath><path d="${shape}" fill="${on ? "#0d2a5c" : "#1c232c"}" stroke="#7b838e" stroke-width="1"/>
 <g clip-path="url(#${gid})">${on ? `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${grillGlow})">${play ? `<animate attributeName="opacity" values=".7;1;.75;1;.7" dur="1.1s" repeatCount="indefinite"/>` : ""}</rect>` : ""}
-${Array.from({ length: 8 }, (_, i) => { const m = i * 2.6; return `<rect x="${arcN(x + 1.5 + m)}" y="${arcN(y + 2 + m * 1.6)}" width="${arcN(w - 3 - 2 * m)}" height="${arcN(h - 4 - 3.2 * m)}" fill="none" stroke="${on ? (i % 2 ? "#8fe0ff" : "#4f7fb8") : (i % 2 ? "#5e6e70" : "#3b464a")}" stroke-width="1.1" stroke-dasharray="1.6 1.2" opacity=".85"/>`; }).join("")}
+${Array.from({ length: 8 }, (_, i) => { const m = i * 2.6; if (w - 3 - 2 * m <= 0 || h - 4 - 3.2 * m <= 0) return ""; return `<rect x="${arcN(x + 1.5 + m)}" y="${arcN(y + 2 + m * 1.6)}" width="${arcN(w - 3 - 2 * m)}" height="${arcN(h - 4 - 3.2 * m)}" fill="none" stroke="${on ? (i % 2 ? "#8fe0ff" : "#4f7fb8") : (i % 2 ? "#5e6e70" : "#3b464a")}" stroke-width="1.1" stroke-dasharray="1.6 1.2" opacity=".85"/>`; }).join("")}
 <path d="M${x} ${y} L${x + w} ${y + h}" stroke="#fff" stroke-width="4" opacity=".05"/></g>`; };
   return `<defs><linearGradient id="${body}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1c1f24"/><stop offset=".5" stop-color="#2b2f36"/><stop offset="1" stop-color="#16181c"/></linearGradient>
 <linearGradient id="${chrome}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f6f8"/><stop offset=".45" stop-color="#9aa3ad"/><stop offset=".55" stop-color="#d9dee3"/><stop offset="1" stop-color="#7d858f"/></linearGradient>

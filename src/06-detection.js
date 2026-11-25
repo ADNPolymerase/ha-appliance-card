@@ -1279,7 +1279,11 @@ function detectApplianceType(cfg, st) {
   // the entities' domains. Dreame's purifier is no robot.
   if (!["fan", "climate"].includes(domainOf(cfg.state_entity)) && ROBOT_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "robot";
   // A UPS, by its name in any language or by its maker's line.
-  if (UPS_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "ups";
+  // "Onduleur" alone is a UPS when its state is one's (NUT: OL, OB LB, ...),
+  // a solar inverter otherwise.
+  const upsNamed = stripAccents(hay.replace(/\b[a-z_]+\./g, " "));
+  const upsState = !!st && /^((ol|ob|lb|hb|rb|chrg|dischrg|byp|ovr|trim|boost|fsd)(\s+|$))+$|^(online|on.?battery)$/i.test(String(st.state).trim());
+  if (UPS_NAME_RE.test(upsNamed) || (upsState && /onduleur/.test(upsNamed))) return "ups";
   // A pool pump, by its name in any language or by Oklyn's.
   if (POOL_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "pool_pump";
   // Solar panels by their name or their inverter's maker, before a home
@@ -1351,7 +1355,7 @@ function detectApplianceType(cfg, st) {
   if (/^climate\./.test(eid) && hvacModes.includes("fan_only") && hvacModes.every((m) => ["off", "fan_only"].includes(m))) return "hrv";
   // A thermostat or a radiator valve, by its name or its maker's. Before the
   // air conditioner, since a Nest or an ecobee cools as well.
-  if (/^climate\./.test(eid) && THERMOSTAT_NAME_RE.test(stripAccents(`${hay} ${stHay(st)}`.toLowerCase()))) return "thermostat";
+  if (/^climate\./.test(eid) && !hvacModes.includes("dry") && THERMOSTAT_NAME_RE.test(stripAccents(`${hay} ${stHay(st)}`.toLowerCase()))) return "thermostat";
   if (AC_WORD_RE.test(hay) && ["climate", "switch", "select"].includes(domainOf(cfg.state_entity))) return "air_conditioner";
   if (/air.?con|aircon|airco|mini.?split|(^|[\s._])(split|clim)([\s._]|$)|climatis|climatiz|condicionad|klimaanl|klimatyz|klimatiz|luftkondit|kondicion|sensibo|melcloud|\u043a\u043e\u043d\u0434\u0438\u0446\u0438\u043e\u043d\u0435\u0440|\u7a7a\u8c03/.test(hay)) return "air_conditioner";
   // Cooling alone does not make one: a Nest or an ecobee cools too, and says
@@ -1375,9 +1379,10 @@ function detectApplianceType(cfg, st) {
   // Before the dryer: a washer-dryer says "dry" in every language, and it is a
   // washer that also dries, not a dryer that also washes.
   if (WASHER_DRYER_RE.test(stripAccents(hay))) return "washer";
+  // A dishwasher first: it dries too.
+  if (/dish|vaisselle|geschirrsp|spuelmasch|spulmasch|lavavajillas|lavastoviglie|vaatwasser|diskmaskin/.test(hay)) return "dishwasher";
   // Not in the word laundry.
   if (/(?<!laun)dry|seche|s\u00e8che|tumble|trockner|secadora|asciugatrice|droger|torktumlare/.test(hay)) return "dryer";
-  if (/dish|vaisselle|geschirrsp|spuelmasch|spulmasch|lavavajillas|lavastoviglie|vaatwasser|diskmaskin/.test(hay)) return "dishwasher";
   // A temperature sensor nothing above has claimed.
   if (st && domainOf(cfg.state_entity) === "sensor" && ["temperature", "carbon_dioxide"].includes(st.attributes.device_class)) return "climate_sensor";
   return "washer";

@@ -169,7 +169,7 @@ const SECTIONS = [
   { field: "ph_entity", types: ["pool_pump"], labelKey: "section_ph", includeDomains: ["sensor"] },
   { field: "redox_entity", types: ["pool_pump"], labelKey: "section_redox", includeDomains: ["sensor"] },
   { field: "filtration_time_entity", types: ["pool_pump"], labelKey: "section_filtration_time", includeDomains: ["sensor"] },
-  { field: "pressure_entity", types: ["pool_pump"], labelKey: "section_pressure", includeDomains: ["sensor"], extra: (c) =>
+  { field: "pressure_entity", types: ["pool_pump"], labelKey: "section_filter_pressure", includeDomains: ["sensor"], extra: (c) =>
       c._row("pool_pressure_alert", "pressure_alert", { placeholder: String(POOL_PRESSURE_ALERT) }) },
   { field: "pool_mode_entity", types: ["pool_pump"], labelKey: "section_pool_mode", includeDomains: ["select", "input_select", "sensor"] },
   { field: "chlorine_pump_entity", types: ["pool_pump"], labelKey: "section_chlorine_pump", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
@@ -1092,7 +1092,7 @@ class ApplianceCardEditor extends HTMLElement {
     slot.innerHTML = `
       <label>${esc(t(hass, "photo_label"))}</label>
       <div class="ph-bar">
-        <input type="text" class="ph-url" value="${esc(typeof cfg.illustration_image === "string" ? cfg.illustration_image : href)}" placeholder="/local/volet.jpg" />
+        <input type="text" class="ph-url" value="${esc(typeof cfg.illustration_image === "string" ? cfg.illustration_image : href)}" placeholder="/local/photo.jpg" />
         <button type="button" class="ph-btn ph-up" title="${esc(t(hass, "photo_upload"))}"><ha-icon icon="mdi:image-plus"></ha-icon><span>${esc(t(hass, "photo_upload"))}</span></button>
         ${href ? `<button type="button" class="ph-btn ph-del" title="${esc(t(hass, "photo_remove"))}"><ha-icon icon="mdi:delete-outline"></ha-icon></button>` : ""}
         <input type="file" accept="image/*" class="ph-file" hidden />
@@ -2392,6 +2392,6 @@ window.customCards = window.customCards || [];
 window.customCards.push({
   type: "ha-appliance-card",
   name: "HA Appliance Card",
-  description: "Every appliance of the home drawn and animated from its real state: washer, oven, heat pump, robot, pool pump, speaker, power strip and more than a hundred others, any brand or integration.",
+  description: "Every appliance of the home drawn and animated from its real state: 74 types and more than 170 models, from the washer to the heat pump, the robot or the power strip, any brand or integration.",
   documentationURL: "https://github.com/ADNPolymerase/ha-appliance-card",
 });

@@ -13,6 +13,7 @@
  * This card has ten CustomEvent sites and they are all exercised below.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
+import vm from 'node:vm';
 import { sourcePath, sourceText } from '../tools/source.mjs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -1265,6 +1266,15 @@ for (const [code, block] of Object.entries(TABLE)) {
     [...missing.map(k => '-' + k), ...extra.map(k => '+' + k)].join(' ') || 'ok', 'ok');
 }
 
+// A key written twice in a language keeps only its last value, silently: the
+// filter pressure of a pool pump read "Pressure" that way.
+{
+  const tText = SRC.slice(tStart, SRC.indexOf('\n};', tStart));
+  const blocks = tText.split(/\n  "?[a-zA-Z-]+"?: \{\n/).slice(1);
+  const dups = blocks.map((b) => { const seen = new Set(), d = []; for (const m of b.matchAll(/(?:^|[\s{,])([a-z][a-z0-9_]*): "/g)) { if (seen.has(m[1])) d.push(m[1]); seen.add(m[1]); } return d; });
+  check('traductions : aucune cle en double', dups.flat().join(' ') || 'ok', 'ok');
+  check('traductions : 16 langues lues', blocks.length, Object.keys(TABLE).length);
+}
 // Regional variants must land on the base language, not fall back to English.
 check('locale zh-CN : resolue vers le bloc zh',
   stateLine((() => {
@@ -15473,7 +15483,7 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('contact : fenetre aussi', stateLine(D('window', 'on')), 'Open');
   check('contact : son dessin', /det_door|nt-on/.test(D('door', 'on')), true);
   check('vibration : au repos', stateLine(D('vibration', 'off')), 'Still');
-  check('vibration : detectee', stateLine(D('vibration', 'on')), 'Vibration');
+  check('vibration : detectee', stateLine(D('vibration', 'on')), 'Vibration detected');
   check('bris de glace : par le nom', stateLine(build({ appliance_type: 'detector', state_entity: 'binary_sensor.glass_break' }, { 'binary_sensor.glass_break': { state: 'on', attributes: {} } }).html), 'Glass break');
   check('bris de glace : au repos tout va bien', stateLine(D('', 'off', { detector_layout: 'glass' })), 'All clear');
   check('fumee : inchangee', stateLine(D('smoke', 'on')), 'Smoke detected');
@@ -16157,6 +16167,7 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   const J = (w, extra = {}, sw = 'on') => build({ appliance_type: 'speaker', speaker_layout: 'jukebox', state_entity: 'switch.jb', power_entity: 'sensor.jb_w', power_on_threshold: 80, ...extra },
     { 'switch.jb': S(sw), 'sensor.jb_w': S(w, { unit_of_measurement: 'W' }) }).html;
   check('jukebox : dessine', kind(J(120)), 'spk_jukebox');
+  check('jukebox : aucun cadre de taille negative', /(width|height)="-/.test(J(120) + J(0)), false);
   check('jukebox : reconnu au nom', kind(build({ state_entity: 'switch.jukebox' }, { 'switch.jukebox': S('on') }).html), 'spk_jukebox');
   check('jukebox : un Rock-Ola', kind(build({ appliance_type: 'speaker', state_entity: 'media_player.rock_ola' }, { 'media_player.rock_ola': S('idle') }).html), 'spk_jukebox');
   check('jukebox : au-dessus du seuil, en lecture', stateLine(J(120)), 'Playing');
@@ -16189,6 +16200,33 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('editeur bar : dans les modeles', /<option value="barrel_bar"/.test(edB), true);
   check('editeur bar : couleur du rideau', /curtain_color/.test(edB), true);
   check('editeur lampe : pas de rideau ailleurs', /curtain_color/.test(markup(newEditor({ state_entity: 'light.x', appliance_type: 'lamp', lamp_layout: 'bulb' })._root)), false);
+}
+
+
+// =============================================================================
+// Detection: names that were read as something else (the 2026-11 audit)
+// =============================================================================
+{
+  // The detector on its own, in a sandbox of its own.
+  const ctx = { window: { customCards: [] }, document: { currentScript: null, querySelectorAll: () => [], createElement: () => ({}) }, customElements: { define() {}, get() {} }, HTMLElement: class {}, navigator: {}, console: { info() {}, log() {}, warn() {} }, setTimeout, clearTimeout, fetch: async () => ({ ok: false }) };
+  vm.createContext(ctx);
+  vm.runInContext(`${SRC}\n;globalThis.__detect = detectApplianceType;`, ctx);
+  const typeOf = (id, state = 'on', attrs = {}) => ctx.__detect({ state_entity: id }, { entity_id: id, state, attributes: attrs });
+  check('detection : un relais Shelly switch_0 n est pas un switch reseau', typeOf('switch.dryer_switch_0') === 'network', false);
+  check('detection : un interrupteur mural n est pas un switch reseau', typeOf('sensor.washer_wall_switch_power', '12') === 'network', false);
+  check('detection : un switch reseau reste un switch', typeOf('sensor.switch_bureau_poe_power', '12'), 'network');
+  check('detection : un switch par ses ports', typeOf('sensor.switch_8_ports_temperature', '40'), 'network');
+  check('detection : un UniFi USW', typeOf('sensor.usw_lite_8_poe_uptime', '3'), 'network');
+  check('detection : une prise a deux relais n est pas une console', typeOf('switch.kitchen_switch_2') === 'console', false);
+  check('detection : une Switch 2 par son nom', typeOf('sensor.nintendo_switch_2_used_screen_time', '3'), 'console');
+  check('detection : un onduleur solaire', typeOf('sensor.onduleur_puissance', '420'), 'solar');
+  check('detection : un onduleur solaire nomme', typeOf('sensor.onduleur_solaire_production', '420'), 'solar');
+  check('detection : un onduleur secouru par son nom', typeOf('sensor.onduleur_secouru_charge', '80'), 'ups');
+  check('detection : un onduleur par son etat NUT', typeOf('sensor.onduleur_bureau', 'OL CHRG'), 'ups');
+  check('detection : un climatiseur Tado', typeOf('climate.tado_salon', 'cool', { hvac_modes: ['off', 'cool', 'heat', 'dry', 'fan_only', 'auto'] }), 'air_conditioner');
+  check('detection : un thermostat Tado reste un thermostat', typeOf('climate.tado_salon', 'heat', { hvac_modes: ['off', 'heat', 'auto'] }), 'thermostat');
+  check('detection : un lave-vaisselle qui seche', typeOf('sensor.dishwasher_drying', 'on'), 'dishwasher');
+  check('detection : un seche-linge reste un seche-linge', typeOf('sensor.dryer_status', 'run'), 'dryer');
 }
 
 report();
