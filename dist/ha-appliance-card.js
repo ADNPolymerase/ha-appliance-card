@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "5.1.0";
+const CARD_VERSION = "5.1.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -189,7 +189,7 @@ const T = {
     type_cover: "Shutter, blind, pergola or awning", layout_cov_shutter: "Roller shutter", layout_cov_blind: "Roller blind", layout_cov_venetian: "Venetian blind", layout_cov_raffstore: "Exterior venetian blind", layout_cov_pergola: "Bioclimatic pergola", layout_cov_awning: "Awning", layout_cov_curtain: "Curtain", curtain_opening: "Opens", curtain_center: "From the middle", curtain_left: "To the left", curtain_right: "To the right", cov_open: "Open", cov_closed: "Closed", cov_open_at: "Open {pct} %", cov_opening: "Opening", cov_closing: "Closing", cov_deployed: "Extended", cov_retracted: "Retracted", cov_deployed_at: "Extended {pct} %", cov_deploying: "Extending", cov_retracting: "Retracting", cov_louvers_open: "Louvers open", cov_louvers_closed: "Louvers closed", cov_louvers_at: "Louvers {pct} %", cov_louvers_opening: "Opening the louvers", cov_louvers_closing: "Closing the louvers", cov_position: "Position", cov_tilt: "Slats", cov_light: "Light", cov_open_btn: "Open", cov_close_btn: "Close", cover_color: "Colour (apron, slats, frame)", fabric_color: "Fabric colour", fabric_stripes: "Striped fabric", cov_c_white: "White", cov_c_grey: "Grey", cov_c_anthracite: "Anthracite", cov_c_black: "Black", cov_c_beige: "Beige", cov_c_wood: "Wood", cov_c_brown: "Brown", cov_f_ecru: "Ecru", cov_f_white: "White", cov_f_linen: "Linen", cov_f_grey: "Grey", cov_f_anthracite: "Anthracite", cov_f_blue: "Blue", cov_f_petrol: "Petrol blue", cov_f_terracotta: "Terracotta", cov_f_green: "Green", layout_ths_co2_eink: "CO\u2082 monitor, e-ink (Aranet4)", layout_ths_co2_box: "CO\u2082 monitor, LED bar (AirGradient)", layout_ths_co2_netatmo: "Netatmo indoor station", layout_ths_co2_netatmo_module: "Netatmo additional indoor module", layout_ths_switchbot_co2: "SwitchBot Meter Pro CO\u2082", layout_ths_switchbot_pro: "SwitchBot Meter Pro", layout_ths_switchbot_meter: "SwitchBot Meter", layout_ths_switchbot_plus: "SwitchBot Meter Plus", layout_ths_switchbot_outdoor: "SwitchBot Indoor/Outdoor Meter", ths_co2: "CO\u2082", co2_good: "Air is fine", co2_ventilate: "Ventilation advised", co2_poor: "Ventilate now", co2_warning: "Orange from (ppm)", co2_alert: "Red from (ppm)", netatmo_color: "Netatmo colour", ntm_aluminium: "Aluminium", ntm_sand: "Sand", ntm_mint: "Mint", ntm_graphite: "Graphite",
     type_fingerbot: "Finger bot (Fingerbot, SwitchBot Bot)", layout_fb_plus: "Fingerbot Plus (Tuya, Adaprox, MOES)", layout_fb_switchbot: "SwitchBot Bot", layout_fb_classic: "Fingerbot, first model", fingerbot_color: "Colour", fb_ready: "Ready", fb_pressing: "Pressing", fb_held: "Held down", fb_released: "Released", fb_charging: "Charging", fb_charged: "Charged", fb_low: "Low battery", fb_press: "Press", fb_charge: "Charge", fb_mode: "Mode", fb_m_click: "Press", fb_m_switch: "Switch", fb_m_program: "Program", fb_lower: "Down position", fb_upper: "Up position", fb_sustain: "Hold time", fb_reverse: "Reversed", fb_touch: "Touch button", fb_yes: "Yes", fb_no: "No", fb_last: "Last press",
     type_valve: "Shut-off valve (Aqara T1, Tuya)", layout_vlv_aqara: "Aqara Valve Controller T1", layout_vlv_tuya: "Tuya valve controller", vlv_open: "Open", vlv_closed: "Closed", vlv_opening: "Opening", vlv_closing: "Closing", valve_handle_color: "Handle colour", vlv_h_red: "Red", vlv_h_blue: "Blue", vlv_h_yellow: "Yellow", vlv_h_black: "Black",
-    type_food_processor: "Thermomix", layout_pool_pump: "Pump and filter", layout_pool_basin: "Pool", pool_spots: "Number of spots", section_pool_cover: "Pool cover", section_shower: "Solar shower", section_ph_target: "pH setpoint", section_redox_target: "RedOx setpoint", pool_line_cover: "Cover", pool_line_shower: "Shower", pool_cover_open: "Open", pool_cover_closed: "Closed", pool_cover_part: "{p} % open", pool_cover_opening: "Opening", pool_cover_closing: "Closing", pool_cover_tarp: "Closed, winter tarp", pool_shower_on: "Running", pool_shower_off: "Off", type_frozen_treat: "Ice cream & slush maker", ft_churning: "Churning", ft_freezing: "Freezing", ft_done: "Done", ft_ready_serve: "Ready to serve", ft_flavor: "Flavour", ft_fl_vanilla: "Vanilla", ft_fl_strawberry: "Strawberry", ft_fl_chocolate: "Chocolate", ft_fl_pistachio: "Pistachio", ft_fl_mango: "Mango", ft_fl_blue_raspberry: "Blue raspberry", type_gas_fireplace: "Gas fireplace", gf_burning: "Burning", gf_pilot_on: "Pilot on", gf_flame_height: "Flame height", gf_flame: "Flame sensor", gf_pilot: "Pilot light", gf_on: "On", gf_error: "Error", photo_label: "Your own photo", photo_upload: "Upload a photo", photo_remove: "Remove the photo", photo_hint: "Drag the photo to frame it, then put the dashed frame over the window: the cover moves inside it. Take the photo with the cover open.", photo_reset: "Frame again", photo_uploading: "Uploading\u2026", photo_error: "Couldn't load the photo", photo_add_area: "Add an area", photo_remove_area: "Remove this area", door_style_gate: "Swing gate", door_style_sliding_gate: "Sliding gate", det_gate_leaves: "Gate leaves", gate_leaves_1: "One leaf", gate_leaves_2: "Two leaves", det_gate_side: "Opens to", gate_side_left: "Left", gate_side_right: "Right", photo_hint_door: "Drag the photo to frame it, then put the dashed frame on the door, the window or the gate: it opens inside it. Take the photo shut. A garage door or a gate: take it open, it is drawn over the photo.", photo_hint_laundry: "Drag the photo to frame it, then put the dashed frame on the porthole: the drum turns inside it. Take the photo door shut, machine off.", photo_hint_screen: "Drag the photo to frame it, then put the dashed frame on the screen: the picture shows inside it. Take the photo screen off.", layout_fp_tm31: "Thermomix TM31", layout_fp_tm6: "Thermomix TM6", fp_off: "Off", fp_ready: "Ready", fp_mixing: "Mixing", fp_cooking: "Cooking",
+    type_food_processor: "Thermomix", layout_pool_pump: "Pump and filter", layout_pool_basin: "Pool", pool_spots: "Number of spots", pool_spots_random: "Colour-changing spots", winter_invert: "Invert (on means in season, not winter)", section_pool_cover: "Pool cover", section_shower: "Solar shower", section_ph_target: "pH setpoint", section_redox_target: "RedOx setpoint", pool_line_cover: "Cover", pool_line_shower: "Shower", pool_cover_open: "Open", pool_cover_closed: "Closed", pool_cover_part: "{p} % open", pool_cover_opening: "Opening", pool_cover_closing: "Closing", pool_cover_tarp: "Closed, winter tarp", pool_shower_on: "Running", pool_shower_off: "Off", type_frozen_treat: "Ice cream & slush maker", ft_churning: "Churning", ft_freezing: "Freezing", ft_done: "Done", ft_ready_serve: "Ready to serve", ft_flavor: "Flavour", ft_fl_vanilla: "Vanilla", ft_fl_strawberry: "Strawberry", ft_fl_chocolate: "Chocolate", ft_fl_pistachio: "Pistachio", ft_fl_mango: "Mango", ft_fl_blue_raspberry: "Blue raspberry", type_gas_fireplace: "Gas fireplace", gf_burning: "Burning", gf_pilot_on: "Pilot on", gf_flame_height: "Flame height", gf_flame: "Flame sensor", gf_pilot: "Pilot light", gf_on: "On", gf_error: "Error", photo_label: "Your own photo", photo_upload: "Upload a photo", photo_remove: "Remove the photo", photo_hint: "Drag the photo to frame it, then put the dashed frame over the window: the cover moves inside it. Take the photo with the cover open.", photo_reset: "Frame again", photo_uploading: "Uploading\u2026", photo_error: "Couldn't load the photo", photo_add_area: "Add an area", photo_remove_area: "Remove this area", door_style_gate: "Swing gate", door_style_sliding_gate: "Sliding gate", det_gate_leaves: "Gate leaves", gate_leaves_1: "One leaf", gate_leaves_2: "Two leaves", det_gate_side: "Opens to", gate_side_left: "Left", gate_side_right: "Right", photo_hint_door: "Drag the photo to frame it, then put the dashed frame on the door, the window or the gate: it opens inside it. Take the photo shut. A garage door or a gate: take it open, it is drawn over the photo.", photo_hint_laundry: "Drag the photo to frame it, then put the dashed frame on the porthole: the drum turns inside it. Take the photo door shut, machine off.", photo_hint_screen: "Drag the photo to frame it, then put the dashed frame on the screen: the picture shows inside it. Take the photo screen off.", layout_fp_tm31: "Thermomix TM31", layout_fp_tm6: "Thermomix TM6", fp_off: "Off", fp_ready: "Ready", fp_mixing: "Mixing", fp_cooking: "Cooking",
     det_tampered: "Tampered", det_sec_tamper: "Tamper",
     cam_person: "Person detected", cam_vehicle: "Vehicle detected", cam_animal: "Animal detected", cam_siren: "Siren", cam_line_spotlight: "Spotlight", cam_line_tracking: "Auto tracking", cam_v_lit: "On", cam_v_on: "On", cam_v_off: "Off", cam_sec_person: "Person detection", cam_sec_vehicle: "Vehicle detection", cam_sec_animal: "Animal detection", cam_sec_pan: "Pan position", cam_sec_tilt: "Tilt position",
     valve_fluid: "Fluid", vlv_f_water: "Water", vlv_f_gas: "Gas",
@@ -4991,7 +4991,7 @@ function robotBatteryIcon(pct, charging) {
 // rests, and sometimes it backwashes the filter into the drain or runs to
 // keep the pipes from freezing. A chlorine dosing pump is an option: its tank
 // and its long tube only show when one is given.
-const POOL_ONLY_FIELDS = ["water_temperature_entity", "air_temperature_entity", "ph_entity", "redox_entity", "pool_layout", "shower_entity", "spot_count", "ph_target_entity", "redox_target_entity",
+const POOL_ONLY_FIELDS = ["water_temperature_entity", "air_temperature_entity", "ph_entity", "redox_entity", "pool_layout", "shower_entity", "spot_count", "spot_random", "ph_target_entity", "redox_target_entity",
   "filtration_time_entity", "pressure_entity", "pressure_alert", "pool_mode_entity", "chlorine_pump_entity",
   "chlorine_level_entity", "backwash_entity", "frost_entity", "pool_alert_entity"];
 const POOL_NAME_RE = /pool.?pump|swimming.?pool|(^|[^a-z])pool([^a-z]|$)|piscine|pompe.?(de.?)?piscine|oklyn|neopool|iopool|flipr|hayward|pentair|filter.?pump|(^|[^a-z])(exo|intex)([^a-z]|$)|poolstation|(^|[^a-z])pisc|schwimmbad|poolpumpe|filterpumpe|bomba.?de.?(piscina|filtra)|piscina|pompa.?(piscina|filtraz)|zwembad|zwempomp|bassengpump|poolpump|pompa.?basen|basen|baz(e|\u00e9)n|\u6cf3\u6c60|\u0431\u0430\u0441\u0441\u0435\u0439\u043d/;
@@ -5063,6 +5063,8 @@ function poolCoverOf(hass, cfg) {
 function poolSpotLight(hass, cfg) {
   const s = cfg.light_entity ? stateObj(hass, cfg.light_entity) : null;
   const a = (s && s.attributes) || {};
+  // Colour-changing spots asked for in the card (HACF #224), whatever the light says.
+  if (cfg.spot_random === true) return "random";
   if (/random|rainbow|cycle|multi|party|disco|aleat|zufall|arc.?en.?ciel|regenbogen/i.test(String(a.effect || ""))) return "random";
   const rgb = Array.isArray(a.rgb_color) && a.rgb_color.length === 3 ? a.rgb_color.map(Number) : null;
   if (rgb && rgb.every((n) => Number.isFinite(n)) && !(rgb[0] > 235 && rgb[1] > 235 && rgb[2] > 235)) return `rgb(${rgb.map((n) => Math.round(n)).join(",")})`;
@@ -5076,7 +5078,17 @@ const POOL_REDOX_RANGE = [650, 750];
 // a grill under its cover; dosing-tank-card #3, like the mower's #80):
 // ticked in the card, or switched on from an on and off entity.
 function seasonWinter(hass, cfg) {
-  return cfg.winter === true || (!!cfg.winter_entity && robotRaised(hass, cfg.winter_entity, /winter|hiver/));
+  // robot_winter is what the editor wrote here before 5.1.1 (HACF #224).
+  if (cfg.winter === true || cfg.robot_winter === true) return true;
+  if (!cfg.winter_entity) return false;
+  // Inverted (HACF #224): an entity that is on during the season, so off
+  // means put away. Unknown or unavailable stays out of winter either way.
+  if (cfg.winter_invert === true) {
+    const s = stateObj(hass, cfg.winter_entity);
+    if (!s || ["unknown", "unavailable", ""].includes(String(s.state).trim().toLowerCase())) return false;
+    return !robotRaised(hass, cfg.winter_entity, /winter|hiver|season|saison/);
+  }
+  return robotRaised(hass, cfg.winter_entity, /winter|hiver/);
 }
 const poolWinter = seasonWinter;
 // The types that can be put away for the winter, beside the robots.
@@ -12778,6 +12790,8 @@ class ApplianceCard extends HTMLElement {
           if (ranged && v !== null) { if (v >= min && v <= max) line.good = true; else line.bad = true; }
           const aim = cfg[target] ? numericState(hass, cfg[target]) : null;
           if (aim !== null) line.value = keepTogether(`${line.value} \u2192 ${netNumber(hass, aim, digits)}`);
+          // With a setpoint, the line opens it so it can be changed (HACF #224).
+          if (aim !== null && entityUsable(hass, cfg[target])) line.entity = cfg[target];
         });
         if (poolBasin && cfg.cover_entity) {
           const c = poolCoverOf(hass, cfg);
@@ -12785,7 +12799,10 @@ class ApplianceCard extends HTMLElement {
             value: wintered ? t(hass, "pool_cover_tarp") : c.moving ? t(hass, c.moving === "opening" ? "pool_cover_opening" : "pool_cover_closing") : c.pos >= 100 ? t(hass, "pool_cover_closed") : c.pos <= 0 ? t(hass, "pool_cover_open") : keepTogether(t(hass, "pool_cover_part").replace("{p}", String(Math.round(100 - c.pos)))) });
         }
         if (poolBasin && cfg.shower_entity && stateObj(hass, cfg.shower_entity)) {
-          extraLines.push({ key: "pool_shower", icon: "mdi:shower-head", label: t(hass, "pool_line_shower"), entity: cfg.shower_entity, value: t(hass, poolOn(hass, cfg.shower_entity) && !wintered ? "pool_shower_on" : "pool_shower_off") });
+          // The shower switches from its line (HACF #224), not in winter.
+          const showerOn = poolOn(hass, cfg.shower_entity) && !wintered;
+          extraLines.push({ key: "pool_shower", icon: "mdi:shower-head", label: t(hass, "pool_line_shower"), entity: cfg.shower_entity, value: t(hass, showerOn ? "pool_shower_on" : "pool_shower_off"),
+            toggle: !wintered && entityUsable(hass, cfg.shower_entity) && ["switch", "input_boolean", "valve", "light"].includes(domainOf(cfg.shower_entity)) ? cfg.shower_entity : "", lit: showerOn });
         }
         const ft = numericEntity(hass, cfg.filtration_time_entity);
         if (ft) {
@@ -14173,7 +14190,7 @@ class ApplianceCard extends HTMLElement {
       : "";
     const linesHtml = lines.length
       ? `<div class="info-lines${infoEntities.length > INFO_COMPACT_ABOVE ? " compact" : ""}${cfg.values_right ? " right" : ""}">${lines
-          .map((l) => ({ ...l, open: !l.menu && !l.del && !!l.entity && entityUsable(hass, l.entity) }))
+          .map((l) => ({ ...l, open: !l.menu && !l.del && !l.toggle && !!l.entity && entityUsable(hass, l.entity) }))
           .map((l) => {
             // A line that deletes (#136): a first tap arms it, red, a second
             // one within three seconds deletes.
@@ -14184,7 +14201,7 @@ class ApplianceCard extends HTMLElement {
             const tick = l.tick ? ` data-fire="${l.tick.fire}" data-dur="${l.tick.dur}"` : "";
             if (tick) this._hasTick = true;
             const bar = !armed && l.bar !== undefined && l.bar !== null ? `<span class="lbar"><i${tick} style="width:${Math.round(l.bar * 10) / 10}%"></i></span>` : "";
-            return `<div class="info-line ${armed || l.warn ? "warn" : l.caution ? "caution" : ""}${l.open || l.menu || delKey ? " clickable" : ""}${l.menu ? " has-menu" : ""}${l.wrap && !bar ? " wrap" : ""}${l.lit ? " lit" : ""}${l.dim ? " dim" : ""}${l.good ? " good" : ""}${l.bad ? " bad" : ""}${l.del ? " timed" : ""}${armed ? " armed" : ""}${bar ? " has-bar" : ""}${!bar && !l.wrap && !l.bare && value && String(value).length <= 14 ? " fit" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""}${delKey ? ` data-del="${esc(delKey)}"` : ""}${l.menu ? ` data-line-menu="${l.menu}" aria-expanded="${this._lineMenu === l.menu}"` : ""} title="${esc(l.label)}"><ha-icon icon="${esc(armed ? "mdi:delete" : l.icon)}"></ha-icon>${l.bare && value ? "" : `<span class="label">${esc(l.label)}</span>`}${bar}${value ? `<span${!armed && tick ? ` class="cd"${tick}` : ""}>${esc(value)}</span>` : ""}${l.menu ? `<ha-icon class="chev" icon="mdi:chevron-${this._lineMenu === l.menu ? "up" : "down"}"></ha-icon>` : ""}</div>`;
+            return `<div class="info-line ${armed || l.warn ? "warn" : l.caution ? "caution" : ""}${l.open || l.menu || l.toggle || delKey ? " clickable" : ""}${l.menu ? " has-menu" : ""}${l.wrap && !bar ? " wrap" : ""}${l.lit ? " lit" : ""}${l.dim ? " dim" : ""}${l.good ? " good" : ""}${l.bad ? " bad" : ""}${l.del ? " timed" : ""}${armed ? " armed" : ""}${bar ? " has-bar" : ""}${!bar && !l.wrap && !l.bare && value && String(value).length <= 14 ? " fit" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""}${l.toggle ? ` data-line-toggle="${esc(l.toggle)}"` : ""}${delKey ? ` data-del="${esc(delKey)}"` : ""}${l.menu ? ` data-line-menu="${l.menu}" aria-expanded="${this._lineMenu === l.menu}"` : ""} title="${esc(l.label)}"><ha-icon icon="${esc(armed ? "mdi:delete" : l.icon)}"></ha-icon>${l.bare && value ? "" : `<span class="label">${esc(l.label)}</span>`}${bar}${value ? `<span${!armed && tick ? ` class="cd"${tick}` : ""}>${esc(value)}</span>` : ""}${l.menu ? `<ha-icon class="chev" icon="mdi:chevron-${this._lineMenu === l.menu ? "up" : "down"}"></ha-icon>` : ""}</div>`;
           })
           .join("")}${lineMenuHtml}</div>`
       : "";
@@ -14570,6 +14587,11 @@ class ApplianceCard extends HTMLElement {
         }
         return this._call(id);
       });
+    });
+    // A line that switches its entity (the pool's shower, HACF #224).
+    this._root.querySelectorAll("[data-line-toggle]").forEach((el) => {
+      const id = el.getAttribute("data-line-toggle");
+      this._wireControl(el, cfg.controls_activation, id, () => this._call(id));
     });
     // A power strip's sockets, each switched where it is drawn.
     this._root.querySelectorAll("[data-outlet]").forEach((el) => {

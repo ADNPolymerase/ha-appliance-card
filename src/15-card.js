@@ -3460,6 +3460,8 @@ class ApplianceCard extends HTMLElement {
           if (ranged && v !== null) { if (v >= min && v <= max) line.good = true; else line.bad = true; }
           const aim = cfg[target] ? numericState(hass, cfg[target]) : null;
           if (aim !== null) line.value = keepTogether(`${line.value} \u2192 ${netNumber(hass, aim, digits)}`);
+          // With a setpoint, the line opens it so it can be changed (HACF #224).
+          if (aim !== null && entityUsable(hass, cfg[target])) line.entity = cfg[target];
         });
         if (poolBasin && cfg.cover_entity) {
           const c = poolCoverOf(hass, cfg);
@@ -3467,7 +3469,10 @@ class ApplianceCard extends HTMLElement {
             value: wintered ? t(hass, "pool_cover_tarp") : c.moving ? t(hass, c.moving === "opening" ? "pool_cover_opening" : "pool_cover_closing") : c.pos >= 100 ? t(hass, "pool_cover_closed") : c.pos <= 0 ? t(hass, "pool_cover_open") : keepTogether(t(hass, "pool_cover_part").replace("{p}", String(Math.round(100 - c.pos)))) });
         }
         if (poolBasin && cfg.shower_entity && stateObj(hass, cfg.shower_entity)) {
-          extraLines.push({ key: "pool_shower", icon: "mdi:shower-head", label: t(hass, "pool_line_shower"), entity: cfg.shower_entity, value: t(hass, poolOn(hass, cfg.shower_entity) && !wintered ? "pool_shower_on" : "pool_shower_off") });
+          // The shower switches from its line (HACF #224), not in winter.
+          const showerOn = poolOn(hass, cfg.shower_entity) && !wintered;
+          extraLines.push({ key: "pool_shower", icon: "mdi:shower-head", label: t(hass, "pool_line_shower"), entity: cfg.shower_entity, value: t(hass, showerOn ? "pool_shower_on" : "pool_shower_off"),
+            toggle: !wintered && entityUsable(hass, cfg.shower_entity) && ["switch", "input_boolean", "valve", "light"].includes(domainOf(cfg.shower_entity)) ? cfg.shower_entity : "", lit: showerOn });
         }
         const ft = numericEntity(hass, cfg.filtration_time_entity);
         if (ft) {
@@ -4855,7 +4860,7 @@ class ApplianceCard extends HTMLElement {
       : "";
     const linesHtml = lines.length
       ? `<div class="info-lines${infoEntities.length > INFO_COMPACT_ABOVE ? " compact" : ""}${cfg.values_right ? " right" : ""}">${lines
-          .map((l) => ({ ...l, open: !l.menu && !l.del && !!l.entity && entityUsable(hass, l.entity) }))
+          .map((l) => ({ ...l, open: !l.menu && !l.del && !l.toggle && !!l.entity && entityUsable(hass, l.entity) }))
           .map((l) => {
             // A line that deletes (#136): a first tap arms it, red, a second
             // one within three seconds deletes.
@@ -4866,7 +4871,7 @@ class ApplianceCard extends HTMLElement {
             const tick = l.tick ? ` data-fire="${l.tick.fire}" data-dur="${l.tick.dur}"` : "";
             if (tick) this._hasTick = true;
             const bar = !armed && l.bar !== undefined && l.bar !== null ? `<span class="lbar"><i${tick} style="width:${Math.round(l.bar * 10) / 10}%"></i></span>` : "";
-            return `<div class="info-line ${armed || l.warn ? "warn" : l.caution ? "caution" : ""}${l.open || l.menu || delKey ? " clickable" : ""}${l.menu ? " has-menu" : ""}${l.wrap && !bar ? " wrap" : ""}${l.lit ? " lit" : ""}${l.dim ? " dim" : ""}${l.good ? " good" : ""}${l.bad ? " bad" : ""}${l.del ? " timed" : ""}${armed ? " armed" : ""}${bar ? " has-bar" : ""}${!bar && !l.wrap && !l.bare && value && String(value).length <= 14 ? " fit" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""}${delKey ? ` data-del="${esc(delKey)}"` : ""}${l.menu ? ` data-line-menu="${l.menu}" aria-expanded="${this._lineMenu === l.menu}"` : ""} title="${esc(l.label)}"><ha-icon icon="${esc(armed ? "mdi:delete" : l.icon)}"></ha-icon>${l.bare && value ? "" : `<span class="label">${esc(l.label)}</span>`}${bar}${value ? `<span${!armed && tick ? ` class="cd"${tick}` : ""}>${esc(value)}</span>` : ""}${l.menu ? `<ha-icon class="chev" icon="mdi:chevron-${this._lineMenu === l.menu ? "up" : "down"}"></ha-icon>` : ""}</div>`;
+            return `<div class="info-line ${armed || l.warn ? "warn" : l.caution ? "caution" : ""}${l.open || l.menu || l.toggle || delKey ? " clickable" : ""}${l.menu ? " has-menu" : ""}${l.wrap && !bar ? " wrap" : ""}${l.lit ? " lit" : ""}${l.dim ? " dim" : ""}${l.good ? " good" : ""}${l.bad ? " bad" : ""}${l.del ? " timed" : ""}${armed ? " armed" : ""}${bar ? " has-bar" : ""}${!bar && !l.wrap && !l.bare && value && String(value).length <= 14 ? " fit" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""}${l.toggle ? ` data-line-toggle="${esc(l.toggle)}"` : ""}${delKey ? ` data-del="${esc(delKey)}"` : ""}${l.menu ? ` data-line-menu="${l.menu}" aria-expanded="${this._lineMenu === l.menu}"` : ""} title="${esc(l.label)}"><ha-icon icon="${esc(armed ? "mdi:delete" : l.icon)}"></ha-icon>${l.bare && value ? "" : `<span class="label">${esc(l.label)}</span>`}${bar}${value ? `<span${!armed && tick ? ` class="cd"${tick}` : ""}>${esc(value)}</span>` : ""}${l.menu ? `<ha-icon class="chev" icon="mdi:chevron-${this._lineMenu === l.menu ? "up" : "down"}"></ha-icon>` : ""}</div>`;
           })
           .join("")}${lineMenuHtml}</div>`
       : "";
@@ -5252,6 +5257,11 @@ class ApplianceCard extends HTMLElement {
         }
         return this._call(id);
       });
+    });
+    // A line that switches its entity (the pool's shower, HACF #224).
+    this._root.querySelectorAll("[data-line-toggle]").forEach((el) => {
+      const id = el.getAttribute("data-line-toggle");
+      this._wireControl(el, cfg.controls_activation, id, () => this._call(id));
     });
     // A power strip's sockets, each switched where it is drawn.
     this._root.querySelectorAll("[data-outlet]").forEach((el) => {

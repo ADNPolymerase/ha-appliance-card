@@ -182,7 +182,7 @@ const SECTIONS = [
   { field: "backwash_entity", types: ["pool_pump"], labelKey: "section_backwash", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
   { field: "frost_entity", types: ["pool_pump"], labelKey: "section_frost", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
   { field: "winter_entity", types: WINTER_TYPES, labelKey: "section_robot_winter", includeDomains: ["input_boolean", "switch", "binary_sensor"],
-    extra: (c) => c._row("winter", "robot_winter", { type: "checkbox" }) + c._row("winter_snowfall", "winter_snowfall", { type: "checkbox", defaultOn: true }) },
+    extra: (c) => (c._config.winter_entity ? c._row("winter_invert", "winter_invert", { type: "checkbox" }) : "") + c._row("robot_winter", "winter", { type: "checkbox" }) + c._row("winter_snowfall", "winter_snowfall", { type: "checkbox", defaultOn: true }) },
   { field: "pool_alert_entity", types: ["pool_pump"], labelKey: "section_pool_alert", includeDomains: ["binary_sensor", "sensor"] },
   // Solar panels: the energy of the day and an alert. A battery: what goes
   // in and out, its reserve, its charge limit and an alert.
@@ -1909,7 +1909,8 @@ class ApplianceCardEditor extends HTMLElement {
         }) : "") : ""}
         ${this._type === "pool_pump" ? this._row("section_screen_layout", "pool_layout", { type: "select", value: this._config.pool_layout || "pump",
           options: [{ value: "pump", label: t(hass, "layout_pool_pump") }, { value: "basin", label: t(hass, "layout_pool_basin") }] })
-          + (this._config.pool_layout === "basin" ? this._row("pool_spots", "spot_count", { type: "range", min: 1, max: 6, step: 1, default: 3 }) : "") : ""}
+          + (this._config.pool_layout === "basin" ? this._row("pool_spots", "spot_count", { type: "range", min: 1, max: 6, step: 1, default: 3 })
+            + this._row("pool_spots_random", "spot_random", { type: "checkbox" }) : "") : ""}
         ${this._type === "water_pump" ? this._row("section_screen_layout", "pump_layout", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(PUMP_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_pump_${v}`) }))),

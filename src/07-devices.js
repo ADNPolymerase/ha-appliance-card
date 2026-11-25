@@ -705,7 +705,7 @@ function robotBatteryIcon(pct, charging) {
 // rests, and sometimes it backwashes the filter into the drain or runs to
 // keep the pipes from freezing. A chlorine dosing pump is an option: its tank
 // and its long tube only show when one is given.
-const POOL_ONLY_FIELDS = ["water_temperature_entity", "air_temperature_entity", "ph_entity", "redox_entity", "pool_layout", "shower_entity", "spot_count", "ph_target_entity", "redox_target_entity",
+const POOL_ONLY_FIELDS = ["water_temperature_entity", "air_temperature_entity", "ph_entity", "redox_entity", "pool_layout", "shower_entity", "spot_count", "spot_random", "ph_target_entity", "redox_target_entity",
   "filtration_time_entity", "pressure_entity", "pressure_alert", "pool_mode_entity", "chlorine_pump_entity",
   "chlorine_level_entity", "backwash_entity", "frost_entity", "pool_alert_entity"];
 const POOL_NAME_RE = /pool.?pump|swimming.?pool|(^|[^a-z])pool([^a-z]|$)|piscine|pompe.?(de.?)?piscine|oklyn|neopool|iopool|flipr|hayward|pentair|filter.?pump|(^|[^a-z])(exo|intex)([^a-z]|$)|poolstation|(^|[^a-z])pisc|schwimmbad|poolpumpe|filterpumpe|bomba.?de.?(piscina|filtra)|piscina|pompa.?(piscina|filtraz)|zwembad|zwempomp|bassengpump|poolpump|pompa.?basen|basen|baz(e|\u00e9)n|\u6cf3\u6c60|\u0431\u0430\u0441\u0441\u0435\u0439\u043d/;
@@ -777,6 +777,8 @@ function poolCoverOf(hass, cfg) {
 function poolSpotLight(hass, cfg) {
   const s = cfg.light_entity ? stateObj(hass, cfg.light_entity) : null;
   const a = (s && s.attributes) || {};
+  // Colour-changing spots asked for in the card (HACF #224), whatever the light says.
+  if (cfg.spot_random === true) return "random";
   if (/random|rainbow|cycle|multi|party|disco|aleat|zufall|arc.?en.?ciel|regenbogen/i.test(String(a.effect || ""))) return "random";
   const rgb = Array.isArray(a.rgb_color) && a.rgb_color.length === 3 ? a.rgb_color.map(Number) : null;
   if (rgb && rgb.every((n) => Number.isFinite(n)) && !(rgb[0] > 235 && rgb[1] > 235 && rgb[2] > 235)) return `rgb(${rgb.map((n) => Math.round(n)).join(",")})`;
@@ -790,7 +792,17 @@ const POOL_REDOX_RANGE = [650, 750];
 // a grill under its cover; dosing-tank-card #3, like the mower's #80):
 // ticked in the card, or switched on from an on and off entity.
 function seasonWinter(hass, cfg) {
-  return cfg.winter === true || (!!cfg.winter_entity && robotRaised(hass, cfg.winter_entity, /winter|hiver/));
+  // robot_winter is what the editor wrote here before 5.1.1 (HACF #224).
+  if (cfg.winter === true || cfg.robot_winter === true) return true;
+  if (!cfg.winter_entity) return false;
+  // Inverted (HACF #224): an entity that is on during the season, so off
+  // means put away. Unknown or unavailable stays out of winter either way.
+  if (cfg.winter_invert === true) {
+    const s = stateObj(hass, cfg.winter_entity);
+    if (!s || ["unknown", "unavailable", ""].includes(String(s.state).trim().toLowerCase())) return false;
+    return !robotRaised(hass, cfg.winter_entity, /winter|hiver|season|saison/);
+  }
+  return robotRaised(hass, cfg.winter_entity, /winter|hiver/);
 }
 const poolWinter = seasonWinter;
 // The types that can be put away for the winter, beside the robots.

@@ -10568,6 +10568,28 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('217 : RedOx dans la plage en vert', / good/.test(orpCls(700)), true);
   check('217 : vagues quand la pompe tourne', /attributeName="opacity" values="0;1;1;0"/.test(B({}, {})), true);
   check('217 : eau calme a l arret', /attributeName="opacity" values="0;1;1;0"/.test(render({ ...P, pool_layout: 'basin' }, { 'binary_sensor.p': s('off') })), false);
+  // HACF #224: setpoints, shower, winter inverted, colour-changing spots.
+  check('224 : la ligne pH ouvre la consigne', /data-more="number\.c"[^>]*title="pH"/.test(B({ ph_entity: 'sensor.ph', ph_target_entity: 'number.c' }, { 'sensor.ph': s(7.42), 'number.c': s(7.2) })), true);
+  check('224 : sans consigne, la ligne pH ouvre la sonde', /data-more="sensor\.ph"[^>]*title="pH"/.test(B({ ph_entity: 'sensor.ph' }, { 'sensor.ph': s(7.42) })), true);
+  check('224 : la ligne RedOx ouvre sa consigne', /data-more="number\.r"[^>]*title="RedOx"/.test(B({ redox_entity: 'sensor.orp', redox_target_entity: 'number.r' }, { 'sensor.orp': s(700), 'number.r': s(720) })), true);
+  check('224 : la douche se commande depuis sa ligne', /data-line-toggle="switch\.d"[^>]*title="Shower"/.test(B({ shower_entity: 'switch.d' }, { 'switch.d': s('off') })), true);
+  check('224 : la ligne douche allumee', /class="info-line [^"]*lit[^"]*"[^>]*title="Shower"/.test(B({ shower_entity: 'switch.d' }, { 'switch.d': s('on') })), true);
+  check('224 : pas de commande de douche en hivernage', /data-line-toggle="switch\.d"/.test(B({ shower_entity: 'switch.d', winter: true }, { 'switch.d': s('off') })), false);
+  check('224 : un capteur de douche ne se commande pas', /data-line-toggle/.test(B({ shower_entity: 'binary_sensor.d' }, { 'binary_sensor.d': s('on') })), false);
+  const W224 = (v, inv) => /fill="#2f5d50"/.test(B({ winter_entity: 'input_boolean.saison', ...(inv ? { winter_invert: true } : {}) }, { 'input_boolean.saison': s(v) }));
+  check('224 : hivernage par interrupteur', W224('on', false), true);
+  check('224 : inverse, allume = en saison', W224('on', true), false);
+  check('224 : inverse, eteint = hivernage', W224('off', true), true);
+  check('224 : inverse, indisponible = pas d hivernage', W224('unavailable', true), false);
+  check('224 : ancienne case robot_winter encore lue', /fill="#2f5d50"/.test(B({ robot_winter: true }, {})), true);
+  check('224 : spots changeants demandes', /hsl\(55 95% 60%\)/.test(B({ light_entity: 'switch.l', spot_random: true }, { 'switch.l': s('on') })), true);
+  check('224 : spots fixes sans la case', /hsl\(55 95% 60%\)/.test(B({ light_entity: 'switch.l' }, { 'switch.l': s('on') })), false);
+  const edB = markup(newEditor({ state_entity: 'binary_sensor.p', appliance_type: 'pool_pump', pool_layout: 'basin', winter_entity: 'input_boolean.saison' }));
+  check('224 : editeur, la case hivernage ecrit winter', edB.includes('data-field="winter"'), true);
+  check('224 : editeur, plus de robot_winter pour la piscine', edB.includes('data-field="robot_winter"'), false);
+  check('224 : editeur, inverser l hivernage', edB.includes('data-field="winter_invert"'), true);
+  check('224 : editeur, spots changeants', edB.includes('data-field="spot_random"'), true);
+  check('224 : editeur, pas d inversion sans interrupteur', markup(newEditor({ state_entity: 'binary_sensor.p', appliance_type: 'pool_pump' })).includes('data-field="winter_invert"'), false);
   check('piscine : niveau du bidon', /class="pl-can-l" x="68.1" y="56.5" width="11.8" height="3"/.test(render({ ...P, chlorine_pump_entity: 'binary_sensor.cl', chlorine_level_entity: 'sensor.cl' },
     { 'binary_sensor.p': s('on'), 'binary_sensor.cl': s('off'), 'sensor.cl': s(40, { unit_of_measurement: '%' }) })), true);
 
