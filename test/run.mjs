@@ -12799,6 +12799,43 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('editeur mobilite : le modele', ed({ appliance_type: 'mobility', state_entity: 'switch.t' }).includes('"mobility_layout"'), true);
   check('editeur mobilite : la batterie', ed({ appliance_type: 'mobility', state_entity: 'switch.t' }).includes('data-toggle="battery_entity"'), true);
   check('mobilite : en francais', stateLine(render({ ...MB, language: 'fr' }, mbS('on', 118))), 'En charge');
+  // A battery charger on a smart plug (HACF #209): charging from 15 W,
+  // maintaining below with the current still running, the gauge filling in
+  // turn, the mode lights chosen, what it charges beside it.
+  const BCH = { ...MB, mobility_layout: 'charger' };
+  check('chargeur : le dessin', kindOf(render(BCH, mbS('on', 40))), 'mob_charger');
+  check('chargeur : en charge des 15 W', stateLine(render(BCH, mbS('on', 20))), 'Charging');
+  check('chargeur : maintien en dessous', stateLine(render(BCH, mbS('on', 3))), 'Maintaining');
+  check('chargeur : maintien en francais', stateLine(render({ ...BCH, language: 'fr' }, mbS('on', 3))), 'Maintien de charge');
+  check('chargeur : le seuil se regle encore', stateLine(render({ ...BCH, power_on_threshold: 30 }, mbS('on', 20))), 'Maintaining');
+  check('chargeur : debranche', stateLine(render(BCH, mbS('off', 0))), 'Unplugged');
+  const bchg = render(BCH, mbS('on', 40));
+  check('chargeur : la jauge se remplit en boucle', ['nta-bar1', 'nta-bar4'].every((c) => bchg.includes(`class="${c}"`)), true);
+  check('chargeur : le courant descend et remonte', (bchg.match(/class="nta-feed"/g) || []).length, 2);
+  const bcare = render(BCH, mbS('on', 3));
+  check('chargeur : maintien, le courant coule doucement', (bcare.match(/class="nta-feedslow"/g) || []).length, 2);
+  check('chargeur : maintien, ca bouge encore', /\bnt-on\b/.test(machineCls(bcare)), true);
+  check('chargeur : maintien, la jauge pleine', /class="nta-bar1"/.test(bcare), false);
+  check('chargeur : maintien, le voyant vert', /fill="#7ed957" stroke="#fff"[^>]*class="nta-led"/.test(bcare), true);
+  check('chargeur : debranche, rien ne coule', /class="nta-feed/.test(render(BCH, mbS('off', 0))), false);
+  const bleds = (h) => (h.match(/r="1.05" fill="#fff4d6"/g) || []).length;
+  check('chargeur : aucun voyant de mode par defaut', bleds(bchg), 0);
+  check('chargeur : les voyants choisis', bleds(render({ ...BCH, charger_modes: ['moto', 'agm'] }, mbS('on', 40))), 2);
+  check('chargeur : un mode inconnu ignore', bleds(render({ ...BCH, charger_modes: ['moto', 'turbo'] }, mbS('on', 40))), 1);
+  check('chargeur : debranche, voyants eteints', bleds(render({ ...BCH, charger_modes: ['moto'] }, mbS('off', 0))), 0);
+  check('chargeur : la batterie par defaut', render(BCH, mbS('on', 40)).includes('>12V</text>'), true);
+  check('chargeur : la moto', /fill="#a51e1e"/.test(render({ ...BCH, charger_target: 'motorcycle' }, mbS('on', 40))), true);
+  check('chargeur : la voiture', /stroke="#0d47a1"/.test(render({ ...BCH, charger_target: 'car' }, mbS('on', 40))), true);
+  check('chargeur : la camionnette', /fill="#1e88e5"/.test(render({ ...BCH, charger_target: 'van' }, mbS('on', 40))), true);
+  check('chargeur : une cible inconnue, la batterie', render({ ...BCH, charger_target: 'boat' }, mbS('on', 40)).includes('>12V</text>'), true);
+  check('chargeur : une ombre floue', /feGaussianBlur/.test(render({ ...BCH, charger_target: 'car' }, mbS('on', 40))), true);
+  check('chargeur : ctek par son nom', byNm('switch.ctek_nxt5'), 'mob_charger');
+  check('chargeur : chargeur de batterie par son nom', byNm('switch.chargeur_batterie_moto'), 'mob_charger');
+  check('detection : chargeur de batterie', det('switch.chargeur_batterie'), 'mob_charger');
+  check('detection : une borne n est pas un chargeur de batterie', det('switch.borne_recharge') === 'mob_charger', false);
+  check('editeur chargeur : ce qu il charge et les voyants', ['"charger_target"', 'data-check="charger_modes"'].every((f) => ed({ ...BCH, state_entity: 'switch.t' }).includes(f)), true);
+  check('editeur chargeur : pas ailleurs', ed({ appliance_type: 'mobility', mobility_layout: 'scooter', state_entity: 'switch.t' }).includes('"charger_target"'), false);
+  check('editeur chargeur : les voyants coches', /data-value="agm" checked/.test(ed({ ...BCH, state_entity: 'switch.t', charger_modes: ['agm'] })), true);
 }
 
 // =============================================================================
@@ -15764,6 +15801,27 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('photo tele : allumee, l image dans la zone', /class="scr-glass" style="left: 5%; top: 30%; width: 90%; height: 40%; background: #000/.test(PS('on', 90)) && /scr-lit/.test(PS('on', 90)), true);
   check('photo tele : eteinte, rien par-dessus la photo', /background: transparent/.test(PS('off', 0)), true);
   check('photo tele : la photo', /<image href="\/local\/tv\.jpg"/.test(PS('off', 0)), true);
+  // A lamp on its photo, taken switched off (HACF #209): lit, a glow in its
+  // colour where the bulb is, dimmed with it; the colour of a plain bulb set.
+  const LPH = (sw, more = {}, attrs = {}) => build({ appliance_type: 'lamp', state_entity: 'switch.amphore', illustration_image: '/local/amphore.jpg', illustration_area: [40, 70, 20, 20], ...more }, { 'switch.amphore': { state: sw, attributes: attrs } }).html;
+  check('photo lampe : la photo', /<image href="\/local\/amphore\.jpg"/.test(LPH('off')), true);
+  check('photo lampe : eteinte, pas de halo', /lpp-g0/.test(LPH('off')), false);
+  check('photo lampe : allumee, le halo ou est l ampoule', /<radialGradient id="lpp-g0" cx="60" cy="98"/.test(LPH('on')), true);
+  check('photo lampe : la couleur reglee', /stop-color="rgb\(47,107,255\)"/.test(LPH('on', { light_color: '#2f6bff' })), true);
+  check('photo lampe : la couleur courte', /stop-color="rgb\(34,102,255\)"/.test(LPH('on', { light_color: '#26f' })), true);
+  check('photo lampe : sans reglage, blanc chaud', /stop-color="rgb\(255,/.test(LPH('on')), true);
+  const rgbLamp = build({ appliance_type: 'lamp', state_entity: 'light.amphore', illustration_image: '/local/a.jpg', light_color: '#2f6bff' }, { 'light.amphore': { state: 'on', attributes: { rgb_color: [255, 0, 0], brightness: 255 } } }).html;
+  check('photo lampe : la couleur de l ampoule gagne', /stop-color="rgb\(255,0,0\)"/.test(rgbLamp) && !/rgb\(47,107,255\)/.test(rgbLamp), true);
+  const dim = build({ appliance_type: 'lamp', state_entity: 'light.amphore', illustration_image: '/local/a.jpg' }, { 'light.amphore': { state: 'on', attributes: { brightness: 0 } } }).html;
+  check('photo lampe : baissee, le halo aussi', /class="lpp-glow" opacity="0.26"/.test(dim), true);
+  check('photo lampe : une ampoule par zone', /lpp-g1/.test(LPH('on', { illustration_area: [[10, 20, 20, 20], [60, 20, 20, 20]] })), true);
+  check('photo lampe : la zone par defaut', /<radialGradient id="lpp-g0" cx="60" cy="81.8"/.test(LPH('on', { illustration_area: undefined })), true);
+  check('lampe : la couleur reglee aussi sur le dessin', /--lc:rgb\(47,107,255\)/.test(build({ appliance_type: 'lamp', state_entity: 'switch.l', light_color: '#2f6bff' }, { 'switch.l': { state: 'on', attributes: {} } }).html), true);
+  check('lampe : une couleur fausse ignoree', /--lc:rgb\(47,107,255\)/.test(build({ appliance_type: 'lamp', state_entity: 'switch.l', light_color: 'bleu' }, { 'switch.l': { state: 'on', attributes: {} } }).html), false);
+  check('lampe : light_color en fait une lampe', /\blp\b/.test(build({ state_entity: 'switch.l', light_color: '#2f6bff' }, { 'switch.l': { state: 'on', attributes: {} } }).html), true);
+  const edL = markup(newEditor({ appliance_type: 'lamp', state_entity: 'switch.l', light_color: '#2f6bff' }));
+  check('editeur lampe : la couleur de la lumiere', /type="color" data-field="light_color" value="#2f6bff"/.test(edL), true);
+  check('editeur lampe : la photo', /data-slot="__photo"/.test(edL), true);
 }
 
 // =============================================================================
@@ -15779,7 +15837,7 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
     'switch.strip_usb': S('on'),
   };
   const OUT = ['switch.strip_l1', 'switch.strip_l2', 'switch.strip_l3', 'switch.strip_l4'].map((entity, i) => ({ entity, name: ['Printer', 'Fridge', 'Heater', 'Dryer'][i] }));
-  const PS = (extra = {}, states = ST) => build({ appliance_type: 'power_strip', state_entity: 'switch.strip_l1', outlets: OUT, ...extra }, states);
+  const PS = (extra = {}, states = ST) => build({ appliance_type: 'power_strip', state_entity: 'switch.strip_l1', outlets: OUT, strip_orientation: 'horizontal', ...extra }, states);
   const h = PS().html;
   check('multiprise : en marche', stateLine(h), 'In use');
   check('multiprise : dessin shelly par le modele', /nt-k-strip_shelly/.test(PS({ strip_layout: 'shelly' }).html), true);
@@ -15798,13 +15856,14 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   const usb = PS({ usb_entity: 'switch.strip_usb' }).html;
   check('multiprise : les ports USB', infoLine(usb, 'USB ports'), 'On');
   check('multiprise : les ports USB se commandent', /data-outlet="switch\.strip_usb"/.test(usb), true);
-  check('multiprise : sans liste, l entite d etat seule', (build({ appliance_type: 'power_strip', state_entity: 'switch.strip_l1' }, ST).html.match(/data-outlet="/g) || []).length, 1);
+  check('multiprise : sans liste, l entite d etat seule', new Set(build({ appliance_type: 'power_strip', state_entity: 'switch.strip_l1' }, ST).html.match(/data-outlet="[^"]+"/g) || []).size, 1);
   check('multiprise : pas de bouton marche general', /data-action="toggle"/.test(h), false);
   check('multiprise : six prises au plus', (PS({ outlets: [...OUT, ...OUT] }).html.match(/data-outlet="/g) || []).length, 6);
   check('multiprise : sans nom, celui de l entite', infoLine(PS({ outlets: [{ entity: 'switch.strip_l1' }] }).html, 'Strip Printer').replace(/\u00a0/g, ' '), '7 W');
   // Standing (HACF #207): each socket's name and state beside it, a tap on
   // the tag switches it, no line per socket under the drawing.
   const up = PS({ strip_orientation: 'vertical', usb_entity: 'switch.strip_usb' }).html;
+  check('multiprise : debout par defaut', PS({ strip_orientation: undefined, usb_entity: 'switch.strip_usb' }).html, up);
   check('multiprise verticale : la prise et son etiquette se commandent', (up.match(/data-outlet="switch\.strip_l1"/g) || []).length, 2);
   check('multiprise verticale : les noms sur le dessin', ['Printer', 'Fridge', 'Heater', 'Dryer', 'USB ports'].every((n) => up.includes(`>${n}</text>`)), true);
   check('multiprise verticale : l etat sur le dessin', up.includes('>131 W</text>') && up.includes('>Off</text>'), true);
@@ -15870,10 +15929,10 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   try { new Card().setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'power_strip', outlets: [] }); } catch (e) { emptyErr = e.message; }
   check('multiprise : sans prise ni etat, refusee', !!emptyErr, true);
   const free = build({ appliance_type: 'power_strip', outlets: OUT }, ST).html;
-  check('multiprise : sans entite d etat, les quatre prises', (free.match(/data-outlet="/g) || []).length, 4);
+  check('multiprise : sans entite d etat, les quatre prises', new Set(free.match(/data-outlet="[^"]+"/g) || []).size, 4);
   check('multiprise : sans entite d etat, en marche', stateLine(free), 'In use');
   check('multiprise : sans entite d etat, le nom du type', /Power strip/.test(free), true);
-  check('multiprise : sans entite d etat, sans type', (build({ outlets: OUT }, ST).html.match(/data-outlet="/g) || []).length, 4);
+  check('multiprise : sans entite d etat, sans type', new Set(build({ outlets: OUT }, ST).html.match(/data-outlet="[^"]+"/g) || []).size, 4);
 }
 
 // =============================================================================

@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.54.0";
+const CARD_VERSION = "4.55.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -148,7 +148,7 @@ const T = {
     source: "Source", source_plug: "A smart plug", source_integration: "Integration entities", plug_switch: "Smart plug switch",
     type_thermostat: "Thermostat", section_thermostat_layout: "Model", layout_th_square: "Square", layout_th_round: "Round", layout_th_glass: "Black glass", layout_th_valve: "Radiator valve", th_idle: "Target reached", th_eco: "Eco", th_away: "Away", th_frost: "Frost protection", th_window: "Window open", th_line_valve: "Valve", section_thermostat: "Room thermostat",
     compact_lines: "Information", lines_below: "Under the card", lines_beside: "Beside the drawing", lines_toggle: "Hidden, a chevron shows them", lines_show: "Show the information", lines_hide: "Hide the information",
-    type_mobility: "Electric ride", layout_mob_scooter: "Scooter", layout_mob_offroad: "Off-road scooter", layout_mob_ebike: "E-bike", layout_mob_gyropode: "Gyropode", layout_mob_motorcycle: "Electric motorcycle", mob_charging: "Charging", mob_charged: "Charged", mob_unplugged: "Unplugged", mob_plugged: "Plugged in", type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", show_controls: "Show the buttons", values_right: "Values on the right", show_state_duration: "Time in the current state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets", illustration_frame: "Same drawing height as the cards beside it", illustration_backdrop: "Background behind the drawing", backdrop_none: "None", backdrop_neutral: "Neutral", backdrop_state: "State color", winter_snowfall: "Falling snow", det_model: "Model", det_door_style: "Door", door_style_wood: "Wooden door", door_style_glass_top: "Wooden door, glass top", door_style_glass: "Glass door", door_style_external: "Entrance door", door_style_external_glass: "Entrance door with glass", door_style_sliding_glass: "Sliding glass door", door_style_sliding_wood: "Sliding barn door", det_window_style: "Window", window_style_casement: "Single casement", window_style_double: "Double casement", window_style_sliding: "Sliding window", window_style_small: "Small window", window_style_tilt: "Tilt-in window", door_style_garage: "Sectional garage door", door_style_pocket: "Pocket door", det_frame_color: "Frame", frame_white: "White", frame_anthracite: "Anthracite", layout_cam_trackmix: "Dual lens, tracking", layout_det_door: "Door or window contact", layout_det_vibration: "Vibration", layout_det_glass: "Glass break", det_open: "Open", det_closed: "Closed", det_vibrating: "Vibration", det_still: "Still", det_glass_break: "Glass break", section_screen_source: "Input source", screen_source: "Input",
+    type_mobility: "Electric ride", layout_mob_scooter: "Scooter", layout_mob_offroad: "Off-road scooter", layout_mob_ebike: "E-bike", layout_mob_gyropode: "Gyropode", layout_mob_motorcycle: "Electric motorcycle", mob_charging: "Charging", mob_charged: "Charged", mob_unplugged: "Unplugged", mob_plugged: "Plugged in", layout_mob_charger: "Battery charger", mob_care: "Maintaining", charger_target: "What it charges", chg_target_battery: "Battery", chg_target_motorcycle: "Motorcycle", chg_target_car: "Car", chg_target_van: "Van", charger_modes: "Mode lights", chg_mode_moto: "Motorcycle", chg_mode_car: "Car", chg_mode_agm: "AGM", chg_mode_lithium: "Lithium", chg_mode_cold: "Winter", light_color: "Colour of the light", type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", show_controls: "Show the buttons", values_right: "Values on the right", show_state_duration: "Time in the current state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets", illustration_frame: "Same drawing height as the cards beside it", illustration_backdrop: "Background behind the drawing", backdrop_none: "None", backdrop_neutral: "Neutral", backdrop_state: "State color", winter_snowfall: "Falling snow", det_model: "Model", det_door_style: "Door", door_style_wood: "Wooden door", door_style_glass_top: "Wooden door, glass top", door_style_glass: "Glass door", door_style_external: "Entrance door", door_style_external_glass: "Entrance door with glass", door_style_sliding_glass: "Sliding glass door", door_style_sliding_wood: "Sliding barn door", det_window_style: "Window", window_style_casement: "Single casement", window_style_double: "Double casement", window_style_sliding: "Sliding window", window_style_small: "Small window", window_style_tilt: "Tilt-in window", door_style_garage: "Sectional garage door", door_style_pocket: "Pocket door", det_frame_color: "Frame", frame_white: "White", frame_anthracite: "Anthracite", layout_cam_trackmix: "Dual lens, tracking", layout_det_door: "Door or window contact", layout_det_vibration: "Vibration", layout_det_glass: "Glass break", det_open: "Open", det_closed: "Closed", det_vibrating: "Vibration", det_still: "Still", det_glass_break: "Glass break", section_screen_source: "Input source", screen_source: "Input",
     type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4", section_net_disk5: "Disk 5", section_net_disk6: "Disk 6", section_net_disk7: "Disk 7", section_net_disk8: "Disk 8",
     type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_combo: "Vacuum and mop robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", mower_style: "Mower style", mower_classic: "Classic", mower_navimow: "Navimow, orange wheels", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", shelter_garage: "Garage", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_low_battery: "Low battery", robot_bag_full: "Bag full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error", robot_station_box: "Rectangular station", robot_station_color: "Station colour", color_gold: "Gold", robot_camera: "Camera module on the robot", section_robot_clean_tank: "Clean water", section_robot_dirty_tank: "Dirty water",
     type_pool_pump: "Pool pump", pool_filtering: "Filtering", pool_chlorinating: "Chlorine injection", pool_backwash: "Backwash", pool_frost: "Frost protection", pool_light_on: "light on", section_water_temperature: "Water temperature", section_air_temperature: "Air temperature", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtration time today", section_pressure: "Filter pressure", pool_pressure_alert: "Alert above this pressure (bar)", section_pool_mode: "Pump mode", section_chlorine_pump: "Chlorine pump", section_chlorine_level: "Chlorine tank level", section_backwash: "Backwash", section_frost: "Frost protection", section_pool_alert: "Alert", pool_line_water: "Water", pool_line_air: "Air", pool_line_filtered: "Filtered today", pool_line_pressure: "Pressure", pool_line_chlorine: "Chlorine tank", pool_line_mode: "Mode",
@@ -289,8 +289,19 @@ function requestLanguage(l) {
 // does not, so the page is asked for the card's <script> next, and HACS's
 // folder is the last resort. The version in the query keeps the browser from
 // serving a previous release's file from its cache.
+// Loaded as a module (how Home Assistant loads its resources), there is no
+// current script: the address is then read from where this code runs, which
+// a stack trace names.
 const SCRIPT_URL = (() => {
-  try { return (document.currentScript && document.currentScript.src) || null; } catch (e) { return null; }
+  try {
+    if (document.currentScript && document.currentScript.src) return document.currentScript.src;
+  } catch (e) { /* no document */ }
+  try {
+    const m = String(new Error().stack || "").match(/(https?:\/\/[^\s()]*?\/ha-appliance-card\.js[^\s():]*)/);
+    return m ? m[1] : null;
+  } catch (e) {
+    return null;
+  }
 })();
 function assetUrl(name) {
   let src = SCRIPT_URL;
@@ -5826,7 +5837,7 @@ const MAILBOX_COLORS_3D = Object.keys(MB3_PAL);
 // A lamp, read from its light entity: on or off, how bright, in what colour,
 // and whether an effect runs. A switch or a helper only says on or off, and
 // the lamp is drawn in the warm white of a bulb.
-const LAMP_ONLY_FIELDS = ["lamp_layout", "curtain_color", "spots", "timer_entity", "motion_entity"];
+const LAMP_ONLY_FIELDS = ["lamp_layout", "curtain_color", "spots", "timer_entity", "motion_entity", "light_color"];
 const LAMP_LAYOUTS = ["barrel_bar", "bulb", "bedside", "floor", "floor_tree", "torch", "pendant", "ceiling", "ceiling_panel", "ceiling_ring", "strip", "strip_cove", "strip_plinth", "strip_baseboard", "strip_slats", "spot", "spot_track", "spot_surface", "spot_updown", "panels", "desk", "wall", "garden_spot", "garden_tree", "flood", "flood_pir", "bollard", "string", "curtain", "icicle", "festoon", "squares"];
 const LAMP_SPOTS = [1, 2, 3, 4, 5];
 // The layouts drawn with as many spots as the light has.
@@ -5855,6 +5866,14 @@ function hsRgb(h, s) {
   };
   return [f(5), f(3), f(1)];
 }
+// A colour set as "#2f6bff", "#26f" or [47, 107, 255]; anything else is none.
+function lampColorOf(v) {
+  if (Array.isArray(v) && v.length === 3 && v.every((n) => Number.isFinite(Number(n)))) return v.map((n) => Math.max(0, Math.min(255, Math.round(Number(n)))));
+  const m = String(v || "").trim().match(/^#?([0-9a-f]{3}|[0-9a-f]{6})$/i);
+  if (!m) return null;
+  const h = m[1].length === 3 ? m[1].replace(/./g, "$&$&") : m[1];
+  return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16));
+}
 function lampReadOf(hass, cfg, st) {
   const raw = st ? String(st.state).trim().toLowerCase() : "";
   const a = (st && st.attributes) || {};
@@ -5870,6 +5889,9 @@ function lampReadOf(hass, cfg, st) {
   else if (kelvin) rgb = kelvinRgb(kelvin);
   else if (Array.isArray(a.hs_color) && a.hs_color.length === 2) rgb = hsRgb(Number(a.hs_color[0]) || 0, Number(a.hs_color[1]) || 0);
   else if (numberOrNull(a.color_temp_kelvin)) rgb = kelvinRgb(numberOrNull(a.color_temp_kelvin));
+  // A lamp that tells no colour (a bulb on a smart plug, HACF #209) takes
+  // the one set.
+  if (!rgb) rgb = lampColorOf(cfg && cfg.light_color);
   const effect = on && typeof a.effect === "string" && !LAMP_NO_EFFECT.includes(a.effect.trim().toLowerCase()) ? a.effect : null;
   return { mode, pct, kelvin, effect, rgb: rgb || LAMP_WARM };
 }
@@ -6136,7 +6158,7 @@ function thsLayoutOf(cfg, st) {
 }
 // Its colour, read in Celsius: cold, comfortable, warm, hot.
 const thsColor = (c) => c === null || c === undefined ? "#9aa0a6" : c < 16 ? "#2f8fe0" : c < 26 ? "#43a047" : c < 30 ? "#fb8c00" : "#e53935";
-const MOBILITY_LAYOUTS = ["scooter", "offroad", "ebike", "gyropode", "motorcycle"];
+const MOBILITY_LAYOUTS = ["scooter", "offroad", "ebike", "gyropode", "motorcycle", "charger"];
 const PUMP_LAYOUTS = ["booster", "sump", "circulator"];
 const CIRC_MODELS = ["grundfos", "wilo", "dab", "generic"];
 const FLOOR_LAYOUTS = ["water", "electric"];
@@ -6265,7 +6287,7 @@ const NT_NAME_RES = [
   ["detector", /x.?sense|smoke|fumee|detecteur.?(de.?)?(fumee|co|fuite)|monoxyde|carbon.?monoxide|(^|[^a-z])co.?(alarm|detector)|rauchmelder|detector.?de.?humo|rilevatore|rookmelder|brandvarnare|roykvarsler|roegalarm|czujnik.?dymu|water.?leak|fuite.?d.?eau|wassermelder|leak.?sensor/],
   ["christmas_tree", /christmas|xmas|(^|[^a-z])sapin|(^|[^a-z])noel([^a-z]|$)|weihnacht|tannenbaum|navidad|natale|kerstboom|julgran|juletre|juletrae|choink|vanocni.?strom/],
   ["aquarium", /aquari|akwari|akvari/],
-  ["mobility", /cowboy|vanmoof|(^|[.])niu([._\s]|$)|trottinette|e-?scooter|(^|[^a-z])scooter([^a-z]|$)|ninebot|(^|[^a-z])(velo|e-?bike|ebike|vae|pedelec)([^a-z]|$)|gyropode|gyroroue|monowheel|hoverboard|(^|[^a-z])moto([^a-z]|$)|motorcycle|super.?soco|sur.?ron|ausom|dualtron|kaabo|patinete|monopattino|hulajnoga|elsparkcykel|elsparkesykkel|kolobezka/],
+  ["mobility", /ctek|noco|optimate|tecmate|accumate|battery.?(charger|tender|maintainer)|trickle.?charg|chargeur.?(de.?)?batter|batterieladeg|erhaltungslad|caricabatter|cargador.?de.?bater|acculader|prostownik|druppellad|cowboy|vanmoof|(^|[.])niu([._\s]|$)|trottinette|e-?scooter|(^|[^a-z])scooter([^a-z]|$)|ninebot|(^|[^a-z])(velo|e-?bike|ebike|vae|pedelec)([^a-z]|$)|gyropode|gyroroue|monowheel|hoverboard|(^|[^a-z])moto([^a-z]|$)|motorcycle|super.?soco|sur.?ron|ausom|dualtron|kaabo|patinete|monopattino|hulajnoga|elsparkcykel|elsparkesykkel|kolobezka/],
   ["sauna", /sauna|saunum|huum|harvia|(^|[^a-z])(tylo|effe)([^a-z]|$)/],
   ["spa", /balboa|spanet|arctic.?spa|(^|[^a-z])(spa|gecko|jacuzzi|hot.?tub|bain.?nordique|whirlpoolwanne)([^a-z]|$)/],
   ["meter", /linky|compteur.?(electrique|edf|enedis)|smart.?meter|(^|[\s.])(electricity|gas|water).?meter|p1.?meter|(^|[^a-z])dsmr([^a-z]|$)|shelly.?(pro.?)?3?em([^a-z]|$)|tibber.?pulse|iammeter|ksem|homewizard.?(p1|kwh|energy)|(^|[^a-z])(teleinfo|papp|sinsts)([^a-z]|$)/],
@@ -6512,6 +6534,7 @@ function grillLayoutOf(cfg, st) {
 function mobilityLayoutOf(cfg, st) {
   if (MOBILITY_LAYOUTS.includes(cfg.mobility_layout)) return cfg.mobility_layout;
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
+  if (/ctek|noco|optimate|tecmate|accumate|battery.?(charger|tender|maintainer)|trickle.?charg|chargeur.?(de.?)?batter|batterieladeg|erhaltungslad|caricabatter|cargador.?de.?bater|acculader|prostownik|druppellad/.test(hay)) return "charger";
   if (/ausom|dualtron|kaabo|off.?road|tout.?terrain|gelande|todoterreno|fuoristrada|teren/.test(hay)) return "offroad";
   if (/gyropode|gyroroue|monowheel|hoverboard|segway.?pt|one.?wheel/.test(hay)) return "gyropode";
   if (/(^|[^a-z])moto([^a-z]|$)|motorcycle|motorrad|motocicl|motocykl|super.?soco|sur.?ron|talaria|horwin|zero.?s/.test(hay)) return "motorcycle";
@@ -6867,6 +6890,15 @@ function ntValueText(hass, cfg, id) {
 
 const ntFlake = (x, y, r, color, w = .8) =>
   `<path d="M${x} ${y - r}v${2 * r}M${x - r} ${y}h${2 * r}M${x - r * .7} ${y - r * .7}l${r * 1.4} ${r * 1.4}M${x + r * .7} ${y - r * .7}l${-r * 1.4} ${r * 1.4}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
+// A battery charger on a smart plug (HACF #209), drawn generic: a gauge of
+// four segments that fills one at a time and starts again while it charges,
+// full while it maintains, a green maintenance light, the mode lights chosen
+// (motorcycle, car, AGM, lithium, winter). Beside it what it charges: a
+// battery on its own, a motorcycle (under the seat), a car or a van (hood
+// up). The current runs down the red lead and back up the black.
+const CHARGER_TARGETS = ["battery", "motorcycle", "car", "van"];
+const CHARGER_ON_W = 15;
+const CHARGER_MODES = ["moto", "car", "agm", "lithium", "cold"];
 // A puff of smoke: three soft blobs, light grey.
 const ntPuff = (x, y, r, cls, f) => `<g class="${cls}" filter="url(#${f})"><circle cx="${x}" cy="${y}" r="${r}" fill="#cfd8dc" opacity=".8"/><circle cx="${(x + r * .8).toFixed(1)}" cy="${(y - r * .5).toFixed(1)}" r="${(r * .75).toFixed(1)}" fill="#eceff1" opacity=".85"/><circle cx="${(x - r * .7).toFixed(1)}" cy="${(y - r * .3).toFixed(1)}" r="${(r * .6).toFixed(1)}" fill="#b0bec5" opacity=".75"/></g>`;
 // A door and window contact (Sonoff SNZB-04P): the sensor on the frame, its
@@ -6965,12 +6997,12 @@ const RACK_TRANS_S = 1.6;
 // illustration_area the part of the box where the movement plays ([x, y,
 // width, height] in % of the box). A cover's apron, fabric or slats come down
 // in that area to its position, over the window of the photo.
-const PHOTO_TYPES = ["cover", "detector", "washer", "dryer", "screen"];
+const PHOTO_TYPES = ["cover", "detector", "washer", "dryer", "screen", "lamp"];
 const PHOTO_ASPECT = 120 / 135;
 const PHOTO_AREA = [20, 18, 60, 64];
 // Where the movement plays until it is set: the window, the door, the
 // porthole, the screen, about where they sit on a photo taken from the front.
-const PHOTO_AREAS = { cover: [20, 18, 60, 64], detector: [22, 8, 56, 84], washer: [24, 34, 52, 46], dryer: [24, 34, 52, 46], screen: [6, 28, 88, 42] };
+const PHOTO_AREAS = { cover: [20, 18, 60, 64], detector: [22, 8, 56, 84], washer: [24, 34, 52, 46], dryer: [24, 34, 52, 46], screen: [6, 28, 88, 42], lamp: [36, 54, 28, 28] };
 const photoAreaFor = (type) => (PHOTO_AREAS[type] || PHOTO_AREA).slice();
 // Where the picture is: a path or address as given, or a picture uploaded to
 // Home Assistant (media-source://image_upload/<id>), served at its own address.
@@ -7060,7 +7092,7 @@ function stripReadOf(hass, cfg, st, lines) {
   const usbValue = usb ? (usb.dead ? t(hass, "ev_offline") : t(hass, usb.on ? "strip_usb_on" : "strip_usb_off")) : "";
   // Standing, each socket's name and state are drawn beside it: no line of
   // its own under the drawing.
-  const vertical = cfg.strip_orientation === "vertical";
+  const vertical = cfg.strip_orientation !== "horizontal";
   if (!vertical) {
     sockets.forEach((k, i) => { if (!k.empty) lines.push({ key: `strip_${i + 1}`, icon: k.on ? "mdi:power-plug" : "mdi:power-plug-off-outline", label: k.name, value: k.w !== null && k.on && !k.dead ? keepTogether(valueOf(k)) : valueOf(k), entity: k.entity, open: true, dim: !k.on }); });
     if (usb) lines.push({ key: "strip_usb", icon: "mdi:usb-port", label: t(hass, "strip_usb"), value: usbValue, entity: usb.entity, open: true, dim: !usb.on });
@@ -7739,7 +7771,14 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     // it draws its threshold or more (40 W by default, a charger tapering
     // off draws less), charged below it. A battery entity gives the level,
     // and says charged at 100 % whatever the plug says.
-    const kind = `mob_${mobilityLayoutOf(cfg, st)}`;
+    const layout = mobilityLayoutOf(cfg, st), kind = `mob_${layout}`;
+    // A battery charger (HACF #209) draws far less than a ride's charger:
+    // charging from 15 W by default, maintaining below, with the current
+    // still running and its green light on.
+    const charger = layout === "charger";
+    if (charger && (cfg.power_on_threshold === undefined || cfg.power_on_threshold === "")) threshold = CHARGER_ON_W;
+    const extra = charger ? { target: CHARGER_TARGETS.includes(cfg.charger_target) ? cfg.charger_target : "battery",
+      modes: (Array.isArray(cfg.charger_modes) ? cfg.charger_modes : typeof cfg.charger_modes === "string" ? cfg.charger_modes.split(/[\s,]+/) : []).filter((m) => CHARGER_MODES.includes(m)) } : {};
     const lvUnit = cfg.battery_entity ? unitOf(hass, cfg.battery_entity) : "";
     const lv = cfg.battery_entity && (!lvUnit || lvUnit === "%") ? numericState(hass, cfg.battery_entity) : null;
     const level = lv === null ? null : Math.max(0, Math.min(100, lv));
@@ -7749,16 +7788,15 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     }
     const isOff = !dead && ["off", "false", "0", "no", "unplugged"].includes(raw);
     const metered = cfg.power_entity && watts !== null && isFinite(threshold);
-    if (isOff) return out("off", "mob_unplugged", NT_COLORS.off, { kind, on: false, st: "off", level });
-    if (level !== null && level >= 100) return out("full", "mob_charged", NT_COLORS.lit, { kind, on: false, st: "full", level });
-    if (metered) {
-      return watts >= threshold ? out("charging", "mob_charging", "#fb8c00", { kind, on: true, st: "charging", level })
-        : out("full", "mob_charged", NT_COLORS.lit, { kind, on: false, st: "full", level });
-    }
+    if (isOff) return out("off", "mob_unplugged", NT_COLORS.off, { kind, on: false, st: "off", level, ...extra });
+    const done = charger ? out("full", "mob_care", NT_COLORS.lit, { kind, on: true, st: "full", level, ...extra })
+      : out("full", "mob_charged", NT_COLORS.lit, { kind, on: false, st: "full", level });
+    if (level !== null && level >= 100) return done;
+    if (metered) return watts >= threshold ? out("charging", "mob_charging", "#fb8c00", { kind, on: true, st: "charging", level, ...extra }) : done;
     // A level alone says nothing of a charger (Cowboy, MySmartBike): only a
     // plug that is on means it sits on one.
-    if (level !== null && ["switch", "input_boolean"].includes(domainOf(cfg.state_entity))) return out("charging", "mob_charging", "#fb8c00", { kind, on: true, st: "charging", level });
-    return out("idle", "mob_plugged", NT_COLORS.idle, { kind, on: false, st: "plugged", level });
+    if (level !== null && ["switch", "input_boolean"].includes(domainOf(cfg.state_entity))) return out("charging", "mob_charging", "#fb8c00", { kind, on: true, st: "charging", level, ...extra });
+    return out("idle", "mob_plugged", NT_COLORS.idle, { kind, on: false, st: "plugged", level, ...extra });
   }
   if (type === "humidifier") {
     // A tank humidifier (#89): the humidity it reads and the one it aims at,
@@ -9491,7 +9529,7 @@ function requestDrawing(key) {
   drawState[key] = "loading";
   import(assetUrl(`ha-appliance-card-draw-${key}.js`))
     .then((m) => {
-      if (!drawDeps) drawDeps = { __v: CARD_VERSION, ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, numberOrNull, shdBlur, t, thsColor, zoneColumns };
+      if (!drawDeps) drawDeps = { __v: CARD_VERSION, ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CHARGER_MODES, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, numberOrNull, shdBlur, t, thsColor, zoneColumns };
       drawn[key] = m.default(drawDeps);
       drawState[key] = "ready";
       for (const fn of Array.from(langListeners)) {
@@ -14924,7 +14962,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ __v: CARD_VERSION, t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, illustrationBackdropOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, ST_READY_C, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, cameraLayoutOf, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, CURTAIN_COLORS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, DETECTOR_MODELS, DOOR_STYLES, gateLeavesOf, gateSideOf, WINDOW_STYLES, FRAME_COLORS, FINGERBOT_LAYOUTS, VALVE_LAYOUTS, RACK_LAYOUTS, STRIP_LAYOUTS, STRIP_ORIENTATIONS, STRIP_MAX, FP_LAYOUTS, FP_COOK_W, WD_LAYOUTS, WD_COOL_W, WD_CARB_W, VALVE_HANDLE_COLORS, VALVE_FLUIDS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, NT_ONLY_FIELDS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, doorStyleOf, consoleLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, CO2_WARN, CO2_ALERT, NETATMO_COLORS, COVER_LAYOUTS, CURTAIN_OPENINGS, curtainOpeningOf, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, PHOTO_TYPES, photoAreaFor, photoUrlOf, photoBoxOf, PHOTO_AREAS_MAX, photoAreasOf, photoAreasValue, photoCoverCrop, photoShrink, ARC_COLORS, ARC_BUTTONS, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
+      .then((m) => m.default({ __v: CARD_VERSION, t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, illustrationBackdropOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, ST_READY_C, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, cameraLayoutOf, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, CURTAIN_COLORS, lampColorOf, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, DETECTOR_MODELS, DOOR_STYLES, gateLeavesOf, gateSideOf, WINDOW_STYLES, FRAME_COLORS, FINGERBOT_LAYOUTS, VALVE_LAYOUTS, RACK_LAYOUTS, STRIP_LAYOUTS, STRIP_ORIENTATIONS, STRIP_MAX, FP_LAYOUTS, FP_COOK_W, WD_LAYOUTS, WD_COOL_W, WD_CARB_W, VALVE_HANDLE_COLORS, VALVE_FLUIDS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, NT_ONLY_FIELDS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, doorStyleOf, consoleLayoutOf, mobilityLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, CHARGER_TARGETS, CHARGER_MODES, SPK_COLORS, CO2_WARN, CO2_ALERT, NETATMO_COLORS, COVER_LAYOUTS, CURTAIN_OPENINGS, curtainOpeningOf, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, PHOTO_TYPES, photoAreaFor, photoUrlOf, photoBoxOf, PHOTO_AREAS_MAX, photoAreasOf, photoAreasValue, photoCoverCrop, photoShrink, ARC_COLORS, ARC_BUTTONS, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;
@@ -14940,5 +14978,6 @@ window.customCards = window.customCards || [];
 window.customCards.push({
   type: "ha-appliance-card",
   name: "HA Appliance Card",
-  description: "Card for washers, dryers, dishwashers, ovens, microwaves, cooker hoods & cooktops. Works with any brand or integration via configurable entity mapping.",
+  description: "Every appliance of the home drawn and animated from its real state: washer, oven, heat pump, robot, pool pump, speaker, power strip and more than a hundred others, any brand or integration.",
+  documentationURL: "https://github.com/ADNPolymerase/ha-appliance-card",
 });

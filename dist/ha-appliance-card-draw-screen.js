@@ -2,8 +2,8 @@
 // The screen drawing and its CSS, loaded by the card the first time it shows one.
 export default function defineDrawing(deps) {
 // A page still running the card of an earlier release: an arrow to reload.
-if (!deps || deps.__v !== "4.54.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
-let { ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, numberOrNull, shdBlur, t, thsColor, zoneColumns } = deps;
+if (!deps || deps.__v !== "4.55.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
+let { ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CHARGER_MODES, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, numberOrNull, shdBlur, t, thsColor, zoneColumns } = deps;
 // [top of the drawing, its height, how much larger it is drawn].
 const SCREEN_BANDS = { tv_feet: [28, 66, 2], tv_stand: [26, 68, 2], tv_wall: [25, 62, 2], projector: [0, 87, 1.8], computer: [24, 62, 1.6], laptop: [24, 64, 1.6],
   tablet_wall: [26, 59, 2], tablet_frame: [26, 59, 2], tablet_portrait: [24, 64, 2] };
@@ -177,8 +177,6 @@ function photoSvg(ph, over) {
 <g clip-path="url(#php-c)"><rect x="0" y="-10" width="120" height="135" fill="#808080" opacity=".18"/><g class="ph-img">${img}</g>${over}</g>
 <rect x=".3" y="-9.7" width="119.4" height="134.4" rx="7" fill="none" stroke="#000" stroke-opacity=".14" stroke-width=".6"/></svg>`;
 }
-// A screen on its photo, taken off: the area is its glass, and the picture
-// it shows goes there, lit, with a little glow round it.
 function screenPhotoHtml(cls, sc, ph) {
   const mode = sc.mode || "off", lit = SCREEN_LIT.includes(mode), a = ph.areas[0];
   const tablet = SCREEN_TABLETS.includes(sc.layout);

@@ -1039,7 +1039,7 @@ function mailboxHtml(cls, c) {
 // A lamp, read from its light entity: on or off, how bright, in what colour,
 // and whether an effect runs. A switch or a helper only says on or off, and
 // the lamp is drawn in the warm white of a bulb.
-const LAMP_ONLY_FIELDS = ["lamp_layout", "curtain_color", "spots", "timer_entity", "motion_entity"];
+const LAMP_ONLY_FIELDS = ["lamp_layout", "curtain_color", "spots", "timer_entity", "motion_entity", "light_color"];
 const LAMP_LAYOUTS = ["barrel_bar", "bulb", "bedside", "floor", "floor_tree", "torch", "pendant", "ceiling", "ceiling_panel", "ceiling_ring", "strip", "strip_cove", "strip_plinth", "strip_baseboard", "strip_slats", "spot", "spot_track", "spot_surface", "spot_updown", "panels", "desk", "wall", "garden_spot", "garden_tree", "flood", "flood_pir", "bollard", "string", "curtain", "icicle", "festoon", "squares"];
 const LAMP_SPOTS = [1, 2, 3, 4, 5];
 // The layouts drawn with as many spots as the light has.
@@ -1068,6 +1068,14 @@ function hsRgb(h, s) {
   };
   return [f(5), f(3), f(1)];
 }
+// A colour set as "#2f6bff", "#26f" or [47, 107, 255]; anything else is none.
+function lampColorOf(v) {
+  if (Array.isArray(v) && v.length === 3 && v.every((n) => Number.isFinite(Number(n)))) return v.map((n) => Math.max(0, Math.min(255, Math.round(Number(n)))));
+  const m = String(v || "").trim().match(/^#?([0-9a-f]{3}|[0-9a-f]{6})$/i);
+  if (!m) return null;
+  const h = m[1].length === 3 ? m[1].replace(/./g, "$&$&") : m[1];
+  return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16));
+}
 function lampReadOf(hass, cfg, st) {
   const raw = st ? String(st.state).trim().toLowerCase() : "";
   const a = (st && st.attributes) || {};
@@ -1083,6 +1091,9 @@ function lampReadOf(hass, cfg, st) {
   else if (kelvin) rgb = kelvinRgb(kelvin);
   else if (Array.isArray(a.hs_color) && a.hs_color.length === 2) rgb = hsRgb(Number(a.hs_color[0]) || 0, Number(a.hs_color[1]) || 0);
   else if (numberOrNull(a.color_temp_kelvin)) rgb = kelvinRgb(numberOrNull(a.color_temp_kelvin));
+  // A lamp that tells no colour (a bulb on a smart plug, HACF #209) takes
+  // the one set.
+  if (!rgb) rgb = lampColorOf(cfg && cfg.light_color);
   const effect = on && typeof a.effect === "string" && !LAMP_NO_EFFECT.includes(a.effect.trim().toLowerCase()) ? a.effect : null;
   return { mode, pct, kelvin, effect, rgb: rgb || LAMP_WARM };
 }

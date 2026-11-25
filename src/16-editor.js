@@ -1036,6 +1036,25 @@ class ApplianceCardEditor extends HTMLElement {
           <label><input type="checkbox" data-field="${field}" data-type="checkbox" ${(opts.defaultOn ? this._config[field] !== false : this._config[field]) ? "checked" : ""} /> ${t(hass, labelKey)}</label>
         </div>`;
     }
+    // A colour picked from a swatch (a lamp's light).
+    if (opts.type === "color") {
+      const c = lampColorOf(this._config[field]);
+      const hex = c ? `#${c.map((n) => n.toString(16).padStart(2, "0")).join("")}` : opts.default;
+      return `
+        <div class="row">
+          <label>${t(hass, labelKey)}</label>
+          <input type="color" data-field="${field}" value="${esc(hex)}" style="width: 64px; height: 32px; padding: 0" />
+        </div>`;
+    }
+    // Several boxes ticked into one list (a charger's mode lights).
+    if (opts.type === "checks") {
+      const on = Array.isArray(this._config[field]) ? this._config[field] : [];
+      return `
+        <div class="row">
+          <label>${t(hass, labelKey)}</label>
+          <div class="row-inline checks">${opts.options.map((o) => `<label><input type="checkbox" data-check="${field}" data-value="${esc(o.value)}" ${on.includes(o.value) ? "checked" : ""} /> ${esc(o.label)}</label>`).join("")}</div>
+        </div>`;
+    }
     if (opts.type === "range") {
       const v = value === "" ? opts.default : value;
       return `
@@ -1124,7 +1143,7 @@ class ApplianceCardEditor extends HTMLElement {
       frame.querySelectorAll(".ph-area").forEach((el) => el.remove());
       st.areas.forEach((_, i) => {
         const el = document.createElement("div");
-        el.className = `ph-area${["washer", "dryer"].includes(this._type) ? " ph-round" : ""}`;
+        el.className = `ph-area${["washer", "dryer", "lamp"].includes(this._type) ? " ph-round" : ""}`;
         el.setAttribute("data-i", String(i));
         el.innerHTML = `<i data-h="nw"></i><i data-h="ne"></i><i data-h="sw"></i><i data-h="se"></i>${st.areas.length > 1 ? `<b data-del="${i}" title="${esc(t(hass, "photo_remove_area"))}">\u00d7</b>` : ""}`;
         frame.appendChild(el);
@@ -1537,6 +1556,8 @@ class ApplianceCardEditor extends HTMLElement {
         }
         .row-inline { display: flex; align-items: center; gap: 8px; font-size: 1.05em; color: var(--primary-text-color, #1c1c1c); cursor: pointer; }
         .row-inline input { width: auto; }
+        .row-inline.checks { flex-wrap: wrap; gap: 4px 14px; }
+        .row-inline.checks label { display: flex; align-items: center; gap: 4px; }
         .ph-bar { display: flex; gap: 6px; align-items: center; }
         .ph-bar .ph-url { flex: 1; min-width: 0; }
         .ph-btn { display: inline-flex; align-items: center; gap: 4px; padding: 7px 10px; border-radius: 6px; border: 1px solid var(--divider-color, #ccc);
@@ -1817,7 +1838,7 @@ class ApplianceCardEditor extends HTMLElement {
         }) : ""}
         ${this._type === "power_strip" ? this._row("strip_orientation", "strip_orientation", {
           type: "select",
-          value: STRIP_ORIENTATIONS.includes(this._config.strip_orientation) ? this._config.strip_orientation : "horizontal",
+          value: STRIP_ORIENTATIONS.includes(this._config.strip_orientation) ? this._config.strip_orientation : "vertical",
           options: STRIP_ORIENTATIONS.map((v) => ({ value: v, label: t(hass, `strip_or_${v}`) })),
         }) : ""}
         ${this._type === "cover" ? this._row("cover_color", "cover_color", {
@@ -1847,6 +1868,11 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(MOBILITY_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_mob_${v}`) }))),
         }) : ""}
+        ${this._type === "mobility" && mobilityLayoutOf(this._config, this._hass && this._hass.states ? this._hass.states[this._config.state_entity] : null) === "charger" ? this._row("charger_target", "charger_target", {
+          type: "select",
+          value: CHARGER_TARGETS.includes(this._config.charger_target) ? this._config.charger_target : "battery",
+          options: CHARGER_TARGETS.map((v) => ({ value: v, label: t(hass, `chg_target_${v}`) })),
+        }) + this._row("charger_modes", "charger_modes", { type: "checks", options: CHARGER_MODES.map((v) => ({ value: v, label: t(hass, `chg_mode_${v}`) })) }) : ""}
         ${this._type === "floor_heating" ? this._row("section_screen_layout", "floor_layout", {
           type: "select",
           options: FLOOR_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_floor_${v}`) })),
@@ -1884,7 +1910,7 @@ class ApplianceCardEditor extends HTMLElement {
         }) : "") + (lampLayoutOf(this._config, stateObj(hass, this._config.state_entity)) === "barrel_bar" ? this._row("curtain_color", "curtain_color", {
           type: "select",
           options: CURTAIN_COLORS.map((v) => ({ value: v, label: t(hass, `color_${v}`) })),
-        }) : "") + this._row("show_toggle", "show_toggle", { type: "checkbox", defaultOn: true }) : ""}
+        }) : "") + this._row("light_color", "light_color", { type: "color", default: "#ffc878" }) + this._row("show_toggle", "show_toggle", { type: "checkbox", defaultOn: true }) : ""}
         ${this._type === "robot" ? (() => {
           const layout = robotLayoutOf(this._config, stateObj(hass, this._config.state_entity));
           return this._row("section_screen_layout", "robot_layout", {
@@ -2261,6 +2287,15 @@ class ApplianceCardEditor extends HTMLElement {
       });
     });
 
+    this._root.querySelectorAll("input[data-check]").forEach((el) => {
+      el.addEventListener("change", () => {
+        const field = el.getAttribute("data-check");
+        const list = Array.from(this._root.querySelectorAll(`input[data-check="${field}"]`)).filter((n) => n.checked).map((n) => n.getAttribute("data-value"));
+        this._config = { ...this._config, [field]: list };
+        if (!list.length) delete this._config[field];
+        this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
+      });
+    });
     this._root.querySelectorAll("[data-field]").forEach((el) => {
       el.addEventListener("change", (ev) => {
         const field = ev.target.getAttribute("data-field");
@@ -2297,7 +2332,8 @@ class ApplianceCardEditor extends HTMLElement {
         if (field === "illustration_backdrop" && !illustrationBackdropOf(value)) delete this._config.illustration_backdrop;
         // The whole degree is the default and is not written.
         if (field === "temperature_decimals" && value === "0") delete this._config.temperature_decimals;
-        if (field === "strip_orientation" && value === "horizontal") delete this._config.strip_orientation;
+        if (field === "strip_orientation" && value === "vertical") delete this._config.strip_orientation;
+        if (field === "charger_target" && value === "battery") delete this._config.charger_target;
         if (field === "compact") {
           if (value === "side") this._config.compact = "side";
           else if (value === "hide") this._config.compact = true;
@@ -2356,5 +2392,6 @@ window.customCards = window.customCards || [];
 window.customCards.push({
   type: "ha-appliance-card",
   name: "HA Appliance Card",
-  description: "Card for washers, dryers, dishwashers, ovens, microwaves, cooker hoods & cooktops. Works with any brand or integration via configurable entity mapping.",
+  description: "Every appliance of the home drawn and animated from its real state: washer, oven, heat pump, robot, pool pump, speaker, power strip and more than a hundred others, any brand or integration.",
+  documentationURL: "https://github.com/ADNPolymerase/ha-appliance-card",
 });

@@ -2,8 +2,8 @@
 // The lamp drawing and its CSS, loaded by the card the first time it shows one.
 export default function defineDrawing(deps) {
 // A page still running the card of an earlier release: an arrow to reload.
-if (!deps || deps.__v !== "4.54.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
-let { ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, numberOrNull, shdBlur, t, thsColor, zoneColumns } = deps;
+if (!deps || deps.__v !== "4.55.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
+let { ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CHARGER_MODES, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, numberOrNull, shdBlur, t, thsColor, zoneColumns } = deps;
 const softShadow = (cx, cy, rx, ry, op = .26, b = 1.6) => { const id = `shd-${cx}-${cy}-${rx}`.replace(/\./g, "_"); return `${shdBlur(id, b)}<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#000" opacity="${op}" filter="url(#${id})"/>`; };
 // The lamp, drawn in the light's colour: its halo, the cone it throws, and
 // segments that change hue when an effect runs.
@@ -492,9 +492,42 @@ function lampHtml(cls, c) {
         <div class="machine ${cls} ${flags}" style="--lc:rgb(${rgb.join(",")});--lb:${level.toFixed(2)}"><svg class="lp-svg" viewBox="0 -6 96 108">${LAMP_SVGS[layout](c)}</svg></div>`;
 }
 
+// Your own photo for the types drawn in HTML (HACF #165): the photo in the
+// same box as ntPhoto's, cut to its crop, what moves drawn over it in SVG.
+function photoSvg(ph, over) {
+  const href = esc(ph.href);
+  let img;
+  if (!ph.crop) img = `<image href="${href}" x="0" y="-10" width="120" height="135" preserveAspectRatio="xMidYMid slice"/>`;
+  else {
+    const [cx, cy, cw, ch] = ph.crop, f = (n) => +n.toFixed(2);
+    img = `<image href="${href}" x="${f(-cx / cw * 120)}" y="${f(-10 - cy / ch * 135)}" width="${f(12000 / cw)}" height="${f(13500 / ch)}" preserveAspectRatio="none"/>`;
+  }
+  return `<svg class="ph-svg" viewBox="0 -10 120 135" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%"><defs><clipPath id="php-c"><rect x="0" y="-10" width="120" height="135" rx="7"/></clipPath></defs>
+<g clip-path="url(#php-c)"><rect x="0" y="-10" width="120" height="135" fill="#808080" opacity=".18"/><g class="ph-img">${img}</g>${over}</g>
+<rect x=".3" y="-9.7" width="119.4" height="134.4" rx="7" fill="none" stroke="#000" stroke-opacity=".14" stroke-width=".6"/></svg>`;
+}
+// A screen on its photo, taken off: the area is its glass, and the picture
+// it shows goes there, lit, with a little glow round it.
+// A lamp on its photo, taken switched off (HACF #209): lit, a glow in its
+// colour where its bulb is (one per area), brighter in the middle, and a
+// wash of the same colour over the whole picture; dimmed with it.
+function lampPhotoHtml(cls, c, ph) {
+  const mode = c.mode || "unav", on = mode === "on", f = (n) => +n.toFixed(2);
+  const col = `rgb(${(Array.isArray(c.rgb) ? c.rgb : LAMP_WARM).join(",")})`;
+  const level = c.pct === null || c.pct === undefined ? 1 : 0.25 + 0.75 * Math.min(100, Math.max(0, c.pct)) / 100;
+  let over = "";
+  if (on) {
+    const spots = ph.areas.map((a) => ({ cx: f((a[0] + a[2] / 2) * 1.2), cy: f(-10 + (a[1] + a[3] / 2) * 1.35), r: f(Math.max(a[2] * 1.2, a[3] * 1.35) / 2) }));
+    const s0 = spots[0];
+    over = `<defs><radialGradient id="lpp-w" cx="${s0.cx}" cy="${f(s0.cy - 12)}" r="80" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${col}" stop-opacity=".5"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></radialGradient>${spots.map((p, i) => `<radialGradient id="lpp-g${i}" cx="${p.cx}" cy="${p.cy}" r="${f(p.r * 3)}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${col}" stop-opacity=".9"/><stop offset=".45" stop-color="${col}" stop-opacity=".35"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></radialGradient><radialGradient id="lpp-c${i}" cx="${p.cx}" cy="${p.cy}" r="${f(p.r * 1.05)}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff"/><stop offset=".45" stop-color="${col}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></radialGradient>`).join("")}</defs>
+<g class="lpp-glow" opacity="${level.toFixed(2)}"><rect x="0" y="-10" width="120" height="135" fill="url(#lpp-w)" style="mix-blend-mode: screen"/>${spots.map((p, i) => `<rect x="0" y="-10" width="120" height="135" fill="url(#lpp-g${i})" style="mix-blend-mode: screen"/><rect x="0" y="-10" width="120" height="135" fill="url(#lpp-g${i})" style="mix-blend-mode: screen"/><circle cx="${p.cx}" cy="${p.cy}" r="${f(p.r * 1.05)}" fill="url(#lpp-c${i})"/>`).join("")}</g>`;
+  }
+  return `
+        <div class="machine ${cls} ph-machine lp-photo lp-m-${mode}">${photoSvg(ph, over)}</div>`;
+}
 
 return {
-draw: (cls, ctx) => lampHtml(cls, ctx.lampDraw || {}),
+draw: (cls, ctx) => (ctx.photo ? lampPhotoHtml(cls, ctx.lampDraw || {}, ctx.photo) : lampHtml(cls, ctx.lampDraw || {})),
 css: () => `
         svg.lp-svg{position:absolute;left:0;top:0;width:96px;height:108px;overflow:hidden}
         .lp-halo{opacity:calc(var(--lb,1) * .85);transition:opacity .4s}

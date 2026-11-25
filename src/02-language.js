@@ -84,8 +84,19 @@ function requestLanguage(l) {
 // does not, so the page is asked for the card's <script> next, and HACS's
 // folder is the last resort. The version in the query keeps the browser from
 // serving a previous release's file from its cache.
+// Loaded as a module (how Home Assistant loads its resources), there is no
+// current script: the address is then read from where this code runs, which
+// a stack trace names.
 const SCRIPT_URL = (() => {
-  try { return (document.currentScript && document.currentScript.src) || null; } catch (e) { return null; }
+  try {
+    if (document.currentScript && document.currentScript.src) return document.currentScript.src;
+  } catch (e) { /* no document */ }
+  try {
+    const m = String(new Error().stack || "").match(/(https?:\/\/[^\s()]*?\/ha-appliance-card\.js[^\s():]*)/);
+    return m ? m[1] : null;
+  } catch (e) {
+    return null;
+  }
 })();
 function assetUrl(name) {
   let src = SCRIPT_URL;

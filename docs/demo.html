@@ -1550,6 +1550,16 @@ const demo_mobMotorcycle = mobCard(L("Motorcycle", "Moto"), "motorcycle", "on", 
 // For the README's poster: still frames, so the gauge reads from a battery.
 const demo_mobPoster = mobCard("Ausom DT2 Pro", "offroad", "on", 121, 70);
 const demo_mobUnplugged = mobCard(L("Scooter", "Trottinette"), "scooter", "off", 0, 41);
+// A battery charger on a smart plug (HACF #209): what it charges beside it,
+// the mode lights chosen.
+const chgCard = (name, target, watts, modes, plug = "on") => () => card({ name, appliance_type: "mobility", mobility_layout: "charger", charger_target: target, charger_modes: modes,
+  state_entity: "switch.chg_plug", power_entity: "sensor.chg_power" },
+  [st("switch.chg_plug", plug), st("sensor.chg_power", watts, { unit_of_measurement: "W", device_class: "power" })]);
+const demo_chgBattery = chgCard(L("Battery charger", "Chargeur de batterie"), "battery", 48, ["agm"]);
+const demo_chgMoto = chgCard(L("Motorcycle battery", "Batterie de la moto"), "motorcycle", 52, ["moto", "agm"]);
+const demo_chgCar = chgCard(L("Car battery", "Batterie de la voiture"), "car", 3, ["car"]);
+const demo_chgVan = chgCard(L("Van battery", "Batterie de la camionnette"), "van", 60, ["car", "cold"]);
+const demo_chgOff = chgCard(L("Battery charger", "Chargeur de batterie"), "battery", 0, ["agm"], "off");
 const demoTreeRed = () => card({ name: L("Red and gold", "Rouge et or"), appliance_type: "christmas_tree", state_entity: "switch.tree2", tree_palette: "red_gold" }, [st("switch.tree2", "on")]);
 // Watering, litter boxes, detectors and speakers.
 const irrCard = (name, cfg, ents) => () => card({ name, appliance_type: "irrigation", ...cfg }, ents);
@@ -2093,6 +2103,7 @@ function liveGallery() {
     [L("SwitchBot meters", "Thermom\u00e8tres SwitchBot"), [EXTRA.sb_co2, EXTRA.sb_co2_high, EXTRA.sb_pro, EXTRA.sb_meter, EXTRA.sb_plus, EXTRA.sb_outdoor]],
     [L("Your own photo (HACF #165)", "Votre photo (HACF #165)"), [EXTRA.photo_shutter, EXTRA.photo_garage, EXTRA.photo_gate, EXTRA.photo_washer, EXTRA.photo_tv]],
     [L("Gates", "Portails"), [EXTRA.gate_swing, EXTRA.gate_swing_open, EXTRA.gate_white, EXTRA.gate_white_open]],
+    [L("New: battery chargers, for a battery, a motorcycle, a car or a van (HACF #209)", "Nouveau : chargeurs de batterie, pour une batterie, une moto, une voiture ou une camionnette (HACF #209)"), [demo_chgBattery, demo_chgMoto, demo_chgCar, demo_chgVan, demo_chgOff], "new"],
     [L("New: a jukebox and a barrel bar (HACF #200)", "Nouveau : un jukebox et un bar tonneau (HACF #200)"), [EXTRA.jukebox_play, EXTRA.jukebox_idle, EXTRA.jukebox_off, EXTRA.barrel_open, EXTRA.barrel_closed, EXTRA.barrel_red], "new"],
     [L("New: water dispensers, chillers and carbonators (#140)", "Nouveau : distributeurs d'eau, refroidisseurs et gaz\u00e9ificateurs (#140)"), [EXTRA.wd_cooling, EXTRA.wd_sparkling, EXTRA.wd_carbonating, EXTRA.wd_co2_low, EXTRA.wd_column, EXTRA.wd_column_cool], "new"],
     [L("New: pinball cabinets (pincab), the ball in play", "Nouveau : flippers virtuels (pincab), la bille en jeu"), [EXTRA.pincab_menu, EXTRA.pincab_play, EXTRA.pincab_blue, EXTRA.pincab_off], "new"],
@@ -2116,7 +2127,7 @@ function liveGallery() {
     [L("Shutters, blinds, pergolas, awnings and curtains", "Volets, stores, pergolas, stores bannes et rideaux"), [EXTRA.cov_shutter, EXTRA.cov_shutter_closing, EXTRA.cov_shutter_closed, EXTRA.cov_blind, EXTRA.cov_venetian, EXTRA.cov_raffstore, EXTRA.cov_pergola, EXTRA.cov_awning, EXTRA.cov_curtain, EXTRA.cov_curtain_left, EXTRA.cov_curtain_open, EXTRA.cov_curtain_right]],
     [L("Air purifiers and fans", "Purificateurs et ventilateurs"), [purifier, boxPurifier, ringPurifier, fan, ceilingFan]],
     [L("Robots and vacuums", "Robots et aspirateurs"), [rbtVacuum, rbtEmptying, rbtBox, rbtBoxGold, rbtMop, rbtCombo, rbtDrying, rbtMower, rbtNavimow, rbtRain, rbtStick, rbtWasher]],
-    [L("Electric rides", "Mobilit\u00e9 \u00e9lectrique"), [demo_mobScooter, demo_mobOffroad, demo_mobEbike, demo_mobGyropode, demo_mobMotorcycle, demo_mobUnplugged]],
+    [L("Electric rides", "Mobilit\u00e9 \u00e9lectrique"), [demo_mobScooter, demo_mobOffroad, demo_mobEbike, demo_mobGyropode, demo_mobMotorcycle, demo_mobUnplugged, demo_chgBattery, demo_chgMoto]],
     [L("Pellet grills and smokers", "Barbecues et fumoirs \u00e0 pellets"), [EXTRA.pg_timberline_cook, EXTRA.pg_timberline_plain, EXTRA.pg_timberline_off, EXTRA.pg_timberline_low, EXTRA.pg_drum_preheat, EXTRA.pg_drum_probe, EXTRA.pg_drum_error, EXTRA.pg_cart_cool, EXTRA.pg_cart_warm, EXTRA.pg_vertical_smoke, pgWinterDemo]],
     [L("Pool", "Piscine"), [poolRunning, poolChlorine, poolBackwash, poolFrost, poolWintered, poolLight, poolError]],
     [L("Buffer tanks, circulators, solar thermal and wood stoves", "Ballons, circulateurs, solaire thermique et po\u00eales \u00e0 bois"), [heatTank, heatTankLoading, heatTankLow, heatFws, heatFwsDraw, heatFwsCirc, heatCirc, heatCircWilo, heatCircFault, heatCircNoData, heatSth, heatSthTubes, heatSthFrost, heatSthStag, heatWood, heatWoodEmbers, heatWoodCold, heatWoodWater]],

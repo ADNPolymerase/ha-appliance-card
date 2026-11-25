@@ -2,8 +2,8 @@
 // The robot drawing and its CSS, loaded by the card the first time it shows one.
 export default function defineDrawing(deps) {
 // A page still running the card of an earlier release: an arrow to reload.
-if (!deps || deps.__v !== "4.54.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
-let { ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, numberOrNull, shdBlur, t, thsColor, zoneColumns } = deps;
+if (!deps || deps.__v !== "4.55.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
+let { ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CHARGER_MODES, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, numberOrNull, shdBlur, t, thsColor, zoneColumns } = deps;
 // The small screen and the air lines the dehumidifier and the two heaters
 // share. Warm air rises; the air a dehumidifier or a fan blows goes the other
 // way along the same lines.
@@ -1019,6 +1019,143 @@ ${[0, 1, 2, 3, 4, 5, 6].map((i) => `<path d="M${79 + i * 3.6} 55 V61" stroke="#4
 <ellipse cx="30.6" cy="62" rx="4.4" ry="5.4" fill="#2a2f34" stroke="#c4cbd2" stroke-width=".9"/><ellipse cx="28.4" cy="62" rx="2" ry="4.2" fill="#fffde7"/>
 <path d="M62 86 L66 86" stroke="#9aa3ad" stroke-width="1.8" stroke-linecap="round"/>
 </g>${mobCharger(70, [76, 74], c)}${mobGauge(88, 30, c)}`;
+}
+
+function chgLed(x, y, on, col, pulse, r = 1.3) {
+  return `${on ? `<circle cx="${x}" cy="${y}" r="${(r * 2.3).toFixed(2)}" fill="${col}" opacity=".3"${pulse ? ' class="nta-led"' : ""}/>` : ""}<circle cx="${x}" cy="${y}" r="${r}" fill="${on ? col : "#4b5157"}" stroke="${on ? "#fff" : "#5d646a"}" stroke-opacity="${on ? .5 : 1}" stroke-width=".35"${on && pulse ? ' class="nta-led"' : ""}/>`;
+}
+function chgBox(c) {
+  const on = c.st !== "off", care = c.st === "full", g = ntId();
+  let o = `<defs>${ntV(g, "#3b4045", "#17191b")}</defs>
+<rect x="4" y="4" width="66" height="32" rx="9" fill="url(#${g})" stroke="#0e0f10" stroke-width=".6"/>
+<rect x="11" y="6.5" width="56" height="4" rx="2" fill="#fff" opacity=".05"/>
+<circle cx="17" cy="20" r="5.2" fill="#1b1d1f" stroke="#3a3f43" stroke-width=".5"/>
+<path d="M15 17.6 A3 3 0 1 0 19 17.6 M17 15.8 v3.4" fill="none" stroke="${on ? "#f2913a" : "#6b7177"}" stroke-width=".8" stroke-linecap="round"/>`;
+  for (let i = 0; i < 4; i++) {
+    const x = 27 + i * 8.2;
+    o += `<rect x="${x.toFixed(1)}" y="11" width="7.2" height="5" rx="1" fill="#3c4247" stroke="#15171a" stroke-width=".3"/><rect x="${x.toFixed(1)}" y="11" width="7.2" height="5" rx="1" ${mobBar(c, i, "#7ed957", "#3c4247")}/>`;
+  }
+  o += `<text x="43.4" y="9.6" font-size="2.2" text-anchor="middle" fill="#8a9298" ${NT_FONT}>25 \u00b7 50 \u00b7 75 \u00b7 100 %</text>
+${chgLed(64, 13.5, care, "#7ed957", care)}<g fill="none" stroke="#9aa2a8" stroke-width=".4"><rect x="61.6" y="17.8" width="4.6" height="2.6" rx=".3"/><path d="M66.2 18.6 v1"/></g>`;
+  const modes = Array.isArray(c.modes) ? c.modes : [];
+  CHARGER_MODES.forEach((k, i) => { o += chgLed(29 + i * 8, 31, on && modes.includes(k), "#fff4d6", false, 1.05); });
+  o += `<g fill="none" stroke="#aab1b7" stroke-width=".42" stroke-linecap="round"><circle cx="27.6" cy="26" r=".85"/><circle cx="30.4" cy="26" r=".85"/><path d="M27.6 26 l1.3-1.6 h1.2 M35.2 26.4 h3.6 v-.9 l-.7-.9 h-2.2 l-.7 .9 z M61 24 v4 M59.3 25 l3.4 2 M59.3 27 l3.4-2"/></g>
+<text x="45" y="27" font-size="2.2" font-weight="700" text-anchor="middle" fill="#aab1b7" ${NT_FONT}>AGM</text><text x="53" y="27" font-size="2.2" font-weight="700" text-anchor="middle" fill="#aab1b7" ${NT_FONT}>Li</text>`;
+  return o;
+}
+function chgClamp(x, y, a, red, k) {
+  const f = red ? "#d42f2f" : "#2a2d30", e = red ? "#8f1d1d" : "#111", h = red ? "#ef6b6b" : "#4a4e52";
+  return `<g transform="translate(${x} ${y}) rotate(${a}) scale(${k})"><rect x="-3.2" y="-13" width="6.4" height="13" rx="3" fill="${f}" stroke="${e}" stroke-width=".5"/><rect x="-1.4" y="-11" width="1.1" height="8" rx=".5" fill="${h}"/><path d="M-3.2 -1 h6.4" stroke="${e}" stroke-width=".6"/></g>`;
+}
+// A small battery seen from the side, under a hood or a seat.
+function chgBatSmall(x, y, w, h) {
+  const g = ntId(), t = w * .16;
+  return `<defs>${ntV(g, "#4a5056", "#25292d")}</defs><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="url(#${g})" stroke="#15181a" stroke-width=".4"/><rect x="${x}" y="${y}" width="${w}" height="${(h * .22).toFixed(2)}" rx=".8" fill="#5d646b"/>
+<rect x="${(x + w * .2 - t / 2).toFixed(2)}" y="${(y - t * .6).toFixed(2)}" width="${t.toFixed(2)}" height="${(t * .65).toFixed(2)}" rx=".4" fill="#d1ab55"/><rect x="${(x + w * .8 - t / 2).toFixed(2)}" y="${(y - t * .6).toFixed(2)}" width="${t.toFixed(2)}" height="${(t * .65).toFixed(2)}" rx=".4" fill="#d1ab55"/>
+<rect x="${(x + w * .12).toFixed(2)}" y="${(y + h * .45).toFixed(2)}" width="${(w * .76).toFixed(2)}" height="${(h * .18).toFixed(2)}" fill="#f2913a" opacity=".85"/>`;
+}
+const chgWheel = (x, y, r) => ntKeep(`<circle cx="${x}" cy="${y}" r="${r}" fill="#1e2226"/><circle cx="${x}" cy="${y}" r="${(r * .62).toFixed(2)}" fill="#9aa3ad"/><circle cx="${x}" cy="${y}" r="${(r * .5).toFixed(2)}" fill="none" stroke="#6b737b" stroke-width=".6" stroke-dasharray="1.2 1"/><circle cx="${x}" cy="${y}" r="${(r * .2).toFixed(2)}" fill="#4a525b"/>`);
+// What sits beside the charger: its drawing, where its + and - are, the
+// clamps' size, where the charger stands and how big it is.
+const CHG_TARGET_DRAW = {
+  battery() {
+    const f = ntId(), tp = ntId(), sd = ntId();
+    return { svg: `<defs>${ntV(f, "#3d4349", "#1e2226")}${ntV(tp, "#5f666d", "#40464c")}${ntV(sd, "#2a2f34", "#15181b")}</defs>${ntShadow(64, 114, 42)}
+<path d="M88 80 L100 70 L100 101 L88 112 Z" fill="url(#${sd})"/>
+<rect x="28" y="80" width="60" height="32" rx="1.6" fill="url(#${f})" stroke="#111315" stroke-width=".5"/>
+<path d="M28 80 L40 70 L100 70 L88 80 Z" fill="url(#${tp})" stroke="#2a2f34" stroke-width=".5"/>
+<rect x="47" y="74.4" width="4" height="2.2" rx=".6" fill="#1d2125"/><rect x="77" y="74.4" width="4" height="2.2" rx=".6" fill="#1d2125"/>
+<path d="M49 75.4 V67 Q49 62.6 53.4 62.6 H74.6 Q79 62.6 79 67 V75.4" fill="none" stroke="#15181b" stroke-width="3.2" stroke-linejoin="round"/>
+<path d="M49 75.4 V67 Q49 62.6 53.4 62.6 H74.6 Q79 62.6 79 67 V75.4" fill="none" stroke="#3d4349" stroke-width="1.8" stroke-linejoin="round"/>
+<path d="M51 66 Q51 64.2 53.4 64.2 H74.6" fill="none" stroke="#6b737b" stroke-width=".5"/>
+<circle cx="71" cy="77.2" r="1.7" fill="#2f8f3a" stroke="#1d5c25" stroke-width=".4"/><circle cx="70.5" cy="76.7" r=".5" fill="#c8f0c0"/>
+<ellipse cx="42" cy="75.6" rx="3.4" ry="1.3" fill="#c0392b"/><rect x="39.6" y="71.6" width="4.8" height="4" fill="#d1ab55"/><ellipse cx="42" cy="71.6" rx="2.4" ry=".9" fill="#e9cc85"/>
+<ellipse cx="86" cy="75.6" rx="3.4" ry="1.3" fill="#26292d"/><rect x="83.6" y="71.6" width="4.8" height="4" fill="#d1ab55"/><ellipse cx="86" cy="71.6" rx="2.4" ry=".9" fill="#e9cc85"/>
+<rect x="28" y="86" width="60" height="5" fill="#f2913a"/>
+<text x="58" y="102" font-size="9" font-weight="800" text-anchor="middle" fill="#e8ebee" ${NT_FONT}>12V</text>
+<text x="58" y="108.5" font-size="3.6" font-weight="700" text-anchor="middle" fill="#9aa2a9" letter-spacing=".4" ${NT_FONT}>AGM</text>
+<text x="34" y="98" font-size="5" font-weight="700" fill="#e05252" ${NT_FONT}>+</text><text x="80" y="98" font-size="5" font-weight="700" fill="#c3c9ce" ${NT_FONT}>\u2212</text>`, p: [42, 72], m: [86, 72], k: 1, at: [0, 0], cs: 1.3 };
+  },
+  motorcycle() {
+    const tk = ntId(), ch = ntId(), en = ntId(), fr = "#26292d";
+    // A classic roadster at its real proportions: wheels about 45 % of the
+    // wheelbase, the seat about one and a quarter wheels high; the shock in
+    // front of the wheel and the exhaust, on its axis to the swingarm.
+    const shock = `<g transform="translate(88 77) rotate(-6.2)"><path d="M0 0 V18.4" stroke="${fr}" stroke-width="1.8" stroke-linecap="round"/><path d="M0 3 L1.8 4.2 L-1.8 5.6 L1.8 7 L-1.8 8.4 L1.8 9.8 L-1.8 11.2 L1.8 12.6 L0 13.6" fill="none" stroke="#f2b632" stroke-width="1"/><rect x="-1.4" y="13.6" width="2.8" height="3" rx=".6" fill="#7d868f"/></g>`;
+    return { svg: `<defs>${ntV(tk, "#ef5350", "#a51e1e")}${ntV(ch, "#f2f5f7", "#9aa3ad")}${ntV(en, "#626a72", "#2c3136")}</defs>${ntShadow(60, 114, 50)}
+${chgWheel(24, 96, 16)}${chgWheel(96, 96, 16)}
+<path d="M70 93 L96 96" stroke="${fr}" stroke-width="3.4" stroke-linecap="round"/>
+<path d="M66 75 L104 75 M73 91 L98 77" stroke="${fr}" stroke-width="2" stroke-linecap="round"/>
+<path d="M41 70 L69 75 L71 93 M42 73 L47 97 L71 97" fill="none" stroke="${fr}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M9 89 A17 17 0 0 1 34 80" fill="none" stroke="#a51e1e" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M41 65 L24 96" stroke="${fr}" stroke-width="3.6" stroke-linecap="round"/><path d="M33.4 79.6 L25.4 93.6" stroke="url(#${ch})" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M49 92 Q48 103 62 103 L84 100" fill="none" stroke="url(#${ch})" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M82 97 L109 91 Q112 91 112 94 L112 96 Q112 99 109 99 L84 102 Z" fill="url(#${ch})" stroke="#6b737b" stroke-width=".5"/>
+<path d="M48 79 L69 79 L70 96 Q59 99 49 96 Z" fill="url(#${en})" stroke="#1d2125" stroke-width=".5"/>
+${[0, 1, 2, 3].map((i) => `<path d="M49.4 ${82 + i * 3} H68.6" stroke="#868f97" stroke-width=".8"/>`).join("")}
+<circle cx="64" cy="92" r="3.2" fill="#3a4047" stroke="url(#${ch})" stroke-width=".9"/>
+<path d="M70 77 L88 77 L80 90 L72 91 Z" fill="#17191b"/>
+${chgBatSmall(72, 80, 10, 7)}
+<path d="M63 75 Q65 70.6 74 70.6 L100 71.4 Q106 71.4 108 75 L106 78 L64 78 Z" fill="#1b1d20"/><path d="M68 72.4 Q84 71 102 72.8" stroke="#fff" stroke-width=".6" opacity=".18" fill="none"/>
+${shock}
+<path d="M104 74 L115 77.6 L113 81 L102 77.6 Z" fill="#a51e1e"/><rect x="112" y="77.6" width="3.6" height="2.4" rx=".6" fill="#ff5252"/>
+<path d="M41 71 Q45 61 58 61 L64 62.4 Q70.6 65.6 69 73 L67.4 78 L44 78 Q39.4 75.4 41 71 Z" fill="url(#${tk})" stroke="#7a1414" stroke-width=".6"/>
+<path d="M46 67 Q53 62.8 63 64.6" fill="none" stroke="#fff" stroke-width="1.1" opacity=".5"/>
+<path d="M41 65 L40 59 L46 57.6" fill="none" stroke="${fr}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M46 57.6 l3 -.6" stroke="#3a3f44" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M40.4 60 L38 54" stroke="${fr}" stroke-width=".7"/><ellipse cx="37.4" cy="53" rx="2.2" ry="1.4" fill="#3a3f44"/>
+<path d="M37 66.4 L40.6 66.4" stroke="${fr}" stroke-width="1.6"/><circle cx="33.6" cy="66.6" r="4.6" fill="#2c3136" stroke="url(#${ch})" stroke-width="1.1"/><circle cx="32.6" cy="66.6" r="2.9" fill="#fffde7"/>`, p: [74, 79.4], m: [80, 79.4], k: .46, at: [48, -6], cs: 1 };
+  },
+  car() {
+    const bd = ntId(), gl = ntId();
+    return { svg: `<defs>${ntV(bd, "#64b5f6", "#1565c0")}${ntV(gl, "#e3f2fd", "#90caf9")}</defs>${ntShadow(61, 114, 56)}
+<path d="M6 103 L6 91 Q6 87 10 86 L44 82 L57 66 Q61 62 68 62 L95 62 Q103 62 107 69 L113 82 Q116 86 116 92 L116 103 Z" fill="url(#${bd})" stroke="#0d47a1" stroke-width=".7"/>
+<path d="M47 82 L58 68 Q61 65 66 65 L80 65 L80 82 Z" fill="url(#${gl})" stroke="#0d47a1" stroke-width=".5"/>
+<path d="M84 65 L95 65 Q100 65 103 71 L108 82 L84 82 Z" fill="url(#${gl})" stroke="#0d47a1" stroke-width=".5"/>
+<path d="M82 64 V100 M49 84 V100" stroke="#0d47a1" stroke-width=".5" opacity=".6"/><rect x="72" y="86" width="6" height="1.4" rx=".7" fill="#0d47a1"/><rect x="99" y="86" width="6" height="1.4" rx=".7" fill="#0d47a1"/>
+<path d="M6 97 H116" stroke="#0d47a1" stroke-width=".5" opacity=".5"/>
+<circle cx="28" cy="101" r="13" fill="#1a2a3a"/><circle cx="94" cy="101" r="13" fill="#1a2a3a"/>${chgWheel(28, 101, 11)}${chgWheel(94, 101, 11)}
+<path d="M7 89 L14 88 L14 92 L7 93 Z" fill="#fffde7" stroke="#90a4ae" stroke-width=".4"/><path d="M112 84 L116 85 L116 90 L113 90 Z" fill="#e53935"/>
+<rect x="10" y="80" width="33" height="6" fill="#263238"/>
+<rect x="28" y="76" width="12" height="8" rx="1" fill="#455a64"/><circle cx="34" cy="76" r="2.4" fill="#ffca28" stroke="#455a64" stroke-width=".5"/>
+${chgBatSmall(13, 75, 12, 8)}
+<path d="M44 82 L14 60 L16 57.5 L46 80 Z" fill="url(#${bd})" stroke="#0d47a1" stroke-width=".6"/><path d="M44 82 L14 60 L15 61.8 L43 83.4 Z" fill="#0d47a1" opacity=".55"/>
+<path d="M22 81 L20 64" stroke="#b0bec5" stroke-width=".8"/>`, p: [15.4, 74], m: [22.6, 74], k: .5, at: [46, -6], cs: 1 };
+  },
+  van() {
+    const bd = ntId(), gl = ntId();
+    return { svg: `<defs>${ntV(bd, "#f7f9fa", "#b4bcc3")}${ntV(gl, "#e3f2fd", "#90caf9")}</defs>${ntShadow(61, 114, 56)}
+<path d="M6 103 L6 90 Q6 86 10 85 L27 80 L39 51 Q41 46 47 46 L110 46 Q116 46 116 52 L116 103 Z" fill="url(#${bd})" stroke="#7b868f" stroke-width=".7"/>
+<path d="M30 80 L41 52 Q42 49 46 49 L52 49 L52 80 Z" fill="url(#${gl})" stroke="#7b868f" stroke-width=".5"/>
+<path d="M55 50 L68 50 L68 70 L55 70 Z" fill="url(#${gl})" stroke="#7b868f" stroke-width=".5"/>
+<path d="M53 48 V100 M70 48 V100 M112 48 V100" stroke="#7b868f" stroke-width=".5" opacity=".7"/><path d="M70 60 H116" stroke="#9aa3ab" stroke-width=".5" opacity=".6"/>
+<rect x="61" y="76" width="6" height="1.4" rx=".7" fill="#7b868f"/><rect x="74" y="76" width="6" height="1.4" rx=".7" fill="#7b868f"/>
+<rect x="72" y="64" width="38" height="5" rx="1" fill="#1e88e5"/>
+<path d="M50 46 V43 H108 V46" fill="none" stroke="#5d676f" stroke-width="1"/>
+<path d="M6 96 H116" stroke="#7b868f" stroke-width=".5" opacity=".5"/>
+<circle cx="28" cy="101" r="13" fill="#2b3238"/><circle cx="94" cy="101" r="13" fill="#2b3238"/>${chgWheel(28, 101, 11)}${chgWheel(94, 101, 11)}
+<path d="M7 88 L15 86.5 L15 91 L7 92 Z" fill="#fffde7" stroke="#90a4ae" stroke-width=".4"/><rect x="113" y="74" width="3" height="10" fill="#e53935"/>
+<rect x="9" y="79" width="20" height="6" fill="#263238"/>
+${chgBatSmall(11, 74, 11, 8)}
+<path d="M30 79 L8 62 L10 59.6 L32 77 Z" fill="url(#${bd})" stroke="#7b868f" stroke-width=".6"/><path d="M30 79 L8 62 L9 63.8 L29 80.4 Z" fill="#7b868f" opacity=".5"/>
+<path d="M18 80 L16 66" stroke="#b0bec5" stroke-width=".8"/>`, p: [13.2, 73.2], m: [19.8, 73.2], k: .46, at: [47, -8], cs: 1 };
+  },
+};
+function mobBatCharger(c) {
+  const T = (CHG_TARGET_DRAW[c.target] || CHG_TARGET_DRAW.battery)();
+  const f = (n) => +n.toFixed(2), tip = (x, y, a, k) => [f(x + 13 * k * Math.sin(a * Math.PI / 180)), f(y - 13 * k * Math.cos(a * Math.PI / 180))];
+  const [ax, ay] = T.at, cs = T.cs, tp = tip(T.p[0], T.p[1], -18, T.k), tm = tip(T.m[0], T.m[1], 18, T.k);
+  const r0 = [f(ax + 16 * cs), f(ay + 36 * cs)], b0 = [f(ax + 24 * cs), f(ay + 36 * cs)];
+  // The red lead drawn from the battery up, so the current running to its
+  // start goes down to the battery; the black from the charger down, so it
+  // comes back up.
+  const red = `M${tp[0]} ${tp[1]} C${f(tp[0] - 10)} ${f(tp[1] - 10)} ${f(r0[0] - 2)} ${f(r0[1] + 12)} ${r0[0]} ${r0[1]}`;
+  const blk = `M${b0[0]} ${b0[1]} C${f(b0[0] + 4)} ${f(b0[1] + 12)} ${f(tm[0] - 4)} ${f(tm[1] - 14)} ${tm[0]} ${tm[1]}`;
+  const cab = (d) => `<path d="${d}" fill="none" stroke="#7a8288" stroke-width="2.4" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#1c1e20" stroke-width="1.8" stroke-linecap="round"/>`;
+  const flowing = c.st === "charging" || c.st === "full", cls = c.st === "full" ? "nta-feedslow" : "nta-feed";
+  const flow = (d) => `<path class="${cls}" d="${d}" fill="none" stroke="#ffcf6b" stroke-width=".9" stroke-dasharray="2 4" stroke-linecap="round"/>`;
+  return `${T.svg}${cab(blk)}${cab(red)}${flowing ? flow(red) + flow(blk) : ""}
+${chgClamp(T.p[0], T.p[1], -18, true, T.k)}${chgClamp(T.m[0], T.m[1], 18, false, T.k)}
+<g transform="translate(${ax} ${ay}) scale(${cs})">${chgBox(c)}</g>`;
 }
 
 // Watering, a self-cleaning litter box, a smoke, CO or leak detector and a
@@ -5092,7 +5229,7 @@ ${leg(inset, inset)}${leg(inset, L - 2.2)}
 ${backbox}`;
 }
 
-const NT_DRAW = { spk_jukebox: (c) => ntJukebox({ on: c.st !== "off" && c.st !== undefined, playing: c.st === "playing" }), wd_under_sink: ntWdUnderSink, wd_column: ntWdColumn, con_pincab: (c) => arcPincab({ ...c, playing: c.st === "playing" }), con_arcade_bartop: (c) => arcBartop({ ...c, playing: c.st === "playing" }), con_arcade_upright: (c) => arcUpright({ ...c, playing: c.st === "playing" }), strip_shelly: ntStripShelly, strip_classic: ntStripClassic, gas_fireplace: ntGasFireplace, fp_tm31: ntFoodTm31, fp_tm6: ntFoodTm6, rack_box: ntRackBox, rack_accordion: ntRackAccordion, rack_frame: ntRackFrame, vlv_aqara: ntValveAqara, vlv_tuya: ntValveTuya,  fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_switchbot_co2: (c) => ntSbPro(c, true), ths_switchbot_pro: (c) => ntSbPro(c, false), ths_switchbot_meter: (c) => ntSbMeter(c, false), ths_switchbot_plus: (c) => ntSbMeter(c, true), ths_switchbot_outdoor: ntSbOutdoor, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, cov_curtain: ntCovCurtain, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, det_door: ntDetDoor, det_vibration: ntDetVibration, det_glass: ntDetGlass, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, spk_focal_bird: ntSpkFocalBird, spk_focal_od6: ntSpkFocalOd6, spk_denon_avr: ntSpkDenon, spk_avr: ntSpkAvr, spk_wiim_amp: ntSpkWiim, spk_smart_clock: ntSpkClock, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+const NT_DRAW = { spk_jukebox: (c) => ntJukebox({ on: c.st !== "off" && c.st !== undefined, playing: c.st === "playing" }), wd_under_sink: ntWdUnderSink, wd_column: ntWdColumn, con_pincab: (c) => arcPincab({ ...c, playing: c.st === "playing" }), con_arcade_bartop: (c) => arcBartop({ ...c, playing: c.st === "playing" }), con_arcade_upright: (c) => arcUpright({ ...c, playing: c.st === "playing" }), strip_shelly: ntStripShelly, strip_classic: ntStripClassic, gas_fireplace: ntGasFireplace, fp_tm31: ntFoodTm31, fp_tm6: ntFoodTm6, rack_box: ntRackBox, rack_accordion: ntRackAccordion, rack_frame: ntRackFrame, vlv_aqara: ntValveAqara, vlv_tuya: ntValveTuya,  fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_switchbot_co2: (c) => ntSbPro(c, true), ths_switchbot_pro: (c) => ntSbPro(c, false), ths_switchbot_meter: (c) => ntSbMeter(c, false), ths_switchbot_plus: (c) => ntSbMeter(c, true), ths_switchbot_outdoor: ntSbOutdoor, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, cov_curtain: ntCovCurtain, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, det_door: ntDetDoor, det_vibration: ntDetVibration, det_glass: ntDetGlass, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, spk_focal_bird: ntSpkFocalBird, spk_focal_od6: ntSpkFocalOd6, spk_denon_avr: ntSpkDenon, spk_avr: ntSpkAvr, spk_wiim_amp: ntSpkWiim, spk_smart_clock: ntSpkClock, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, mob_charger: mobBatCharger, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 // What a tint leaves alone: a part wrapped by ntKeep (an app's tile, a
 // display, a tyre).
 const ntKeep = (s) => `<!--k-->${s}<!--/k-->`;
@@ -5230,7 +5367,7 @@ const NT_CSS = `
         .nta-caust{opacity:.35}
         .nt-on .nta-caust{opacity:0;animation:nt-shimmer 3s ease-in-out infinite}
         .nta-blink{animation:nt-blink 2.4s linear infinite}
-        .nt-on .nta-feed{animation:nt-feed .625s linear infinite}
+        .nt-on .nta-feed{animation:nt-feed .625s linear infinite}.nt-on .nta-feedslow{animation:nt-feed 1.9s linear infinite}
         .nt-on .nta-led,.nt-on .nta-next{animation:nt-glow 1.25s ease-in-out infinite}
         .nt-on .nta-bar1{animation:nt-bar1 5s steps(1) infinite}.nt-on .nta-bar2{animation:nt-bar2 5s steps(1) infinite}
         .nt-on .nta-bar3{animation:nt-bar3 5s steps(1) infinite}.nt-on .nta-bar4{animation:nt-bar4 5s steps(1) infinite}

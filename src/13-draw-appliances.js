@@ -2722,6 +2722,23 @@ function laundryPhotoHtml(type, ctx) {
 }
 // A screen on its photo, taken off: the area is its glass, and the picture
 // it shows goes there, lit, with a little glow round it.
+// A lamp on its photo, taken switched off (HACF #209): lit, a glow in its
+// colour where its bulb is (one per area), brighter in the middle, and a
+// wash of the same colour over the whole picture; dimmed with it.
+function lampPhotoHtml(cls, c, ph) {
+  const mode = c.mode || "unav", on = mode === "on", f = (n) => +n.toFixed(2);
+  const col = `rgb(${(Array.isArray(c.rgb) ? c.rgb : LAMP_WARM).join(",")})`;
+  const level = c.pct === null || c.pct === undefined ? 1 : 0.25 + 0.75 * Math.min(100, Math.max(0, c.pct)) / 100;
+  let over = "";
+  if (on) {
+    const spots = ph.areas.map((a) => ({ cx: f((a[0] + a[2] / 2) * 1.2), cy: f(-10 + (a[1] + a[3] / 2) * 1.35), r: f(Math.max(a[2] * 1.2, a[3] * 1.35) / 2) }));
+    const s0 = spots[0];
+    over = `<defs><radialGradient id="lpp-w" cx="${s0.cx}" cy="${f(s0.cy - 12)}" r="80" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${col}" stop-opacity=".5"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></radialGradient>${spots.map((p, i) => `<radialGradient id="lpp-g${i}" cx="${p.cx}" cy="${p.cy}" r="${f(p.r * 3)}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${col}" stop-opacity=".9"/><stop offset=".45" stop-color="${col}" stop-opacity=".35"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></radialGradient><radialGradient id="lpp-c${i}" cx="${p.cx}" cy="${p.cy}" r="${f(p.r * 1.05)}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff"/><stop offset=".45" stop-color="${col}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></radialGradient>`).join("")}</defs>
+<g class="lpp-glow" opacity="${level.toFixed(2)}"><rect x="0" y="-10" width="120" height="135" fill="url(#lpp-w)" style="mix-blend-mode: screen"/>${spots.map((p, i) => `<rect x="0" y="-10" width="120" height="135" fill="url(#lpp-g${i})" style="mix-blend-mode: screen"/><rect x="0" y="-10" width="120" height="135" fill="url(#lpp-g${i})" style="mix-blend-mode: screen"/><circle cx="${p.cx}" cy="${p.cy}" r="${f(p.r * 1.05)}" fill="url(#lpp-c${i})"/>`).join("")}</g>`;
+  }
+  return `
+        <div class="machine ${cls} ph-machine lp-photo lp-m-${mode}">${photoSvg(ph, over)}</div>`;
+}
 function screenPhotoHtml(cls, sc, ph) {
   const mode = sc.mode || "off", lit = SCREEN_LIT.includes(mode), a = ph.areas[0];
   const tablet = SCREEN_TABLETS.includes(sc.layout);
