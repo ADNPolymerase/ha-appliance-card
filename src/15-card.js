@@ -5337,12 +5337,11 @@ class ApplianceCard extends HTMLElement {
     const ease = (x) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
     const step = (t) => {
       const host = this._root && this._root.querySelector(".fr3");
-      if (!host) { this._frRaf = null; return; }
+      const draw = drawingOf("fridge");
+      if (!host || !draw) { this._frRaf = null; return; }
       const p = Math.min(1, (t - t0) / dur), e = ease(p);
       const k = (a, b) => (a === b ? 1 : b ? e : 1 - e);
-      host.innerHTML = p < 1
-        ? FR3(ctx, { open: prev.f || now.f, freezerOpen: prev.z || now.z, kF: k(prev.f, now.f), kZ: k(prev.z, now.z) })
-        : FR3(ctx);
+      host.innerHTML = draw("", { ...ctx, frSwing: p < 1 ? { open: prev.f || now.f, freezerOpen: prev.z || now.z, kF: k(prev.f, now.f), kZ: k(prev.z, now.z) } : true });
       this._frRaf = p < 1 ? requestAnimationFrame(step) : null;
     };
     this._frRaf = requestAnimationFrame(step);

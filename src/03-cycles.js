@@ -3,7 +3,9 @@ const STATE_KEYWORDS = {
   // OperationState.Ready. "inactive" has to be listed here rather than left
   // to "active" under running: that keyword cannot match inside a word, and
   // would mean the opposite of the state if it could.
-  idle: ["idle", "off", "stand.?by", "veille", "eteint", "arret", "inactif", "inactive", "ready", "wait", "asleep"],
+  idle: ["idle", "off", "stand.?by", "veille", "eteint", "arret", "inactif", "inactive", "ready", "wait", "asleep",
+    // Ready and off, as German, French, Italian, Spanish and Dutch machines say it.
+    "bereit", "pret\\b", "pronto", "listo", "aus\\b", "spento", "apagad", "uit\\b"],
   // Before "running": ovens report "Preheating", and the "heating" keyword
   // below cannot match it anyway (no word boundary inside "preheating").
   preheating: ["preheat", "pre-heat", "pre_heat", "prechauff", "vorheiz", "precalent", "voorverwarm"],
@@ -19,10 +21,12 @@ const STATE_KEYWORDS = {
     "broil", "roast", "proof", "boil(?!er)", "busy", "making", "deliver", "prepar", "process", "clean(?!ed)", "descal",
     // Aborting is a cancelled cycle still draining, not an error and not
     // finished: the appliance is doing something until it stops.
-    "abort"],
-  paused: ["pause", "hold", "suspended", "action.?required", "attention"],
-  done: ["end", "done", "finish", "complete", "termin", "made\\b"],
-  delayed: ["delay", "differ", "scheduled", "programmed", "pre.?set\\b", "reservation"],
+    "abort",
+    // At work, in German, Italian, Spanish and Dutch.
+    "lauft", "laeuft", "in corso", "en marcha", "funcionando", "bezig"],
+  paused: ["pause", "hold", "suspended", "action.?required", "attention", "pausiert", "pausa", "gepauzeerd"],
+  done: ["end", "done", "finish", "complete", "termin", "made\\b", "fertig", "beendet", "finito", "finalizado", "klaar", "fin\\b"],
+  delayed: ["delay", "differ", "scheduled", "programmed", "programme$", "pre.?set\\b", "reservation"],
   error: ["error", "fault", "alarm", "erreur", "fail", "out.?of.?order", "overheat", "unusual"],
 };
 

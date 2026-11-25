@@ -165,10 +165,11 @@ const STRAIGHTENER_RE = /straighten|flat.?iron|lisseur|fer.?a.?lisser|glatteisen
 // a NAS by its maker or its system, a switch by its name, a rack by its own.
 // A Nintendo Switch is a console, not a switch.
 const NET_LAYOUTS = ["switch", "server", "nas", "rack", "router", "mini_pc"];
-const NET_NAS_RE = /(^|[\s._-])(nas|synology|diskstation|qnap|ugreen|unraid|truenas|freenas|openmediavault|omv|asustor|terramaster|ds\d{3})/;
-// Not a relay's own switch_0 or switch_2 (Shelly, Tuya), nor a wall or light
-// switch; a switch named by its ports still is one.
-const NET_SWITCH_RE = /(?<!nintendo.?|wall.?|light.?|relay.?|power.?|smart.?)switch(?![\s._-]?\d)|(^|[^a-z])\d{1,2}.?ports?([^a-z]|$)|(^|[\s._-])(usw|edgeswitch|poe)([\s._-]|$)/;
+const NET_NAS_RE = /(^|[\s._-])(nas|synology|diskstation|qnap|ugreen|unraid|truenas|freenas|openmediavault|omv|asustor|terramaster|ds\d{3}(?!\d))/;
+// "Switch" alone only leads a name ("Switch bureau"): kitchen_switch is a
+// plug's, switch_0 a relay's (Shelly, Tuya). A switch named by its ports,
+// its PoE or its network still is one.
+const NET_SWITCH_RE = /^[\s._-]*switch(?![\s._-]?\d)|(network|ethernet|gigabit|managed|poe|lan)[\s._-]?switch|switch[\s._-]?(poe|gigabit|ethernet|reseau|network)|(^|[^a-z])\d{1,2}.?ports?([^a-z]|$)|(^|[\s._-])(usw|edgeswitch|poe)([\s._-]|$)/;
 const NET_RACK_RE = /(^|[\s._-])(rack|baie|homelab)([\s._-]|$)/;
 // A mini PC (#129): a small box on a desk, Beelink, NUC and the like.
 const NET_MINIPC_RE = /(^|[\s._-])(mini.?pc|beelink|nuc|minisforum|geekom|gmktec|mele|chuwi|asrock.?deskmini|mac.?mini)([\s._-]|\d|$)/;
@@ -327,7 +328,7 @@ const ROBOT_ONLY_FIELDS = ["robot_layout", "robot_station", "robot_station_color
   "shortcut_entities", "robot_water_entity", "robot_clean_mode_entity", "robot_clean_tank_entity", "robot_dirty_tank_entity", "robot_rain_entity", "robot_error_entity", "robot_winter", "robot_winter_entity"];
 // A robot by its name, its maker's or its integration's. A robot cook is a
 // cooker, so the word robot needs what it does.
-const ROBOT_NAME_RE = /dolphin|sileno|tapo.?rv\d+|proscenic|hombot|ambrogio|tineco|aspirateur.?balai|floor.?one|ifloor|laveur.?de.?sol|floor.?washer|nass.?trocken|lavapavimenti|stick.?vac|cordless.?vac|akkusauger|stielsauger|roomba|braava|roborock|ecovacs|deebot|dreame|neato|eufy.?clean|robovac|xiaomi.?vacuum|conga|robot.?(vacuum|aspir|mop|laveur|mower|tondeuse)|robot.?(clean|sweep)|vacuum|aspirateur|saugroboter|staubsauger|wischroboter|aspiradora|aspirapolvere|robotstofzuiger|stofzuiger|dammsugare|st(o|\u00f8)vsuger|odkurzacz|vysavac|landroid|automower|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|lawn.?mower|(^|[^a-z])mower|tondeuse|m(a|ae|\u00e4)hroboter|robotmaaier|grasmaaier|cortac(e|\u00e9)sped|tosaerba|corta.?relva|robotgr(a|\u00e4)sklipp|robotgressklipp|robotpl(a|\u00e6)neklipp|kosiarka|sekacka|\u626b\u5730|\u5438\u5c18|\u62d6\u5730|\u5272\u8349|\u043f\u044b\u043b\u0435\u0441\u043e\u0441|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
+const ROBOT_NAME_RE = /winbot|dolphin|sileno|tapo.?rv\d+|proscenic|hombot|ambrogio|tineco|aspirateur.?balai|floor.?one|ifloor|laveur.?de.?sol|floor.?washer|nass.?trocken|lavapavimenti|stick.?vac|cordless.?vac|akkusauger|stielsauger|roomba|braava|roborock|ecovacs|deebot|dreame|neato|eufy.?clean|robovac|xiaomi.?vacuum|conga|robot.?(vacuum|aspir|mop|laveur|mower|tondeuse)|robot.?(clean|sweep)|vacuum|aspirateur|saugroboter|staubsauger|wischroboter|aspiradora|aspirapolvere|robotstofzuiger|stofzuiger|dammsugare|st(o|\u00f8)vsuger|odkurzacz|vysavac|landroid|automower|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|lawn.?mower|(^|[^a-z])mower|tondeuse|m(a|ae|\u00e4)hroboter|robotmaaier|grasmaaier|cortac(e|\u00e9)sped|tosaerba|corta.?relva|robotgr(a|\u00e4)sklipp|robotgressklipp|robotpl(a|\u00e6)neklipp|kosiarka|sekacka|\u626b\u5730|\u5438\u5c18|\u62d6\u5730|\u5272\u8349|\u043f\u044b\u043b\u0435\u0441\u043e\u0441|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
 const ROBOT_MOWER_RE = /mow|m(a|ae|\u00e4)h|tondeuse|maaier|cortac|tosaerba|relva|klipp|kosiark|sekack|landroid|automower|worx|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|\u5272\u8349|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
 // A robot that vacuums and mops in the same cycle (#91), named as such.
 const ROBOT_COMBO_RE = /combo|hybrid|2.?[ei]n.?1|saug.?(und.?)?wisch|aspirateur.?laveur|\u626b\u62d6/;

@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.55.1";
+const CARD_VERSION = "4.60.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -347,7 +347,9 @@ const STATE_KEYWORDS = {
   // OperationState.Ready. "inactive" has to be listed here rather than left
   // to "active" under running: that keyword cannot match inside a word, and
   // would mean the opposite of the state if it could.
-  idle: ["idle", "off", "stand.?by", "veille", "eteint", "arret", "inactif", "inactive", "ready", "wait", "asleep"],
+  idle: ["idle", "off", "stand.?by", "veille", "eteint", "arret", "inactif", "inactive", "ready", "wait", "asleep",
+    // Ready and off, as German, French, Italian, Spanish and Dutch machines say it.
+    "bereit", "pret\\b", "pronto", "listo", "aus\\b", "spento", "apagad", "uit\\b"],
   // Before "running": ovens report "Preheating", and the "heating" keyword
   // below cannot match it anyway (no word boundary inside "preheating").
   preheating: ["preheat", "pre-heat", "pre_heat", "prechauff", "vorheiz", "precalent", "voorverwarm"],
@@ -363,10 +365,12 @@ const STATE_KEYWORDS = {
     "broil", "roast", "proof", "boil(?!er)", "busy", "making", "deliver", "prepar", "process", "clean(?!ed)", "descal",
     // Aborting is a cancelled cycle still draining, not an error and not
     // finished: the appliance is doing something until it stops.
-    "abort"],
-  paused: ["pause", "hold", "suspended", "action.?required", "attention"],
-  done: ["end", "done", "finish", "complete", "termin", "made\\b"],
-  delayed: ["delay", "differ", "scheduled", "programmed", "pre.?set\\b", "reservation"],
+    "abort",
+    // At work, in German, Italian, Spanish and Dutch.
+    "lauft", "laeuft", "in corso", "en marcha", "funcionando", "bezig"],
+  paused: ["pause", "hold", "suspended", "action.?required", "attention", "pausiert", "pausa", "gepauzeerd"],
+  done: ["end", "done", "finish", "complete", "termin", "made\\b", "fertig", "beendet", "finito", "finalizado", "klaar", "fin\\b"],
+  delayed: ["delay", "differ", "scheduled", "programmed", "programme$", "pre.?set\\b", "reservation"],
   error: ["error", "fault", "alarm", "erreur", "fail", "out.?of.?order", "overheat", "unusual"],
 };
 
@@ -1431,7 +1435,7 @@ function evOptionsSayCharger(st) {
 // The names a charger goes by: what it is, in the languages of the card, its
 // makers and the integrations that read it, and the icons Home Assistant
 // draws charging stations with.
-const EV_NAME_RE = /(^|[^a-z])(goe|garo|autel|trydan|v2c|evcc|warp[0-9]?|pracht)([^a-z0-9]|$)|kathrein|heidelberg.?(energy|wallbox)|amperfied|elli.?(charger|wallbox)|wall.?box|ev.?charg|car.?charg|evse|charge.?point|charging.?station|wall.?connector|ocpp|status.?connector|peblar|nrgkick|openevse|lektrico|blue.?current|webasto|easee|zaptec|go.?e.?charger|wattpilot|zappi|hypervolt|nexblue|technove|pod.?point|charge.?amps|(^|[^a-z])(ohme|keba|alfen)([^a-z]|$)|ladestation|lades(a|ae|\u00e4)ule|ladepunkt|borne.?(de.?)?recharge|laadpaal|laadpunt|laadstation|punto.?de.?recarga|estacion.?de.?carga|cargador.?(de.?)?(ve|coche|vehiculo)|colonnina|stazione.?di.?ricarica|posto.?de.?carregamento|carregador.?(de.?)?(ve|carro)|laddbox|laddstolpe|ladeboks|ladestasjon|stacja.?ladowania|nab(i|\u00ed)jec(i|\u00ed).?stanic|\u0437\u0430\u0440\u044f\u0434\u043d\u0430\u044f.?\u0441\u0442\u0430\u043d\u0446|\u5145\u7535\u6869|ev-station|ev-plug/;
+const EV_NAME_RE = /(^|[^a-z])(goe|garo|autel|trydan|v2c|evcc|warp[0-9]?|pracht)([^a-z0-9]|$)|juicebox|evbox|openwb|emporia|mennekes|amtron|chargestorm|kathrein|heidelberg.?(energy|wallbox)|amperfied|elli.?(charger|wallbox)|wall.?box|ev.?charg|car.?charg|evse|charge.?point|charging.?station|wall.?connector|ocpp|status.?connector|peblar|nrgkick|openevse|lektrico|blue.?current|webasto|easee|zaptec|go.?e.?charger|wattpilot|zappi|hypervolt|nexblue|technove|pod.?point|charge.?amps|(^|[^a-z])(ohme|keba|alfen)([^a-z]|$)|ladestation|lades(a|ae|\u00e4)ule|ladepunkt|borne.?(de.?)?recharge|laadpaal|laadpunt|laadstation|punto.?de.?recarga|estacion.?de.?carga|cargador.?(de.?)?(ve|coche|vehiculo)|colonnina|stazione.?di.?ricarica|posto.?de.?carregamento|carregador.?(de.?)?(ve|carro)|laddbox|laddstolpe|ladeboks|ladestasjon|stacja.?ladowania|nab(i|\u00ed)jec(i|\u00ed).?stanic|\u0437\u0430\u0440\u044f\u0434\u043d\u0430\u044f.?\u0441\u0442\u0430\u043d\u0446|\u5145\u7535\u6869|ev-station|ev-plug/;
 
 // What a heat pump's valve says. HeishaMon reads its 2-way valve Heating or
 // Cooling and its 3-way valve Room or Tank: a position, which names the mode
@@ -1664,6 +1668,14 @@ const INTEGRATION_STATES = {
   hard_stop_or_error: "error", exception: "error", power_failure: "error", cancelled: "idle", setting: "idle", system_initialize: "idle",
   // Home Connect, with its long key cut to the last part
   actionrequired: "paused", action_required: "paused",
+  // SmartThings dryers, LG and Whirlpool, more of what they say
+  dehumidifying: "running", continuous_dehumidifying: "running", sanitizing: "running", internal_care: "running",
+  thawing_frozen_inside: "running", freeze_protection: "running", sterilize: "running",
+  cancel: "idle", firmware: "idle", frozen_prevent_initial: "idle", change_condition: "paused", door_open: "idle",
+  // An oven cooling down or sensing is still at work; a descaling asked for
+  // waits on someone.
+  cooling: "running", sensing: "running", pyrolysis: "running", pyrolyse: "running", aufheizen: "preheating",
+  descaling_required: "paused", descale_required: "paused",
   // Midea, ConnectLife, GE, Xiaomi's cookers, Tokit, Nespresso, Philips, De'Longhi
   start: "running", work: "running", working: "running", add_clothes: "running", refreshing: "running", recovering: "running",
   order: "delayed", reservation: "delayed", delay_run: "delayed", dsm_delay_run: "delayed",
@@ -2788,13 +2800,13 @@ const AUTO_PATTERNS = {
   // programme itself.
   // LG ThinQ calls it the current cycle or course (its "cycles" is a
   // counter), SmartThings the washer mode or a select ending in cycle.
-  program_entity: /^(?!.*(phase|finish|progress|type|time|remain|duration|a[ck]tiv|actif|attivo|count))(.*program|.*current.?(cycle|course)|.*[._]course$|.*(washer|dryer|oven)_mode$|select\..*_cycle$)/i,
+  program_entity: /^(?!.*(phase|finish|progress|type|time|remain|duration|a[ck]tiv|actif|attivo|count|ende\b|programmende|_fin$))(.*program|.*current.?(cycle|course)|.*[._]course$|.*(washer|dryer|oven)_mode$|select\..*_cycle$)/i,
   active_program_entity: /a[ck]tiv\w*.?program|program\w*.?(a[ck]tiv|actif|attivo)/i,
   // What is left of the cycle, not of the filter or the detergent.
-  remaining_time_entity: /^(?!.*(filter|water|clean|detergent|softener|salt|rinse.?aid|batter|range|capacity)).*(time.?to.?end|remain|time.?left|left.?time|finish.?(in|time)|completion.?time|end.?time)/i,
+  remaining_time_entity: /^(?!.*(filter|water|clean|detergent|softener|salt|rinse.?aid|batter|range|capacity)).*(time.?to.?end|remain|time.?left|left.?time|finish.?(in|time)|completion.?time|end.?time|restant|restzeit|verbleib|rimanent|restante|resterend|pozostal|zbyva)/i,
   progress_entity: /^(?!.*(update|firmware|filter)).*(progress|percent_?complete)/i,
   // A door lock (hOn, Electrolux) is not the door.
-  door_entity: /^(?!.*(lock|alarm|assistant)).*door/i,
+  door_entity: /^(?!.*(lock|alarm|assistant|verrou|verriegel|blocco|bloqueo)).*(door|(^|[._])(porte|tur|tuer|puerta|porta|deur|drzwi|dvere)([._]|$))/i,
   alerts_entity: /alert/i,
   connectivity_entity: /connectiv/i,
   // A start delay is set, not pressed: HomeWhiz writes its own on a number.
@@ -2804,8 +2816,14 @@ const AUTO_PATTERNS = {
   resume_entity: /resume/i,
   // Resetting a filter or a counter stops nothing.
   stop_entity: /^(?!.*(filter|descal|counter|statistic|maintenance|hours|usage)).*(stop|reset)/i,
-  power_entity: /_power$|power_w$|watt/i,
-  energy_entity: /^(?!.*(cost|price|tarif|prix|batter)).*(energy|kwh)/i,
+  power_entity: /_power$|power_w$|watt|current_consumption|power_consumption|(^|[._])(leistung|puissance|potenza|potencia|vermogen)([._]|$)/i,
+  energy_entity: /^(?!.*(cost|price|tarif|prix|batter|water|eau|wasser)).*(energ|kwh|consumption)/i,
+  // A delay shown, on a sensor; a delay set, on a number, a select or a time.
+  delay_entity: /^sensor\..*(delay|start.?in|differ|zeitvorwahl|ritardat|retras|uitgesteld)/i,
+  delay_set_entity: /^(number|input_number|select|input_select|time)\..*(delay|start.?in|differ|zeitvorwahl|ritardat|retras|uitgesteld)/i,
+  toggle_entity: /^switch\..*(_power|on_?off|power_?switch|main_?power)$/i,
+  robot_clean_tank_entity: /(clean|fresh|clear).?water|water.?tank|eau.?propre|frischwasser/i,
+  robot_dirty_tank_entity: /(dirty|waste|sewage).?water|eau.?sale|schmutzwasser/i,
 };
 
 // The step of a cycle: Miele names it a program phase, Electrolux a cycle
@@ -3432,6 +3450,22 @@ function commonPrefixOf(ids) {
 const SHARED_FIELDS = ["heating_entity", "cooling_entity"];
 // Whether an entity's unit and class can be what a field reads. No unit says
 // nothing: a template or a word is left to its name.
+// What an entity's class says when its name says nothing a pattern knows
+// (temps_restant, Kasa's current_consumption): a power, an energy counter, a
+// door, the time left or the end time of the cycle.
+function classFits(hass, field, id) {
+  const st = hass.states[id], dom = domainOf(id);
+  const a = (st && st.attributes) || {};
+  const dc = a.device_class;
+  if (field === "power_entity") return dom === "sensor" && dc === "power";
+  if (field === "energy_entity") return dom === "sensor" && dc === "energy" && ["total_increasing", "total"].includes(a.state_class);
+  if (field === "door_entity") return (dom === "binary_sensor" && ["door", "opening"].includes(dc)) || (dom === "sensor" && Array.isArray(a.options) && a.options.some((o) => ["open", "opened"].includes(String(o).toLowerCase())));
+  if (field === "remaining_time_entity") {
+    if (dom !== "sensor" || /total|runtime|operating|hours|filter|usage|lifetime|since|duration|length|estimat/.test(id)) return false;
+    return dc === "duration" || (dc === "timestamp" && /finish|end|fin|ende|done|termin/.test(id));
+  }
+  return false;
+}
 function fieldFits(hass, field, id) {
   const dom = domainOf(id);
   const a = (hass.states[id] && hass.states[id].attributes) || {};
@@ -3442,6 +3476,7 @@ function fieldFits(hass, field, id) {
   if (/temperature_entity$/.test(field)) return (!u || /\u00b0|^c$|^f$|^k$/.test(u)) && (!dc || dc === "temperature");
   if (field === "battery_entity") return (!u || u === "%") && (!dc || dc === "battery");
   if (/(^|_)power_entity$/.test(field)) return (!u || /^(m|k|g)?w$/.test(u)) && (!dc || dc === "power");
+  if (field === "energy_entity") return (!u || /^(m|k)?wh$/.test(u)) && (!dc || dc === "energy");
   if (/humidity_entity$/.test(field)) return (!u || u === "%") && (!dc || dc === "humidity");
   if (field === "progress_entity") return !u || u === "%";
   if (field === "remaining_time_entity") return !["%", "w", "kw", "kwh", "wh", "l", "kg", "g", "km", "m"].includes(u) && !/\u00b0/.test(u);
@@ -3528,7 +3563,7 @@ function autoSuggest(hass, cfg, sectionsFor) {
       .filter(([k]) => !(SHARED_FIELDS.includes(k) && SHARED_FIELDS.includes(field))).map(([, v]) => v));
     const fit = siblings.filter((id) => domains[field].includes(domainOf(id)) && !used.has(id) && fieldFits(hass, field, id)
       && !(emsHeatPump && field === "temperature_entity" && /(^|[._])curflowtemp$/.test(id)));
-    const match = fit.find((id) => re.test(bare(id))) || fit.find((id) => re.test(id));
+    const match = fit.find((id) => re.test(bare(id))) || fit.find((id) => re.test(id)) || fit.find((id) => classFits(hass, field, id));
     if (match) patch[field] = match;
   }
   // ha-google-home puts a speaker's alarms and timers on a device of its
@@ -3976,7 +4011,8 @@ function optionsInclude(st, words) {
 // Names that say an air conditioner only where one can live: a solar
 // inverter's ac_power is alternating current.
 const AC_WORD_RE = /(^|[\s._])ac([\s._]|$)/;
-function detectApplianceType(cfg, st) {
+// nameHay: a second pass on the entity's name, when its id said nothing.
+function detectApplianceType(cfg, st, nameHay) {
   if (cfg.appliance_type && cfg.appliance_type !== "auto") return cfg.appliance_type;
   // A humidifier by its own fields or its entity's class, before a humidity
   // sensor makes a dehumidifier of it. Essential oil diffusers often report
@@ -4064,10 +4100,10 @@ function detectApplianceType(cfg, st) {
   if (FAN_ONLY_FIELDS.some((f) => cfg[f])) return "fan";
   if (FRYER_ONLY_FIELDS.some((f) => cfg[f])) return "air_fryer";
   if (EV_ONLY_FIELDS.some((f) => cfg[f])) return "ev_charger";
-  const hay = `${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.icon) || ""}`.toLowerCase();
+  const hay = nameHay !== undefined ? nameHay : `${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.icon) || ""}`.toLowerCase();
   // Before everything else: a printer's entities are named after its maker or
   // its software, and a Bambu Lab one after its model ("p1s_...", "a1_...").
-  if (/3d.?print|print.?3d|printer-3d|octoprint|prusa|bambu|klipper|moonraker|creality|elegoo|centauri|anycubic|kobra|flashforge|snapmaker|voron|reprap|duet3d|ultimaker|dremel|mainsail|neptune.?[1-4]|saturn.?[1-4]|(^|[\s._])mars.?[1-5]|(^|[\s._])k[12]_(plus|max|pro|se)|(^|[\s._])(x1c|x1e|p1s|p1p|p2s|a1|a1_mini|a1mini|a2l|h2c|h2d|h2dpro|h2s|x2d)_|(^|[\s.])x1_(?!carbon|yoga|nano|extreme)|(^|[\s._-])ender[._-]?\d/.test(hay)) return "printer_3d";
+  if (/3d.?print|print.?3d|(^|[\s._])k1(c|.?max)([\s._]|$)|printer-3d|octoprint|prusa|bambu|klipper|moonraker|creality|elegoo|centauri|anycubic|kobra|flashforge|snapmaker|voron|reprap|duet3d|ultimaker|dremel|mainsail|neptune.?[1-4]|saturn.?[1-4]|(^|[\s._])mars.?[1-5]|(^|[\s._])k[12]_(plus|max|pro|se)|(^|[\s._])(x1c|x1e|p1s|p1p|p2s|a1|a1_mini|a1mini|a2l|h2c|h2d|h2dpro|h2s|x2d)_|(^|[\s.])x1_(?!carbon|yoga|nano|extreme)|(^|[\s._-])ender[._-]?\d/.test(hay)) return "printer_3d";
   // An EV charger, by its name in any language, by its maker's or its
   // integration's, or by the icon of a charging station. "Charger" alone
   // could be a phone's on a plug, so it needs its car. An integration that
@@ -4092,21 +4128,24 @@ function detectApplianceType(cfg, st) {
   if (optionsInclude(st, ["ccp", "rdy"])) return "litter_box";
   // A robot vacuum, mop or mower by its name or its maker's, read without
   // the entities' domains. Dreame's purifier is no robot.
-  if (!["fan", "climate"].includes(domainOf(cfg.state_entity)) && ROBOT_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "robot";
+  if (!["fan", "climate"].includes(domainOf(cfg.state_entity)) && !/purif/.test(hay) && ROBOT_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "robot";
   // A UPS, by its name in any language or by its maker's line.
   // "Onduleur" alone is a UPS when its state is one's (NUT: OL, OB LB, ...),
   // a solar inverter otherwise.
   const upsNamed = stripAccents(hay.replace(/\b[a-z_]+\./g, " "));
   const upsState = !!st && /^((ol|ob|lb|hb|rb|chrg|dischrg|byp|ovr|trim|boost|fsd)(\s+|$))+$|^(online|on.?battery)$/i.test(String(st.state).trim());
-  if (UPS_NAME_RE.test(upsNamed) || (upsState && /onduleur/.test(upsNamed))) return "ups";
+  // A parcel on its way with UPS is no UPS.
+  if ((UPS_NAME_RE.test(upsNamed) || (upsState && /onduleur/.test(upsNamed))) && !/parcel|package|colis|paket|deliver|livraison|tracking|suivi|(^|[^a-z])mail/.test(upsNamed)) return "ups";
   // A pool pump, by its name in any language or by Oklyn's.
   if (POOL_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "pool_pump";
   // Solar panels by their name or their inverter's maker, before a home
   // battery: an EcoFlow PowerStream is the inverter of a battery's panels.
   // Anker's Solarbank and Zendure's SolarFlow say solar and are batteries.
   if (/solar.?bank|solar.?flow/.test(hay)) return "home_battery";
-  if (domainOf(cfg.state_entity) !== "climate" && SOLAR_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "solar";
-  if (BATTERY_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "home_battery";
+  // An inverter microwave or an inverter air conditioner is no solar inverter.
+  if (domainOf(cfg.state_entity) !== "climate" && !/microwave|micro.?onde|mikrowelle|air.?con|inverter.?(ac|clim)([^a-z]|$)|(^|[^a-z])(ac|clim).?inverter/.test(hay) && SOLAR_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "solar";
+  // EcoFlow also makes a cooler, an air conditioner and a mower.
+  if (!/glacier|ecoflow.?wave|blade/.test(hay) && BATTERY_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "home_battery";
   // A bathroom scale, by its name or its maker's, or a weight sensor in
   // kilograms, pounds or stones.
   if (SCALE_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "scale";
@@ -4120,19 +4159,19 @@ function detectApplianceType(cfg, st) {
   // "microwave" before "oven": plenty of devices are named "microwave_oven".
   if (/microwave|micro.?onde|mikrowelle|magnetron|mikrob/.test(hay)) return "microwave";
   if (/coffee|cafeti|cafe|kaffee|espresso|cafetera|macchina.?caff|koffie|kaffemask|ekspres.?do.?kawy|delonghi|de.?longhi|primadonna|barista|fellow.?aiden|(^|[^a-z])(jura|aiden)([^a-z]|$)/.test(hay)) return "coffee";
-  if (/cook.?processor|cookit|thermomix|robot.?cuiseur|companion|monsieur.?cuisine|cookeo|k\u00fcchenmaschine|kuchenmaschine|multicooker|tokit|(^|[\s._])cooker([\s._]|$)/.test(hay)) return "cooker";
+  if (/cook.?processor|cookit|thermomix|robot.?cuiseur|companion|monsieur.?cuisine|cookeo|k\u00fcchenmaschine|kuchenmaschine|multicooker|tokit|(^|[\s._])cooker(?![\s._]?hood)([\s._]|$)/.test(hay)) return "cooker";
   if (/wine.?(cooler|cellar|fridge|cabinet|conditioning|storage)|cave.?(a|\u00e0).?vin|weink(u|ue|\u00fc)hl|weinklima|vinoteca|cantinetta|wijnklimaat|vinkyl|vinkj|vink\u00f8l|winiark|vinotek/.test(hay)) return "fridge";
-  if (/fridge|freezer|frigo|r\u00e9frig|refrig|kuhlschrank|k\u00fchlschrank|nevera|frigor|koelkast|kyl(skap)?\b|kj\u00f8leskap|lod\u00f3wka|lodowka|congel|gefrier|vriezer|(^|[^a-z])frys/.test(hay)) return "fridge";
+  if (/fridge|freezer|frigo|r\u00e9frig|refrig|kuhlschrank|k\u00fchlschrank|nevera|frigor|koelkast|kyl(skap)?\b|kj\u00f8leskap|lod\u00f3wka|lodowka|congel|gefrier|vriezer|(^|[^a-z])frys|geladeira|lednice|koleskab|kjoleskap|jaakaappi|kholodilnik/.test(hay)) return "fridge";
   if (/kettle|stagg|fellow.?ekg|bouilloire|wasserkocher|hervidor|bollitore|waterkoker|vattenkokare|vannkoker|elkedel|czajnik/.test(hay)) return "kettle";
   // An iron, and the steam generator that is one on a boiler. Spanish and
   // Portuguese call a griddle a plancha as well, so theirs is the ironing one:
   // plancha de ropa, centro de planchado, ferro de engomar.
-  if (/\biron(ing)?\b|steam.?(generator|station)|fer.?a.?repasser|centrale.?vapeur|bugeleisen|dampfstation|dampfbugel|plancha.?de.?ropa|planchado|ferro.?(da.?stiro|de.?engomar|de.?passar)|strijkijzer|stoomgenerator|stryk(jarn|ejern)|strygejern|zelazko|generator.?pary|zehlicka|parni.?generator|\u0443\u0442\u044e\u0433|\u043f\u0430\u0440\u043e\u0433\u0435\u043d\u0435\u0440\u0430\u0442\u043e\u0440|\u71a8\u6597/.test(hay)) return "iron";
+  if (/(^|[^a-z])iron(ing)?\b|steam.?(generator|station)|fer.?a.?repasser|centrale.?vapeur|bugeleisen|dampfstation|dampfbugel|plancha.?de.?ropa|planchado|ferro.?(da.?stiro|de.?engomar|de.?passar)|strijkijzer|stoomgenerator|stryk(jarn|ejern)|strygejern|zelazko|generator.?pary|zehlicka|parni.?generator|\u0443\u0442\u044e\u0433|\u043f\u0430\u0440\u043e\u0433\u0435\u043d\u0435\u0440\u0430\u0442\u043e\u0440|\u71a8\u6597/.test(hay)) return "iron";
   // A toaster, but not a toaster oven, which is an oven.
   // A screen, by its name in any language or by a media player that calls
   // itself a television. "TV" alone, since it hides in so many names.
   if (st && domainOf(cfg.state_entity) === "media_player" && st.attributes.device_class === "tv") return "screen";
-  if (SCREEN_NAME_RE.test(hay)) return "screen";
+  if (!["climate", "fan"].includes(domainOf(cfg.state_entity)) && SCREEN_NAME_RE.test(hay)) return "screen";
   // A switch, a server or a NAS, by its name or its maker's. Read without
   // the entities' domains, since a plug's own entity is a switch.
   if (NET_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "network";
@@ -4156,7 +4195,7 @@ function detectApplianceType(cfg, st) {
   // domain says tank, the name says boiler, and the name is the one that knows.
   const eid = String(cfg.state_entity || "").toLowerCase();
   // First: a heat pump's own water heater is still the heat pump.
-  if (/heat.?pump|pompe.?(a|\u00e0).?chaleur|w(a|ae|\u00e4)rmepumpe|bomba.?de.?calor|pompa.?di.?calore|warmtepomp|v(a|\u00e4)rmepump|pompa.?ciep|tepelne.?cerpadlo|ecodan|altherma|aquarea|thermia|yutaki|arotherm|vitocal|lambda.?(wp|heat|hp)|(^|[\s._])eu\d{2}l[\s._]/.test(hay)
+  if (/heat.?pump|pompe.?(a|\u00e0).?chaleur|w(a|ae|\u00e4)rmepumpe|bomba.?de.?calor|pompa.?di.?calore|warmtepomp|v(a|\u00e4)rmepump|pompa.?ciep|tepelne.?cerpadlo|ecodan|altherma|aquarea|thermia|yutaki|arotherm|vitocal|lambda.?(wp|heat|hp)|(^|[\s._])eu\d{2}l[\s._]|nibe|myuplink|therma.?v|estia|(^|[^a-z])(pac|wp)([^a-z]|$)/.test(hay)
     // EMS-ESP's compressor activity sits on its boiler device, under a
     // boiler's name: its short name says heat pump.
     || /(^|[._])hpactivity$/.test(eid)) return "heat_pump";
@@ -4181,25 +4220,35 @@ function detectApplianceType(cfg, st) {
   // Before the boiler: MDI names a storage tank "water-boiler", and water_heater
   // is the Home Assistant domain for one.
   if (/water.?heater|water.?boiler|chauffe.?eau|cumulus|warmwasserspeicher|termo.?electrico|scaldabagno|varmvattenberedare|varmtvannsbereder|podgrzewacz/.test(hay)) return "water_heater";
-  if (/\bboiler|chaudiere|chaudi\u00e8re|heizkessel|gaskessel|caldaia|caldera|cv.?ketel|kocio\u0142|nefit/.test(hay)) return "boiler";
+  if (/(^|[^a-z])boiler|chaudiere|chaudi\u00e8re|heizkessel|gaskessel|caldaia|caldera|cv.?ketel|kocio\u0142|nefit/.test(hay)) return "boiler";
   // Any other climate entity that only heats is a thermostat: a boiler's
   // heating circuit (Bosch's hc1), a radiator valve, a zone.
   if (/^climate\./.test(eid)) return "thermostat";
-  if (/hood|hotte|abzug|extractor|exaustor|afzuigkap|emh|okap/.test(hay)) return "hood";
+  // A bathroom extractor fan is no cooker hood, nor is a neighbourhood.
+  if (/(?<!neighbo(u)?r)hood|hotte|abzug|extractor|exaustor|afzuigkap|emh|okap/.test(hay) && !(domainOf(cfg.state_entity) === "fan" && /bath|salle.?de.?bain|(^|[^a-z])(wc|sdb|toilet)/.test(hay))) return "hood";
   // A fan, by its name in any language, which a fan.* entity id carries; not
   // ventilation, which is a building's.
   if (/ventilat(eur|or|ore)|ventilador|wentylator|fl(a|\u00e4)kt|vifte|ceiling.?fan|(^|[\s._])fan([\s._]|$)|\u98ce\u6247|\u540a\u6247|\u0432\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440/.test(hay)) return "fan";
   if (/cooktop|hotplate|plaque|kochfeld|kookplaat|induction|induktion|kogeplade|(^|[^a-z])hob([^a-z]|$)/.test(hay)) return "cooktop";
-  if (/oven|four|backofen|horno|forno|piekarnik/.test(hay)) return "oven";
+  // "Four" alone, not a plug's fourth socket.
+  if ((/oven|backofen|horno|forno|piekarnik|trouba|(^|[^a-z])ugn([^a-z]|$)/.test(hay) || (/(^|[^a-z])four([^a-z]|$)/.test(hay) && !/(plug|prise|socket|outlet|relay|gang|channel|button|bouton|switch)[\s._-]?four/.test(hay)))) return "oven";
   // Before the dryer: a washer-dryer says "dry" in every language, and it is a
   // washer that also dries, not a dryer that also washes.
   if (WASHER_DRYER_RE.test(stripAccents(hay))) return "washer";
   // A dishwasher first: it dries too.
-  if (/dish|vaisselle|geschirrsp|spuelmasch|spulmasch|lavavajillas|lavastoviglie|vaatwasser|diskmaskin/.test(hay)) return "dishwasher";
+  if (/dish|vaisselle|geschirrsp|spuelmasch|spulmasch|lavavajillas|lavastoviglie|vaatwasser|diskmaskin|zmywark|opvaskemaskin|oppvaskmaskin|mycka|astianpesu|lava.?lou(c|\u00e7)a/.test(hay)) return "dishwasher";
   // Not in the word laundry.
-  if (/(?<!laun)dry|seche|s\u00e8che|tumble|trockner|secadora|asciugatrice|droger|torktumlare/.test(hay)) return "dryer";
+  if (/(?<!laun)dry|seche|s\u00e8che|tumble|trockner|secadora|asciugatrice|droger|torktumlare|suszark|susick|torketromm|kuivausrump/.test(hay)) return "dryer";
   // A temperature sensor nothing above has claimed.
   if (st && domainOf(cfg.state_entity) === "sensor" && ["temperature", "carbon_dioxide"].includes(st.attributes.device_class)) return "climate_sensor";
+  // Nothing in the id (sensor.status, sensor.kitchen_operation_state): the
+  // name the user sees may say it ("Dishwasher state", "S\u00e8che-linge
+  // Status"). The name only, not the maker's, which would make a boiler of a
+  // Bosch washer; and not when the id already says washer.
+  if (nameHay === undefined && st && !/wash|lave.?linge|waschmasch|lavadora|lavatrice|wasmachine|tvattmaskin|vaskemaskin|pralka|pesukone/.test(hay)) {
+    const named = stripAccents(String(st.attributes.friendly_name || "")).toLowerCase().trim();
+    if (named) return detectApplianceType(cfg, st, `${cfg.icon || ""} ${named} ${(st.attributes.icon) || ""}`);
+  }
   return "washer";
 }
 
@@ -4399,10 +4448,11 @@ const STRAIGHTENER_RE = /straighten|flat.?iron|lisseur|fer.?a.?lisser|glatteisen
 // a NAS by its maker or its system, a switch by its name, a rack by its own.
 // A Nintendo Switch is a console, not a switch.
 const NET_LAYOUTS = ["switch", "server", "nas", "rack", "router", "mini_pc"];
-const NET_NAS_RE = /(^|[\s._-])(nas|synology|diskstation|qnap|ugreen|unraid|truenas|freenas|openmediavault|omv|asustor|terramaster|ds\d{3})/;
-// Not a relay's own switch_0 or switch_2 (Shelly, Tuya), nor a wall or light
-// switch; a switch named by its ports still is one.
-const NET_SWITCH_RE = /(?<!nintendo.?|wall.?|light.?|relay.?|power.?|smart.?)switch(?![\s._-]?\d)|(^|[^a-z])\d{1,2}.?ports?([^a-z]|$)|(^|[\s._-])(usw|edgeswitch|poe)([\s._-]|$)/;
+const NET_NAS_RE = /(^|[\s._-])(nas|synology|diskstation|qnap|ugreen|unraid|truenas|freenas|openmediavault|omv|asustor|terramaster|ds\d{3}(?!\d))/;
+// "Switch" alone only leads a name ("Switch bureau"): kitchen_switch is a
+// plug's, switch_0 a relay's (Shelly, Tuya). A switch named by its ports,
+// its PoE or its network still is one.
+const NET_SWITCH_RE = /^[\s._-]*switch(?![\s._-]?\d)|(network|ethernet|gigabit|managed|poe|lan)[\s._-]?switch|switch[\s._-]?(poe|gigabit|ethernet|reseau|network)|(^|[^a-z])\d{1,2}.?ports?([^a-z]|$)|(^|[\s._-])(usw|edgeswitch|poe)([\s._-]|$)/;
 const NET_RACK_RE = /(^|[\s._-])(rack|baie|homelab)([\s._-]|$)/;
 // A mini PC (#129): a small box on a desk, Beelink, NUC and the like.
 const NET_MINIPC_RE = /(^|[\s._-])(mini.?pc|beelink|nuc|minisforum|geekom|gmktec|mele|chuwi|asrock.?deskmini|mac.?mini)([\s._-]|\d|$)/;
@@ -4561,7 +4611,7 @@ const ROBOT_ONLY_FIELDS = ["robot_layout", "robot_station", "robot_station_color
   "shortcut_entities", "robot_water_entity", "robot_clean_mode_entity", "robot_clean_tank_entity", "robot_dirty_tank_entity", "robot_rain_entity", "robot_error_entity", "robot_winter", "robot_winter_entity"];
 // A robot by its name, its maker's or its integration's. A robot cook is a
 // cooker, so the word robot needs what it does.
-const ROBOT_NAME_RE = /dolphin|sileno|tapo.?rv\d+|proscenic|hombot|ambrogio|tineco|aspirateur.?balai|floor.?one|ifloor|laveur.?de.?sol|floor.?washer|nass.?trocken|lavapavimenti|stick.?vac|cordless.?vac|akkusauger|stielsauger|roomba|braava|roborock|ecovacs|deebot|dreame|neato|eufy.?clean|robovac|xiaomi.?vacuum|conga|robot.?(vacuum|aspir|mop|laveur|mower|tondeuse)|robot.?(clean|sweep)|vacuum|aspirateur|saugroboter|staubsauger|wischroboter|aspiradora|aspirapolvere|robotstofzuiger|stofzuiger|dammsugare|st(o|\u00f8)vsuger|odkurzacz|vysavac|landroid|automower|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|lawn.?mower|(^|[^a-z])mower|tondeuse|m(a|ae|\u00e4)hroboter|robotmaaier|grasmaaier|cortac(e|\u00e9)sped|tosaerba|corta.?relva|robotgr(a|\u00e4)sklipp|robotgressklipp|robotpl(a|\u00e6)neklipp|kosiarka|sekacka|\u626b\u5730|\u5438\u5c18|\u62d6\u5730|\u5272\u8349|\u043f\u044b\u043b\u0435\u0441\u043e\u0441|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
+const ROBOT_NAME_RE = /winbot|dolphin|sileno|tapo.?rv\d+|proscenic|hombot|ambrogio|tineco|aspirateur.?balai|floor.?one|ifloor|laveur.?de.?sol|floor.?washer|nass.?trocken|lavapavimenti|stick.?vac|cordless.?vac|akkusauger|stielsauger|roomba|braava|roborock|ecovacs|deebot|dreame|neato|eufy.?clean|robovac|xiaomi.?vacuum|conga|robot.?(vacuum|aspir|mop|laveur|mower|tondeuse)|robot.?(clean|sweep)|vacuum|aspirateur|saugroboter|staubsauger|wischroboter|aspiradora|aspirapolvere|robotstofzuiger|stofzuiger|dammsugare|st(o|\u00f8)vsuger|odkurzacz|vysavac|landroid|automower|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|lawn.?mower|(^|[^a-z])mower|tondeuse|m(a|ae|\u00e4)hroboter|robotmaaier|grasmaaier|cortac(e|\u00e9)sped|tosaerba|corta.?relva|robotgr(a|\u00e4)sklipp|robotgressklipp|robotpl(a|\u00e6)neklipp|kosiarka|sekacka|\u626b\u5730|\u5438\u5c18|\u62d6\u5730|\u5272\u8349|\u043f\u044b\u043b\u0435\u0441\u043e\u0441|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
 const ROBOT_MOWER_RE = /mow|m(a|ae|\u00e4)h|tondeuse|maaier|cortac|tosaerba|relva|klipp|kosiark|sekack|landroid|automower|worx|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|\u5272\u8349|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
 // A robot that vacuums and mops in the same cycle (#91), named as such.
 const ROBOT_COMBO_RE = /combo|hybrid|2.?[ei]n.?1|saug.?(und.?)?wisch|aspirateur.?laveur|\u626b\u62d6/;
@@ -5455,11 +5505,6 @@ function hrvControls(hass, cfg) {
   return out;
 }
 
-// A soft shadow on the floor, blurred so it reads as the object standing on
-// the floor rather than a grey plate laid under it. footPath takes the outline
-// of the footprint itself, for an appliance drawn in three-quarter view.
-const shdBlur = (id, b) => `<filter id="${id}" x="-40%" y="-200%" width="180%" height="500%"><feGaussianBlur stdDeviation="${b}"/></filter>`;
-const footShadow = (d, op = .24, b = 1.6) => { const id = `shdf-${d.length}-${d.slice(1, 12)}`.replace(/[^\w-]/g, "_"); return `${shdBlur(id, b)}<path d="${d}" fill="#000" opacity="${op}" filter="url(#${id})"/>`; };
 // Heat recovery ventilation, read from its fan (or climate, or select) entity:
 // on or off, its speed and its preset (boost, away); a bypass or Vallox's
 // cell state (heat recovery, cool recovery, bypass, defrosting); a filter in
@@ -6294,7 +6339,7 @@ const NT_NAME_RES = [
   ["detector", /x.?sense|smoke|fumee|detecteur.?(de.?)?(fumee|co|fuite)|monoxyde|carbon.?monoxide|(^|[^a-z])co.?(alarm|detector)|rauchmelder|detector.?de.?humo|rilevatore|rookmelder|brandvarnare|roykvarsler|roegalarm|czujnik.?dymu|water.?leak|fuite.?d.?eau|wassermelder|leak.?sensor/],
   ["christmas_tree", /christmas|xmas|(^|[^a-z])sapin|(^|[^a-z])noel([^a-z]|$)|weihnacht|tannenbaum|navidad|natale|kerstboom|julgran|juletre|juletrae|choink|vanocni.?strom/],
   ["aquarium", /aquari|akwari|akvari/],
-  ["mobility", /ctek|noco|optimate|tecmate|accumate|battery.?(charger|tender|maintainer)|trickle.?charg|chargeur.?(de.?)?batter|batterieladeg|erhaltungslad|caricabatter|cargador.?de.?bater|acculader|prostownik|druppellad|cowboy|vanmoof|(^|[.])niu([._\s]|$)|trottinette|e-?scooter|(^|[^a-z])scooter([^a-z]|$)|ninebot|(^|[^a-z])(velo|e-?bike|ebike|vae|pedelec)([^a-z]|$)|gyropode|gyroroue|monowheel|hoverboard|(^|[^a-z])moto([^a-z]|$)|motorcycle|super.?soco|sur.?ron|ausom|dualtron|kaabo|patinete|monopattino|hulajnoga|elsparkcykel|elsparkesykkel|kolobezka/],
+  ["mobility", /ctek(?!.?chargestorm)|noco|optimate|tecmate|accumate|battery.?(charger|tender|maintainer)|trickle.?charg|chargeur.?(de.?)?batter|batterieladeg|erhaltungslad|caricabatter|cargador.?de.?bater|acculader|prostownik|druppellad|cowboy|vanmoof|(^|[.])niu([._\s]|$)|trottinette|e-?scooter|(^|[^a-z])scooter([^a-z]|$)|ninebot|(^|[^a-z])(velo|e-?bike|ebike|vae|pedelec)([^a-z]|$)|gyropode|gyroroue|monowheel|hoverboard|(^|[^a-z])moto([^a-z]|$)|motorcycle|super.?soco|sur.?ron|ausom|dualtron|kaabo|patinete|monopattino|hulajnoga|elsparkcykel|elsparkesykkel|kolobezka/],
   ["sauna", /sauna|saunum|huum|harvia|(^|[^a-z])(tylo|effe)([^a-z]|$)/],
   ["spa", /balboa|spanet|arctic.?spa|(^|[^a-z])(spa|gecko|jacuzzi|hot.?tub|bain.?nordique|whirlpoolwanne)([^a-z]|$)/],
   ["meter", /linky|compteur.?(electrique|edf|enedis)|smart.?meter|(^|[\s.])(electricity|gas|water).?meter|p1.?meter|(^|[^a-z])dsmr([^a-z]|$)|shelly.?(pro.?)?3?em([^a-z]|$)|tibber.?pulse|iammeter|ksem|homewizard.?(p1|kwh|energy)|(^|[^a-z])(teleinfo|papp|sinsts)([^a-z]|$)/],
@@ -6541,7 +6586,7 @@ function grillLayoutOf(cfg, st) {
 function mobilityLayoutOf(cfg, st) {
   if (MOBILITY_LAYOUTS.includes(cfg.mobility_layout)) return cfg.mobility_layout;
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
-  if (/ctek|noco|optimate|tecmate|accumate|battery.?(charger|tender|maintainer)|trickle.?charg|chargeur.?(de.?)?batter|batterieladeg|erhaltungslad|caricabatter|cargador.?de.?bater|acculader|prostownik|druppellad/.test(hay)) return "charger";
+  if (/ctek(?!.?chargestorm)|noco|optimate|tecmate|accumate|battery.?(charger|tender|maintainer)|trickle.?charg|chargeur.?(de.?)?batter|batterieladeg|erhaltungslad|caricabatter|cargador.?de.?bater|acculader|prostownik|druppellad/.test(hay)) return "charger";
   if (/ausom|dualtron|kaabo|off.?road|tout.?terrain|gelande|todoterreno|fuoristrada|teren/.test(hay)) return "offroad";
   if (/gyropode|gyroroue|monowheel|hoverboard|segway.?pt|one.?wheel/.test(hay)) return "gyropode";
   if (/(^|[^a-z])moto([^a-z]|$)|motorcycle|motorrad|motocicl|motocykl|super.?soco|sur.?ron|talaria|horwin|zero.?s/.test(hay)) return "motorcycle";
@@ -6895,8 +6940,6 @@ function ntValueText(hass, cfg, id) {
   return formatInfoValue(s, hass, null, cfg, id);
 }
 
-const ntFlake = (x, y, r, color, w = .8) =>
-  `<path d="M${x} ${y - r}v${2 * r}M${x - r} ${y}h${2 * r}M${x - r * .7} ${y - r * .7}l${r * 1.4} ${r * 1.4}M${x + r * .7} ${y - r * .7}l${-r * 1.4} ${r * 1.4}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
 // A battery charger on a smart plug (HACF #209), drawn generic: a gauge of
 // four segments that fills one at a time and starts again while it charges,
 // full while it maintains, a green maintenance light, the mode lights chosen
@@ -8955,457 +8998,6 @@ function esc(value) {
     .replace(/'/g, "&#39;");
 }
 
-// The fridge drawing. Two sets of coordinates: `body` is laid out against the
-// whole cabinet (doors shut), `door[]` against each panel (a door open). The
-// display, the handle and the ice dispenser belong to their door and swing
-// with it, which is also why an open door shows nothing but its edge.
-// Fridges and freezers in three-quarter view: the cabinet with its side and
-// top, doors that turn on their hinge (the outside until seen edge on, then
-// the inside with its balconies), a lit inside with things standing on glass
-// shelves, a cellar's bottles lying on wooden racks, an ice dispenser, a chest
-// freezer whose lid lifts and an upright one with see-through drawers. Drawn
-// in SVG on a 120 x 135 field. anim (from the card's door animation) sets
-// open, freezerOpen and kF / kZ, how far each door has turned.
-const FR3 = (() => {
-  let n = 0;
-  const id = () => `fr${n++}`;
-  // The cabinet: front x0..x1, y0..y1; side and top drawn with a depth (dx, dy).
-  const DX = 11, DY = -6;
-  function cabinet(x0, y0, x1, y1, g) {
-    return `${footShadow(`M${x0 - 3} ${y1 + 3.5} H${x1 + 3} L${x1 + DX + 4} ${y1 + DY + 2.5} H${x0 + DX - 1} Z`, .3, 1.8)}
-    <path d="M${x1} ${y0} L${x1 + DX} ${y0 + DY} V${y1 + DY} L${x1} ${y1} Z" fill="url(#${g.side})"/>
-    <path d="M${x0} ${y0} L${x0 + DX} ${y0 + DY} H${x1 + DX} L${x1} ${y0} Z" fill="url(#${g.top})"/>
-    <path d="M${x1} ${y0} L${x1 + DX} ${y0 + DY}" stroke="rgba(255,255,255,.8)" stroke-width=".7"/>
-    <rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" rx="2.5" fill="url(#${g.front})" stroke="rgba(0,0,0,.18)" stroke-width=".6"/>
-    <rect x="${x0 + 3}" y="${y1}" width="5" height="3" rx="1" fill="#59616b"/><rect x="${x1 - 8}" y="${y1}" width="5" height="3" rx="1" fill="#59616b"/>`;
-  }
-  function defs(g, warmLight) {
-    return `<defs>
-    <linearGradient id="${g.front}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--ac-body-hi, #ffffff)"/><stop offset=".55" stop-color="var(--ac-body, #e9edf1)"/><stop offset="1" stop-color="var(--ac-body-lo, #b9c2ca)"/></linearGradient>
-    <linearGradient id="${g.side}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#aeb7bf"/><stop offset="1" stop-color="#8b959e"/></linearGradient>
-    <linearGradient id="${g.top}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6f8fa"/><stop offset="1" stop-color="#d5dbe0"/></linearGradient>
-    <linearGradient id="${g.door}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--ac-body-hi, #ffffff)"/><stop offset=".6" stop-color="var(--ac-body, #e9edf1)"/><stop offset="1" stop-color="var(--ac-body-lo, #b9c2ca)"/></linearGradient>
-    <linearGradient id="${g.cav}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${warmLight ? "#fffdf5" : "#5f6a73"}"/><stop offset="1" stop-color="${warmLight ? "#e3eef5" : "#3d464e"}"/></linearGradient>
-    <linearGradient id="${g.handle}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8f99a3"/><stop offset=".4" stop-color="#f3f5f7"/><stop offset="1" stop-color="#7d868f"/></linearGradient>
-    <linearGradient id="${g.rec}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b1f24"/><stop offset="1" stop-color="#3a424a"/></linearGradient>
-    <linearGradient id="${g.glass}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#cfe9ff" stop-opacity=".55"/><stop offset=".5" stop-color="#ffffff" stop-opacity=".25"/><stop offset="1" stop-color="#cfe9ff" stop-opacity=".5"/></linearGradient>
-    <radialGradient id="${g.glow}" cx=".5" cy=".3" r=".7"><stop offset="0" stop-color="#fffbe6" stop-opacity=".9"/><stop offset="1" stop-color="#fffbe6" stop-opacity="0"/></radialGradient>
-    </defs>`;
-  }
-  // A handle standing out from the door: its bar and the shadow it casts.
-  const handle = (x, y, h, g) => `<rect x="${x + 1.4}" y="${y + 1}" width="2.4" height="${h}" rx="1.2" fill="rgba(0,0,0,.15)"/><rect x="${x}" y="${y}" width="2.6" height="${h}" rx="1.3" fill="url(#${g.handle})"/><rect x="${x + 2.6}" y="${y + 1.5}" width="1" height="${h - 3}" fill="#6d7680"/>`;
-  // The display shows the reading as the card writes it; with no current it is
-  // a dark pane.
-  const lcd = (x, y, w, v, warn, dark) => v === undefined || v === "" ? "" : `<g class="fr-lcd${warn ? " warn" : ""}"><rect x="${x}" y="${y}" width="${w}" height="8" rx="1.6" fill="#15191d"/>${dark ? "" : `<text x="${x + w / 2}" y="${y + 6}" text-anchor="middle" font-size="${Math.min(5.6, (w * 1.75) / Math.max(3, String(v).length)).toFixed(2)}" font-weight="600" fill="${warn ? "#ff5252" : "#4fc3f7"}">${esc(v)}</text>`}</g>`;
-  const seam = (x0, y, x1) => `<path d="M${x0} ${y} H${x1}" stroke="rgba(0,0,0,.28)" stroke-width=".9"/><path d="M${x0} ${y + 1} H${x1}" stroke="rgba(255,255,255,.7)" stroke-width=".5"/>`;
-  const vseam = (x, y0, y1) => `<path d="M${x} ${y0} V${y1}" stroke="rgba(0,0,0,.28)" stroke-width=".9"/><path d="M${x + 1} ${y0} V${y1}" stroke="rgba(255,255,255,.6)" stroke-width=".5"/>`;
-  // A cube of ice: rounded, pale blue, with a gleam on its corner.
-  const cube = (x, y, s, r, cls = "", fall = 14) => `<g class="fr-cube ${cls}" style="--fall:${fall}px"><g transform="translate(${x} ${y}) rotate(${r})"><rect x="${-s / 2}" y="${-s / 2}" width="${s}" height="${s}" rx="${s * .25}" fill="#e6f6ff" stroke="#81c7f5" stroke-width=".45"/><path d="M${-s * .3} ${-s * .25} L${-s * .05} ${-s * .32}" stroke="#fff" stroke-width=".7" stroke-linecap="round"/></g></g>`;
-  // The ice and water dispenser: a dark recess, the ice bin behind its window,
-  // the chute, the lever, a glass on the drip tray, cubes dropping into it.
-  function dispenser(x, y, w, h, s, g) {
-    const cx = x + w / 2;
-    const bin = s.ice !== undefined ? `<rect x="${x + 2.5}" y="${y + 2.5}" width="${w - 5}" height="9" rx="1.5" fill="#0f1317"/>${s.ice ? [0, 1, 2, 3, 4].map((i) => cube(x + 5 + i * (w - 10) / 4, y + 8 - (i % 2) * 2.2, 3.4, i * 23)).join("") + `<path class="fr-glint" d="M${x + 4} ${y + 4} H${x + w - 4}" stroke="#bfe6ff" stroke-width=".6"/>` : `<text x="${cx}" y="${y + 9}" text-anchor="middle" font-size="3.6" fill="#59616b">\u2014</text>`}` : "";
-    const falling = s.ice ? cube(cx, y + 17, 2.8, 15, "drop", 11) + cube(cx - 1, y + 17, 2.6, 40, "drop d2", 11) + cube(cx + 1, y + 17, 2.6, 70, "drop d3", 11) : "";
-    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="url(#${g.rec})" stroke="rgba(0,0,0,.35)" stroke-width=".5"/>
-    <path d="M${x + 1} ${y + 1} H${x + w - 1} L${x + w - 3} ${y + 3} H${x + 3} Z" fill="rgba(0,0,0,.4)"/>
-    ${bin}
-    <rect x="${cx - 2.5}" y="${y + 13}" width="5" height="3" rx="1" fill="#59616b"/>
-    <rect x="${cx - 4}" y="${y + 16.5}" width="1.2" height="7" rx=".6" fill="#8f99a3"/>
-    ${falling}
-    <path d="M${cx - 4} ${y + h - 9} L${cx - 3.2} ${y + h - 3.6} H${cx + 3.2} L${cx + 4} ${y + h - 9}" fill="url(#${g.glass})" stroke="#9fc6e6" stroke-width=".5"/>
-    ${s.ice ? cube(cx - 1.2, y + h - 5.4, 2.4, 20) + cube(cx + 1.4, y + h - 5.8, 2.2, 55) : ""}
-    <rect x="${x + 2}" y="${y + h - 3.4}" width="${w - 4}" height="2.2" rx="1" fill="#59616b"/>`;
-  }
-  // The inside, seen through the open front as a real box: the back wall set
-  // back along the cabinet's own depth, the left wall and the floor showing,
-  // glass shelves seen a little from above, and things standing on them with
-  // a top of their own. What lies right of or above the opening stays hidden
-  // behind the frame.
-  function box3(x, y, w, h, d, front, top, side) {
-    // A box standing at (x, y) bottom-left of its front face, depth d along the
-    // cabinet's depth vector.
-    const kx = d * 0.73, ky = -d * 0.4;
-    return `<path d="M${x} ${y - h} L${x + kx} ${y - h + ky} H${x + w + kx} L${x + w} ${y - h} Z" fill="${top}"/>
-    <path d="M${x + w} ${y} L${x + w + kx} ${y + ky} V${y - h + ky} L${x + w} ${y - h} Z" fill="${side}"/>
-    <rect x="${x}" y="${y - h}" width="${w}" height="${h}" fill="${front}"/>`;
-  }
-  function inside(x0, y0, x1, y1, g, s, freezer) {
-    const cid = id(), gl = id(), gb = id(), cy = id(), DXI = 12, DYI = -7;
-    const bx0 = x0 + DXI, by0 = y0 + DYI, by1 = y1 + DYI;
-    const lit = !s.dark;
-    const wallBack = `url(#${gb})`, wallLeft = `url(#${gl})`, floor = lit ? "#c9d6e0" : "#3a434a";
-    const grads = `<linearGradient id="${gl}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${lit ? "#aebfcc" : "#2c3338"}"/><stop offset="1" stop-color="${lit ? "#dbe6ee" : "#3d464e"}"/></linearGradient>
-    <linearGradient id="${cy}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".35"/><stop offset=".35" stop-color="#fff" stop-opacity=".35"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".3"/></linearGradient>
-    <linearGradient id="${gb}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${lit ? "#ffffff" : "#4a545c"}"/><stop offset=".5" stop-color="${lit ? "#eef5fa" : "#434c54"}"/><stop offset="1" stop-color="${lit ? "#d6e2ea" : "#3a434a"}"/></linearGradient>`;
-    const shelfYs = freezer === "drawers" ? [] : freezer ? [0.5] : [0.3, 0.58];
-    const shelf = (f) => {
-      const y = y0 + (y1 - y0) * f;
-      return `<path d="M${x0} ${y} L${x0 + DXI} ${y + DYI} H${x1 + 2} V${y} Z" fill="rgba(190,225,250,.55)" stroke="rgba(110,160,195,.7)" stroke-width=".5"/>
-      <rect x="${x0}" y="${y}" width="${x1 - x0}" height="1.6" fill="rgba(140,185,215,.9)"/><path d="M${x0} ${y + .3} H${x1}" stroke="#fff" stroke-width=".6"/>
-      <path d="M${x0 + 2} ${y + 2.2} L${x0 + DXI + 2} ${y + DYI + 2.2} H${x1 + 2}" stroke="rgba(0,0,0,.08)" stroke-width="1.6" fill="none"/>`;
-    };
-    const sy = (f) => y0 + (y1 - y0) * f;
-    const items = freezer === "drawers" ? drawerStack(x0, y0, x1, y1, s.dark, s.kF === undefined ? 1 : s.kF)
-      : freezer
-      ? box3(x0 + 6, sy(0.5) - 1, 12, 8, 6, "#90caf9", "#bbdefb", "#64b5f6") + box3(x0 + 21, sy(0.5) - 2, 10, 7, 6, "#ef9a9a", "#ffcdd2", "#e57373")
-        + box3(x0 + 7, y1 - 2, 14, 9, 7, "#e0e0e0", "#f5f5f5", "#bdbdbd") + box3(x0 + 25, y1 - 3, 12, 8, 6, "#a5d6a7", "#c8e6c9", "#81c784")
-      : box3(x0 + 7, sy(0.3) - 1, 5, 11, 4, "#fafafa", "#eceff1", "#cfd8dc") + `<path d="M${x0 + 7} ${sy(0.3) - 12} l2.5 -2.2 l2.5 2.2 z" fill="#42a5f5"/>`
-        + box3(x0 + 16, sy(0.3) - 2, 9, 6, 5, "#ffb74d", "#ffe0b2", "#fb8c00")
-        + `<ellipse cx="${x0 + 13}" cy="${sy(0.58) - 4}" rx="4.6" ry="3.6" fill="#e53935"/><path d="M${x0 + 11} ${sy(0.58) - 6} q1.5 -1 3 0" stroke="#fff" stroke-width=".7" fill="none" opacity=".7"/>`
-        + standingBottle(x0 + 24, sy(0.58) - 3, 2.3, 16, "#43a047", "#1b5e20", cy)
-        + `<ellipse cx="${x0 + 33}" cy="${sy(0.58) - 3}" rx="4" ry="2.4" fill="#fff176"/><ellipse cx="${x0 + 33}" cy="${sy(0.58) - 4}" rx="4" ry="1.6" fill="#fff9c4"/>`
-        + box3(x0 + 3, y1 - 1.5, x1 - x0 - 10, 8, 6, "rgba(200,230,200,.75)", "rgba(220,240,220,.7)", "rgba(160,200,160,.75)")
-        + `<ellipse cx="${x0 + 12}" cy="${y1 - 7}" rx="3" ry="2.2" fill="#7cb342"/><ellipse cx="${x0 + 20}" cy="${y1 - 6.5}" rx="3" ry="2.2" fill="#fb8c00"/>`;
-    const lamp = lit ? `<rect x="${bx0 + 6}" y="${by0 + 1}" width="${x1 - bx0 - 10}" height="2.2" rx="1" fill="#fffde7"/><path d="M${bx0} ${by0 + 2} H${x1}" stroke="none"/>
-      <polygon points="${bx0 + 6},${by0 + 3} ${x1 - 4},${by0 + 3} ${x1},${y1} ${x0},${y1}" fill="url(#${g.glow})" opacity=".55"/>` : "";
-    return `<defs>${grads}</defs><clipPath id="${cid}"><rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}"/></clipPath>
-    <g clip-path="url(#${cid})">
-      <rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="${wallLeft}"/>
-      <rect x="${bx0}" y="${by0}" width="${x1 - bx0 + 4}" height="${by1 - by0}" fill="${wallBack}"/>
-      <path d="M${x0} ${y0} L${bx0} ${by0} V${by1} L${x0} ${y1} Z" fill="${wallLeft}"/>
-      <path d="M${x0} ${y1} L${bx0} ${by1} H${x1 + 4} V${y1} Z" fill="${floor}"/>
-      <path d="M${bx0} ${by0} V${by1} M${bx0} ${by1} H${x1 + 4}" stroke="rgba(0,0,0,.22)" stroke-width=".8"/>
-      <path d="M${bx0 + 1} ${by0} V${by1 - 1} H${x1 + 4}" stroke="rgba(0,0,0,.08)" stroke-width="2.4" fill="none"/>
-      ${[0.25, 0.5, 0.75].map((f) => `<path d="M${x0} ${y0 + (y1 - y0) * f} L${bx0} ${by0 + (by1 - by0) * f}" stroke="rgba(0,0,0,.06)" stroke-width=".6"/>`).join("")}
-      ${lamp}
-      ${shelfYs.map(shelf).join("")}
-      ${items}
-      ${freezer || !lit ? "" : [0, 1, 2].map((i) => `<path class="fr-mist m${i + 1}" d="M${x0 + 10 + i * 12} ${y1 - 2} q2 3 0 6" stroke="rgba(200,230,255,.8)" stroke-width="1" fill="none"/>`).join("")}
-    </g>
-    <rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="none" stroke="rgba(0,0,0,.25)" stroke-width="1.2"/>
-    <path d="M${x0 + .6} ${y0 + .6} V${y1 - .6}" stroke="#e9eef2" stroke-width="1.6"/>`;
-  }
-  // A bottle standing upright, seen slightly from above: round foot, straight
-  // sides, a curved shoulder, the neck and its cap.
-  function standingBottle(cx, by, r, h, color, cap, shade) {
-    const ry = r * 0.32, hb = h * 0.58, sh = h * 0.2, hn = h * 0.22, rn = r * 0.38;
-    const t = by - hb, ts = t - sh, tn = ts - hn;
-    const d = `M${cx - r} ${t} L${cx - r} ${by} A${r} ${ry} 0 0 0 ${cx + r} ${by} L${cx + r} ${t} C${cx + r} ${t - sh * .55} ${cx + rn} ${ts + sh * .35} ${cx + rn} ${ts} L${cx + rn} ${tn} L${cx - rn} ${tn} L${cx - rn} ${ts} C${cx - rn} ${ts + sh * .35} ${cx - r} ${t - sh * .55} ${cx - r} ${t} Z`;
-    return `<path d="${d}" fill="${color}"/><path d="${d}" fill="url(#${shade})"/>
-      <rect x="${cx - r}" y="${t + hb * .25}" width="${r * 2}" height="${hb * .4}" fill="#f5f0e1" opacity=".85"/><rect x="${cx - r}" y="${t + hb * .25}" width="${r * 2}" height="${hb * .4}" fill="url(#${shade})"/>
-      <rect x="${cx - rn - .2}" y="${tn - 1.6}" width="${rn * 2 + .4}" height="1.8" rx=".4" fill="${cap}"/><ellipse cx="${cx}" cy="${tn - 1.6}" rx="${rn + .2}" ry="${(rn + .2) * .35}" fill="${cap}" opacity=".7"/>
-      <path d="M${cx - r * .45} ${t - sh * .2} V${by - 1}" stroke="rgba(255,255,255,.45)" stroke-width=".6"/>`;
-  }
-  // A jar seen slightly from above: its lid is an ellipse.
-  function jar(cx, by, r, h, color, lid, shade) {
-    const ry = r * 0.32;
-    const d = `M${cx - r} ${by - h} L${cx - r} ${by} A${r} ${ry} 0 0 0 ${cx + r} ${by} L${cx + r} ${by - h} Z`;
-    return `<path d="${d}" fill="${color}"/><path d="${d}" fill="url(#${shade})"/>
-      <rect x="${cx - r - .2}" y="${by - h - 1.8}" width="${r * 2 + .4}" height="1.8" fill="${lid}"/><ellipse cx="${cx}" cy="${by - h - 1.8}" rx="${r + .2}" ry="${ry}" fill="${lid}"/><ellipse cx="${cx}" cy="${by - h - 1.8}" rx="${r * .8}" ry="${ry * .7}" fill="rgba(255,255,255,.25)"/>`;
-  }
-  // A wine bottle lying on a rack, neck towards us: tip (tx, ty), its axis going
-  // back along (ux, uy).
-  function lyingBottle(tx, ty, ux, uy, len, glass, capsule) {
-    const nx = -uy, ny = ux; // perpendicular, towards the bottom right
-    const prof = [[0, 1.2], [2.6, 1.25], [4.6, 1.25], [6, 2.2], [7.4, 3], [8.8, 3.3], [len, 3.3]];
-    const pt = (s0, r, side) => `${(tx + ux * s0 + nx * r * side).toFixed(2)} ${(ty + uy * s0 + ny * r * side).toFixed(2)}`;
-    const outline = (from, to) => { const seg = prof.filter(([s0]) => s0 >= from && s0 <= to); return `M${seg.map(([s0, r]) => pt(s0, r, 1)).join(" L")} L${seg.reverse().map(([s0, r]) => pt(s0, r, -1)).join(" L")} Z`; };
-    const end = prof[prof.length - 1];
-    return `<ellipse cx="${tx + ux * end[0]}" cy="${ty + uy * end[0]}" rx="3.3" ry="3.3" fill="${glass}"/>
-      <path d="${outline(0, len)}" fill="${glass}"/>
-      <path d="M${pt(5.6, 1.4, -1)} L${pt(len - .5, 2.2, -1)}" stroke="rgba(255,255,255,.28)" stroke-width=".9" stroke-linecap="round"/>
-      <path d="${outline(0, 2.6)}" fill="${capsule}"/>
-      <ellipse cx="${tx}" cy="${ty}" rx="1.25" ry="1.25" fill="${capsule}" stroke="rgba(0,0,0,.35)" stroke-width=".4"/>`;
-  }
-  // A door turning on its hinge. Closed it spans W from the hinge (sgn +1: hinge
-  // on the left, -1: on the right); wide open its free edge sits wOpen beyond the
-  // hinge, inside face towards us (the drawing of door()). k (0..1) is how far
-  // it has turned. Until it is seen edge on, its outside turns with it: the panel
-  // and what is on it (front). A point gone out by z towards us moves by
-  // (-DX, -DY) * z / DEPTH, the cabinet's own depth vector.
-  const DEPTH = 40, KD = DX / DEPTH;
-  function swing(xh, y0, y1, g, sgn, W, wOpen, kind, front, k = 1) {
-    const proj = (th) => sgn * W * Math.cos(th) - KD * W * Math.sin(th);
-    const thEdge = Math.atan2(sgn, KD);
-    let lo = thEdge, hi = Math.PI * .99;
-    for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (Math.abs(proj(m)) < wOpen) lo = m; else hi = m; }
-    const th = k * lo, e = proj(th);
-    if (Math.sign(e) === sgn) {
-      const a = e / (sgn * W), b = Math.sin(th) * 1.4 / (sgn * W);
-      const fx = xh + e, fy = (x) => x;
-      return `<g transform="matrix(${a} ${b} 0 1 ${xh - a * xh} ${-b * xh})">${front}</g>`
-        + `<path d="M${fx} ${y0 + b * sgn * W} V${y1 + b * sgn * W}" stroke="rgba(0,0,0,.35)" stroke-width="${.6 + 2.4 * Math.sin(th)}"/>`;
-    }
-    PF = Math.min(1, Math.abs(e) / wOpen);
-    const d = door(xh, y0, y1, g, -sgn, Math.abs(e), kind);
-    PF = 1;
-    return d;
-  }
-  const panel = (x0, y0, x1, y1, g) => `<rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" rx="2.2" fill="url(#${g.front})" stroke="rgba(0,0,0,.2)" stroke-width=".6"/>`;
-  // A door swung wide open on its hinge (dir -1: hinge on the left, +1: on the
-  // right), seen from inside: a liner with a gasket, the thickness of the door
-  // on its free edge, and balconies that stand out of the liner with what they
-  // hold. kind: "bins" (fridge), "glass" (wine cellar: a framed pane, nothing in
-  // it), "plain".
-  let PF = 1;
-  function door(xh, y0, y1, g, dir, w, kind) {
-    const P = (u, f) => [xh + dir * w * u, y0 + (y1 - y0) * f + u * PF * (2.5 - 6.5 * (1 - f) + 4 * f)];
-    const quad = (u0, f0, u1, f1) => { const a = P(u0, f0), b = P(u1, f0), c = P(u1, f1), d = P(u0, f1); return `M${a} L${b} L${c} L${d} Z`; };
-    const lin = id(), cyl = id();
-    const defs = `<defs><linearGradient id="${lin}" x1="${dir < 0 ? 1 : 0}" y1="0" x2="${dir < 0 ? 0 : 1}" y2="0"><stop offset="0" stop-color="#cfd8de"/><stop offset=".35" stop-color="#eef2f5"/><stop offset="1" stop-color="#fbfcfd"/></linearGradient>
-      <linearGradient id="${cyl}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".35"/><stop offset=".35" stop-color="#fff" stop-opacity=".35"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".3"/></linearGradient></defs>`;
-    // The thickness of the door, seen on its free edge.
-    const e0 = P(1, 0), e1 = P(1, 1), t = dir * 3;
-    const edge = `<path d="M${e0} L${e0[0] + t} ${e0[1] + 1} L${e1[0] + t} ${e1[1] + 1} L${e1} Z" fill="url(#${g.side})"/>`;
-    let body = `<path d="${quad(0, 0, 1, 1)}" fill="url(#${lin})" stroke="rgba(0,0,0,.25)" stroke-width=".6"/>
-      <path d="${quad(.07, .02, .93, .98)}" fill="none" stroke="rgba(0,0,0,.18)" stroke-width="1.4"/>
-      <path d="${quad(0, 0, .14, 1)}" fill="rgba(0,0,0,.08)"/>`;
-    if (kind === "glass") {
-      body += `<path d="${quad(.16, .05, .84, .95)}" fill="rgba(180,215,235,.35)" stroke="#7b6a5a" stroke-width="1.6"/>
-        <path d="${quad(.25, .1, .45, .1)} " fill="none"/>
-        <path d="M${P(.28, .1)} L${P(.48, .1)} L${P(.24, .55)} L${P(.2, .55)} Z" fill="rgba(255,255,255,.35)"/>`;
-    }
-    if (kind === "bins") {
-      body += [0.24, 0.52, 0.8].map((f, i) => {
-        const lip = 4.2, back = [dir * 2.4, -2.6];
-        const [ax, ay] = P(.1, f), [bx, by] = P(.9, f);
-        // Floor of the balcony, seen from above.
-        let out = `<path d="M${ax} ${ay} L${bx} ${by} L${bx + back[0]} ${by + back[1]} L${ax + back[0]} ${ay + back[1]} Z" fill="#dfe7ec"/>`;
-        // What stands in it: bottles in the lower one, jars and a carton above.
-        const items = i === 2 ? [[.25, "#43a047", 11, 3.2], [.5, "#8d6e63", 10, 3.2], [.75, "#fafafa", 9, 3.6]]
-          : i === 1 ? [[.3, "#fff59d", 6, 4.4], [.7, "#ef9a9a", 7, 4]] : [[.3, "#ffcc80", 5, 3.6], [.62, "#b3e5fc", 5.5, 3.6]];
-        out += items.map(([u, c, h, wd]) => {
-          const [x, y] = P(u, f), cx = x + back[0] * .5, by2 = y + back[1] * .5 - .5;
-          return i === 2 ? standingBottle(cx, by2, wd / 2, h + 3, c, "#37474f", cyl) : jar(cx, by2, wd / 2, h * .8, c, i === 1 ? "#e53935" : "#ffffff", cyl);
-        }).join("");
-        // The front lip, translucent, hiding the feet of what stands behind it.
-        out += `<path d="M${ax} ${ay} L${bx} ${by} L${bx} ${by + lip} L${ax} ${ay + lip} Z" fill="rgba(205,228,242,.88)" stroke="#90a4ae" stroke-width=".5"/>
-          <path d="M${ax} ${ay + .4} L${bx} ${by + .4}" stroke="#fff" stroke-width=".6"/>`;
-        return out;
-      }).join("");
-    }
-    return defs + body + edge;
-  }
-  // Inside of a wine cellar: dark wood walls in depth, a warm light, wooden racks
-  // seen from above with bottles lying on them, their bases towards us.
-  // While it cools, snowflakes come and go on its shut doors, one after the
-  // other (first picks the first of the four staggers).
-  const frost = (s, pts, first, color = "#4fc3f7") => s.cooling === true && !s.dark
-    ? pts.map(([x, y], i) => `<g class="fr-flake fr-f${((first + i) % 4) + 1}">${ntFlake(x, y, 3.2, color, .9)}</g>`).join("") : "";
-  // Door shut, the cellar's LEDs light it blue;
-  // door open, its lamp lights it warm.
-  function wineInside(x0, y0, x1, y1, g, s, blue) {
-    const cid = id(), gl = id(), gb = id(), DXI = 12, DYI = -7;
-    const bx0 = x0 + DXI, by0 = y0 + DYI, by1 = y1 + DYI, lit = !s.dark;
-    const grads = `<linearGradient id="${gl}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${lit ? "#2a1d16" : "#141010"}"/><stop offset="1" stop-color="${lit ? "#4a352a" : "#1e1816"}"/></linearGradient>
-    <linearGradient id="${gb}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${lit ? "#6b4c3b" : "#241c19"}"/><stop offset="1" stop-color="${lit ? "#3e2c22" : "#1a1513"}"/></linearGradient>`;
-    const rows = 5, step = (y1 - y0 - 8) / rows;
-    let racks = "";
-    for (let r = 0; r < rows; r++) {
-      const y = y0 + 10 + step * (r + 1) - 2;
-      racks += `<path class="fr-rack" d="M${x0} ${y} L${x0 + DXI} ${y + DYI} H${x1 + 2} V${y} Z" fill="${lit ? "#8d6e63" : "#3e2f29"}"/>
-        <rect x="${x0}" y="${y}" width="${x1 - x0}" height="2" fill="${lit ? "#6d4c41" : "#2e2320"}"/><path d="M${x0} ${y + .3} H${x1}" stroke="rgba(255,220,180,.35)" stroke-width=".5"/>`;
-      racks += [2, 1, 0].map((c) => lyingBottle(x0 + 7 + c * 14, y - 3.4, 0.864, -0.504, 19, lit ? (c === 1 ? "#4a1a22" : "#26402a") : "#151b16", c === 1 ? "#c9a24b" : "#8e1b2c")).join("");
-    }
-    const lamp = !lit ? "" : blue
-      ? `<rect x="${bx0 + 4}" y="${by0}" width="${x1 - bx0 - 6}" height="3" rx="1.5" fill="#4fc3f7" opacity=".55"/><rect x="${bx0 + 6}" y="${by0 + .6}" width="${x1 - bx0 - 10}" height="1.8" rx=".9" fill="#e1f5fe"/>
-      <polygon points="${bx0 + 6},${by0 + 3} ${x1 - 4},${by0 + 3} ${x1},${y1} ${x0},${y1}" fill="#29b6f6" opacity=".3"/>`
-      : `<rect x="${bx0 + 6}" y="${by0 + 1}" width="${x1 - bx0 - 10}" height="2" rx="1" fill="#ffe0b2"/>
-      <polygon points="${bx0 + 6},${by0 + 3} ${x1 - 4},${by0 + 3} ${x1},${y1} ${x0},${y1}" fill="#ffb74d" opacity=".12"/>`;
-    const tint = lit && blue ? `<rect class="fr-cool" x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="#29b6f6" opacity=".34"/>` : "";
-    return `<defs>${grads}</defs><clipPath id="${cid}"><rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}"/></clipPath>
-    <g clip-path="url(#${cid})">
-      <rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="url(#${gl})"/>
-      <rect x="${bx0}" y="${by0}" width="${x1 - bx0 + 4}" height="${by1 - by0}" fill="url(#${gb})"/>
-      <path d="M${x0} ${y0} L${bx0} ${by0} V${by1} L${x0} ${y1} Z" fill="url(#${gl})"/>
-      <path d="M${bx0} ${by0} V${by1}" stroke="rgba(0,0,0,.35)" stroke-width=".8"/>
-      ${lamp}${racks}${tint}
-    </g>
-    <rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="none" stroke="rgba(0,0,0,.3)" stroke-width="1.2"/>`;
-  }
-
-  // Four see-through drawers stacked in an upright freezer, the top one pulled
-  // out towards us.
-  function drawerStack(x0, y0, x1, y1, dark, k) {
-    const goods = [["#66bb6a", "#ef5350", "#fff176"], ["#f48fb1", "#64b5f6", "#ffb74d"], ["#aed581", "#ba68c8", "#e57373"], ["#4db6ac", "#ff8a65", "#90a4ae"]];
-    const n = 4, gap = 2.4, h = (y1 - y0 - 6 - gap * n) / n, w = x1 - x0 - 5, d = 12;
-    let out = "";
-    for (let i = n - 1; i >= 0; i--) {
-      const pull = i === 0 ? k : 0;
-      const bx = x0 + 2 - pull * 7, by = y0 + 4 + (i + 1) * (h + gap) + pull * 7;
-      const kx = d * 0.73, ky = -d * 0.4;
-      // Goods first, then the clear plastic tub over them.
-      const pk = goods[i].map((col, j) => box3(bx + 3 + j * (w - 6) / 3, by - 1.2, (w - 10) / 3, [6, 4.5, 7][j] * h / 14, 6, col, "rgba(255,255,255,.55)", "rgba(0,0,0,.18)")).join("");
-      out += `<path d="M${bx} ${by - h} L${bx + kx} ${by - h + ky} H${bx + w + kx} L${bx + w} ${by - h} Z" fill="rgba(225,240,250,${pull ? .55 : .35})" stroke="rgba(120,170,200,.6)" stroke-width=".4"/>
-        ${pk}
-        <path d="M${bx + w} ${by} L${bx + w + kx} ${by + ky} V${by - h + ky} L${bx + w} ${by - h} Z" fill="rgba(190,220,240,.45)" stroke="rgba(120,170,200,.6)" stroke-width=".4"/>
-        <rect x="${bx}" y="${by - h}" width="${w}" height="${h}" rx="1.2" fill="rgba(215,235,248,${dark ? .25 : .5})" stroke="rgba(110,160,195,.85)" stroke-width=".6"/>
-        <rect x="${bx + w / 2 - 7}" y="${by - h + 1.2}" width="14" height="2.4" rx="1.2" fill="#5d6672"/>
-        <path d="M${bx + 2} ${by - h + 1} L${bx + 6} ${by - 1}" stroke="rgba(255,255,255,.7)" stroke-width=".8"/>`;
-    }
-    return out;
-  }
-  // Chest freezer, seen from the front right and above: the lid lifts on its
-  // back hinge and shows the tub, a wire basket and frozen food, cold mist
-  // rising out of it.
-  function chest(s) {
-    const g = { front: id(), side: id(), top: id(), door: id(), cav: id(), handle: id(), rec: id(), glass: id(), glow: id() };
-    const tub = id(), lin = id(), cid = id();
-    const x0 = 4, x1 = 88, y0 = 66, y1 = 114, KX = 22, KY = -26, lip = 7;
-    const lit = !s.dark;
-    let out = defs(g, lit) + `<defs><linearGradient id="${tub}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${lit ? "#dfeaf2" : "#3a434a"}"/><stop offset="1" stop-color="${lit ? "#b6c8d6" : "#2a3137"}"/></linearGradient>
-      <linearGradient id="${lin}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#cfd8de"/><stop offset="1" stop-color="#f4f7f9"/></linearGradient></defs>`;
-    // Its shadow lies under its whole footprint, deep as it is: a flat
-    // ellipse under the front left the right side standing on bare floor.
-    const foot = (m, d) => `M${x0 - m} ${y1 + d} L${x1 + m} ${y1 + d} L${x1 + KX + m} ${y1 + KY + d * .5} L${x0 + KX - m} ${y1 + KY + d * .5} Z`;
-    out += `<path d="${foot(4, 3.6)}" fill="rgba(0,0,0,.06)" stroke="rgba(0,0,0,.06)" stroke-width="3" stroke-linejoin="round"/>
-      <path d="${foot(1.5, 2.2)}" fill="rgba(0,0,0,.1)" stroke-linejoin="round"/>
-      <path d="M${x1} ${y0} L${x1 + KX} ${y0 + KY} V${y1 + KY} L${x1} ${y1} Z" fill="url(#${g.side})"/>
-      <rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" rx="2.5" fill="url(#${g.front})" stroke="rgba(0,0,0,.18)" stroke-width=".6"/>
-      <rect x="${x0 + 5}" y="${y1 - 11}" width="26" height="6" rx="1.2" fill="#c5ccd3"/>${[0, 1, 2, 3, 4, 5].map((i) => `<rect x="${x0 + 7.5 + i * 3.8}" y="${y1 - 10}" width="1.8" height="4" rx=".6" fill="#6b747e"/>`).join("")}
-      <rect x="${x0 + 3}" y="${y1}" width="6" height="2.6" rx="1" fill="#59616b"/><rect x="${x1 - 9}" y="${y1}" width="6" height="2.6" rx="1" fill="#59616b"/>
-      ${lcd(x1 - 30, y0 + lip + 8, 24, s.fridgeTemp, s.warn, s.dark)}
-      <circle cx="${x1 - 27}" cy="${y0 + lip + 21}" r="1.1" fill="${s.warn ? "#ff5252" : "#43a047"}"/>`;
-    const rim = [[x0, y0], [x0 + KX, y0 + KY], [x1 + KX, y0 + KY], [x1, y0]];
-    if (!s.open) {
-      out += `<path d="M${rim.map((p) => p.join(" ")).join(" L")} Z" fill="url(#${g.top})" stroke="rgba(0,0,0,.18)" stroke-width=".6"/>
-        <path d="M${x0 + 6} ${y0 - 3} L${x0 + KX - 2} ${y0 + KY + 2} H${x1 + KX - 8}" stroke="#fff" stroke-width="1" fill="none" opacity=".8"/>
-        <path d="M${x1} ${y0} L${x1 + KX} ${y0 + KY} V${y0 + KY + lip} L${x1} ${y0 + lip} Z" fill="#a9b2bb"/>
-        <rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${lip}" rx="2" fill="url(#${g.door})" stroke="rgba(0,0,0,.2)" stroke-width=".6"/>
-        <rect x="${(x0 + x1) / 2 - 15}" y="${y0 + 2.2}" width="30" height="3" rx="1.5" fill="#363d48"/><rect x="${(x0 + x1) / 2 - 13.5}" y="${y0 + 2.6}" width="27" height="1" rx=".5" fill="#8f98a4"/>
-        <path d="M${x0} ${y0 + lip + .6} H${x1}" stroke="rgba(0,0,0,.35)" stroke-width=".9"/>
-        <g class="nt-run">${[[x0 + 20, y0 - 6], [x0 + 48, y0 - 14], [x0 + 74, y0 - 9], [x1 + 8, y0 - 20]].map(([x, y], i) => `<g class="nta-frost ntd${i + 1}">${ntFlake(x, y, 2.4, "#29b6f6", .7)}</g>`).join("")}</g>`;
-      return out;
-    }
-    // Open: the lid turns on its back hinge. A point of the chest is (x, z, h):
-    // z depth from the front (0..D), h height above the rim.
-    const D = 40, P3 = (x, z, h) => [x + KX * z / D, y0 + KY * z / D - h];
-    const th = (s.kF === undefined ? 1 : s.kF) * 98 * Math.PI / 180, cs = Math.cos(th), sn = Math.sin(th);
-    // Inner face from the hinge (z = D, h = -lip) to the front edge; outer face
-    // the thickness of the lid further along its normal.
-    const inner = (x, f) => P3(x, D - f * D * cs + 0, -lip + f * D * sn);
-    const outer = (x, f) => P3(x + 0, D - f * D * cs + lip * sn, -lip + f * D * sn + lip * cs);
-    const quad = (A, B, C, E) => `M${A} L${B} L${C} L${E} Z`;
-    const lidSvg = th < 1.05
-      ? `<path d="${quad(outer(x0, 0), outer(x1, 0), outer(x1, 1), outer(x0, 1))}" fill="url(#${g.top})" stroke="rgba(0,0,0,.18)" stroke-width=".6"/>
-        <path d="${quad(outer(x1, 0), inner(x1, 0), inner(x1, 1), outer(x1, 1))}" fill="#a9b2bb"/>
-        <path d="${quad(outer(x0, 1), outer(x1, 1), inner(x1, 1), inner(x0, 1))}" fill="url(#${g.door})" stroke="rgba(0,0,0,.2)" stroke-width=".6"/>`
-      : `<path d="${quad(inner(x0, 0), inner(x1, 0), inner(x1, 1), inner(x0, 1))}" fill="url(#${lin})" stroke="rgba(0,0,0,.25)" stroke-width=".6"/>
-        <path d="${quad(inner(x0 + 4, .08), inner(x1 - 4, .08), inner(x1 - 4, .92), inner(x0 + 4, .92))}" fill="none" stroke="rgba(0,0,0,.16)" stroke-width="1.6"/>
-        <path d="${quad(inner(x1, 0), outer(x1, 0), outer(x1, 1), inner(x1, 1))}" fill="url(#${g.side})"/>
-        <path d="${quad(inner(x0, 1), inner(x1, 1), outer(x1, 1), outer(x0, 1))}" fill="#c3cad1"/>
-        ${lit && th > 1.4 ? (() => { const L0 = inner((x0 + x1) / 2 - 10, .12), L1 = inner((x0 + x1) / 2 + 10, .12); return `<path d="M${L0} L${L1}" stroke="#fffde7" stroke-width="2" stroke-linecap="round"/>`; })() : ""}`;
-    // The tub: opening, back and left inner walls, floor, then what it holds.
-    const DEP = 15, inset = 3;
-    const o = [[x0 + inset, y0 + 1], [x0 + KX + inset * .4, y0 + KY + 2], [x1 + KX - inset, y0 + KY + 2], [x1 - inset, y0 + 1]];
-    // Frozen food lying on the floor of the tub, sinking behind the front rim.
-    const fl = y0 + 7;
-    const foods = box3(x0 + 9, fl, 18, 9, 10, "#90caf9", "#bbdefb", "#64b5f6") + box3(x0 + 29, fl + 1, 14, 8, 9, "#ef9a9a", "#ffcdd2", "#e57373")
-      + box3(x0 + 45, fl, 16, 10, 10, "#e0e0e0", "#f5f5f5", "#bdbdbd") + box3(x0 + 17, fl - 9, 13, 7, 8, "#a5d6a7", "#c8e6c9", "#81c784")
-      + box3(x0 + 36, fl - 10, 11, 6, 7, "#fff59d", "#fffde7", "#fbc02d")
-      + `<ellipse cx="${x0 + 58}" cy="${fl - 12}" rx="7" ry="3.4" fill="#ffcc80"/><ellipse cx="${x0 + 58}" cy="${fl - 13}" rx="7" ry="2.4" fill="#fff3e0"/>`;
-    // Wire basket hooked on the rim, on the right.
-    const bx = x1 - 24, by = y0 - 6, bw = 26, bh = 10, bd = 20;
-    const kx = bd * 0.73, ky = -bd * 0.4;
-    const basket = box3(bx + 2, by - 1, 9, 5, 7, "#ffcc80", "#ffe0b2", "#ffb74d") + box3(bx + 12, by - 1, 8, 6, 7, "#b39ddb", "#d1c4e9", "#9575cd")
-      + `<path d="M${bx} ${by - bh} L${bx + kx} ${by - bh + ky} H${bx + bw + kx} L${bx + bw} ${by - bh} Z M${bx + bw} ${by} L${bx + bw + kx} ${by + ky} V${by - bh + ky} M${bx} ${by - bh} V${by} H${bx + bw} V${by - bh}" fill="none" stroke="#9aa5ae" stroke-width=".7"/>
-      ${[1, 2, 3, 4, 5].map((i) => `<path d="M${bx + i * bw / 6} ${by - bh} V${by}" stroke="#9aa5ae" stroke-width=".45"/>`).join("")}
-      <path d="M${bx} ${by - bh / 2} H${bx + bw}" stroke="#9aa5ae" stroke-width=".45"/>`;
-    out += `<clipPath id="${cid}"><path d="M${o.map((p) => p.join(" ")).join(" L")} Z"/></clipPath>
-      <g clip-path="url(#${cid})">
-        <rect x="${x0}" y="${y0 + KY - 2}" width="${x1 - x0 + KX + 4}" height="${-KY + 6}" fill="url(#${tub})"/>
-        <path d="M${o[1]} L${o[2]} L${o[2][0]} ${o[2][1] + DEP} L${o[1][0]} ${o[1][1] + DEP} Z" fill="${lit ? "#eef4f8" : "#434c54"}"/>
-        <path d="M${o[0]} L${o[1]} L${o[1][0]} ${o[1][1] + DEP} L${o[0][0]} ${o[0][1] + DEP} Z" fill="${lit ? "#c3d3df" : "#2c3338"}"/>
-        ${[0.3, 0.6].map((f) => `<path d="M${o[1][0]} ${o[1][1] + DEP * f} H${o[2][0]}" stroke="rgba(255,255,255,.6)" stroke-width=".8"/>`).join("")}
-        ${foods}${basket}
-      </g>
-      <path d="M${o.map((p) => p.join(" ")).join(" L")} Z" fill="none" stroke="#9aa5ae" stroke-width="1.6"/>
-      <path d="M${rim.map((p) => p.join(" ")).join(" L")} Z" fill="none" stroke="url(#${g.top})" stroke-width="2.4"/>
-      <rect x="${x0}" y="${y0}" width="${x1 - x0}" height="2.6" rx="1" fill="#d5dbe0" stroke="rgba(0,0,0,.2)" stroke-width=".5"/>
-      ${lidSvg}
-      ${lit && th > 1.2 ? [0, 1, 2, 3].map((i) => `<path class="fr-steam m${i + 1}" d="M${x0 + 18 + i * 18} ${y0 - 4} q-2.5 -3 0 -6 q2.5 -3 0 -6" stroke="rgba(215,238,255,.9)" stroke-width="1.4" fill="none" stroke-linecap="round"/>`).join("") : ""}`;
-    return out;
-  }
-  // Upright freezer: one door, see-through drawers behind it.
-  function uprightFreezer(s) {
-    const g = { front: id(), side: id(), top: id(), door: id(), cav: id(), handle: id(), rec: id(), glass: id(), glow: id() };
-    const x0 = 28, x1 = 84, y0 = 2, y1 = 116;
-    let out = defs(g, !s.dark) + cabinet(x0, y0, x1, y1, g);
-    const front = `<rect x="${x0 + 3}" y="${y0 + 3}" width="${x1 - x0 - 6}" height="14" rx="2" fill="rgba(0,0,0,.04)"/>`
-      + handle(x1 - 7, y0 + 24, 44, g) + lcd(x0 + 5, y0 + 6, 26, s.fridgeTemp, s.warn, s.dark);
-    if (s.open) return out + inside(x0 + 1, y0 + 1, x1 - 1, y1 - 1, g, s, "drawers") + swing(x0, y0, y1, g, 1, x1 - x0, 17, "plain", panel(x0, y0, x1, y1, g) + front, s.kF);
-    return out + front + `<g class="nt-run">${[[x0 + 9, y0 + 32], [x1 - 15, y0 + 62], [x0 + 12, y0 + 96]].map(([x, y], i) => `<g class="nta-frost ntd${i + 1}">${ntFlake(x, y, 2.2, "#29b6f6", .65)}</g>`).join("")}</g>`;
-  }
-  function fridge(layout, s) {
-    if (layout === "chest") return chest(s);
-    if (layout === "drawers") return uprightFreezer(s);
-    const g = { front: id(), side: id(), top: id(), door: id(), cav: id(), handle: id(), rec: id(), glass: id(), glow: id() };
-    let out = defs(g, !s.dark);
-    if (layout === "side_by_side") {
-      const x0 = 18, x1 = 90, y0 = 6, y1 = 116, mid = 48;
-      out += cabinet(x0, y0, x1, y1, g);
-      const rFront = handle(mid + 3.5, y0 + 26, 50, g) + lcd(mid + 10, y0 + 8, 18, s.fridgeTemp, s.warn, s.dark);
-      const lFront = lcd(x0 + 5, y0 + 8, 20, s.freezerTemp, false, s.dark) + dispenser(x0 + 3, y0 + 22, 19, 34, s, g) + handle(mid - 5.5, y0 + 26, 50, g);
-      if (s.open) out += inside(mid + 1, y0 + 1, x1 - 1, y1 - 1, g, s, false) + swing(x1, y0, y1, g, -1, x1 - mid, 15, "bins", panel(mid, y0, x1, y1, g) + rFront, s.kF);
-      else out += vseam(mid, y0, y1) + rFront + frost(s, [[mid + 22, y0 + 62], [mid + 12, y0 + 92]], 0);
-      // Dispenser on the left of the freezer door, handle beside the seam in
-      // front of it, never hidden behind it.
-      if (s.freezerOpen) out += inside(x0 + 1, y0 + 1, mid - 1, y1 - 1, g, s, true) + swing(x0, y0, y1, g, 1, mid - x0, 15, "plain", panel(x0, y0, mid, y1, g) + lFront, s.kZ);
-      else out += lFront + frost(s, [[x0 + 9, y0 + 68], [x0 + 21, y0 + 94]], 2);
-      out += vseam(mid, y0, y1);
-      return out;
-    }
-    const x0 = 28, x1 = 84, y0 = 2, y1 = 116;
-    out += cabinet(x0, y0, x1, y1, g);
-    if (layout === "wine") {
-      // Closed: the same racks and lying bottles as the open cellar, seen
-      // through the tinted glass of the door.
-      const wx0 = x0 + 4, wy0 = y0 + 13, wx1 = x1 - 8, wy1 = y1 - 5;
-      const glassFront = `<path d="M${x0} ${y0} H${x1} V${y1} H${x0} Z M${wx0} ${wy0} V${wy1} H${wx1} V${wy0} Z" fill="url(#${g.front})" fill-rule="evenodd" stroke="rgba(0,0,0,.2)" stroke-width=".6"/>
-        <rect x="${wx0}" y="${wy0}" width="${wx1 - wx0}" height="${wy1 - wy0}" rx="2" fill="url(#${g.glass})" opacity=".45"/>
-        <path d="M${wx0 + 3} ${wy0 + 2} L${wx0 + 15} ${wy0 + 2} L${wx0 + 3} ${wy0 + 48} Z" fill="rgba(255,255,255,.14)"/>
-        <rect x="${wx0}" y="${wy0}" width="${wx1 - wx0}" height="${wy1 - wy0}" rx="2" fill="none" stroke="#3a3f45" stroke-width="1.6"/>
-        ${handle(x1 - 6, y0 + 30, 50, g)}${lcd(x0 + 17, y0 + 3, 20, s.fridgeTemp, s.warn, s.dark)}`;
-      if (s.open) return out + wineInside(x0 + 1, y0 + 1, x1 - 1, y1 - 1, g, s) + swing(x0, y0, y1, g, 1, x1 - x0, 17, "glass", glassFront, s.kF);
-      return out + wineInside(wx0, wy0, wx1, wy1, g, s, true) + `
-        <rect class="fr-glass" x="${wx0}" y="${wy0}" width="${wx1 - wx0}" height="${wy1 - wy0}" rx="2" fill="url(#${g.glass})" opacity=".45"/>
-        <rect x="${wx0}" y="${wy0}" width="${wx1 - wx0}" height="${wy1 - wy0}" rx="2" fill="rgba(20,24,28,${s.dark ? .55 : .18})"/>
-        <path d="M${wx0 + 3} ${wy0 + 2} L${wx0 + 15} ${wy0 + 2} L${wx0 + 3} ${wy0 + 48} Z" fill="rgba(255,255,255,.14)"/>
-        <path d="M${wx0 + 19} ${wy0 + 2} L${wx0 + 23} ${wy0 + 2} L${wx0 + 9} ${wy0 + 56} L${wx0 + 7} ${wy0 + 56} Z" fill="rgba(255,255,255,.08)"/>
-        <rect x="${wx0}" y="${wy0}" width="${wx1 - wx0}" height="${wy1 - wy0}" rx="2" fill="none" stroke="#3a3f45" stroke-width="1.6"/>
-        ${frost(s, [[wx0 + 9, wy0 + 13], [wx1 - 9, wy0 + 33], [wx0 + 15, wy0 + 57], [wx1 - 11, wy0 + 80]], 0, "#e1f5fe")}
-        ${handle(x1 - 6, y0 + 30, 50, g)}${lcd(x0 + 17, y0 + 3, 20, s.fridgeTemp, s.warn, s.dark)}`;
-    }
-    const cut = layout === "freezer_top" ? 0.34 : layout === "single" ? 1 : 0.63;
-    const yc = y0 + (y1 - y0) * cut;
-    const fridgeTop = layout !== "freezer_top";
-    const fy0 = fridgeTop ? y0 : yc, fy1 = fridgeTop ? (layout === "single" ? y1 : yc) : y1;
-    const zy0 = fridgeTop ? yc : y0, zy1 = fridgeTop ? y1 : yc;
-    const fFront = handle(x1 - 7, fy0 + (fy1 - fy0) * 0.22, Math.min(40, (fy1 - fy0) * 0.45), g) + lcd(x0 + 5, fy0 + 6, 16, s.fridgeTemp, s.warn, s.dark)
-      + (s.ice !== undefined && layout === "freezer_bottom" ? dispenser(x0 + 5, fy0 + 18, 17, 30, s, g) : "");
-    if (s.open) out += inside(x0 + 1, fy0 + 1, x1 - 1, fy1 - 1, g, s, false) + swing(x0, fy0, fy1, g, 1, x1 - x0, 17, "bins", panel(x0, fy0, x1, fy1, g) + fFront, s.kF);
-    else out += fFront + frost(s, [[x0 + 31, fy0 + (fy1 - fy0) * 0.42], [x0 + 15, fy0 + (fy1 - fy0) * 0.84]], 0);
-    if (layout !== "single") {
-      out += seam(x0, yc, x1);
-      const zFront = handle(x1 - 7, zy0 + 6, Math.min(18, (zy1 - zy0) * 0.4), g) + lcd(x0 + 5, zy0 + 6, 16, s.freezerTemp, false, s.dark);
-      if (s.freezerOpen) out += inside(x0 + 1, zy0 + 1, x1 - 1, zy1 - 1, g, s, true) + swing(x0, zy0, zy1, g, 1, x1 - x0, 17, "plain", panel(x0, zy0, x1, zy1, g) + zFront, s.kZ);
-      else out += zFront + frost(s, [[x0 + 30, zy0 + (zy1 - zy0) * 0.62]], 2);
-    }
-    return out;
-  }
-
-  return (ctx, anim) => {
-    n = 0;
-    const L = ctx.layout || "freezer_bottom";
-    const cold = L === "chest" || L === "drawers";
-    const s = {
-      fridgeTemp: cold ? ctx.coldText || undefined : ctx.fridgeTemp,
-      freezerTemp: L === "single" || cold ? undefined : ctx.freezerTemp,
-      warn: !!ctx.fridgeWarn,
-      dark: !!ctx.dark,
-      open: cold ? !!(ctx.doorOpen || ctx.freezerDoorOpen) : !!ctx.doorOpen,
-      freezerOpen: !cold && !!ctx.freezerDoorOpen,
-      ice: L === "wine" ? undefined : ctx.ice,
-      cooling: ctx.cooling,
-      kF: 1,
-      kZ: 1,
-      ...(anim || {}),
-    };
-    return `<svg class="fr-svg" viewBox="0 -10 120 135">${fridge(L, s)}</svg>`;
-  };
-})();
-
 const MOWER_STYLES = ["classic", "navimow"];
 // The mower's style: the one chosen, else its name (Navimow, Segway).
 function mowerStyleOf(cfg, st) {
@@ -9525,7 +9117,7 @@ function illustrationHtml(type, ctx) {
     .filter(Boolean)
     .join(" ");
 
-  const draw = drawingOf(drawKeyOf(type));
+  const draw = drawingOf(type === "robot" && ctx.robot && ctx.robot.layout === "pool" ? "nt" : drawKeyOf(type));
   const html = draw ? draw(cls, ctx, type) : "";
   return html && ctx.tint ? ntTint(html, ctx.tint) : html;
 }
@@ -9538,7 +9130,7 @@ function requestDrawing(key) {
   drawState[key] = "loading";
   import(assetUrl(`ha-appliance-card-draw-${key}.js`))
     .then((m) => {
-      if (!drawDeps) drawDeps = { __v: CARD_VERSION, ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CHARGER_MODES, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, numberOrNull, shdBlur, t, thsColor, zoneColumns };
+      if (!drawDeps) drawDeps = { __v: CARD_VERSION, ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CHARGER_MODES, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntTint, numberOrNull, t, thsColor, zoneColumns };
       drawn[key] = m.default(drawDeps);
       drawState[key] = "ready";
       for (const fn of Array.from(langListeners)) {
@@ -14951,12 +14543,11 @@ class ApplianceCard extends HTMLElement {
     const ease = (x) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
     const step = (t) => {
       const host = this._root && this._root.querySelector(".fr3");
-      if (!host) { this._frRaf = null; return; }
+      const draw = drawingOf("fridge");
+      if (!host || !draw) { this._frRaf = null; return; }
       const p = Math.min(1, (t - t0) / dur), e = ease(p);
       const k = (a, b) => (a === b ? 1 : b ? e : 1 - e);
-      host.innerHTML = p < 1
-        ? FR3(ctx, { open: prev.f || now.f, freezerOpen: prev.z || now.z, kF: k(prev.f, now.f), kZ: k(prev.z, now.z) })
-        : FR3(ctx);
+      host.innerHTML = draw("", { ...ctx, frSwing: p < 1 ? { open: prev.f || now.f, freezerOpen: prev.z || now.z, kF: k(prev.f, now.f), kZ: k(prev.z, now.z) } : true });
       this._frRaf = p < 1 ? requestAnimationFrame(step) : null;
     };
     this._frRaf = requestAnimationFrame(step);

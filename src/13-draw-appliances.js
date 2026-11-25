@@ -1982,7 +1982,6 @@ function robotAskHtml(notice) {
 }
 
 function robotHtml(cls, r) {
-  if (r.layout === "pool") return ntHtml(`${cls} rbt rbt-l-pool rbt-m-${r.mode || "docked"}`, { kind: "pool", on: r.mode === "cleaning", lcd: r.poolTime || "", winter: r.mode === "winter" });
   if (r.layout === "stick" || r.layout === "floor_washer") {
     return `
         <div class="machine ${cls} rbt rbt-l-${r.layout} rbt-m-${r.mode || "docked"}">${r.layout === "stick" ? dysonSvg(r.battery) : washerSvg(r.battery)}</div>`;

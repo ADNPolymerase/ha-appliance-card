@@ -323,7 +323,7 @@ const NT_NAME_RES = [
   ["detector", /x.?sense|smoke|fumee|detecteur.?(de.?)?(fumee|co|fuite)|monoxyde|carbon.?monoxide|(^|[^a-z])co.?(alarm|detector)|rauchmelder|detector.?de.?humo|rilevatore|rookmelder|brandvarnare|roykvarsler|roegalarm|czujnik.?dymu|water.?leak|fuite.?d.?eau|wassermelder|leak.?sensor/],
   ["christmas_tree", /christmas|xmas|(^|[^a-z])sapin|(^|[^a-z])noel([^a-z]|$)|weihnacht|tannenbaum|navidad|natale|kerstboom|julgran|juletre|juletrae|choink|vanocni.?strom/],
   ["aquarium", /aquari|akwari|akvari/],
-  ["mobility", /ctek|noco|optimate|tecmate|accumate|battery.?(charger|tender|maintainer)|trickle.?charg|chargeur.?(de.?)?batter|batterieladeg|erhaltungslad|caricabatter|cargador.?de.?bater|acculader|prostownik|druppellad|cowboy|vanmoof|(^|[.])niu([._\s]|$)|trottinette|e-?scooter|(^|[^a-z])scooter([^a-z]|$)|ninebot|(^|[^a-z])(velo|e-?bike|ebike|vae|pedelec)([^a-z]|$)|gyropode|gyroroue|monowheel|hoverboard|(^|[^a-z])moto([^a-z]|$)|motorcycle|super.?soco|sur.?ron|ausom|dualtron|kaabo|patinete|monopattino|hulajnoga|elsparkcykel|elsparkesykkel|kolobezka/],
+  ["mobility", /ctek(?!.?chargestorm)|noco|optimate|tecmate|accumate|battery.?(charger|tender|maintainer)|trickle.?charg|chargeur.?(de.?)?batter|batterieladeg|erhaltungslad|caricabatter|cargador.?de.?bater|acculader|prostownik|druppellad|cowboy|vanmoof|(^|[.])niu([._\s]|$)|trottinette|e-?scooter|(^|[^a-z])scooter([^a-z]|$)|ninebot|(^|[^a-z])(velo|e-?bike|ebike|vae|pedelec)([^a-z]|$)|gyropode|gyroroue|monowheel|hoverboard|(^|[^a-z])moto([^a-z]|$)|motorcycle|super.?soco|sur.?ron|ausom|dualtron|kaabo|patinete|monopattino|hulajnoga|elsparkcykel|elsparkesykkel|kolobezka/],
   ["sauna", /sauna|saunum|huum|harvia|(^|[^a-z])(tylo|effe)([^a-z]|$)/],
   ["spa", /balboa|spanet|arctic.?spa|(^|[^a-z])(spa|gecko|jacuzzi|hot.?tub|bain.?nordique|whirlpoolwanne)([^a-z]|$)/],
   ["meter", /linky|compteur.?(electrique|edf|enedis)|smart.?meter|(^|[\s.])(electricity|gas|water).?meter|p1.?meter|(^|[^a-z])dsmr([^a-z]|$)|shelly.?(pro.?)?3?em([^a-z]|$)|tibber.?pulse|iammeter|ksem|homewizard.?(p1|kwh|energy)|(^|[^a-z])(teleinfo|papp|sinsts)([^a-z]|$)/],
@@ -570,7 +570,7 @@ function grillLayoutOf(cfg, st) {
 function mobilityLayoutOf(cfg, st) {
   if (MOBILITY_LAYOUTS.includes(cfg.mobility_layout)) return cfg.mobility_layout;
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
-  if (/ctek|noco|optimate|tecmate|accumate|battery.?(charger|tender|maintainer)|trickle.?charg|chargeur.?(de.?)?batter|batterieladeg|erhaltungslad|caricabatter|cargador.?de.?bater|acculader|prostownik|druppellad/.test(hay)) return "charger";
+  if (/ctek(?!.?chargestorm)|noco|optimate|tecmate|accumate|battery.?(charger|tender|maintainer)|trickle.?charg|chargeur.?(de.?)?batter|batterieladeg|erhaltungslad|caricabatter|cargador.?de.?bater|acculader|prostownik|druppellad/.test(hay)) return "charger";
   if (/ausom|dualtron|kaabo|off.?road|tout.?terrain|gelande|todoterreno|fuoristrada|teren/.test(hay)) return "offroad";
   if (/gyropode|gyroroue|monowheel|hoverboard|segway.?pt|one.?wheel/.test(hay)) return "gyropode";
   if (/(^|[^a-z])moto([^a-z]|$)|motorcycle|motorrad|motocicl|motocykl|super.?soco|sur.?ron|talaria|horwin|zero.?s/.test(hay)) return "motorcycle";

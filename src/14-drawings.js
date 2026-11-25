@@ -21,7 +21,7 @@ function illustrationHtml(type, ctx) {
     .filter(Boolean)
     .join(" ");
 
-  const draw = drawingOf(drawKeyOf(type));
+  const draw = drawingOf(type === "robot" && ctx.robot && ctx.robot.layout === "pool" ? "nt" : drawKeyOf(type));
   const html = draw ? draw(cls, ctx, type) : "";
   return html && ctx.tint ? ntTint(html, ctx.tint) : html;
 }
@@ -283,8 +283,15 @@ const DRAWINGS = {
         </div>`;
   },
 
-  nt: (cls, ctx) => ntHtml(cls, ctx.ntDraw || {}),
+  // A pool robot is drawn with the new types, not with the vacuums: its file
+  // would otherwise carry a copy of theirs.
+  nt: (cls, ctx) => (ctx.robot && ctx.robot.layout === "pool"
+    ? ntHtml(`${cls} rbt rbt-l-pool rbt-m-${ctx.robot.mode || "docked"}`, { kind: "pool", on: ctx.robot.mode === "cleaning", lcd: ctx.robot.poolTime || "", winter: ctx.robot.mode === "winter" })
+    : ntHtml(cls, ctx.ntDraw || {})),
   fridge: (cls, ctx) => {
+    // The doors' swing (_fridgeSwing) redraws the cabinet alone, frame by
+    // frame: through here, so the drawing stays in the fridge's own file.
+    if (ctx.frSwing) return FR3(ctx, ctx.frSwing === true ? undefined : ctx.frSwing);
     // A chest or a drawer freezer frosts over while it cools, like the other
     // new drawings (nt-on).
     const nt = ctx.coldBox ? ` nt nt-k-${ctx.layout}${ctx.cooling !== false && !ctx.dark ? " nt-on" : ""}` : "";

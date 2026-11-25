@@ -198,6 +198,14 @@ const INTEGRATION_STATES = {
   hard_stop_or_error: "error", exception: "error", power_failure: "error", cancelled: "idle", setting: "idle", system_initialize: "idle",
   // Home Connect, with its long key cut to the last part
   actionrequired: "paused", action_required: "paused",
+  // SmartThings dryers, LG and Whirlpool, more of what they say
+  dehumidifying: "running", continuous_dehumidifying: "running", sanitizing: "running", internal_care: "running",
+  thawing_frozen_inside: "running", freeze_protection: "running", sterilize: "running",
+  cancel: "idle", firmware: "idle", frozen_prevent_initial: "idle", change_condition: "paused", door_open: "idle",
+  // An oven cooling down or sensing is still at work; a descaling asked for
+  // waits on someone.
+  cooling: "running", sensing: "running", pyrolysis: "running", pyrolyse: "running", aufheizen: "preheating",
+  descaling_required: "paused", descale_required: "paused",
   // Midea, ConnectLife, GE, Xiaomi's cookers, Tokit, Nespresso, Philips, De'Longhi
   start: "running", work: "running", working: "running", add_clothes: "running", refreshing: "running", recovering: "running",
   order: "delayed", reservation: "delayed", delay_run: "delayed", dsm_delay_run: "delayed",
@@ -1322,13 +1330,13 @@ const AUTO_PATTERNS = {
   // programme itself.
   // LG ThinQ calls it the current cycle or course (its "cycles" is a
   // counter), SmartThings the washer mode or a select ending in cycle.
-  program_entity: /^(?!.*(phase|finish|progress|type|time|remain|duration|a[ck]tiv|actif|attivo|count))(.*program|.*current.?(cycle|course)|.*[._]course$|.*(washer|dryer|oven)_mode$|select\..*_cycle$)/i,
+  program_entity: /^(?!.*(phase|finish|progress|type|time|remain|duration|a[ck]tiv|actif|attivo|count|ende\b|programmende|_fin$))(.*program|.*current.?(cycle|course)|.*[._]course$|.*(washer|dryer|oven)_mode$|select\..*_cycle$)/i,
   active_program_entity: /a[ck]tiv\w*.?program|program\w*.?(a[ck]tiv|actif|attivo)/i,
   // What is left of the cycle, not of the filter or the detergent.
-  remaining_time_entity: /^(?!.*(filter|water|clean|detergent|softener|salt|rinse.?aid|batter|range|capacity)).*(time.?to.?end|remain|time.?left|left.?time|finish.?(in|time)|completion.?time|end.?time)/i,
+  remaining_time_entity: /^(?!.*(filter|water|clean|detergent|softener|salt|rinse.?aid|batter|range|capacity)).*(time.?to.?end|remain|time.?left|left.?time|finish.?(in|time)|completion.?time|end.?time|restant|restzeit|verbleib|rimanent|restante|resterend|pozostal|zbyva)/i,
   progress_entity: /^(?!.*(update|firmware|filter)).*(progress|percent_?complete)/i,
   // A door lock (hOn, Electrolux) is not the door.
-  door_entity: /^(?!.*(lock|alarm|assistant)).*door/i,
+  door_entity: /^(?!.*(lock|alarm|assistant|verrou|verriegel|blocco|bloqueo)).*(door|(^|[._])(porte|tur|tuer|puerta|porta|deur|drzwi|dvere)([._]|$))/i,
   alerts_entity: /alert/i,
   connectivity_entity: /connectiv/i,
   // A start delay is set, not pressed: HomeWhiz writes its own on a number.
@@ -1338,8 +1346,14 @@ const AUTO_PATTERNS = {
   resume_entity: /resume/i,
   // Resetting a filter or a counter stops nothing.
   stop_entity: /^(?!.*(filter|descal|counter|statistic|maintenance|hours|usage)).*(stop|reset)/i,
-  power_entity: /_power$|power_w$|watt/i,
-  energy_entity: /^(?!.*(cost|price|tarif|prix|batter)).*(energy|kwh)/i,
+  power_entity: /_power$|power_w$|watt|current_consumption|power_consumption|(^|[._])(leistung|puissance|potenza|potencia|vermogen)([._]|$)/i,
+  energy_entity: /^(?!.*(cost|price|tarif|prix|batter|water|eau|wasser)).*(energ|kwh|consumption)/i,
+  // A delay shown, on a sensor; a delay set, on a number, a select or a time.
+  delay_entity: /^sensor\..*(delay|start.?in|differ|zeitvorwahl|ritardat|retras|uitgesteld)/i,
+  delay_set_entity: /^(number|input_number|select|input_select|time)\..*(delay|start.?in|differ|zeitvorwahl|ritardat|retras|uitgesteld)/i,
+  toggle_entity: /^switch\..*(_power|on_?off|power_?switch|main_?power)$/i,
+  robot_clean_tank_entity: /(clean|fresh|clear).?water|water.?tank|eau.?propre|frischwasser/i,
+  robot_dirty_tank_entity: /(dirty|waste|sewage).?water|eau.?sale|schmutzwasser/i,
 };
 
 // The step of a cycle: Miele names it a program phase, Electrolux a cycle

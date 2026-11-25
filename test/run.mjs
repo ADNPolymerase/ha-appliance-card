@@ -16210,12 +16210,48 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   // The detector on its own, in a sandbox of its own.
   const ctx = { window: { customCards: [] }, document: { currentScript: null, querySelectorAll: () => [], createElement: () => ({}) }, customElements: { define() {}, get() {} }, HTMLElement: class {}, navigator: {}, console: { info() {}, log() {}, warn() {} }, setTimeout, clearTimeout, fetch: async () => ({ ok: false }) };
   vm.createContext(ctx);
-  vm.runInContext(`${SRC}\n;globalThis.__detect = detectApplianceType;`, ctx);
+  vm.runInContext(`${SRC}\n;globalThis.__detect = detectApplianceType; globalThis.__norm = normalizeState; globalThis.__fr3 = FR3; globalThis.__drawingOf = drawingOf;`, ctx);
   const typeOf = (id, state = 'on', attrs = {}) => ctx.__detect({ state_entity: id }, { entity_id: id, state, attributes: attrs });
   check('detection : un relais Shelly switch_0 n est pas un switch reseau', typeOf('switch.dryer_switch_0') === 'network', false);
   check('detection : un interrupteur mural n est pas un switch reseau', typeOf('sensor.washer_wall_switch_power', '12') === 'network', false);
   check('detection : un switch reseau reste un switch', typeOf('sensor.switch_bureau_poe_power', '12'), 'network');
   check('detection : un switch par ses ports', typeOf('sensor.switch_8_ports_temperature', '40'), 'network');
+  check('detection : la prise kitchen_switch n est pas un switch reseau', typeOf('switch.kitchen_switch') === 'network', false);
+  check('detection : un switch PoE au milieu du nom', typeOf('sensor.bureau_poe_switch_temperature', '40'), 'network');
+  // The name, when the id says nothing.
+  check('detection : sensor.status nomme seche-linge', typeOf('sensor.status', 'run', { friendly_name: 'S\u00e8che-linge Status' }), 'dryer');
+  check('detection : un etat nomme lave-vaisselle', typeOf('sensor.kitchen_operation_state', 'Run', { friendly_name: 'Dishwasher Operation state' }), 'dishwasher');
+  check('detection : un lave-linge garde son id', typeOf('sensor.washer_state', 'run', { friendly_name: 'Bosch Serie 8 state' }), 'washer');
+  check('detection : le nom ne passe pas devant l id', typeOf('sensor.dryer_state', 'run', { friendly_name: 'Laundry room' }), 'dryer');
+  for (const [id, want] of [['sensor.zmywarka_status', 'dishwasher'], ['sensor.oppvaskmaskin_status', 'dishwasher'], ['sensor.suszarka_status', 'dryer'], ['sensor.kjoleskap_temperatur', 'fridge'], ['sensor.geladeira_porta', 'fridge'], ['sensor.ugn_status', 'oven'], ['sensor.nibe_status', 'heat_pump'], ['sensor.pac_etat', 'heat_pump'], ['sensor.juicebox_status', 'ev_charger'], ['sensor.openwb_status', 'ev_charger'], ['vacuum.winbot', 'robot'], ['sensor.k1c_print_status', 'printer_3d'], ['switch.steam_iron', 'iron'], ['sensor.gas_boiler_status', 'boiler']])
+    check(`detection : ${id}`, typeOf(id, 'on'), want);
+  // What machines say in German, French, Italian, Spanish and Dutch.
+  for (const [raw, want] of [['L\u00e4uft', 'running'], ['Fertig', 'done'], ['Beendet', 'done'], ['Bereit', 'idle'], ['Pausiert', 'paused'], ['Aus', 'idle'],
+    ['In corso', 'running'], ['Finito', 'done'], ['In pausa', 'paused'], ['Pronto', 'idle'], ['Listo', 'idle'], ['Finalizado', 'done'],
+    ['Klaar', 'done'], ['Bezig', 'running'], ['Gepauzeerd', 'paused'], ['Pr\u00eat', 'idle'], ['Fin', 'done'], ['Programm\u00e9', 'delayed'],
+    ['dehumidifying', 'running'], ['sanitizing', 'running'], ['cancel', 'idle'], ['change_condition', 'paused'], ['door_open', 'idle'],
+    ['pyrolysis', 'running'], ['descaling_required', 'paused'], ['Programme 9', 'unknown']])
+    check(`etat : ${raw}`, ctx.__norm(raw), want);
+  for (const [id, not] of [['sensor.ds1820_temperature', 'network'], ['sensor.mail_ups_delivering', 'ups'], ['sensor.panasonic_inverter_microwave_status', 'solar'], ['sensor.lg_inverter_ac_status', 'solar'], ['sensor.ecoflow_glacier_temperature', 'home_battery'], ['sensor.ctek_chargestorm_status', 'mobility'], ['sensor.dreame_air_purifier_status', 'robot']])
+    check(`detection : ${id} n est pas ${not}`, typeOf(id, 'on') === not || (not === 'mobility' && /^mob/.test(typeOf(id, 'on'))), false);
+  check('detection : un Synology DS920', typeOf('sensor.ds920_status', 'on'), 'network');
+  check('detection : un Chargestorm est une borne', typeOf('sensor.ctek_chargestorm_status', 'Charging'), 'ev_charger');
+  // The fridge's doors swing through its own drawing, which keeps it out of
+  // the card's file: the same cabinet as FR3's, shut, open and midway.
+  {
+    const fctx = { layout: 'french', doorOpen: true, freezerDoorOpen: false };
+    const fdraw = ctx.__drawingOf('fridge');
+    const half = { open: true, freezerOpen: false, kF: 0.5, kZ: 1 };
+    check('frigo : la porte qui pivote passe par son dessin', fdraw('', { ...fctx, frSwing: half }), ctx.__fr3(fctx, half));
+    check('frigo : et finit comme le dessin', fdraw('', { ...fctx, frSwing: true }), ctx.__fr3(fctx));
+    check('frigo : un vrai dessin', /<svg/.test(fdraw('', { ...fctx, frSwing: true })), true);
+  }
+  check('detection : la quatrieme prise n est pas un four', typeOf('switch.plug_four') === 'oven', false);
+  check('detection : un four en francais', typeOf('sensor.four_cuisine_etat', 'off'), 'oven');
+  check('detection : un quartier n est pas une hotte', typeOf('sensor.neighborhood_status') === 'hood', false);
+  check('detection : une VMC de salle de bain n est pas une hotte', typeOf('fan.bathroom_extractor', 'on') === 'hood', false);
+  check('detection : une hotte reste une hotte', typeOf('fan.cooker_hood', 'on'), 'hood');
+  check('detection : un climatiseur de la salle tele', typeOf('climate.tv_room', 'cool', { hvac_modes: ['off', 'cool', 'dry'] }) === 'screen', false);
   check('detection : un UniFi USW', typeOf('sensor.usw_lite_8_poe_uptime', '3'), 'network');
   check('detection : une prise a deux relais n est pas une console', typeOf('switch.kitchen_switch_2') === 'console', false);
   check('detection : une Switch 2 par son nom', typeOf('sensor.nintendo_switch_2_used_screen_time', '3'), 'console');
@@ -16227,6 +16263,55 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('detection : un thermostat Tado reste un thermostat', typeOf('climate.tado_salon', 'heat', { hvac_modes: ['off', 'heat', 'auto'] }), 'thermostat');
   check('detection : un lave-vaisselle qui seche', typeOf('sensor.dishwasher_drying', 'on'), 'dishwasher');
   check('detection : un seche-linge reste un seche-linge', typeOf('sensor.dryer_status', 'run'), 'dryer');
+}
+
+
+// =============================================================================
+// Suggestions in other languages and by class (the 2026-11 audit)
+// =============================================================================
+{
+  const sug = (type, state, ents) => {
+    const ed = new Editor();
+    ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: type, state_entity: state });
+    const all = { [state]: { state: 'run', attributes: {} }, ...ents };
+    ed.hass = { ...HASS(all), entities: Object.fromEntries(Object.keys(all).map((id) => [id, { device_id: 'dev' }])) };
+    return ed.events.at(-1)?.detail?.config || {};
+  };
+  const W = (u, dc, more = {}) => ({ state: '1', attributes: { unit_of_measurement: u, device_class: dc, ...more } });
+  // A French washer: nothing named in English.
+  const fr = sug('washer', 'sensor.lave_linge_etat', {
+    'sensor.lave_linge_temps_restant': { state: '42', attributes: { unit_of_measurement: 'min' } },
+    'binary_sensor.lave_linge_porte': { state: 'off', attributes: {} },
+    'sensor.lave_linge_puissance': W('W', 'power'),
+    'sensor.lave_linge_energie': W('kWh', 'energy', { state_class: 'total_increasing' }) });
+  check('suggestion fr : temps restant', fr.remaining_time_entity, 'sensor.lave_linge_temps_restant');
+  check('suggestion fr : porte', fr.door_entity, 'binary_sensor.lave_linge_porte');
+  check('suggestion fr : puissance', fr.power_entity, 'sensor.lave_linge_puissance');
+  check('suggestion fr : energie', fr.energy_entity, 'sensor.lave_linge_energie');
+  // German: the end of the programme is not the programme.
+  const de = sug('washer', 'sensor.waschmaschine_status', {
+    'sensor.waschmaschine_programmende': { state: '2026-11-25T12:00:00Z', attributes: { device_class: 'timestamp' } },
+    'sensor.waschmaschine_restzeit': { state: '30', attributes: { unit_of_measurement: 'min' } } });
+  check('suggestion de : programmende n est pas le programme', de.program_entity === 'sensor.waschmaschine_programmende', false);
+  check('suggestion de : restzeit', de.remaining_time_entity, 'sensor.waschmaschine_restzeit');
+  // A Kasa plug: its power and its day's energy by their own names.
+  const kasa = sug('washer', 'switch.kasa_lave_linge', {
+    'sensor.kasa_lave_linge_current_consumption': W('W', 'power'),
+    'sensor.kasa_lave_linge_today_s_consumption': W('kWh', 'energy', { state_class: 'total_increasing' }) });
+  check('suggestion kasa : puissance', kasa.power_entity, 'sensor.kasa_lave_linge_current_consumption');
+  check('suggestion kasa : energie', kasa.energy_entity, 'sensor.kasa_lave_linge_today_s_consumption');
+  // By class alone: a door, a time left, a power.
+  const cls = sug('dishwasher', 'sensor.dw_x', {
+    'binary_sensor.dw_a': { state: 'off', attributes: { device_class: 'door' } },
+    'sensor.dw_b': { state: '20', attributes: { device_class: 'duration', unit_of_measurement: 'min' } },
+    'sensor.dw_c': W('W', 'power') });
+  check('suggestion par classe : porte', cls.door_entity, 'binary_sensor.dw_a');
+  check('suggestion par classe : temps restant', cls.remaining_time_entity, 'sensor.dw_b');
+  check('suggestion par classe : puissance', cls.power_entity, 'sensor.dw_c');
+  const total = sug('dishwasher', 'sensor.dw_x', { 'sensor.dw_program_duration': { state: '120', attributes: { device_class: 'duration', unit_of_measurement: 'min' } } });
+  check('suggestion : une duree totale n est pas le temps restant', total.remaining_time_entity, undefined);
+  const water = sug('washer', 'sensor.w_x', { 'sensor.w_water_consumption': { state: '40', attributes: { unit_of_measurement: 'L' } } });
+  check('suggestion : l eau consommee n est pas l energie', water.energy_entity, undefined);
 }
 
 report();
