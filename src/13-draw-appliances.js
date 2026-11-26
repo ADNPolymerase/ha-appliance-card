@@ -1176,8 +1176,17 @@ function poolBasinSvg(b) {
     h += `<polygon points="${quad(atW(t0, 0), atW(t1, 0), atW(t1, 1), atW(t0, 1))}" fill="#e6ebee" stroke="#9fb0b9" stroke-width=".3"/><path d="M${pt(atW(t0 + (t1 - t0) * 0.35, 0))} L${pt(atW(t0 + (t1 - t0) * 0.35, 1))}" stroke="#fff" stroke-width=".6" opacity=".8"/>`;
   }
   // Under a shut cover the pump shows as the slats heaving on the water
-  // running beneath them (HACF #226).
-  if (b.pump && p > 0 && !tarp) h += `<clipPath id="pb-cov"><polygon points="${quad(atW(1 - p, 0), atW(1, 0), atW(1, 1), atW(1 - p, 1))}"/></clipPath><g clip-path="url(#pb-cov)">${waves("rgba(55,71,79,.24)", 1.8)}</g>`;
+  // running beneath them (HACF #226), and the spots light it from beneath in
+  // their colours (HACF #231).
+  if (p > 0 && !tarp && (b.pump || lightOn)) {
+    h += `<clipPath id="pb-cov"><polygon points="${quad(atW(1 - p, 0), atW(1, 0), atW(1, 1), atW(1 - p, 1))}"/></clipPath><g clip-path="url(#pb-cov)">`;
+    if (lightOn) for (let i = 0; i < n; i++) {
+      const [x, y0] = at((i + 1) / (n + 1), 0);
+      h += `<ellipse class="pb-cglow" cx="${x.toFixed(2)}" cy="${(y0 + H + 13).toFixed(2)}" rx="${night ? 22 : 17}" ry="${night ? 17 : 13}" fill="url(#pb-g${i})" opacity="${night ? .85 : .55}"/>`;
+    }
+    if (b.pump) h += waves("rgba(55,71,79,.24)", 1.8);
+    h += `</g>`;
+  }
   h += `</g>`;
   if (tarp) {
     // The winter tarp over the shut cover, held by water tubes, snow on it.

@@ -106,7 +106,8 @@ const TYPE_AUTO_PATTERNS = {
   },
   // A mailbox: a counter of the mail, and a contact on each door.
   mailbox: {
-    mail_count_entity: /count|compteur|zahl|contador|contatore|teller|licznik|nombre/i,
+    mail_count_entity: /^(?!.*(colis|parcel|paket|package|paquete|pacco|pakket|paczk)).*(count|compteur|zahl|contador|contatore|teller|licznik|nombre)/i,
+    parcel_count_entity: /colis|parcel|paket|package|paquete|pacco|pakket|paczk/i,
     front_door_entity: /front|avant|vorn|delanter|anterior|voor|flap|clapet|slot|fente/i,
     back_door_entity: /back|rear|arriere|hinten|traser|posterior|achter|empt|vidage/i,
   },

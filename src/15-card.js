@@ -3772,9 +3772,12 @@ class ApplianceCard extends HTMLElement {
     // goes up, a door swinging when it opens, never on the first drawing.
     let mailbox = null;
     if (cap.mailbox) {
-      const m = mailboxReadOf(hass, cfg, st);
+      // Its counters stand in for a state entity it does not have (HACF #232).
+      const m = mailboxReadOf(hass, cfg, st || stateObj(hass, cfg.mail_count_entity || cfg.parcel_count_entity || cfg.mail_present_entity));
       if (!cfg.state_show_raw || m.mode === "unav") {
-        stateLabel = m.mode === "mail" && m.count ? `${t(hass, "mb_mail")} \u00b7 ${m.count}` : t(hass, MAILBOX_LABELS[m.mode]);
+        stateLabel = m.mode === "mail" && m.parcels > 0
+          ? (m.count ? `${t(hass, "mb_mail")} \u00b7 ${m.count} \u00b7 ${t(hass, "mb_parcel")} ${m.parcels}` : `${t(hass, "mb_parcel")} \u00b7 ${m.parcels}`)
+          : m.mode === "mail" && m.count ? `${t(hass, "mb_mail")} \u00b7 ${m.count}` : t(hass, MAILBOX_LABELS[m.mode]);
       }
       color = MAILBOX_COLORS[m.mode];
       const now = Date.now();
@@ -3787,13 +3790,17 @@ class ApplianceCard extends HTMLElement {
       this._mbPrev = m;
       const since = (at, ms) => (at && now - at < ms ? now - at : null);
       const arrive = m.present ? since(this._mbArriveAt, MAILBOX_ARRIVE_MS) : null;
-      const drawn = m.present ? Math.min(MAILBOX_MAX_LETTERS, m.count || 1) : 0;
+      // Parcels alone draw no letter.
+      const drawn = m.present && !(m.parcels > 0 && !m.count) ? Math.min(MAILBOX_MAX_LETTERS, m.count || 1) : 0;
       if (m.mode !== "unav") {
         if (m.count !== null) {
           extraLines.push({ key: "mb_count", icon: "mdi:email-outline", label: t(hass, "mb_line_count"), value: String(m.count),
             entity: cfg.mail_count_entity || cfg.state_entity });
         }
-        const lastSt = m.present ? stateObj(hass, cfg.mail_count_entity || cfg.state_entity) : null;
+        if (m.parcels !== null) {
+          extraLines.push({ key: "mb_parcels", icon: "mdi:package-variant-closed", label: t(hass, "mb_parcel"), value: String(m.parcels), entity: cfg.parcel_count_entity });
+        }
+        const lastSt = m.present ? stateObj(hass, cfg.mail_count_entity || cfg.state_entity || cfg.parcel_count_entity) : null;
         const last = lastSt ? Date.parse(lastSt.last_changed) : NaN;
         if (isFinite(last)) {
           extraLines.push({ key: "mb_last", icon: "mdi:email-arrow-left-outline", label: t(hass, "mb_line_last"),

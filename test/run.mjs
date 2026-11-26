@@ -10591,6 +10591,10 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('224 : editeur, spots changeants', edB.includes('data-field="spot_random"'), true);
   check('224 : editeur, pas d inversion sans interrupteur', markup(newEditor({ state_entity: 'binary_sensor.p', appliance_type: 'pool_pump' })).includes('data-field="winter_invert"'), false);
   // HACF #226: no snow falling when asked, active wintering, the pump under the cover, UV.
+  check('231 : les spots colorent le volet ferme', /class="pb-cglow"/.test(B({ cover_entity: 'cover.v', light_entity: 'switch.l' }, { 'cover.v': s('closed', { current_position: 0 }), 'switch.l': s('on') })), true);
+  check('231 : volet ouvert, pas de lueur sur le volet', /pb-cglow/.test(B({ cover_entity: 'cover.v', light_entity: 'switch.l' }, { 'cover.v': s('open', { current_position: 100 }), 'switch.l': s('on') })), false);
+  check('231 : spots eteints, volet sans lueur', /pb-cglow/.test(B({ cover_entity: 'cover.v', light_entity: 'switch.l' }, { 'cover.v': s('closed', { current_position: 0 }), 'switch.l': s('off') })), false);
+  check('231 : hivernage actif, les spots se voient sur le volet', /pb-cglow/.test(B({ winter: true, winter_active: true, light_entity: 'switch.l' }, { 'switch.l': s('on') })), true);
   check('226 : flocons du bassin dans leur classe', /class="pb-fl"/.test(B({ winter: true }, {})), true);
   check('226 : hivernage actif, pas de bache', /fill="#2f5d50"/.test(B({ winter: true, winter_active: true }, {})), false);
   check('226 : hivernage actif, pas de flocons', /class="pb-fl"/.test(B({ winter: true, winter_active: true }, {})), false);
@@ -12307,6 +12311,24 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur bal : le dessin et le cote de la rue', ['mailbox_layout', 'mailbox_front'].every((f) => new RegExp(`data-field="${f}"`).test(markup(newEditor({ ...BAL })))), true);
   check('editeur bal : les portes et le compteur', ['mail_count_entity', 'front_door_entity', 'back_door_entity'].every((f) => new RegExp(`data-toggle="${f}"`).test(markup(newEditor({ appliance_type: 'mailbox', state_entity: 'input_boolean.bal' })))), true);
   check('editeur bal : le cote de la rue seulement en traversante', /data-field="mailbox_front"/.test(markup(newEditor({ ...BAL, mailbox_layout: 'classic' }))), false);
+  // HACF #232: letters and parcels counted apart, no state entity needed.
+  const PC = { appliance_type: 'mailbox', mail_count_entity: 'sensor.lettres', parcel_count_entity: 'sensor.colis' };
+  const SC = (l, c) => ({ 'sensor.lettres': st(String(l)), 'sensor.colis': st(String(c)) });
+  const parcels = (h) => (h.match(/class="mb-parcel"/g) || []).length;
+  check('232 : sans state_entity, les compteurs suffisent', sline(card(PC, SC(2, 1))), 'Courrier · 2 · Colis 1');
+  check('232 : colis seuls', sline(card(PC, SC(0, 1))), 'Colis · 1');
+  check('232 : vide', sline(card(PC, SC(0, 0))), 'Vide');
+  check('232 : la ligne des colis', infoLine(html(card(PC, SC(2, 1))), 'Colis'), '1');
+  check('232 : un colis dessine', parcels(html(card(PC, SC(2, 1)))), 1);
+  check('232 : deux colis au plus', parcels(html(card(PC, SC(0, 5)))), 2);
+  check('232 : pas de colis, rien de dessine', parcels(html(card(PC, SC(3, 0)))), 0);
+  check('232 : les lettres ne prennent pas le compte des colis', letters(html(card({ appliance_type: 'mailbox', parcel_count_entity: 'sensor.colis' }, { 'sensor.colis': st('3') }))), 0);
+  check('232 : badge des colis', /mb-pbadge/.test(html(card(PC, SC(0, 2)))), true);
+  check('232 : colis seuls, pas de badge courrier a zero', /class="mb-badge"/.test(html(card(PC, SC(0, 2)))), false);
+  check('232 : colis dans la boite traversante', parcels(html(card({ ...PC, mailbox_layout: 'through' }, SC(1, 1)))), 1);
+  check('232 : colis dans la boite 3D porte ouverte', /mb-parcel/.test(html(card({ ...PC, mailbox_layout: 'through_3d', front_door_entity: 'binary_sensor.av' }, { ...SC(1, 1), 'binary_sensor.av': st('on') }))), true);
+  check('232 : editeur, champ des colis', /data-toggle="parcel_count_entity"/.test(markup(newEditor({ appliance_type: 'mailbox', state_entity: 'input_boolean.bal' }))), true);
+  check('232 : sans aucune source, la config est refusee', (() => { try { new Card().setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'mailbox' }); return false; } catch (e) { return true; } })(), true);
   // HACF: an entity saying whether mail is inside, whatever the counter says.
   const PR = { ...BAL, mail_present_entity: 'input_boolean.bal_courrier' };
   const SP = (on, n) => ({ ...S({ n }), 'input_boolean.bal_courrier': st(on ? 'on' : 'off') });

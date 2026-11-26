@@ -3,7 +3,7 @@
 export default function defineEditor(deps) {
 // A page still running the card of an earlier release, the files of this one
 // on the server: its helpers are not these, so say to reload the page.
-if (!deps || deps.__v !== "5.3.0") {
+if (!deps || deps.__v !== "5.4.0") {
   if (!customElements.get("ha-appliance-card-editor")) customElements.define("ha-appliance-card-editor", class extends HTMLElement {
     setConfig() {}
     connectedCallback() {
@@ -389,6 +389,7 @@ const SECTIONS = [
   ...Object.entries(OPT_LINES).flatMap(([ty, list]) => list.flatMap((o) => [{ field: o.field, types: [ty], labelKey: o.label, includeDomains: o.domains }]
     .concat(o.target ? [{ field: o.target, types: [ty], labelKey: o.targetLabel, includeDomains: ["sensor", "number", "input_number"] }] : []))),
   { field: "mail_count_entity", types: ["mailbox"], labelKey: "section_mail_count", includeDomains: ["sensor", "counter", "input_number", "number"] },
+  { field: "parcel_count_entity", types: ["mailbox"], labelKey: "section_parcel_count", includeDomains: ["sensor", "counter", "input_number", "number"] },
   { field: "mail_present_entity", types: ["mailbox"], labelKey: "section_mail_present", includeDomains: ["input_boolean", "binary_sensor", "switch", "sensor"] },
   { field: "front_door_entity", types: ["mailbox"], labelKey: "mb_front_door", includeDomains: ["binary_sensor", "sensor", "input_boolean", "switch"] },
   { field: "back_door_entity", types: ["mailbox"], labelKey: "mb_back_door", includeDomains: ["binary_sensor", "sensor", "input_boolean", "switch"] },

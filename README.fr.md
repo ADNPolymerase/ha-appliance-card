@@ -1001,7 +1001,7 @@ pilot_entity: switch.intellifire_pilot_light
 | `pool_alert_entity` | piscine | Tout ce qui doit déclencher l'*Erreur* : la pompe fume et l'aiguille du manomètre s'affole. |
 | `light_entity` | piscine | Le projecteur du bassin : il éclaire la paroi du fond, et son interrupteur se met dans le coin de la carte. |
 | `pool_layout` | piscine | `pump` (défaut, le filtre à sable et la pompe) \| `basin` (le bassin en 3/4 : ses spots sur la paroi du fond, son volet flottant et son rouleau, sa douche solaire, l'eau qui bouge quand la pompe tourne). |
-| `spot_count` | piscine (bassin) | Les spots immergés, de 1 à 6 (3 par défaut). Ils prennent la couleur de `light_entity`, blanc sinon, et changent de couleur quand son effet est aléatoire ou arc-en-ciel. |
+| `spot_count` | piscine (bassin) | Les spots immergés, de 1 à 6 (3 par défaut). Ils prennent la couleur de `light_entity`, blanc sinon, et changent de couleur quand son effet est aléatoire ou arc-en-ciel. Volet fermé, leur lumière passe entre les lames. |
 | `spot_random` | piscine (bassin) | `true` pour que les spots changent de couleur quoi que dise la lumière. |
 | `uv_entity` | piscine (bassin) | L'indice UV, en ligne colorée selon l'échelle de l'OMS : vert sous 3, orange dès 6, rouge dès 8. |
 | `cover_entity` | piscine (bassin) | Le volet flottant : un `cover` (sa position), un capteur binaire (allumé quand il est ouvert) ou un pourcentage d'ouverture. Les lames passent sous le rouleau quand il s'ouvre, et c'est une ligne : *Ouvert*, *Fermé*, *Ouvert à 40 %*, *Ouverture*. |
@@ -1706,6 +1706,7 @@ Un sécheur de filament vu de face, ses bobines côte à côte sur leurs rouleau
 | `mailbox_color` | boîte aux lettres | En vue 3/4 : `anthracite` (défaut) \| `white` \| `grey` \| `green` \| `brown`. |
 | `mailbox_front` | boîte aux lettres | `left` (défaut) \| `right` : le côté de la rue, pour une traversante. |
 | `mail_count_entity` | boîte aux lettres | Un compteur de courrier. La pile dessine jusqu'à douze lettres, et le nombre est une ligne et un badge. |
+| `parcel_count_entity` | boîte aux lettres | Un compteur de colis, à part des lettres : jusqu'à deux colis dessinés dedans, une ligne et un badge marron. Avec ces compteurs, la boîte n'a pas besoin de `state_entity`. |
 | `mail_present_entity` | boîte aux lettres | Le courrier est-il dedans : on à l'arrivée, off une fois relevé (un `input_boolean` que vos automatisations basculent). À off, la boîte affiche *Vide*, sans lettre ni badge, quoi que dise encore un compteur du jour ; le nombre reste en ligne. |
 | `front_door_entity` / `back_door_entity` | boîte aux lettres | Les contacts de la porte côté rue et de la porte côté maison : *Porte avant ouverte*, *Porte arrière ouverte*, la porte pivote et la lumière du jour entre, et une ligne pour chacune. |
 | `tree_palette` | sapin de Noël | `multicolor` (défaut) \| `red_gold` \| `red_silver` \| `gold_silver` \| `blue_silver` \| `white_silver` \| `red_green` : les boules, les lumières, la guirlande, l'étoile, le cache-pot et les cadeaux. |

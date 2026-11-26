@@ -748,7 +748,10 @@ function stateFreeSource(config) {
   // plugs gathered as one strip have no entity of their own (HACF #205).
   const asStrip = config && (config.appliance_type === "power_strip" || !config.appliance_type);
   const hasStripSource = asStrip && Array.isArray(config.outlets) && config.outlets.some((o) => (typeof o === "string" ? o : o && o.entity));
+  // A mailbox read from its letter and parcel counters alone (HACF #232).
+  const asMailbox = config && (config.appliance_type === "mailbox" || !config.appliance_type);
+  const hasMailboxSource = asMailbox && !!(config.mail_count_entity || config.parcel_count_entity || config.mail_present_entity);
   return !!(hasFridgeSource || hasFeederSource || hasChargerSource || hasScreenSource || hasPoolSource
-    || hasSolarSource || hasBatterySource || hasUpsSource || hasNtSource || hasStripSource);
+    || hasSolarSource || hasBatterySource || hasUpsSource || hasNtSource || hasStripSource || hasMailboxSource);
 }
 

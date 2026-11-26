@@ -1001,7 +1001,7 @@ pilot_entity: switch.intellifire_pilot_light
 | `pool_alert_entity` | pool pump | Anything that should raise the *Error*: the pump smokes and the gauge's needle swings. |
 | `light_entity` | pool pump | The pool's light: it shines on the far wall, and the light switch sits in the corner of the card. |
 | `pool_layout` | pool pump | `pump` (default, the sand filter and the pump) \| `basin` (the pool itself in 3/4: its spots on the far wall, its floating cover and its roller, its solar shower, the water moving while the pump runs). |
-| `spot_count` | pool pump (basin) | The underwater spots, 1 to 6 (3 by default). They take the colour of `light_entity`, white otherwise, and change colour when its effect is a random or rainbow one. |
+| `spot_count` | pool pump (basin) | The underwater spots, 1 to 6 (3 by default). They take the colour of `light_entity`, white otherwise, and change colour when its effect is a random or rainbow one. With the cover shut, their light shows through the slats. |
 | `spot_random` | pool pump (basin) | `true` to make the spots change colour whatever the light says. |
 | `uv_entity` | pool pump (basin) | The UV index, as a line coloured on the WHO scale: green under 3, orange from 6, red from 8. |
 | `cover_entity` | pool pump (basin) | The floating cover: a `cover` (its position), a binary sensor (on when open) or a percentage open. The slats go under the roller as it opens, and it is a line: *Open*, *Closed*, *40 % open*, *Opening*. |
@@ -1704,6 +1704,7 @@ A filament dryer from the front, its spools standing side by side on their rolle
 | `mailbox_color` | mailbox | In three-quarter view: `anthracite` (default) \| `white` \| `grey` \| `green` \| `brown`. |
 | `mailbox_front` | mailbox | `left` (default) \| `right`: the side the street is on, for a through-the-wall box. |
 | `mail_count_entity` | mailbox | A counter of the mail. The pile shows up to twelve letters, and the count is a line and a badge. |
+| `parcel_count_entity` | mailbox | A counter of the parcels, apart from the letters: up to two boxes drawn inside, a line and a brown badge. With these counters the mailbox needs no `state_entity`. |
 | `mail_present_entity` | mailbox | Whether mail is inside: on when it arrives, off once collected (an `input_boolean` your automations set). Off, the box reads *Empty* with no letter and no badge, whatever a counter of the day still says; the count stays a line. |
 | `front_door_entity` / `back_door_entity` | mailbox | The contacts on the street door and on the house door: *Front door open*, *Back door open*, the door swings open and daylight comes in, and a line for each. |
 | `tree_palette` | christmas_tree | `multicolor` (default) \| `red_gold` \| `red_silver` \| `gold_silver` \| `blue_silver` \| `white_silver` \| `red_green`: the baubles, the lights, the tinsel, the star, the pot and the presents. |

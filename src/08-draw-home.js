@@ -791,7 +791,7 @@ function cameraHtml(cls, c) {
 // A mailbox, read from a mail indicator or a counter, and from the contacts on
 // its doors: empty, with mail in it, or one of its doors open. Up to twelve
 // letters are drawn in the pile.
-const MAILBOX_ONLY_FIELDS = ["mailbox_layout", "mailbox_front", "mail_count_entity", "mail_present_entity", "front_door_entity", "back_door_entity", "mailbox_color"];
+const MAILBOX_ONLY_FIELDS = ["mailbox_layout", "mailbox_front", "mail_count_entity", "parcel_count_entity", "mail_present_entity", "front_door_entity", "back_door_entity", "mailbox_color"];
 const MAILBOX_LAYOUTS = ["through", "through_3d", "classic"];
 const MAILBOX_SIDES = ["left", "right"];
 const MAILBOX_MAX_LETTERS = 12;
@@ -810,19 +810,23 @@ function mailboxOpen(hass, id) {
 function mailboxReadOf(hass, cfg, st) {
   const raw = st ? String(st.state).trim().toLowerCase() : "";
   if (!st || ["unavailable", "unknown", "none", ""].includes(raw)) return { mode: "unav", count: null, present: false, front: false, back: false };
-  const own = numberOrNull(st.state);
+  // Without a state entity of its own, st is one of its counters, not a count of letters.
+  const own = cfg.state_entity ? numberOrNull(st.state) : null;
   const counted = cfg.mail_count_entity ? numericState(hass, cfg.mail_count_entity) : own;
   const count = counted === null ? null : Math.max(0, Math.round(counted));
+  // Parcels counted apart from the letters (HACF #232).
+  const pc = cfg.parcel_count_entity ? numericState(hass, cfg.parcel_count_entity) : null;
+  const parcels = pc === null ? null : Math.max(0, Math.round(pc));
   // An entity saying whether mail is inside (HACF): on when it arrives, off
   // once collected, whatever a counter of the day still says.
   const flag = cfg.mail_present_entity ? stateObj(hass, cfg.mail_present_entity) : null;
   const flagged = flag && !HA_OFFLINE_STATES.includes(String(flag.state).toLowerCase());
   const present = flagged ? MAILBOX_ON.includes(String(flag.state).trim().toLowerCase())
-    : (count !== null && count > 0) || MAILBOX_ON.includes(raw) || (own !== null && own > 0);
+    : (count !== null && count > 0) || (parcels !== null && parcels > 0) || (cfg.state_entity && MAILBOX_ON.includes(raw)) || (own !== null && own > 0);
   const front = mailboxOpen(hass, cfg.front_door_entity);
   const back = mailboxOpen(hass, cfg.back_door_entity);
   const mode = back ? "back" : front ? "front" : present ? "mail" : "empty";
-  return { mode, count, present, front, back };
+  return { mode, count, parcels, present, front, back };
 }
 // Seen from the side through its wall when it has a door on each face, from
 // the front otherwise.
@@ -856,6 +860,15 @@ function mbLetters(n, x0, step, floor, newIdx, sx, sy) {
   }
   return out;
 }
+// A parcel: a cardboard box with its tape and its label.
+const mbParcel = (x, y, w, h) => `<g class="mb-parcel"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx=".6" fill="#c89a62" stroke="#8d6a3e" stroke-width=".5"/><rect x="${x + w * .44}" y="${y}" width="${w * .12}" height="${h}" fill="#e6c995" opacity=".85"/><rect x="${x + w * .1}" y="${y + h * .55}" width="${w * .26}" height="${h * .25}" fill="#fff" opacity=".9"/></g>`;
+// One or two parcels on the floor of the box, behind the letters.
+const mbParcels = (n, spots) => (n > 0 ? spots.slice(0, Math.min(n, spots.length)).map((s) => mbParcel(...s)).join("") : "");
+const mbParcelBadge = (n, big) => {
+  const txt = String(n), w = txt.length > 1 ? 30 : 25;
+  if (big) return `<g transform="translate(${(118 - (4 + w) * 1.8).toFixed(1)} 9) scale(1.8)">${mbParcelBadge(n)}</g>`;
+  return `<g class="mb-badge mb-pbadge"><rect x="4" y="20" width="${w}" height="12" rx="6" fill="#8d6a3e"/><rect x="8" y="23" width="9" height="6.5" rx=".6" fill="#e6c995"/><path d="M12.5 23 V29.5" stroke="#8d6a3e" stroke-width=".9"/><text x="19.5" y="29.4" font-size="8" font-family="Arial, sans-serif" font-weight="700" fill="#fff">${txt}</text></g>`;
+};
 const mbBadge = (n, big) => {
   const txt = n === null || n === undefined ? "" : String(n);
   const w = txt ? (txt.length > 1 ? 30 : 25) : 17;
@@ -924,6 +937,7 @@ function mbThrough3d(c) {
 <path d="M${pp(pt(0, 0, 0), pt(0, 0, 1), pt(0, H, 1), pt(0, H, 0))} Z" fill="url(#${id("iw")})"/>
 <path d="M${pp(pt(0, H, 0), pt(W, H, 0), pt(W, H, 1), pt(0, H, 1))} Z" fill="url(#${id("if")})"/>
 <path d="M${pp(pt(0, 0, 1), pt(0, H, 1), pt(W, H, 1))}" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".5"/>
+${c.parcels > 0 ? `<g class="mb-parcel"><path d="M${pp(pt(W * .46, H - 13, .32), pt(W * .92, H - 13, .32), pt(W * .92, H - 13, .78), pt(W * .46, H - 13, .78))} Z" fill="#e0b47e" stroke="#8d6a3e" stroke-width=".4"/>${mbParcel(pt(W * .46, H - 13, .32)[0], pt(W * .46, H - 13, .32)[1], W * .46, 13)}</g>` : ""}
 ${letters}
 <path d="M${pp(pt(0, 0, 0), pt(W, 0, 0), pt(W, H, 0))}" fill="none" stroke="#000" stroke-opacity=".3" stroke-width="1.6"/></g>`;
   // The street door, shut or open on its left hinge.
@@ -991,7 +1005,7 @@ const MB_SVGS = {
 <rect class="mb-light" x="60" y="36" width="33" height="44" fill="url(#mb-g-day)"/>
 <rect class="mb-light-f" x="27" y="36" width="33" height="44" fill="url(#mb-g-dayl)"/>
 <rect x="46" y="34" width="28" height="48" fill="#000" opacity=".18"/>
-${mbLetters(c.drawn, 28, 21, 81, c.newIdx, -6, 36)}
+${mbParcels(c.parcels, [[67, 66, 22, 15], [71, 52, 17, 13]])}${mbLetters(c.drawn, 28, 21, 81, c.newIdx, -6, 36)}
 <rect x="24" y="30" width="72" height="5" rx="1.5" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".6"/>
 <rect x="24" y="81" width="72" height="4" rx="1" style="fill:var(--ac-body-lo,#c9d0d7)" ${MB_EDGE} stroke-width=".5"/>
 ${front}${back}
@@ -1008,7 +1022,7 @@ ${lbl(34, right ? c.house : c.street)}${lbl(86, right ? c.street : c.house)}`;
       ? `<g class="mb-swing hl"><path d="M30 40 L12 45 V89 L30 94 Z" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".6"/><path d="M15 50 V84" stroke="#fff" stroke-width="1.2" opacity=".5"/></g>`
       : `<rect x="30" y="40" width="60" height="54" rx="3" fill="url(#mb-g-sh)" ${MB_EDGE} stroke-width=".6"/>
 <rect x="40" y="46" width="40" height="10" rx="2" fill="#151a20"/>
-<g class="mb-glass">${c.drawn > 0 ? '<rect x="43" y="50" width="16" height="6" fill="#fff"/>' : ""}${c.drawn > 4 ? '<rect x="57" y="49" width="18" height="7" fill="#f4f1e8"/>' : ""}${c.drawn > 8 ? '<rect x="50" y="47" width="14" height="9" fill="#fff" transform="rotate(-6 57 51)"/>' : ""}</g>
+<g class="mb-glass">${c.drawn > 0 ? '<rect x="43" y="50" width="16" height="6" fill="#fff"/>' : ""}${c.drawn > 4 ? '<rect x="57" y="49" width="18" height="7" fill="#f4f1e8"/>' : ""}${c.drawn > 8 ? '<rect x="50" y="47" width="14" height="9" fill="#fff" transform="rotate(-6 57 51)"/>' : ""}${c.parcels > 0 ? '<rect x="62" y="50" width="15" height="6" fill="#c89a62"/>' : ""}</g>
 <path d="M41 47.5 H58" stroke="#fff" stroke-width=".8" opacity=".3"/>
 <rect x="44" y="62" width="32" height="8" rx="1" fill="#c8a24e"/><path d="M48 66 H72" stroke="#8a6d2a" stroke-width=".8"/>
 <circle cx="82" cy="80" r="2.2" fill="#7b8590"/><rect x="81.4" y="80" width="1.2" height="3.4" fill="#7b8590"/>`;
@@ -1016,7 +1030,7 @@ ${lbl(34, right ? c.house : c.street)}${lbl(86, right ? c.street : c.house)}`;
 <rect x="55" y="98" width="10" height="27" fill="#8f979f"/><rect x="55" y="98" width="3" height="27" fill="#fff" opacity=".25"/>
 <rect x="24" y="18" width="72" height="82" rx="5" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".7"/>
 <rect x="30" y="40" width="60" height="54" rx="3" fill="url(#mb-g-in)"/>
-${mbLetters(c.drawn, 31, 19, 94, 0, 0, 0)}
+${mbParcels(c.parcels, [[64, 79, 24, 15], [67, 66, 19, 13]])}${mbLetters(c.drawn, 31, 19, 94, 0, 0, 0)}
 <rect class="mb-light-f" x="30" y="40" width="60" height="36" fill="url(#mb-g-dayt)"/>
 ${door}
 <rect x="20" y="12" width="80" height="9" rx="3" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".7"/><path d="M24 14 H96" stroke="#fff" stroke-width="1.4" opacity=".7"/>
@@ -1033,7 +1047,7 @@ function mailboxHtml(cls, c) {
   // A redraw while a letter is on its way resumes it where it was.
   const ago = c.arrive ? `--mb-ago:${(-c.arrive / 1000).toFixed(2)}s` : "";
   return `
-        <div class="machine ${cls} ${flags}" style="${ago}"><svg class="mb-svg" viewBox="0 -8 120 135">${MB_DEFS}${MB_SVGS[layout](c)}${c.present ? mbBadge(c.count, layout === "through_3d") : ""}</svg></div>`;
+        <div class="machine ${cls} ${flags}" style="${ago}"><svg class="mb-svg" viewBox="0 -8 120 135">${MB_DEFS}${MB_SVGS[layout](c)}${c.present && !(c.parcels > 0 && !c.count) ? mbBadge(c.count, layout === "through_3d") : ""}${c.present && c.parcels > 0 ? mbParcelBadge(c.parcels, layout === "through_3d") : ""}</svg></div>`;
 }
 
 // A lamp, read from its light entity: on or off, how bright, in what colour,
