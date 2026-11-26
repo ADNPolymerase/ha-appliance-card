@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "5.2.0";
+const CARD_VERSION = "5.3.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -167,7 +167,7 @@ const T = {
     robot_controls: "Start, pause and return buttons", robot_go_home: "Return to base", battery_corner: "Show the battery in a corner of the card", section_robot_clean_mode: "Cleaning mode", section_robot_floor: "Floor", floor_rug: "Rug", floor_tiles: "Tiles", floor_parquet: "Parquet", floor_smooth: "Smooth floor",
     layout_net_router: "Router / box", layout_net_mini_pc: "Mini PC", section_net_clients: "Connected clients", section_net_wan: "Internet link", section_net_wifi: "Wi-Fi", net_line_clients: "Clients", net_no_internet: "No internet",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Square box", layout_purifier_ring: "Bladeless ring",
-    pf_purifying: "Purifying", pf_auto: "Auto", pf_night: "Night mode", section_air_quality: "Air quality",
+    pf_purifying: "Purifying", pf_auto: "Auto", pf_idle: "Auto \u00b7 idle", pf_sleep: "Turns off in", layout_purifier_cone: "Big+Quiet (cone)", layout_purifier_dome: "Pure Cool Me (dome)", pf_night: "Night mode", section_air_quality: "Air quality",
     section_screen: "Screen", section_heater: "Heating (thermostat)", aq_good: "Good", aq_fair: "Fair",
     aq_poor: "Poor", aq_bad: "Very poor", type_fan: "Fan", layout_fan_stand: "Pedestal",
     layout_fan_table: "Desk", layout_fan_ceiling: "Ceiling", fan_natural: "Natural wind", fan_summer: "Summer",
@@ -3191,9 +3191,11 @@ const TYPE_AUTO_PATTERNS = {
     heater_entity: /^climate\./i,
     humidifier_entity: /^humidifier\./i,
     deep_clean_entity: /deep.?clean/i,
-    low_water_entity: /low.?water|water.?(lack|shortage|empty)|no.?water|tank.?empty/i,
+    low_water_entity: /low.?water|water.?(lack|shortage|empty)|no.?water|tank.?empty|fault.?water/i,
     tank_lifted_entity: /lifted|detached|tank.?(removed|missing|off)/i,
-    water_level_entity: /water.?level/i,
+    water_level_entity: /^(?!.*fault).*water.?level/i,
+    // A Dyson's failed self-check (#141).
+    alerts_entity: /product.?error/i,
     // A Dyson has a HEPA and a carbon filter: the carbon one goes second.
     filter_life_entity: /^(sensor|number)\.(?!.*(type|carbon|charbon|charcoal|kohle|fault|replace)).*(filter|filtre|filtro)/i,
     filter_reset_entity: /^(button|script|switch)\..*(reset.?filter|filter.?reset)/i,
@@ -6796,6 +6798,9 @@ const DYSON_HUMIDIFY_RE = /humidify|(^|[^a-z0-9])(358[a-z]?|ph0[1-5]|ph[12])($|[
 // The other Dyson columns, by the type code of the device registry or the name
 // on the box. Filterless ones first: an AM09 is a Hot+Cool too.
 const DYSON_LAYOUT_RES = [
+  // A Purifier Big+Quiet and a Pure Cool Me are not rings at all (#141).
+  ["cone", /big.{0,3}quiet|(^|[^a-z0-9])(664[a-z]?|bp0[2-6])($|[^a-z0-9])/],
+  ["dome", /cool.?me|(^|[^a-z0-9])bp01($|[^a-z0-9])/],
   ["ring_tower", /(^|[^a-z0-9])am0?7($|[^a-z0-9])/],
   ["ring_heater", /(^|[^a-z0-9])(am0?[459]|hf1)($|[^a-z0-9])/],
   ["ring_desk", /(^|[^a-z0-9])(469|520|dp0[1-4]|cf1|am0?6)($|[^a-z0-9])|desk/],
@@ -6803,7 +6808,7 @@ const DYSON_LAYOUT_RES = [
 ];
 // The gold drum of the Formaldehyde and De-NOx machines.
 const DYSON_GOLD_RE = /formaldehyde|de.?nox|(^|[^a-z0-9])(358e|438e|527e|ph0?[245]|hp09|hp2|tp09)($|[^a-z0-9])/;
-const PURIFIER_LAYOUTS = ["cylinder", "box", "ring", "ring_heat", "ring_humidify", "ring_desk", "ring_heater", "ring_tower"];
+const PURIFIER_LAYOUTS = ["cylinder", "box", "ring", "ring_heat", "ring_humidify", "ring_desk", "ring_heater", "ring_tower", "cone", "dome"];
 // Which Dyson column a card draws, from its entities and its name.
 function dysonLayoutOf(cfg, name, dom) {
   if (cfg.humidifier_entity || DYSON_HUMIDIFY_RE.test(name)) return "ring_humidify";
@@ -12404,12 +12409,22 @@ class ApplianceCard extends HTMLElement {
       // by the word in its entity (Ludoc, HACF).
       extraLines.push(...purifierFilterLines(hass, cfg, t));
       const humidifying = hum.on && ["run", "night"].includes(s.mode);
-      if (!cfg.state_show_raw) stateLabel = t(hass, airLabel(s.mode, humidifying ? "pf_humidifying" : s.preset === "auto" ? "pf_auto" : "pf_purifying"));
+      // In Auto with clean air a Dyson stops its fan and stays on (#141).
+      const idle = ["run", "night"].includes(s.mode) && String(s.a.fan_state || "").toUpperCase() === "OFF";
+      if (!cfg.state_show_raw) stateLabel = t(hass, airLabel(s.mode, idle ? "pf_idle" : humidifying ? "pf_humidifying" : s.preset === "auto" ? "pf_auto" : "pf_purifying"));
+      // Its sleep timer, in minutes, 0 when off.
+      const sleep = numberOrNull(s.a.sleep_timer);
+      if (sleep > 0 && ["run", "night", "heat"].includes(s.mode)) {
+        extraLines.push({ key: "pf_sleep", icon: "mdi:timer-sand", label: t(hass, "pf_sleep"), value: keepTogether(formatDuration(sleep * 60, hass)), entity: cfg.state_entity });
+      }
+      // How wide it oscillates: the loop turns further on a wider span.
+      const span = numberOrNull(s.a.oscillation_span) ?? (numberOrNull(s.a.angle_high) !== null && numberOrNull(s.a.angle_low) !== null ? s.a.angle_high - s.a.angle_low : null);
       color = humidifying && s.mode === "run" ? "#29b6f6" : AIR_COLORS[s.mode];
       const name = `${cfg.state_entity || ""} ${stHay(st)}`.toLowerCase();
       purifier = {
         mode: s.mode, level: s.level, spd: s.spd, warm: s.warm, aq,
-        osc: s.a.oscillating === true, back: String(s.a.direction || "").toLowerCase() === "reverse",
+        osc: s.a.oscillating === true, back: String(s.a.direction || "").toLowerCase() === "reverse", idle,
+        oscMin: span > 0 ? Math.max(0.36, 1 - 0.0018 * Math.min(span, 350)).toFixed(2) : null,
         layout: PURIFIER_LAYOUTS.includes(cfg.purifier_layout) ? cfg.purifier_layout
           : !/dyson/.test(name) ? "cylinder" : dysonLayoutOf(cfg, name, domainOf(cfg.state_entity)),
         gold: DYSON_GOLD_RE.test(name),

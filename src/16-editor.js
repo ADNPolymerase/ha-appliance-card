@@ -2095,6 +2095,8 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "ring", label: t(hass, "layout_purifier_ring") },
             { value: "ring_heat", label: t(hass, "layout_purifier_ring_heat") },
             { value: "ring_humidify", label: t(hass, "layout_purifier_ring_humidify") },
+            { value: "cone", label: t(hass, "layout_purifier_cone") },
+            { value: "dome", label: t(hass, "layout_purifier_dome") },
             { value: "ring_desk", label: t(hass, "layout_purifier_ring_desk") },
             { value: "ring_heater", label: t(hass, "layout_purifier_ring_heater") },
             { value: "ring_tower", label: t(hass, "layout_purifier_ring_tower") },

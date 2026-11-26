@@ -9878,7 +9878,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('anneau : pas d\'oscillation', has(ring({ oscillating: false }), 'osc'), false);
   check('anneau : souffle arriere', has(ring({ direction: 'reverse' }), 'back'), true);
   check('anneau : souffle avant', has(ring({ direction: 'forward' }), 'back'), false);
-  contains('anneau : la boucle pivote sur elle-meme', ring({ oscillating: true }), '@keyframes pf-pivot { 0%, 50%, 100% { transform: scaleX(1); } 25%, 75% { transform: scaleX(0.68); } }');
+  contains('anneau : la boucle pivote sur elle-meme', ring({ oscillating: true }), '@keyframes pf-pivot { 0%, 50%, 100% { transform: scaleX(1); } 25%, 75% { transform: scaleX(var(--osc-min, 0.68)); } }');
   contains('anneau : en arriere, aucune ligne meme en oscillation', ring({}), '.machine.back .wind, .machine.back.osc .wind.l { display: none; }');
   contains('anneau : les anneaux vont vers le centre', ring({}), '100% { transform: scale(0.08); opacity: 0; }');
   check('anneau : les anneaux ont la forme de la boucle', /class="dy-back"[^>]*><b>/.test(ring({ direction: 'reverse' })), true);
@@ -14996,7 +14996,7 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   const base = (hum, dc = '571', extra = {}) => ({ 'fan.dyson': s('on', { percentage: 50 }), 'humidifier.dyson': s(hum, { humidity: 50, mode: 'auto', ...extra }), 'sensor.dc': s(dc, { unit_of_measurement: 'h' }) });
   const on = render(hu, base('on'));
   check('humidify : le reservoir', /class="hu-tank/.test(on), true);
-  check('humidify : la brume', /class="hu-mist"/.test(on), true);
+  check('141 : humidify, pas de brume visible (evaporation)', /class="hu-mist"/.test(on), false);
   check('humidify : l etat', /Humidifying/.test(on), true);
   check('humidify : la cible', infoLine(on, 'Humidity setpoint'), 'Auto \u00b7 50\u00a0%');
   check('humidify : nettoyage dans 24 jours', infoLine(on, 'Deep clean'), 'in 24 days');
@@ -15004,7 +15004,26 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('humidify : eteint, le reservoir reste', /class="hu-tank/.test(dry), true);
   check('humidify : eteint, pas de brume', /class="hu-mist"/.test(dry), false);
   check('humidify : eteint, il purifie', /Humidifying/.test(dry), false);
-  check('humidify : a l arret du cycle, pas de brume', /class="hu-mist"/.test(render(hu, base('on', '571', { action: 'idle' }))), false);
+  check('141 : humidificateur au repos, pas de bulles', /class="machine [^"]*\bhum\b/.test(render(hu, base('on', '571', { action: 'idle' }))), false);
+  check('141 : humidificateur en marche, les bulles', /class="machine [^"]*\bhum\b/.test(render(hu, base('on', '571', { action: 'humidifying' }))), true);
+  // #141: what a Dyson really does.
+  const dy = (attrs, extra = {}) => render({ appliance_type: 'air_purifier', state_entity: 'fan.dyson', ...extra }, { 'fan.dyson': s('on', { friendly_name: 'Dyson', percentage: 50, ...attrs }) });
+  const idleM = dy({ preset_mode: 'auto', fan_state: 'OFF' });
+  check('141 : ventilateur arrete en Auto', /class="machine [^"]*\bidle\b/.test(idleM), true);
+  check('141 : etat Auto en veille', stateLine(idleM), 'Auto \u00b7 idle');
+  check('141 : ventilateur qui souffle', /\bidle\b/.test((/class="machine ([^"]*)"/.exec(dy({ preset_mode: 'auto', fan_state: 'FAN' })) || [, ''])[1]), false);
+  check('141 : minuterie d arret', infoLine(dy({ sleep_timer: 25 }), 'Turns off in'), '25\u00a0min');
+  check('141 : minuterie a 0, pas de ligne', infoLine(dy({ sleep_timer: 0 }), 'Turns off in'), null);
+  check('141 : oscillation 45 degres', /--osc-min: 0\.92/.test(dy({ oscillating: true, oscillation_span: 45 })), true);
+  check('141 : oscillation 350 degres', /--osc-min: 0\.37/.test(dy({ oscillating: true, angle_low: 0, angle_high: 350 })), true);
+  check('141 : sans largeur, l oscillation par defaut', /style="[^"]*--osc-min/.test(dy({ oscillating: true })), false);
+  check('141 : Big+Quiet par le nom', /pf-cone/.test(dy({ friendly_name: 'Dyson Purifier Big+Quiet' })), true);
+  check('141 : Big+Quiet par le code', /pf-cone/.test(render({ appliance_type: 'air_purifier', state_entity: 'fan.bp04' }, { 'fan.bp04': s('on', { friendly_name: 'Dyson BP04' }) })), true);
+  check('141 : Pure Cool Me', /pf-dome/.test(dy({ friendly_name: 'Dyson Pure Cool Me' })), true);
+  check('141 : Pure Cool Me par le code', /pf-dome/.test(render({ appliance_type: 'air_purifier', state_entity: 'fan.bp01' }, { 'fan.bp01': s('on', { friendly_name: 'Dyson BP01' }) })), true);
+  check('141 : cone choisi', /url\(#bq-ring\)/.test(dy({}, { purifier_layout: 'cone' })), true);
+  check('141 : dome choisi', /url\(#cm-dome\)/.test(dy({}, { purifier_layout: 'dome' })), true);
+  check('141 : le PH ne pivote pas', SRC.includes('.machine.on.osc.pf-ring_humidify .dy-head { animation-name: none; }'), true);
   const due = render(hu, base('on', '0'));
   check('humidify : nettoyage du', infoLine(due, 'Deep clean'), 'Due');
   check('humidify : du, en alerte', /class="info-line warn[^"]*"[^>]*><ha-icon icon="mdi:spray-bottle"/.test(due), true);

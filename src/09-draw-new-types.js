@@ -734,6 +734,9 @@ const DYSON_HUMIDIFY_RE = /humidify|(^|[^a-z0-9])(358[a-z]?|ph0[1-5]|ph[12])($|[
 // The other Dyson columns, by the type code of the device registry or the name
 // on the box. Filterless ones first: an AM09 is a Hot+Cool too.
 const DYSON_LAYOUT_RES = [
+  // A Purifier Big+Quiet and a Pure Cool Me are not rings at all (#141).
+  ["cone", /big.{0,3}quiet|(^|[^a-z0-9])(664[a-z]?|bp0[2-6])($|[^a-z0-9])/],
+  ["dome", /cool.?me|(^|[^a-z0-9])bp01($|[^a-z0-9])/],
   ["ring_tower", /(^|[^a-z0-9])am0?7($|[^a-z0-9])/],
   ["ring_heater", /(^|[^a-z0-9])(am0?[459]|hf1)($|[^a-z0-9])/],
   ["ring_desk", /(^|[^a-z0-9])(469|520|dp0[1-4]|cf1|am0?6)($|[^a-z0-9])|desk/],
@@ -741,7 +744,7 @@ const DYSON_LAYOUT_RES = [
 ];
 // The gold drum of the Formaldehyde and De-NOx machines.
 const DYSON_GOLD_RE = /formaldehyde|de.?nox|(^|[^a-z0-9])(358e|438e|527e|ph0?[245]|hp09|hp2|tp09)($|[^a-z0-9])/;
-const PURIFIER_LAYOUTS = ["cylinder", "box", "ring", "ring_heat", "ring_humidify", "ring_desk", "ring_heater", "ring_tower"];
+const PURIFIER_LAYOUTS = ["cylinder", "box", "ring", "ring_heat", "ring_humidify", "ring_desk", "ring_heater", "ring_tower", "cone", "dome"];
 // Which Dyson column a card draws, from its entities and its name.
 function dysonLayoutOf(cfg, name, dom) {
   if (cfg.humidifier_entity || DYSON_HUMIDIFY_RE.test(name)) return "ring_humidify";

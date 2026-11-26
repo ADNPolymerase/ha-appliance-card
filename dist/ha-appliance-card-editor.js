@@ -3,7 +3,7 @@
 export default function defineEditor(deps) {
 // A page still running the card of an earlier release, the files of this one
 // on the server: its helpers are not these, so say to reload the page.
-if (!deps || deps.__v !== "5.2.0") {
+if (!deps || deps.__v !== "5.3.0") {
   if (!customElements.get("ha-appliance-card-editor")) customElements.define("ha-appliance-card-editor", class extends HTMLElement {
     setConfig() {}
     connectedCallback() {
@@ -2104,6 +2104,8 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "ring", label: t(hass, "layout_purifier_ring") },
             { value: "ring_heat", label: t(hass, "layout_purifier_ring_heat") },
             { value: "ring_humidify", label: t(hass, "layout_purifier_ring_humidify") },
+            { value: "cone", label: t(hass, "layout_purifier_cone") },
+            { value: "dome", label: t(hass, "layout_purifier_dome") },
             { value: "ring_desk", label: t(hass, "layout_purifier_ring_desk") },
             { value: "ring_heater", label: t(hass, "layout_purifier_ring_heater") },
             { value: "ring_tower", label: t(hass, "layout_purifier_ring_tower") },

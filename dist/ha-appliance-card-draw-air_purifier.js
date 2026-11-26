@@ -2,7 +2,7 @@
 // The air_purifier drawing and its CSS, loaded by the card the first time it shows one.
 export default function defineDrawing(deps) {
 // A page still running the card of an earlier release: an arrow to reload.
-if (!deps || deps.__v !== "5.2.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
+if (!deps || deps.__v !== "5.3.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
 let { ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CHARGER_MODES, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FT_FLAVORS, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntTint, numberOrNull, t, thsColor, zoneColumns } = deps;
 // Air quality on four levels: good, fair, poor, bad. A PM2.5 reading in
 // micrograms, a US AQI, Philips's allergen index from 1 to 12, or the words of
@@ -110,11 +110,53 @@ function airMachine(cls, a, extra) {
   const on = ["run", "night", "heat"].includes(a.mode);
   const c = [cls, extra, `mode-${a.mode || "off"}`, on ? "on" : "", `lv${a.level || 2}`, a.aq ? `aq${a.aq}` : "", a.hum ? "hum" : "",
     a.osc ? "osc" : "", a.back ? "back" : "", a.warm ? "warm" : "", a.natural ? "nat" : "", a.winter ? "rev" : "",
-    a.lamp ? "lamp" : "", a.lit ? "lit" : "", a.wood ? "wood" : ""].filter(Boolean).join(" ");
-  const style = `--spd: ${a.spd || 1.6}s; --rot: ${a.rot || 0.6}s${a.aq ? `; --aq: ${AQ_COLORS[a.aq]}` : ""}`;
+    a.lamp ? "lamp" : "", a.lit ? "lit" : "", a.wood ? "wood" : "", a.idle ? "idle" : ""].filter(Boolean).join(" ");
+  const style = `--spd: ${a.spd || 1.6}s; --rot: ${a.rot || 0.6}s${a.aq ? `; --aq: ${AQ_COLORS[a.aq]}` : ""}${a.oscMin ? `; --osc-min: ${a.oscMin}` : ""}`;
   return `<div class="machine ${c}" style="${style}">`;
 }
 
+// A Purifier Big+Quiet (#141): a tall perforated drum, navy or gold, under a
+// wide cone whose top holds the copper nozzle ring round a dark core; the air
+// leaves it straight up.
+function bigQuietSvg(p) {
+  const body = p.gold ? ["#7d6340", "#d8b98a", "#a8865a"] : ["#1c2750", "#46579a", "#2a3970"];
+  const head = p.gold ? ["#1a2449", "#3f5096", "#24316a"] : ["#8d949b", "#f1f3f5", "#b9bfc5"];
+  return `<svg class="hu-body" viewBox="0 0 96 108" width="96" height="108" aria-hidden="true">
+            <defs>
+              <linearGradient id="bq-body"><stop offset="0" stop-color="${body[0]}"/><stop offset=".35" stop-color="${body[1]}"/><stop offset="1" stop-color="${body[2]}"/></linearGradient>
+              <linearGradient id="bq-head"><stop offset="0" stop-color="${head[0]}"/><stop offset=".35" stop-color="${head[1]}"/><stop offset="1" stop-color="${head[2]}"/></linearGradient>
+              <linearGradient id="bq-ring" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3c99a"/><stop offset="1" stop-color="#a86a3a"/></linearGradient>
+              <pattern id="bq-perf" width="2.2" height="2.2" patternUnits="userSpaceOnUse"><circle cx="1.1" cy="1.1" r=".55" fill="#000" fill-opacity=".38"/></pattern>
+            </defs>
+            <path d="M29 48 V102 A19 3 0 0 0 67 102 V48 Z" fill="url(#bq-body)"/>
+            <path d="M29 51 V102 A19 3 0 0 0 67 102 V51 Z" fill="url(#bq-perf)"/>
+            <rect x="46.8" y="54" width="2.4" height="15" rx="1.2" fill="${p.gold ? "#3f5096" : "#c48a52"}"/>
+            <path d="M29 49 L23 24 A25 6.5 0 0 1 73 24 L67 49 A19 3 0 0 1 29 49 Z" fill="url(#bq-head)" stroke="#000" stroke-opacity=".2" stroke-width=".4"/>
+            <ellipse cx="48" cy="24" rx="25" ry="6.5" fill="url(#bq-head)" stroke="#000" stroke-opacity=".22" stroke-width=".4"/>
+            <ellipse cx="48" cy="24.4" rx="16" ry="4.1" fill="url(#bq-ring)"/>
+            <ellipse cx="48" cy="24.8" rx="8.5" ry="2.3" fill="#22262b"/>
+            <ellipse class="pf-glow" cx="48" cy="24.8" rx="3" ry=".8" fill="var(--aq, #6f7276)"/>
+          </svg>`;
+}
+// A Pure Cool Me (#141): a slim perforated drum, its screen in a slot down
+// the front, a white ball on top whose front is the dome the air slides off.
+function coolMeSvg() {
+  return `<svg class="hu-body" viewBox="0 0 96 108" width="96" height="108" aria-hidden="true">
+            <defs>
+              <linearGradient id="cm-body"><stop offset="0" stop-color="#7c8288"/><stop offset=".35" stop-color="#e3e6e9"/><stop offset="1" stop-color="#9aa0a6"/></linearGradient>
+              <radialGradient id="cm-ball" cx=".38" cy=".3" r=".8"><stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#e3e6e9"/><stop offset="1" stop-color="#b9bec3"/></radialGradient>
+              <radialGradient id="cm-dome" cx=".45" cy=".35" r=".75"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c9ced3"/></radialGradient>
+              <pattern id="cm-perf" width="2" height="2" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".5" fill="#000" fill-opacity=".4"/></pattern>
+            </defs>
+            <path d="M34 54 V102 A14 2.6 0 0 0 62 102 V54 Z" fill="url(#cm-body)"/>
+            <path d="M34 58 V102 A14 2.6 0 0 0 62 102 V58 Z" fill="url(#cm-perf)"/>
+            <rect x="45.6" y="63" width="4.8" height="17" rx="1.2" fill="#1e2125"/>
+            <circle cx="48" cy="96.5" r="1.5" fill="#1e2125"/>
+            <circle cx="48" cy="38" r="21" fill="url(#cm-ball)" stroke="#000" stroke-opacity=".2" stroke-width=".4"/>
+            <circle cx="48" cy="35" r="14.5" fill="url(#cm-dome)" stroke="#9aa0a6" stroke-width=".7"/>
+            <circle class="pf-glow" cx="48" cy="51" r="1" fill="var(--aq, #6f7276)"/>
+          </svg>`;
+}
 function purifierHtml(cls, p) {
   const layout = p.layout || "cylinder";
   const open = airMachine(cls, p, `pf-${layout}`);
@@ -128,9 +170,12 @@ function purifierHtml(cls, p) {
           ${dysonDial(p.screen, 56.5, 56)}
           <div class="dy-head">${airBox("dy-loop", 33, 1, 30, 54)}${airBox("dy-back", 37, 5, 22, 46, "<b></b><b></b><b></b><b></b>")}</div>
           ${windLines("r", 65, 9, 30, 42, "side")}${windLines("l", 1, 9, 30, 42, "side")}
-          ${p.hum && !p.tankOut ? `<div class="hu-mist"><s></s><s></s><s></s><s></s></div><div class="hu-mist l"><s></s><s></s><s></s><s></s></div>` : ""}
         </div>`;
   }
+  if (layout === "cone") return `${open}${bigQuietSvg(p)}${windLines("pf-jet", 26, 0, 44, 18, "up")}
+        </div>`;
+  if (layout === "dome") return `${open}${coolMeSvg()}${windLines("pf-jet", 28, 0, 40, 16, "up")}
+        </div>`;
   if (layout === "ring") {
     // The loop pivots on itself while it oscillates; the column stays put.
     return `${open}
@@ -278,7 +323,7 @@ css: () => `${AIR_CSS}
         .machine.lv1 .dy-back b:nth-child(n+3), .machine.lv2 .dy-back b:nth-child(n+4) { display: none; }
         .machine.mode-night .dy-back { opacity: 0.45; }
         .machine[class*="pf-ring"] .wind.l { transform: scaleX(-1); display: none; }
-        .hu-foot, .hu-tank, .hu-mist, .hu-body { position: absolute; }
+        .hu-foot, .hu-tank, .hu-body { position: absolute; }
         .hu-body { left: 0; top: 0; display: block; overflow: visible; pointer-events: none; }
         .hu-body { z-index: 3; }
         .hu-foot {
@@ -309,20 +354,19 @@ css: () => `${AIR_CSS}
         .hu-tank b { position: absolute; bottom: 1px; width: 2px; height: 2px; border-radius: 50%; background: rgba(255, 255, 255, 0.85); opacity: 0; }
         .hu-tank b:nth-of-type(1) { left: 22%; } .hu-tank b:nth-of-type(2) { left: 50%; } .hu-tank b:nth-of-type(3) { left: 76%; }
         .machine.hum .hu-tank b { animation: hu-rise 2.1s ease-in infinite; animation-delay: var(--anim-offset, 0s); }
-        .hu-mist { left: 0; top: 0; width: 96px; height: 60px; z-index: 6; pointer-events: none; }
-        .hu-mist.l { display: none; transform: scaleX(-1); }
-        .machine.on.osc .hu-mist { animation: wind-r 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.on.osc .hu-mist.l { display: block; animation: wind-l 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
-        .hu-mist s { position: absolute; left: 60px; width: 8px; height: 8px; border-radius: 50%; background: radial-gradient(circle, rgba(190, 232, 252, 0.95), rgba(150, 215, 245, 0.45) 45%, rgba(150, 215, 245, 0) 72%); opacity: 0; animation: hu-drift 2.4s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
-        .hu-mist s:nth-child(1) { top: 16px; } .hu-mist s:nth-child(2) { top: 27px; animation-delay: calc(-0.6s + var(--anim-offset, 0s)); } .hu-mist s:nth-child(3) { top: 38px; animation-delay: calc(-1.2s + var(--anim-offset, 0s)); } .hu-mist s:nth-child(4) { top: 47px; animation-delay: calc(-1.8s + var(--anim-offset, 0s)); }
         .machine.hum .hu-tank b:nth-of-type(2) { animation-delay: calc(-0.7s + var(--anim-offset, 0s)); } .machine.hum .hu-tank b:nth-of-type(3) { animation-delay: calc(-1.4s + var(--anim-offset, 0s)); }
         @keyframes hu-rise { 0% { transform: translateY(0); opacity: 0; } 25% { opacity: 1; } 100% { transform: translateY(-12px); opacity: 0; } }
-        @keyframes hu-drift { 0% { transform: translate(0, 0) scale(0.5); opacity: 0; } 22% { opacity: 0.95; } 100% { transform: translate(30px, -7px) scale(2.3); opacity: 0; } }
         .machine.on.osc .dy-head { animation: pf-pivot 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.on.osc .wind.r { animation: wind-r 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.on.osc .wind.l { display: block; animation: wind-l 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.back .wind, .machine.back.osc .wind.l { display: none; }
-        @keyframes pf-pivot { 0%, 50%, 100% { transform: scaleX(1); } 25%, 75% { transform: scaleX(0.68); } }
+        @keyframes pf-pivot { 0%, 50%, 100% { transform: scaleX(1); } 25%, 75% { transform: scaleX(var(--osc-min, 0.68)); } }
+        /* A Humidify+Cool does not turn: the air alternates out of its slots (#141). */
+        .machine.on.osc.pf-ring_humidify .dy-head { animation-name: none; }
+        /* In Auto with clean air the fan stands still (#141). */
+        .machine.idle .wind, .machine.idle .dy-back, .machine.idle .pf-jet { display: none !important; }
+        .machine.idle .dy-head { animation-name: none !important; }
+        .pf-jet { position: absolute; z-index: 6; }
         @keyframes pf-aspire { 0% { transform: scale(1); opacity: 0.95; } 100% { transform: scale(0.08); opacity: 0; } }
   `,
 };

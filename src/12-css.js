@@ -1725,7 +1725,7 @@ const ILLUSTRATION_CSS = {
         .machine.lv1 .dy-back b:nth-child(n+3), .machine.lv2 .dy-back b:nth-child(n+4) { display: none; }
         .machine.mode-night .dy-back { opacity: 0.45; }
         .machine[class*="pf-ring"] .wind.l { transform: scaleX(-1); display: none; }
-        .hu-foot, .hu-tank, .hu-mist, .hu-body { position: absolute; }
+        .hu-foot, .hu-tank, .hu-body { position: absolute; }
         .hu-body { left: 0; top: 0; display: block; overflow: visible; pointer-events: none; }
         .hu-body { z-index: 3; }
         .hu-foot {
@@ -1756,20 +1756,19 @@ const ILLUSTRATION_CSS = {
         .hu-tank b { position: absolute; bottom: 1px; width: 2px; height: 2px; border-radius: 50%; background: rgba(255, 255, 255, 0.85); opacity: 0; }
         .hu-tank b:nth-of-type(1) { left: 22%; } .hu-tank b:nth-of-type(2) { left: 50%; } .hu-tank b:nth-of-type(3) { left: 76%; }
         .machine.hum .hu-tank b { animation: hu-rise 2.1s ease-in infinite; animation-delay: var(--anim-offset, 0s); }
-        .hu-mist { left: 0; top: 0; width: 96px; height: 60px; z-index: 6; pointer-events: none; }
-        .hu-mist.l { display: none; transform: scaleX(-1); }
-        .machine.on.osc .hu-mist { animation: wind-r 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.on.osc .hu-mist.l { display: block; animation: wind-l 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
-        .hu-mist s { position: absolute; left: 60px; width: 8px; height: 8px; border-radius: 50%; background: radial-gradient(circle, rgba(190, 232, 252, 0.95), rgba(150, 215, 245, 0.45) 45%, rgba(150, 215, 245, 0) 72%); opacity: 0; animation: hu-drift 2.4s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
-        .hu-mist s:nth-child(1) { top: 16px; } .hu-mist s:nth-child(2) { top: 27px; animation-delay: calc(-0.6s + var(--anim-offset, 0s)); } .hu-mist s:nth-child(3) { top: 38px; animation-delay: calc(-1.2s + var(--anim-offset, 0s)); } .hu-mist s:nth-child(4) { top: 47px; animation-delay: calc(-1.8s + var(--anim-offset, 0s)); }
         .machine.hum .hu-tank b:nth-of-type(2) { animation-delay: calc(-0.7s + var(--anim-offset, 0s)); } .machine.hum .hu-tank b:nth-of-type(3) { animation-delay: calc(-1.4s + var(--anim-offset, 0s)); }
         @keyframes hu-rise { 0% { transform: translateY(0); opacity: 0; } 25% { opacity: 1; } 100% { transform: translateY(-12px); opacity: 0; } }
-        @keyframes hu-drift { 0% { transform: translate(0, 0) scale(0.5); opacity: 0; } 22% { opacity: 0.95; } 100% { transform: translate(30px, -7px) scale(2.3); opacity: 0; } }
         .machine.on.osc .dy-head { animation: pf-pivot 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.on.osc .wind.r { animation: wind-r 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.on.osc .wind.l { display: block; animation: wind-l 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.back .wind, .machine.back.osc .wind.l { display: none; }
-        @keyframes pf-pivot { 0%, 50%, 100% { transform: scaleX(1); } 25%, 75% { transform: scaleX(0.68); } }
+        @keyframes pf-pivot { 0%, 50%, 100% { transform: scaleX(1); } 25%, 75% { transform: scaleX(var(--osc-min, 0.68)); } }
+        /* A Humidify+Cool does not turn: the air alternates out of its slots (#141). */
+        .machine.on.osc.pf-ring_humidify .dy-head { animation-name: none; }
+        /* In Auto with clean air the fan stands still (#141). */
+        .machine.idle .wind, .machine.idle .dy-back, .machine.idle .pf-jet { display: none !important; }
+        .machine.idle .dy-head { animation-name: none !important; }
+        .pf-jet { position: absolute; z-index: 6; }
         @keyframes pf-aspire { 0% { transform: scale(1); opacity: 0.95; } 100% { transform: scale(0.08); opacity: 0; } }
   `,
   // A fan on its stand or on a desk, a cage with its blades turning behind

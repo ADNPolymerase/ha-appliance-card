@@ -3074,12 +3074,22 @@ class ApplianceCard extends HTMLElement {
       // by the word in its entity (Ludoc, HACF).
       extraLines.push(...purifierFilterLines(hass, cfg, t));
       const humidifying = hum.on && ["run", "night"].includes(s.mode);
-      if (!cfg.state_show_raw) stateLabel = t(hass, airLabel(s.mode, humidifying ? "pf_humidifying" : s.preset === "auto" ? "pf_auto" : "pf_purifying"));
+      // In Auto with clean air a Dyson stops its fan and stays on (#141).
+      const idle = ["run", "night"].includes(s.mode) && String(s.a.fan_state || "").toUpperCase() === "OFF";
+      if (!cfg.state_show_raw) stateLabel = t(hass, airLabel(s.mode, idle ? "pf_idle" : humidifying ? "pf_humidifying" : s.preset === "auto" ? "pf_auto" : "pf_purifying"));
+      // Its sleep timer, in minutes, 0 when off.
+      const sleep = numberOrNull(s.a.sleep_timer);
+      if (sleep > 0 && ["run", "night", "heat"].includes(s.mode)) {
+        extraLines.push({ key: "pf_sleep", icon: "mdi:timer-sand", label: t(hass, "pf_sleep"), value: keepTogether(formatDuration(sleep * 60, hass)), entity: cfg.state_entity });
+      }
+      // How wide it oscillates: the loop turns further on a wider span.
+      const span = numberOrNull(s.a.oscillation_span) ?? (numberOrNull(s.a.angle_high) !== null && numberOrNull(s.a.angle_low) !== null ? s.a.angle_high - s.a.angle_low : null);
       color = humidifying && s.mode === "run" ? "#29b6f6" : AIR_COLORS[s.mode];
       const name = `${cfg.state_entity || ""} ${stHay(st)}`.toLowerCase();
       purifier = {
         mode: s.mode, level: s.level, spd: s.spd, warm: s.warm, aq,
-        osc: s.a.oscillating === true, back: String(s.a.direction || "").toLowerCase() === "reverse",
+        osc: s.a.oscillating === true, back: String(s.a.direction || "").toLowerCase() === "reverse", idle,
+        oscMin: span > 0 ? Math.max(0.36, 1 - 0.0018 * Math.min(span, 350)).toFixed(2) : null,
         layout: PURIFIER_LAYOUTS.includes(cfg.purifier_layout) ? cfg.purifier_layout
           : !/dyson/.test(name) ? "cylinder" : dysonLayoutOf(cfg, name, domainOf(cfg.state_entity)),
         gold: DYSON_GOLD_RE.test(name),

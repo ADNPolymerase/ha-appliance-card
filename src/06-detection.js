@@ -358,9 +358,11 @@ const TYPE_AUTO_PATTERNS = {
     heater_entity: /^climate\./i,
     humidifier_entity: /^humidifier\./i,
     deep_clean_entity: /deep.?clean/i,
-    low_water_entity: /low.?water|water.?(lack|shortage|empty)|no.?water|tank.?empty/i,
+    low_water_entity: /low.?water|water.?(lack|shortage|empty)|no.?water|tank.?empty|fault.?water/i,
     tank_lifted_entity: /lifted|detached|tank.?(removed|missing|off)/i,
-    water_level_entity: /water.?level/i,
+    water_level_entity: /^(?!.*fault).*water.?level/i,
+    // A Dyson's failed self-check (#141).
+    alerts_entity: /product.?error/i,
     // A Dyson has a HEPA and a carbon filter: the carbon one goes second.
     filter_life_entity: /^(sensor|number)\.(?!.*(type|carbon|charbon|charcoal|kohle|fault|replace)).*(filter|filtre|filtro)/i,
     filter_reset_entity: /^(button|script|switch)\..*(reset.?filter|filter.?reset)/i,
