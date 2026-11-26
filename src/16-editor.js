@@ -171,6 +171,7 @@ const SECTIONS = [
   { field: "ph_target_entity", types: ["pool_pump"], labelKey: "section_ph_target", includeDomains: ["sensor", "number", "input_number"] },
   { field: "redox_target_entity", types: ["pool_pump"], labelKey: "section_redox_target", includeDomains: ["sensor", "number", "input_number"] },
   { field: "cover_entity", types: ["pool_pump"], labelKey: "section_pool_cover", includeDomains: ["cover", "binary_sensor", "sensor", "number", "input_number"] },
+  { field: "uv_entity", types: ["pool_pump"], labelKey: "section_uv", includeDomains: ["sensor", "number", "input_number"] },
   { field: "shower_entity", types: ["pool_pump"], labelKey: "section_shower", includeDomains: ["valve", "switch", "binary_sensor", "input_boolean"] },
   { field: "filtration_time_entity", types: ["pool_pump"], labelKey: "section_filtration_time", includeDomains: ["sensor"] },
   { field: "pressure_entity", types: ["pool_pump"], labelKey: "section_filter_pressure", includeDomains: ["sensor"], extra: (c) =>
@@ -182,7 +183,7 @@ const SECTIONS = [
   { field: "backwash_entity", types: ["pool_pump"], labelKey: "section_backwash", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
   { field: "frost_entity", types: ["pool_pump"], labelKey: "section_frost", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
   { field: "winter_entity", types: WINTER_TYPES, labelKey: "section_robot_winter", includeDomains: ["input_boolean", "switch", "binary_sensor"],
-    extra: (c) => (c._config.winter_entity ? c._row("winter_invert", "winter_invert", { type: "checkbox" }) : "") + c._row("robot_winter", "winter", { type: "checkbox" }) + c._row("winter_snowfall", "winter_snowfall", { type: "checkbox", defaultOn: true }) },
+    extra: (c) => (c._config.winter_entity ? c._row("winter_invert", "winter_invert", { type: "checkbox" }) : "") + c._row("robot_winter", "winter", { type: "checkbox" }) + (c._config.pool_layout === "basin" ? c._row("winter_active", "winter_active", { type: "checkbox" }) : "") + c._row("winter_snowfall", "winter_snowfall", { type: "checkbox", defaultOn: true }) },
   { field: "pool_alert_entity", types: ["pool_pump"], labelKey: "section_pool_alert", includeDomains: ["binary_sensor", "sensor"] },
   // Solar panels: the energy of the day and an alert. A battery: what goes
   // in and out, its reserve, its charge limit and an alert.

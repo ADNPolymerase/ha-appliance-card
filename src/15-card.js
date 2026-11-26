@@ -3463,16 +3463,24 @@ class ApplianceCard extends HTMLElement {
           // With a setpoint, the line opens it so it can be changed (HACF #224).
           if (aim !== null && entityUsable(hass, cfg[target])) line.entity = cfg[target];
         });
+        // The UV index, coloured on the WHO scale (HACF #226).
+        const uv = cfg.uv_entity ? numericState(hass, cfg.uv_entity) : null;
+        if (uv !== null) {
+          let after = -1;
+          extraLines.forEach((l, k) => { if (l.key === "pool_ph" || l.key === "pool_redox") after = k; });
+          extraLines.splice(after >= 0 ? after + 1 : extraLines.length, 0, { key: "pool_uv", icon: "mdi:weather-sunny-alert", label: "UV", entity: cfg.uv_entity,
+            value: netNumber(hass, uv, Number.isInteger(uv) ? 0 : 1), good: uv < 3, caution: uv >= 6 && uv < 8, bad: uv >= 8 });
+        }
         if (poolBasin && cfg.cover_entity) {
           const c = poolCoverOf(hass, cfg);
           if (c) extraLines.push({ key: "pool_cover", icon: "mdi:window-shutter", label: t(hass, "pool_line_cover"), entity: cfg.cover_entity,
-            value: wintered ? t(hass, "pool_cover_tarp") : c.moving ? t(hass, c.moving === "opening" ? "pool_cover_opening" : "pool_cover_closing") : c.pos >= 100 ? t(hass, "pool_cover_closed") : c.pos <= 0 ? t(hass, "pool_cover_open") : keepTogether(t(hass, "pool_cover_part").replace("{p}", String(Math.round(100 - c.pos)))) });
+            value: wintered && cfg.winter_active !== true ? t(hass, "pool_cover_tarp") : c.moving ? t(hass, c.moving === "opening" ? "pool_cover_opening" : "pool_cover_closing") : c.pos >= 100 ? t(hass, "pool_cover_closed") : c.pos <= 0 ? t(hass, "pool_cover_open") : keepTogether(t(hass, "pool_cover_part").replace("{p}", String(Math.round(100 - c.pos)))) });
         }
         if (poolBasin && cfg.shower_entity && stateObj(hass, cfg.shower_entity)) {
-          // The shower switches from its line (HACF #224), not in winter.
-          const showerOn = poolOn(hass, cfg.shower_entity) && !wintered;
+          // The shower switches from its line (HACF #224), in winter too (HACF #226).
+          const showerOn = poolOn(hass, cfg.shower_entity);
           extraLines.push({ key: "pool_shower", icon: "mdi:shower-head", label: t(hass, "pool_line_shower"), entity: cfg.shower_entity, value: t(hass, showerOn ? "pool_shower_on" : "pool_shower_off"),
-            toggle: !wintered && entityUsable(hass, cfg.shower_entity) && ["switch", "input_boolean", "valve", "light"].includes(domainOf(cfg.shower_entity)) ? cfg.shower_entity : "", lit: showerOn });
+            toggle: entityUsable(hass, cfg.shower_entity) && ["switch", "input_boolean", "valve", "light"].includes(domainOf(cfg.shower_entity)) ? cfg.shower_entity : "", lit: showerOn });
         }
         const ft = numericEntity(hass, cfg.filtration_time_entity);
         if (ft) {
@@ -3504,7 +3512,8 @@ class ApplianceCard extends HTMLElement {
         const c = poolCoverOf(hass, cfg) || { pos: 0, moving: null };
         const sun = stateObj(hass, "sun.sun");
         pool.basin = { pos: c.pos, moving: c.moving, spots: cfg.spot_count, light: lit ? poolSpotLight(hass, cfg) : "off", night: !!sun && sun.state === "below_horizon",
-          shower: cfg.shower_entity ? poolOn(hass, cfg.shower_entity) : null, pump: ["running", "frost", "backwash"].includes(mode), winter: wintered };
+          shower: cfg.shower_entity ? poolOn(hass, cfg.shower_entity) : null, pump: ["running", "frost", "backwash"].includes(mode), winter: wintered,
+          active: cfg.winter_active === true, cover: !!cfg.cover_entity };
       }
     }
 
@@ -4489,7 +4498,7 @@ class ApplianceCard extends HTMLElement {
         .pic-frame { min-height: ${Math.round(116 * illustrationSizeOf(cfg.illustration_size))}px; display: flex; flex-direction: column; justify-content: flex-end; }
         .pic-frame > .machine { margin-left: auto; margin-right: auto; }
         ${backdropCss(illustrationBackdropOf(cfg.illustration_backdrop), color)}
-        ${cfg.winter_snowfall === false ? ".nt-fl,.pl-fl,.rbt-snow{display:none!important}" : ""}
+        ${cfg.winter_snowfall === false ? ".nt-fl,.pl-fl,.pb-fl,.rbt-snow{display:none!important}" : ""}
         ${illustrationCss(applianceType, color)}
         .name { font-size: 1.2em; font-weight: 500; color: var(--primary-text-color, #1c1c1c); }
         .state-line { font-size: 1.05em; color: ${color}; margin-top: 2px; }

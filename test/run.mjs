@@ -10555,7 +10555,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('217 : hivernage, bache', infoLine(B({ cover_entity: 'cover.v', winter: true }, { 'cover.v': s('open', { current_position: 100 }) }), 'Cover'), 'Closed, winter tarp');
   check('217 : hivernage, la bache se dessine', /fill="#2f5d50"/.test(B({ winter: true }, {})), true);
   check('217 : la douche', infoLine(B({ shower_entity: 'valve.d' }, { 'valve.d': s('open') }), 'Shower'), 'Running');
-  check('217 : douche fermee en hivernage', infoLine(B({ shower_entity: 'valve.d', winter: true }, { 'valve.d': s('open') }), 'Shower'), 'Off');
+  check('226 : la douche garde son etat en hivernage', infoLine(B({ shower_entity: 'valve.d', winter: true }, { 'valve.d': s('open') }), 'Shower'), 'Running');
   check('217 : pas de douche dessinee sans entite', /url\(#pb-tank\)/.test(B({}, {})), false);
   const phCls = (v, cfg = {}) => (/<div class="info-line ([^"]*)"[^>]*title="pH"/.exec(B({ ph_entity: 'sensor.ph', ...cfg }, { 'sensor.ph': s(v) })) || [, ''])[1];
   check('217 : pH dans la plage en vert', / good/.test(phCls(7.4)), true);
@@ -10574,7 +10574,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('224 : la ligne RedOx ouvre sa consigne', /data-more="number\.r"[^>]*title="RedOx"/.test(B({ redox_entity: 'sensor.orp', redox_target_entity: 'number.r' }, { 'sensor.orp': s(700), 'number.r': s(720) })), true);
   check('224 : la douche se commande depuis sa ligne', /data-line-toggle="switch\.d"[^>]*title="Shower"/.test(B({ shower_entity: 'switch.d' }, { 'switch.d': s('off') })), true);
   check('224 : la ligne douche allumee', /class="info-line [^"]*lit[^"]*"[^>]*title="Shower"/.test(B({ shower_entity: 'switch.d' }, { 'switch.d': s('on') })), true);
-  check('224 : pas de commande de douche en hivernage', /data-line-toggle="switch\.d"/.test(B({ shower_entity: 'switch.d', winter: true }, { 'switch.d': s('off') })), false);
+  check('226 : la douche se commande aussi en hivernage', /data-line-toggle="switch\.d"/.test(B({ shower_entity: 'switch.d', winter: true }, { 'switch.d': s('off') })), true);
   check('224 : un capteur de douche ne se commande pas', /data-line-toggle/.test(B({ shower_entity: 'binary_sensor.d' }, { 'binary_sensor.d': s('on') })), false);
   const W224 = (v, inv) => /fill="#2f5d50"/.test(B({ winter_entity: 'input_boolean.saison', ...(inv ? { winter_invert: true } : {}) }, { 'input_boolean.saison': s(v) }));
   check('224 : hivernage par interrupteur', W224('on', false), true);
@@ -10590,6 +10590,26 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('224 : editeur, inverser l hivernage', edB.includes('data-field="winter_invert"'), true);
   check('224 : editeur, spots changeants', edB.includes('data-field="spot_random"'), true);
   check('224 : editeur, pas d inversion sans interrupteur', markup(newEditor({ state_entity: 'binary_sensor.p', appliance_type: 'pool_pump' })).includes('data-field="winter_invert"'), false);
+  // HACF #226: no snow falling when asked, active wintering, the pump under the cover, UV.
+  check('226 : flocons du bassin dans leur classe', /class="pb-fl"/.test(B({ winter: true }, {})), true);
+  check('226 : hivernage actif, pas de bache', /fill="#2f5d50"/.test(B({ winter: true, winter_active: true }, {})), false);
+  check('226 : hivernage actif, pas de flocons', /class="pb-fl"/.test(B({ winter: true, winter_active: true }, {})), false);
+  check('226 : hivernage actif, volet ferme', /fill="#e6ebee"/.test(B({ winter: true, winter_active: true }, {})), true);
+  check('226 : hivernage actif, la ligne du volet dit la vraie position', infoLine(B({ cover_entity: 'cover.v', winter: true, winter_active: true }, { 'cover.v': s('closed', { current_position: 0 }) }), 'Cover'), 'Closed');
+  check('226 : la pompe fait onduler le volet ferme', /clip-path="url\(#pb-cov\)"/.test(B({ winter: true, winter_active: true }, {})), true);
+  check('226 : pompe a l arret, le volet ne bouge pas', /pb-cov/.test(render({ ...P, pool_layout: 'basin', winter: true, winter_active: true }, { 'binary_sensor.p': s('off') })), false);
+  check('226 : la pompe fait onduler la bache', /clip-path="url\(#pb-tp\)"/.test(B({ winter: true }, {})), true);
+  check('226 : volet ouvert, pas d ondulation de volet', /pb-cov/.test(B({ cover_entity: 'cover.v' }, { 'cover.v': s('open', { current_position: 100 }) })), false);
+  const uvCls = (v) => (/<div class="info-line ([^"]*)"[^>]*title="UV"/.exec(B({ uv_entity: 'sensor.uv' }, { 'sensor.uv': s(v) })) || [, 'absente'])[1];
+  check('226 : UV faible en vert', / good/.test(uvCls(2)), true);
+  check('226 : UV moyen sans couleur', /good|bad|caution/.test(uvCls(4)), false);
+  check('226 : UV fort en orange', /caution/.test(uvCls(6.5)), true);
+  check('226 : UV tres fort en rouge', / bad/.test(uvCls(9)), true);
+  check('226 : valeur UV', infoLine(B({ uv_entity: 'sensor.uv' }, { 'sensor.uv': s(6.5) }), 'UV'), '6.5');
+  check('226 : UV apres le RedOx', /title="RedOx"[\s\S]*title="UV"/.test(B({ redox_entity: 'sensor.orp', uv_entity: 'sensor.uv' }, { 'sensor.orp': s(700), 'sensor.uv': s(3) })), true);
+  check('226 : editeur, hivernage actif avec le bassin', edB.includes('data-field="winter_active"'), true);
+  check('226 : editeur, pas d hivernage actif sans le bassin', markup(newEditor({ state_entity: 'binary_sensor.p', appliance_type: 'pool_pump' })).includes('data-field="winter_active"'), false);
+  check('226 : editeur, champ UV', edB.includes('uv_entity'), true);
   check('piscine : niveau du bidon', /class="pl-can-l" x="68.1" y="56.5" width="11.8" height="3"/.test(render({ ...P, chlorine_pump_entity: 'binary_sensor.cl', chlorine_level_entity: 'sensor.cl' },
     { 'binary_sensor.p': s('on'), 'binary_sensor.cl': s('off'), 'sensor.cl': s(40, { unit_of_measurement: '%' }) })), true);
 
@@ -15573,8 +15593,8 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
 {
   const P = { appliance_type: 'pool_pump', state_entity: 'switch.p', winter: true };
   const st = { 'switch.p': { state: 'off', attributes: {} } };
-  check('120 : flocons par defaut', /\.nt-fl,\.pl-fl,\.rbt-snow\{display:none/.test(render(P, st)), false);
-  check('120 : winter_snowfall false les cache', /\.nt-fl,\.pl-fl,\.rbt-snow\{display:none!important\}/.test(render({ ...P, winter_snowfall: false }, st)), true);
+  check('120 : flocons par defaut', /\.pb-fl,\.rbt-snow\{display:none/.test(render(P, st)), false);
+  check('120 : winter_snowfall false les cache', /\.nt-fl,\.pl-fl,\.pb-fl,\.rbt-snow\{display:none!important\}/.test(render({ ...P, winter_snowfall: false }, st)), true);
   const I = { appliance_type: 'irrigation', irrigation_layout: 'sprinkler', state_entity: 'switch.i', winter: true };
   check('120 : les flocons de l arrosage dans leur groupe', /<g class="nt-fl">/.test(render(I, { 'switch.i': { state: 'off', attributes: {} } })), true);
 }

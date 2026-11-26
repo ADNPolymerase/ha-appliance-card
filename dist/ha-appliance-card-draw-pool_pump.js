@@ -2,7 +2,7 @@
 // The pool_pump drawing and its CSS, loaded by the card the first time it shows one.
 export default function defineDrawing(deps) {
 // A page still running the card of an earlier release: an arrow to reload.
-if (!deps || deps.__v !== "5.1.1") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
+if (!deps || deps.__v !== "5.2.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
 let { ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CHARGER_MODES, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FT_FLAVORS, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntTint, numberOrNull, t, thsColor, zoneColumns } = deps;
 // A pool pump's drawing: the sand filter on the left with its valve and its
 // gauge, the pump in front of the pool, the pipes between them, and the tank
@@ -88,27 +88,29 @@ const POOL_SVG = `<svg class="pl-pp" viewBox="0 -6 96 108">
 // cover and the roller it winds onto, a solar shower on the deck, and in
 // winter a tarp with snow on it. b: pos (0 open .. 100 closed), moving,
 // spots (count), light ("off", a colour, "random"), night, shower (null when
-// there is none, else open or not), pump, winter.
+// there is none, else open or not), pump, winter, active (active wintering:
+// no tarp nor snow, the pump still runs, HACF #226), cover (a cover entity
+// gives the position, else winter shuts it).
 function poolBasinSvg(b) {
   const FAR = { y: 27, x0: 32, x1: 102 }, NEAR = { y: 66, x0: 23, x1: 93 };
   const lerp = (a, c, t) => a + (c - a) * t;
   const at = (t, s) => [lerp(lerp(FAR.x0, FAR.x1, t), lerp(NEAR.x0, NEAR.x1, t), s), lerp(FAR.y, NEAR.y, s)];
   const pt = (p) => p.map((v) => v.toFixed(2)).join(",");
   const quad = (a, c, d, e) => `${pt(a)} ${pt(c)} ${pt(d)} ${pt(e)}`;
-  const night = !!b.night, winter = !!b.winter;
-  const lightOn = b.light && b.light !== "off" && !winter;
+  const night = !!b.night, winter = !!b.winter, tarp = winter && !b.active;
+  const lightOn = b.light && b.light !== "off" && !tarp;
   const random = b.light === "random";
   const n = Math.max(1, Math.min(6, Math.round(Number(b.spots) || 3)));
   const spot = (i) => (random ? `hsl(${(i * 55) % 360} 95% 60%)` : b.light);
   const hasShower = b.shower !== null && b.shower !== undefined;
-  const pos = winter ? 100 : Math.max(0, Math.min(100, Number(b.pos) || 0));
-  const showerOn = hasShower && !!b.shower && !winter;
+  const pos = tarp || (winter && !b.cover) ? 100 : Math.max(0, Math.min(100, Number(b.pos) || 0));
+  const showerOn = hasShower && !!b.shower;
   const H = 6.5, D = 19;
   const atW = (t, s) => { const q = at(t, s); return [q[0], q[1] + H]; };
   const atD = (t, s) => { const q = at(t, s); return [q[0], q[1] + D]; };
   const hueAnim = (i) => (random ? `<animate attributeName="stop-color" values="${[0, 1, 2, 3, 4, 5, 0].map((k) => `hsl(${(i * 55 + k * 60) % 360} 95% 60%)`).join(";")}" dur="8s" repeatCount="indefinite"/>` : "");
   let h = `<defs>
-    <linearGradient id="pb-w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${winter ? (night ? "#123a40" : "#4f8f8a") : night ? "#0d3b66" : "#4fc3f7"}"/><stop offset="1" stop-color="${winter ? (night ? "#08201f" : "#2e6b6a") : night ? "#06213b" : "#0288d1"}"/></linearGradient>
+    <linearGradient id="pb-w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${tarp ? (night ? "#123a40" : "#4f8f8a") : night ? "#0d3b66" : "#4fc3f7"}"/><stop offset="1" stop-color="${tarp ? (night ? "#08201f" : "#2e6b6a") : night ? "#06213b" : "#0288d1"}"/></linearGradient>
     <linearGradient id="pb-deck" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#efe7d6"/><stop offset="1" stop-color="#ddd2bb"/></linearGradient>
     <linearGradient id="pb-tank" x1="0" x2="1"><stop offset="0" stop-color="#1b1f23"/><stop offset=".45" stop-color="#4a525a"/><stop offset="1" stop-color="#15191c"/></linearGradient>
     ${Array.from({ length: n }, (_, i) => `<radialGradient id="pb-g${i}"><stop offset="0" stop-color="${spot(i) || "#fff"}" stop-opacity=".95">${hueAnim(i)}</stop><stop offset=".55" stop-color="${spot(i) || "#fff"}" stop-opacity=".35">${hueAnim(i)}</stop><stop offset="1" stop-color="${spot(i) || "#fff"}" stop-opacity="0"/></radialGradient>`).join("")}
@@ -145,10 +147,10 @@ function poolBasinSvg(b) {
   // far end towards the roller.
   const front = (t) => { let d = ""; for (let i = 0; i <= 18; i++) d += (i ? " L" : "M") + pt(atW(t + 0.012 * Math.sin(i * 1.4), i / 18)); return d; };
   const wc = `rgba(255,255,255,${night ? .22 : .5})`;
-  if (b.pump && !winter) {
-    const span = at(1, 0)[0] - at(0, 0)[0];
-    for (let k = 0; k < 4; k++) h += `<path d="${front(0)}" stroke="${wc}" stroke-width="1.1" stroke-linejoin="round" fill="none" opacity="0"><animateTransform attributeName="transform" type="translate" from="0 0" to="${span.toFixed(1)} 0" dur="4s" begin="${-k}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.15;.8;1" dur="4s" begin="${-k}s" repeatCount="indefinite"/></path>`;
-  } else for (const t of [0.2, 0.45, 0.7]) h += `<path d="${front(t)}" stroke="${wc}" stroke-width=".6" fill="none" opacity=".7"/>`;
+  const span = at(1, 0)[0] - at(0, 0)[0];
+  const waves = (stroke, width) => { let w = ""; for (let k = 0; k < 4; k++) w += `<path d="${front(0)}" stroke="${stroke}" stroke-width="${width}" stroke-linejoin="round" fill="none" opacity="0"><animateTransform attributeName="transform" type="translate" from="0 0" to="${span.toFixed(1)} 0" dur="4s" begin="${-k}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.15;.8;1" dur="4s" begin="${-k}s" repeatCount="indefinite"/></path>`; return w; };
+  if (b.pump) h += waves(wc, 1.1);
+  else for (const t of [0.2, 0.45, 0.7]) h += `<path d="${front(t)}" stroke="${wc}" stroke-width=".6" fill="none" opacity=".7"/>`;
   // The floating cover: the slats hang from the leading edge, the last one
   // slips under the roller.
   const p = pos / 100, slat = 1 / 22;
@@ -156,11 +158,16 @@ function poolBasinSvg(b) {
     const t1 = Math.min(1, t0 + slat);
     h += `<polygon points="${quad(atW(t0, 0), atW(t1, 0), atW(t1, 1), atW(t0, 1))}" fill="#e6ebee" stroke="#9fb0b9" stroke-width=".3"/><path d="M${pt(atW(t0 + (t1 - t0) * 0.35, 0))} L${pt(atW(t0 + (t1 - t0) * 0.35, 1))}" stroke="#fff" stroke-width=".6" opacity=".8"/>`;
   }
+  // Under a shut cover the pump shows as the slats heaving on the water
+  // running beneath them (HACF #226).
+  if (b.pump && p > 0 && !tarp) h += `<clipPath id="pb-cov"><polygon points="${quad(atW(1 - p, 0), atW(1, 0), atW(1, 1), atW(1 - p, 1))}"/></clipPath><g clip-path="url(#pb-cov)">${waves("rgba(55,71,79,.24)", 1.8)}</g>`;
   h += `</g>`;
-  if (winter) {
+  if (tarp) {
     // The winter tarp over the shut cover, held by water tubes, snow on it.
     h += `<polygon points="${pt(at(-0.03, -0.06))} ${pt(at(0.965, -0.06))} ${pt(at(0.965, 1.06))} ${pt(at(-0.03, 1.06))}" fill="#2f5d50" stroke="#1f3f36" stroke-width=".6"/>`;
     for (const ss of [-0.04, 1.04]) h += `<path d="M${pt(at(-0.02, ss))} L${pt(at(0.955, ss))}" stroke="#4a6f63" stroke-width="2.2" stroke-linecap="round"/>`;
+    // The tarp heaves too while the pump runs beneath it.
+    if (b.pump) h += `<clipPath id="pb-tp"><polygon points="${pt(at(-0.03, -0.06))} ${pt(at(0.965, -0.06))} ${pt(at(0.965, 1.06))} ${pt(at(-0.03, 1.06))}"/></clipPath><g clip-path="url(#pb-tp)" transform="translate(0 ${-H})">${waves("rgba(190,230,210,.28)", 2.2)}</g>`;
     for (const [t, ss, rx] of [[0.25, 0.35, 9], [0.62, 0.6, 11], [0.4, 0.82, 7]]) { const [x, y] = at(t, ss); h += `<ellipse cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" rx="${rx}" ry="${(rx * 0.35).toFixed(1)}" fill="#fff" stroke="#e3edf3" stroke-width=".4"/>`; }
   }
   // The roller over the end of the pool, on a post at each end, thicker as
@@ -180,13 +187,13 @@ function poolBasinSvg(b) {
     h += `<rect x="${(bx + 2.1).toFixed(2)}" y="${(by - 14).toFixed(2)}" width="2.2" height="2" rx=".4" fill="${showerOn ? "#03a9f4" : "#9e9e9e"}"/>`;
     if (showerOn) h += [-1.9, 0, 1.9].map((d) => `<path d="M${(bx + 8.5 + d).toFixed(2)} ${(by - 41).toFixed(2)} L${(bx + 8.5 + d * 1.5).toFixed(2)} ${(by - 1).toFixed(2)}" stroke="#4fc3f7" stroke-width=".7" stroke-dasharray="2 4"><animate attributeName="stroke-dashoffset" values="0;-12" dur=".5s" repeatCount="indefinite"/></path>`).join("") + `<ellipse cx="${(bx + 8.5).toFixed(2)}" cy="${(by - 0.5).toFixed(2)}" rx="4" ry=".9" fill="#4fc3f7" opacity=".5"/>`;
   }
-  if (winter) {
+  if (tarp) {
     const a = at(1, 0.04), c = at(1, 1.03);
     h += `<path d="M${a[0].toFixed(2)} ${(a[1] - up - 2.2).toFixed(2)} L${c[0].toFixed(2)} ${(c[1] - up - 2.2).toFixed(2)}" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".9"/>`;
     if (hasShower) { const [bx, by] = at(-0.17, 1.05); h += `<ellipse cx="${(bx + 8.5).toFixed(2)}" cy="${(by - 44).toFixed(2)}" rx="3.4" ry="1.3" fill="#fff"/><ellipse cx="${bx.toFixed(2)}" cy="${(by - 30.6).toFixed(2)}" rx="3" ry="1" fill="#fff"/>`; }
     for (let k = 0; k < 8; k++) {
       const x = (k * 37) % 118 + 1, d = 3 + (k % 5), y0 = -16 - (k * 13) % 30;
-      h += `<circle cx="${x}" cy="${y0}" r="${(0.6 + (k % 3) * 0.25).toFixed(2)}" fill="#fff" opacity=".9"><animateTransform attributeName="transform" type="translate" from="0 0" to="${k % 2 ? 4 : -4} 120" dur="${d}s" begin="${-((k * 0.7) % d)}s" repeatCount="indefinite"/></circle>`;
+      h += `<circle class="pb-fl" cx="${x}" cy="${y0}" r="${(0.6 + (k % 3) * 0.25).toFixed(2)}" fill="#fff" opacity=".9"><animateTransform attributeName="transform" type="translate" from="0 0" to="${k % 2 ? 4 : -4} 120" dur="${d}s" begin="${-((k * 0.7) % d)}s" repeatCount="indefinite"/></circle>`;
     }
   }
   return `<svg class="pl-pp pl-basin" viewBox="1 13 114 71.25">${h}</svg>`;
