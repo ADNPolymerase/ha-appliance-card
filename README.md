@@ -1599,6 +1599,9 @@ An entity named after a wallbox in the card's languages, after its maker or afte
 | `clients_entity` | network (router) | How many clients are connected, as a line. |
 | `wan_entity` | network (router) | The internet link, a connectivity sensor or a status that says `online` / `offline`: when it is down the router reads *No internet*, in alert. |
 | `wifi_entity` | network (router) | The Wi-Fi, a switch: switched off, the waves stop rising from the antennas and the Wi-Fi light goes dark. |
+| `guest_wifi_entity` | network (router) | The guest Wi-Fi, a switch: a line that switches it, and on a FRITZ!Box the Info light lit while it is on. |
+| `update_entity` | network (router) | The router's `update` entity: while an update is waiting, a line *8.26 → 8.27* and on a FRITZ!Box the Info light blinking. |
+| `router_style` | network (router) | `generic` (a router with three antennas) \| `fritz` (a FRITZ!Box standing on its red foot, such as the 7583, 5690 Pro or 6690) \| `fritz_flat` (a flat FRITZ!Box such as the 7690, 7590 or 7530). A FRITZ!Box is picked from its name. Its five lights follow the entities: Power while it is online, Internet with `wan_entity`, WLAN with `wifi_entity`, Info for the update or the guest Wi-Fi, red when the internet is down. |
 | `disk1_entity` … `disk8_entity` / `bays` | network | One entity per disk, any of its own: the card reads all of them. Its LED is green when fine, blue while it reads or writes, dim while asleep, orange when to watch, red when it fails. `bays`: `1`, `2`, `4` or `8` bays drawn on a NAS, an empty bay has no tray. |
 
 </details>

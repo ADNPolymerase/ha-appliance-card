@@ -153,6 +153,10 @@ const SECTIONS = [
     when: (c) => netLayoutOf(c, null) === "router" },
   { field: "wifi_entity", types: ["network"], labelKey: "section_net_wifi", includeDomains: ["switch", "binary_sensor", "sensor"],
     when: (c) => netLayoutOf(c, null) === "router" },
+  { field: "guest_wifi_entity", types: ["network"], labelKey: "net_guest_wifi", includeDomains: ["switch", "binary_sensor", "input_boolean"],
+    when: (c) => netLayoutOf(c, null) === "router" },
+  { field: "update_entity", types: ["network"], labelKey: "net_update", includeDomains: ["update", "binary_sensor"],
+    when: (c) => netLayoutOf(c, null) === "router" },
   { field: "disk1_entity", types: ["network"], labelKey: "section_net_disk1", includeDomains: ["sensor", "binary_sensor"] },
   { field: "disk2_entity", types: ["network"], labelKey: "section_net_disk2", includeDomains: ["sensor", "binary_sensor"] },
   { field: "disk3_entity", types: ["network"], labelKey: "section_net_disk3", includeDomains: ["sensor", "binary_sensor"] },
@@ -1879,6 +1883,9 @@ class ApplianceCardEditor extends HTMLElement {
           }) + (layout === "switch" ? this._row("net_ports_count", "switch_ports", {
             type: "select",
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(SWITCH_PORTS.map((v) => ({ value: String(v), label: String(v) }))),
+          }) : "") + (layout === "router" ? this._row("router_style", "router_style", {
+            type: "select",
+            options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(ROUTER_STYLES.map((v) => ({ value: v, label: t(hass, `router_style_${v}`) }))),
           }) : "") + (layout === "nas" ? this._row("net_bays", "bays", {
             type: "select",
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(NET_BAYS.map((v) => ({ value: String(v), label: String(v) }))),

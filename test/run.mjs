@@ -12223,6 +12223,32 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('nom : le champ name passe avant', named('UPS Status code', { name: 'UPS' }, { name: 'Mon onduleur' }), 'Mon onduleur');
 }
 
+// ── FRITZ!Box (#142) ──
+{
+  const s = (state, attributes = {}) => ({ state, attributes, last_changed: '2026-08-12T09:00:00Z' });
+  const R = (cfg, st) => render({ appliance_type: 'network', ...cfg }, st);
+  const V = { 'binary_sensor.fritz_box_7583_verbindung': s('on', { friendly_name: 'FRITZ!Box 7583 Verbindung' }) };
+  const F = { state_entity: 'binary_sensor.fritz_box_7583_verbindung' };
+  check('142 : une FRITZ!Box se dessine debout', /fz-led fz-pw/.test(R(F, V)) && /FRITZ!Box<\/text>/.test(R(F, V)), true);
+  check('142 : et pas le routeur a antennes', /class="nt-ant"/.test(R(F, V)), false);
+  check('142 : une 7690 est a plat', /M17 58 H79/.test(R({ state_entity: 'binary_sensor.fritz_box_7690_verbindung' }, { 'binary_sensor.fritz_box_7690_verbindung': s('on') })), true);
+  check('142 : un autre routeur garde ses antennes', /class="nt-ant"/.test(R({ state_entity: 'binary_sensor.archer_be550' }, { 'binary_sensor.archer_be550': s('on') })), true);
+  check('142 : le modele choisi gagne', /class="nt-ant"/.test(R({ ...F, router_style: 'generic' }, V)), true);
+  check('142 : cinq voyants', (R(F, V).match(/class="fz-led /g) || []).length, 5);
+  const U = { ...V, 'update.fritz_os': s('on', { installed_version: '8.26', latest_version: '8.27' }), 'switch.gast': s('on') };
+  const full = R({ ...F, update_entity: 'update.fritz_os', guest_wifi_entity: 'switch.gast' }, U);
+  check('142 : mise a jour, le voyant Info clignote', /class="machine [^"]*nt-update/.test(full), true);
+  check('142 : la ligne de mise a jour', infoLine(full, 'Update'), '8.26\u00a0\u2192\u00a08.27');
+  check('142 : pas de mise a jour, pas de ligne', infoLine(R({ ...F, update_entity: 'update.fritz_os' }, { ...V, 'update.fritz_os': s('off') }), 'Update'), null);
+  check('142 : wifi invite allume', /class="machine [^"]*nt-guest/.test(full), true);
+  check('142 : la ligne du wifi invite', infoLine(full, 'Guest Wi-Fi'), 'On');
+  check('142 : le wifi invite se commande', /data-line-toggle="switch\.gast"/.test(full), true);
+  check('142 : internet coupe', /class="machine [^"]*nt-nowan/.test(R({ ...F, wan_entity: 'binary_sensor.wan' }, { ...V, 'binary_sensor.wan': s('off') })), true);
+  const ed = markup(newEditor({ appliance_type: 'network', state_entity: 'binary_sensor.fritz_box_7583_verbindung' }));
+  check('142 : editeur, le modele de routeur', /data-field="router_style"/.test(ed), true);
+  check('142 : editeur, wifi invite et mise a jour', ['guest_wifi_entity', 'update_entity'].every((f) => new RegExp(`data-toggle="${f}"`).test(ed)), true);
+}
+
 // ── Doorbell and mailbox (forum HACF, message 115) ──────────────────────────
 {
   const st = (state, attributes = {}, lc = '2026-08-12T09:00:00Z') => ({ state, attributes, last_changed: lc, last_updated: lc });

@@ -3413,7 +3413,22 @@ class ApplianceCard extends HTMLElement {
         else if (isFinite(total) && total > drawn) lit = Math.round((ports * drawn) / total);
         else lit = Math.min(drawn, Math.max(0, Math.round(ports)));
       }
-      network = { mode, layout, ports: drawn, lit, bays, disks, fanOff: fan !== null && fan <= 0, wifiOff };
+      // A router's firmware update and its guest Wi-Fi (#142).
+      const upd = layout === "router" && cfg.update_entity ? stateObj(hass, cfg.update_entity) : null;
+      const update = !!upd && String(upd.state).toLowerCase() === "on";
+      if (live && update) {
+        const a = upd.attributes || {};
+        extraLines.push({ key: "net_update", icon: "mdi:update", label: t(hass, "net_update"),
+          value: a.installed_version && a.latest_version ? keepTogether(`${a.installed_version} \u2192 ${a.latest_version}`) : t(hass, "net_update_available"), entity: cfg.update_entity, caution: true });
+      }
+      const guestSt = layout === "router" && cfg.guest_wifi_entity ? stateObj(hass, cfg.guest_wifi_entity) : null;
+      const guest = !!guestSt && ["on", "true", "connected"].includes(String(guestSt.state).toLowerCase());
+      if (live && guestSt && !HA_OFFLINE_STATES.includes(String(guestSt.state).toLowerCase())) {
+        extraLines.push({ key: "net_guest", icon: "mdi:wifi-star", label: t(hass, "net_guest_wifi"), value: t(hass, guest ? "net_on" : "net_off"), entity: cfg.guest_wifi_entity, lit: guest,
+          toggle: entityUsable(hass, cfg.guest_wifi_entity) && ["switch", "input_boolean"].includes(domainOf(cfg.guest_wifi_entity)) ? cfg.guest_wifi_entity : "" });
+      }
+      network = { mode, layout, ports: drawn, lit, bays, disks, fanOff: fan !== null && fan <= 0, wifiOff,
+        style: layout === "router" ? routerStyleOf(cfg, st) : null, noWan, update: live && update, guest: live && guest };
     }
 
     // A pool pump: off, filtering, injecting chlorine, backwashing, running

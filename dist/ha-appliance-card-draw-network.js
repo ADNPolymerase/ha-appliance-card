@@ -2,7 +2,7 @@
 // The network drawing and its CSS, loaded by the card the first time it shows one.
 export default function defineDrawing(deps) {
 // A page still running the card of an earlier release: an arrow to reload.
-if (!deps || deps.__v !== "5.4.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
+if (!deps || deps.__v !== "5.5.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
 let { ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CHARGER_MODES, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FT_FLAVORS, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntTint, numberOrNull, t, thsColor, zoneColumns } = deps;
 // The LEDs of one device do not blink in step.
 function ntDelay(i, step, mod) {
@@ -152,17 +152,55 @@ function ntRouter() {
           <div class="nt-floor" style="left:8px;width:80px;top:94px"></div>`;
 }
 
+// A FRITZ!Box (#142), white with its red accents, its five lights labelled
+// Power, Internet, WLAN, Fon and Info. flat: the models lying down.
+function ntFritz(flat) {
+  const labels = ["Power", "Internet", "WLAN", "Fon", "Info"];
+  const keys = ["pw", "inet", "wl", "fon", "info"];
+  const defs = `<defs><linearGradient id="fz-w" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e3e6e9"/><stop offset=".3" stop-color="#ffffff"/><stop offset="1" stop-color="#eef0f2"/></linearGradient>
+<linearGradient id="fz-r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2343b"/><stop offset="1" stop-color="#a8141b"/></linearGradient>
+<pattern id="fz-perf" width="2.4" height="2.4" patternUnits="userSpaceOnUse"><circle cx="1.2" cy="1.2" r=".45" fill="#9aa1a8" fill-opacity=".5"/></pattern></defs>`;
+  const waves = (cy) => [[cy + 12, 12], [cy + 6, 24], [cy, 36]].map(([top, w], i) =>
+    `<div class="nt-wave" style="left:${48 - w / 2}px;top:${top}px;width:${w}px;height:${w}px;${ntDelay(i, 0.3, 2.4)}"></div>`).join("");
+  if (flat) {
+    const leds = keys.map((k, i) => `<rect class="fz-led fz-${k}" x="${52 + i * 6.4}" y="${69.6 - i * 0.2}" width="3.6" height="1.3" rx=".6"/>`).join("");
+    return `${waves(34)}<svg class="nt-svg" viewBox="0 0 96 108" width="96" height="108" style="position:absolute;left:0;top:0;overflow:visible">${defs}
+<ellipse cx="48" cy="92" rx="42" ry="3" fill="#000" opacity=".16"/>
+<path d="M17 58 H79 L89 74 H7 Z" fill="url(#fz-w)" stroke="#000" stroke-opacity=".18" stroke-width=".4"/>
+<path d="M17 58 H79 L82.6 63.6 H13.4 Z" fill="url(#fz-r)"/>
+<path d="M7 74 H89 V86 Q89 89 86 89 H10 Q7 89 7 86 Z" fill="#f4f5f7" stroke="#000" stroke-opacity=".18" stroke-width=".4"/>
+<path d="M7 74.4 H89" stroke="#fff" stroke-width=".8"/>
+<rect x="9" y="76" width="78" height="11" fill="url(#fz-perf)" opacity=".7"/>
+<text x="12" y="85" font-size="4" font-family="Arial, sans-serif" font-weight="700" fill="#b81c23">FRITZ!Box</text>
+${leds}
+</svg>`;
+  }
+  // The 7583 and its kin: a white slab wider than tall, standing on a thin red
+  // foot that curls up at its right end, the lights in a column top right.
+  const leds = keys.map((k, i) => `<rect class="fz-led fz-${k}" x="75" y="${45 + i * 4.6}" width="3.4" height="1.5" rx=".7"/><text x="73" y="${46.3 + i * 4.6}" font-size="2.5" font-family="Arial, sans-serif" fill="#8a9097" text-anchor="end">${labels[i]}</text>`).join("");
+  return `${waves(8)}<svg class="nt-svg" viewBox="0 0 96 108" width="96" height="108" style="position:absolute;left:0;top:0;overflow:visible">${defs}
+<ellipse cx="49" cy="96" rx="38" ry="2.4" fill="#000" opacity=".18"/>
+<path d="M82 42 L86 39.5 V86 L82 88.5 Z" fill="#c9ced3"/>
+<path d="M14 45 Q14 42 17 42 H82 V88.5 H14 Z" fill="url(#fz-w)" stroke="#000" stroke-opacity=".18" stroke-width=".4"/>
+<path d="M17 42 L21 39.5 H86 L82 42 Z" fill="#f7f8f9" stroke="#000" stroke-opacity=".1" stroke-width=".3"/>
+${leds}
+<path d="M13 95.5 V89.6 Q13 88.5 14.1 88.5 H79 Q81.6 88.5 83 86.2 L84.6 83.4 Q85.8 82 86.8 83.4 Q87.2 84 87.2 85 V92.8 L84.4 95.5 Z" fill="url(#fz-r)"/>
+<path d="M84.4 95.5 L87.2 92.8 V85" fill="none" stroke="#7d0f14" stroke-width=".5"/>
+<path d="M13 95.5 H84.4" stroke="#7d0f14" stroke-width=".6"/>
+<text x="15.5" y="93.8" font-size="3.6" font-family="Arial, sans-serif" font-weight="700" fill="#fff">FRITZ!Box</text>
+</svg>`;
+}
 function networkHtml(cls, n) {
   const layout = NET_LAYOUTS.includes(n.layout) ? n.layout : "nas";
   const disks = n.disks || [];
   const inner = layout === "switch" ? ntSwitch(n.ports || 8, n.lit || 0)
     : layout === "server" ? ntServer(disks, n.fanOff)
       : layout === "rack" ? ntRack(n.fanOff)
-        : layout === "router" ? ntRouter()
+        : layout === "router" ? (n.style === "fritz" || n.style === "fritz_flat" ? ntFritz(n.style === "fritz_flat") : ntRouter())
           : layout === "mini_pc" ? ntMiniPc()
           : ntNas(n.bays || 2, disks);
   return `
-        <div class="machine ${cls} nt nt-${n.mode || "off"} nt-l-${layout}${n.wifiOff ? " nt-nowifi" : ""}">${inner}
+        <div class="machine ${cls} nt nt-${n.mode || "off"} nt-l-${layout}${n.wifiOff ? " nt-nowifi" : ""}${n.noWan ? " nt-nowan" : ""}${n.update ? " nt-update" : ""}${n.guest ? " nt-guest" : ""}">${inner}
         </div>`;
 }
 
@@ -223,6 +261,16 @@ css: () => `
         .nt-on .nt-wl, .nt-busy .nt-wl { background: #4fc3f7; box-shadow: 0 0 2px #4fc3f7; }
         .nt-nowifi .nt-wl { background: #3d434a; box-shadow: none; }
         @keyframes nt-wave { 0% { opacity: 0; } 30% { opacity: 0.9; } 100% { opacity: 0; } }
+        /* A FRITZ!Box's lights (#142). */
+        .fz-led { fill: #c5cad0; }
+        .nt-on .fz-pw, .nt-busy .fz-pw, .nt-alert .fz-pw { fill: #2ecc71; }
+        .nt-on .fz-inet, .nt-busy .fz-inet { fill: #2ecc71; }
+        .nt-on .fz-wl, .nt-busy .fz-wl, .nt-alert .fz-wl { fill: #2ecc71; }
+        .nt-nowifi .fz-wl, .nt-nowan .fz-inet { fill: #c5cad0; }
+        .nt-guest .fz-info { fill: #2ecc71; }
+        .nt-update .fz-info { fill: #2ecc71; animation: nt-blink 1s steps(1) infinite; animation-delay: var(--anim-offset, 0s); }
+        .nt-alert .fz-info { fill: #f44336; animation: nt-blink 1s steps(1) infinite; animation-delay: var(--anim-offset, 0s); }
+        .nt-off .fz-led, .nt-unav .fz-led { fill: #c5cad0; animation-name: none; }
         .machine.nt-unav { opacity: 0.45; filter: grayscale(1); }
         .nt-l-mini_pc .nt-pwring { opacity: .35; }
         .nt-on .nt-pwring, .nt-busy .nt-pwring { opacity: 1; filter: drop-shadow(0 0 2px #ff5252); }

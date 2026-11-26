@@ -1601,6 +1601,9 @@ Une entité qui porte le nom d'une wallbox dans les langues de la carte, de son 
 | `clients_entity` | réseau (routeur) | Le nombre d'appareils connectés, en ligne. |
 | `wan_entity` | réseau (routeur) | Le lien internet, un capteur de connectivité ou un état qui dit `online` / `offline` : quand il tombe, le routeur affiche *Pas d'internet*, en alerte. |
 | `wifi_entity` | réseau (routeur) | Le Wi-Fi, un interrupteur : coupé, les ondes ne montent plus des antennes et le voyant Wi-Fi s'éteint. |
+| `guest_wifi_entity` | réseau (routeur) | Le Wi-Fi invité, un interrupteur : une ligne qui le commande, et sur une FRITZ!Box le voyant Info allumé tant qu'il est activé. |
+| `update_entity` | réseau (routeur) | L'entité `update` du routeur : quand une mise à jour attend, une ligne *8.26 → 8.27* et sur une FRITZ!Box le voyant Info qui clignote. |
+| `router_style` | réseau (routeur) | `generic` (un routeur à trois antennes) \| `fritz` (une FRITZ!Box debout sur son pied rouge, comme la 7583, la 5690 Pro ou la 6690) \| `fritz_flat` (une FRITZ!Box à plat comme la 7690, la 7590 ou la 7530). Une FRITZ!Box est reconnue à son nom. Ses cinq voyants suivent les entités : Power en ligne, Internet avec `wan_entity`, WLAN avec `wifi_entity`, Info pour la mise à jour ou le Wi-Fi invité, en rouge quand internet est coupé. |
 | `disk1_entity` … `disk8_entity` / `bays` | réseau | Une entité par disque, n'importe laquelle des siennes : la carte les lit toutes. Sa diode est verte quand tout va bien, bleue quand il lit ou écrit, faible quand il dort, orange quand il est à surveiller, rouge quand il est en panne. `bays` : `1`, `2`, `4` ou `8` baies dessinées sur un NAS, une baie vide n'a pas de tiroir. |
 
 </details>

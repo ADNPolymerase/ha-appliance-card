@@ -196,6 +196,17 @@ const NET_RATE_BITS = {
   "B/s": 8, "kB/s": 8e3, "KB/s": 8e3, "MB/s": 8e6, "GB/s": 8e9, "KiB/s": 8192, "MiB/s": 8388608, "GiB/s": 8589934592,
 };
 
+// A FRITZ!Box (#142): an upright slab in its red foot, or one of the flat
+// models with the red band across their top.
+const NET_FRITZ_RE = /fritz/;
+const NET_FRITZ_FLAT_RE = /(^|[^0-9])(7690|7682|7590|7530|7520|7510|7490|7430|7362|7360)([^0-9]|$)/;
+const ROUTER_STYLES = ["generic", "fritz", "fritz_flat"];
+function routerStyleOf(cfg, st) {
+  if (ROUTER_STYLES.includes(cfg.router_style)) return cfg.router_style;
+  const name = stripAccents(`${(cfg.state_entity || "").split(".")[1] || ""} ${stHay(st)} ${cfg.name || ""}`.toLowerCase());
+  if (!NET_FRITZ_RE.test(name)) return "generic";
+  return NET_FRITZ_FLAT_RE.test(name) ? "fritz_flat" : "fritz";
+}
 function netLayoutOf(cfg, st) {
   if (NET_LAYOUTS.includes(cfg.network_layout)) return cfg.network_layout;
   const name = stripAccents(`${(cfg.state_entity || "").split(".")[1] || ""} ${stHay(st)} ${cfg.name || ""}`.toLowerCase());

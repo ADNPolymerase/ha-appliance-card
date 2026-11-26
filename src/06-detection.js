@@ -104,6 +104,13 @@ const TYPE_AUTO_PATTERNS = {
     // Ring's ding and Nest's chime, whole words: recording holds a "ding".
     ring_entity: /^(?!.*record).*(ring|visitor|visiteur|doorbell|sonnette|klingel|press|appui)|(^|[._])(ding|chime)([._]|$)/i,
   },
+  // A router, as FRITZ!Box Tools names them (#142).
+  network: {
+    wan_entity: /^binary_sensor\..*(connection|connexion|verbindung|internet|wan)/i,
+    wifi_entity: /^switch\.(?!.*(guest|gast|invit)).*(wi.?fi|wlan)/i,
+    guest_wifi_entity: /^switch\..*(guest|gast|invit)/i,
+    update_entity: /^update\./i,
+  },
   // A mailbox: a counter of the mail, and a contact on each door.
   mailbox: {
     mail_count_entity: /^(?!.*(colis|parcel|paket|package|paquete|pacco|pakket|paczk)).*(count|compteur|zahl|contador|contatore|teller|licznik|nombre)/i,
@@ -1054,7 +1061,7 @@ const SCREEN_ONLY_FIELDS = ["screen_layout", "laptop_style", "laptop_color", "sc
 // Ports, bays, disks and traffic belong to a network device.
 const NETWORK_ONLY_FIELDS = ["network_layout", "switch_ports", "bays", "busy_threshold", "temperature_alert", "cpu_entity",
   "memory_entity", "volume_entity", "download_entity", "upload_entity", "ports_entity", "ports_total", "poe_entity",
-  "problem_entity", "disk1_entity", "disk2_entity", "disk3_entity", "disk4_entity", "disk5_entity", "disk6_entity", "disk7_entity", "disk8_entity", "clients_entity", "wan_entity", "wifi_entity"];
+  "problem_entity", "disk1_entity", "disk2_entity", "disk3_entity", "disk4_entity", "disk5_entity", "disk6_entity", "disk7_entity", "disk8_entity", "clients_entity", "wan_entity", "wifi_entity", "guest_wifi_entity", "router_style"];
 const SCREEN_MEDIA_FIELDS = ["media_entity", "media2_entity", "media3_entity"];
 const PURIFIER_ONLY_FIELDS = ["purifier_layout", "air_quality_entity", "display_entity", "humidifier_entity", "deep_clean_entity", "filter2_life_entity"];
 const FAN_ONLY_FIELDS = ["fan_layout", "wood_blades", "fan_direction_inverted", "oscillating"];

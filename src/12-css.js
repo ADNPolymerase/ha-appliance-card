@@ -1873,6 +1873,16 @@ const ILLUSTRATION_CSS = {
         .nt-on .nt-wl, .nt-busy .nt-wl { background: #4fc3f7; box-shadow: 0 0 2px #4fc3f7; }
         .nt-nowifi .nt-wl { background: #3d434a; box-shadow: none; }
         @keyframes nt-wave { 0% { opacity: 0; } 30% { opacity: 0.9; } 100% { opacity: 0; } }
+        /* A FRITZ!Box's lights (#142). */
+        .fz-led { fill: #c5cad0; }
+        .nt-on .fz-pw, .nt-busy .fz-pw, .nt-alert .fz-pw { fill: #2ecc71; }
+        .nt-on .fz-inet, .nt-busy .fz-inet { fill: #2ecc71; }
+        .nt-on .fz-wl, .nt-busy .fz-wl, .nt-alert .fz-wl { fill: #2ecc71; }
+        .nt-nowifi .fz-wl, .nt-nowan .fz-inet { fill: #c5cad0; }
+        .nt-guest .fz-info { fill: #2ecc71; }
+        .nt-update .fz-info { fill: #2ecc71; animation: nt-blink 1s steps(1) infinite; animation-delay: var(--anim-offset, 0s); }
+        .nt-alert .fz-info { fill: #f44336; animation: nt-blink 1s steps(1) infinite; animation-delay: var(--anim-offset, 0s); }
+        .nt-off .fz-led, .nt-unav .fz-led { fill: #c5cad0; animation-name: none; }
         .machine.nt-unav { opacity: 0.45; filter: grayscale(1); }
         .nt-l-mini_pc .nt-pwring { opacity: .35; }
         .nt-on .nt-pwring, .nt-busy .nt-pwring { opacity: 1; filter: drop-shadow(0 0 2px #ff5252); }
