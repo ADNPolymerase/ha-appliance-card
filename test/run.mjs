@@ -11770,6 +11770,8 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('144 : chene clair par defaut', lamp('on', {}, { lamp_layout: 'stair' }).includes('fill="#dcb07f"'), true);
   check('144 : noyer', lamp('on', {}, { lamp_layout: 'stair_under', stair_material: 'walnut' }).includes('fill="#8a5a3b"'), true);
   check('144 : beton, sans veinage', /stroke="#a6774b"/.test(lamp('on', {}, { lamp_layout: 'stair', stair_material: 'concrete' })), false);
+  check('144 : pas de bande de sol sous l escalier', ['stair', 'stair_under'].some((l) => lamp('on', {}, { lamp_layout: l }).includes('#3a3734')), false);
+  check('144 : la premiere marche descend jusqu au bord', lamp('on', {}, { lamp_layout: 'stair' }).includes('M40 102 L40 90'), true);
   check('144 : matiere inconnue, chene', lamp('on', {}, { lamp_layout: 'stair', stair_material: 'gold' }).includes('fill="#dcb07f"'), true);
   const ed144 = markup(newEditor({ state_entity: 'light.x', appliance_type: 'lamp', lamp_layout: 'stair' }));
   check('144 : editeur, la matiere des marches', ed144.includes('data-field="stair_material"'), true);

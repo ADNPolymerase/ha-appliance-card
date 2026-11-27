@@ -2,7 +2,7 @@
 // The lamp drawing and its CSS, loaded by the card the first time it shows one.
 export default function defineDrawing(deps) {
 // A page still running the card of an earlier release: an arrow to reload.
-if (!deps || deps.__v !== "5.7.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
+if (!deps || deps.__v !== "5.8.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
 let { ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CHARGER_MODES, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FT_FLAVORS, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, STAIR_MATERIALS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntTint, numberOrNull, t, thsColor, zoneColumns } = deps;
 // A soft shadow on the floor, blurred so it reads as the object standing on
 // the floor rather than a grey plate laid under it. footPath takes the outline
@@ -507,17 +507,18 @@ ${lpGrass()}
 // Stairs (#144) in 3/4, as seen from below: five wooden steps climbing away
 // to the right along the wall on their left. Each riser faces us, each tread
 // is seen from above, the stairs' right side is the darker wood.
-const LP_STAIR = { N: 5, W: 30, dx: 10, dy: -5, H: 12, x: (i) => 10 + i * 10, t: (i) => 80 - i * 17 };
+const LP_STAIR = { N: 5, W: 30, dx: 10, dy: -5, H: 12, x: (i) => 10 + i * 10, t: (i) => 90 - i * 17 };
 function lpStairs(extra, c) {
   const { N, W, dx, dy, H, x, t } = LP_STAIR;
   const [tread, edge, riser, nose, grain, sideC] = STAIR_MATERIALS[(c && c.stairMaterial) || "oak"] || STAIR_MATERIALS.oak;
   // A dark grey wall, the way step lights are usually seen.
   let h = `<defs><linearGradient id="lp-sW" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5f5b57"/><stop offset="1" stop-color="#46423f"/></linearGradient></defs>`
-    + `<rect x="0" y="-6" width="96" height="98" fill="url(#lp-sW)"/><rect x="0" y="92" width="96" height="10" fill="#3a3734"/>`;
-  // The right side, a sawtooth down to the floor.
-  let side = `M${x(0) + W} 92 L${x(0) + W} ${t(0)}`;
+    + `<rect x="0" y="-6" width="96" height="108" fill="url(#lp-sW)"/>`;
+  // The right side, a sawtooth down to the bottom of the card (no floor band,
+  // the stairs simply run out of the picture).
+  let side = `M${x(0) + W} 102 L${x(0) + W} ${t(0)}`;
   for (let i = 0; i < N; i++) side += ` L${x(i) + W + dx} ${t(i) + dy}${i < N - 1 ? ` L${x(i + 1) + W} ${t(i + 1)}` : ""}`;
-  h += `<path class="lp-st-side" d="${side} L${x(N - 1) + W + dx} ${92 + N * dy} Z" fill="${sideC}"/>`;
+  h += `<path class="lp-st-side" d="${side} L${x(N - 1) + W + dx} ${102 + N * dy} Z" fill="${sideC}"/>`;
   for (let i = N - 1; i >= 0; i--) {
     h += `<polygon points="${x(i)},${t(i)} ${x(i) + W},${t(i)} ${x(i) + W + dx},${t(i) + dy} ${x(i) + dx},${t(i) + dy}" fill="${tread}" stroke="${edge}" stroke-width=".4"/>`;
     h += `<rect x="${x(i)}" y="${t(i)}" width="${W}" height="${H}" fill="${riser}"/><rect x="${x(i) - 0.6}" y="${t(i)}" width="${W + 0.6}" height="1.8" fill="${nose}"/>`;
@@ -525,7 +526,7 @@ function lpStairs(extra, c) {
     if (extra) h += extra(i);
   }
   // Where the stairs meet the wall.
-  h += `<path d="M${x(0)} 92 L${x(0)} ${t(0)}${Array.from({ length: N }, (_, i) => ` L${x(i) + dx} ${t(i) + dy}${i < N - 1 ? ` L${x(i + 1)} ${t(i + 1)}` : ""}`).join("")}" fill="none" stroke="rgba(0,0,0,.18)" stroke-width=".8"/>`;
+  h += `<path d="M${x(0)} 102 L${x(0)} ${t(0)}${Array.from({ length: N }, (_, i) => ` L${x(i) + dx} ${t(i) + dy}${i < N - 1 ? ` L${x(i + 1)} ${t(i + 1)}` : ""}`).join("")}" fill="none" stroke="rgba(0,0,0,.18)" stroke-width=".8"/>`;
   return h;
 }
 // Which steps get a light when there are fewer lights than steps.
