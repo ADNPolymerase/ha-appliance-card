@@ -11754,6 +11754,28 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('lampe : l effet anime', machineCls(lamp('on', { effect: 'Rainbow' })).includes('lp-fx'), true);
   check('lampe : Solid n est pas un effet', machineCls(lamp('on', { effect: 'Solid' })).includes('lp-fx'), false);
   check('lampe : ampoule par defaut', machineCls(lamp('on')).includes('lp-l-bulb'), true);
+  // #144: stairs, small wall lights above the steps or a strip under each tread.
+  check('144 : escalier par son nom', machineCls(lamp('on', {}, {}, 'light.escalier')).includes('lp-l-stair'), true);
+  check('144 : step lights', machineCls(lamp('on', { friendly_name: 'Stair step lights' })).includes('lp-l-stair '), true);
+  check('144 : Treppe', machineCls(lamp('on', {}, {}, 'light.treppe_wand')).includes('lp-l-stair'), true);
+  check('144 : ruban sous les marches', machineCls(lamp('on', {}, {}, 'light.ruban_led_escalier')).includes('lp-l-stair_under'), true);
+  check('144 : lumiere sous les marches', machineCls(lamp('on', { friendly_name: 'Under stair light' })).includes('lp-l-stair_under'), true);
+  check('144 : un ruban ailleurs reste un ruban', machineCls(lamp('on', {}, {}, 'light.ruban_led_cuisine')).includes('lp-l-stair'), false);
+  const nLamps = (h) => (h.match(/fill="#2b3036"\/><path d="M[^"]*" fill="#454c54"/g) || []).length;
+  check('144 : trois appliques par defaut', nLamps(lamp('on', {}, { lamp_layout: 'stair' })), 3);
+  check('144 : cinq appliques', nLamps(lamp('on', {}, { lamp_layout: 'stair', spots: 5 })), 5);
+  check('144 : une applique', nLamps(lamp('on', {}, { lamp_layout: 'stair', spots: 1 })), 1);
+  check('144 : sous les marches, un ruban par marche', (lamp('on', {}, { lamp_layout: 'stair_under' }).match(/class="lp-litS"/g) || []).length, 5);
+  check('144 : eteint', machineCls(lamp('off', {}, { lamp_layout: 'stair' })).includes('lp-m-off'), true);
+  check('144 : chene clair par defaut', lamp('on', {}, { lamp_layout: 'stair' }).includes('fill="#dcb07f"'), true);
+  check('144 : noyer', lamp('on', {}, { lamp_layout: 'stair_under', stair_material: 'walnut' }).includes('fill="#8a5a3b"'), true);
+  check('144 : beton, sans veinage', /stroke="#a6774b"/.test(lamp('on', {}, { lamp_layout: 'stair', stair_material: 'concrete' })), false);
+  check('144 : matiere inconnue, chene', lamp('on', {}, { lamp_layout: 'stair', stair_material: 'gold' }).includes('fill="#dcb07f"'), true);
+  const ed144 = markup(newEditor({ state_entity: 'light.x', appliance_type: 'lamp', lamp_layout: 'stair' }));
+  check('144 : editeur, la matiere des marches', ed144.includes('data-field="stair_material"'), true);
+  check('144 : editeur, pas de matiere sur une ampoule', markup(newEditor({ state_entity: 'light.x', appliance_type: 'lamp', lamp_layout: 'bulb' })).includes('stair_material'), false);
+  check('144 : editeur, le nombre d appliques', ed144.includes('data-field="spots"'), true);
+  check('144 : editeur, les deux dessins proposes', ['stair', 'stair_under'].every((v) => ed144.includes(`value="${v}"`)), true);
   check('lampe : ruban par son nom', machineCls(lamp('on', {}, {}, 'light.ruban_led_cuisine')).includes('lp-l-strip'), true);
   check('lampe : WLED en ruban', machineCls(lamp('on', { friendly_name: 'WLED Bureau' })).includes('lp-l-strip'), true);
   check('lampe : Nanoleaf en panneaux', machineCls(lamp('on', { friendly_name: 'Nanoleaf Shapes' })).includes('lp-l-panels'), true);

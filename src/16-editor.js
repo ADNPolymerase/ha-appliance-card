@@ -2054,6 +2054,9 @@ class ApplianceCardEditor extends HTMLElement {
         }) + (LAMP_SPOT_ROWS.includes(lampLayoutOf(this._config, stateObj(hass, this._config.state_entity))) ? this._row("lamp_spots", "spots", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(LAMP_SPOTS.map((v) => ({ value: String(v), label: String(v) }))),
+        }) : "") + (["stair", "stair_under"].includes(lampLayoutOf(this._config, stateObj(hass, this._config.state_entity))) ? this._row("stair_material", "stair_material", {
+          type: "select",
+          options: STAIR_MATERIAL_NAMES.map((v) => ({ value: v, label: t(hass, `stair_mat_${v}`) })),
         }) : "") + (lampLayoutOf(this._config, stateObj(hass, this._config.state_entity)) === "barrel_bar" ? this._row("curtain_color", "curtain_color", {
           type: "select",
           options: CURTAIN_COLORS.map((v) => ({ value: v, label: t(hass, `color_${v}`) })),

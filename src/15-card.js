@@ -3873,7 +3873,8 @@ class ApplianceCard extends HTMLElement {
       const mst = cfg.motion_entity ? stateObj(hass, cfg.motion_entity) : null;
       const motion = !!mst && ["on", "true", "1", "detected", "home"].includes(String(mst.state).trim().toLowerCase());
       if (mst) extraLines.push({ key: "lamp_motion", icon: motion ? "mdi:motion-sensor" : "mdi:motion-sensor-off", label: t(hass, "section_motion"), value: t(hass, motion ? "det_line_detected" : "det_line_clear"), entity: cfg.motion_entity, caution: motion });
-      lampDraw = { mode: l.mode, rgb: l.rgb, pct: l.pct, fx: !!l.effect, layout: lpLayout, spots: lampSpotsOf(cfg, st), motion, curtain: cfg.curtain_color };
+      lampDraw = { mode: l.mode, rgb: l.rgb, pct: l.pct, fx: !!l.effect, layout: lpLayout, spots: lampSpotsOf(cfg, st), motion, curtain: cfg.curtain_color,
+        stairMaterial: STAIR_MATERIAL_NAMES.includes(cfg.stair_material) ? cfg.stair_material : "oak" };
     }
 
     // The HACF drawings: a pump, underfloor heating, a spa, a sauna, an

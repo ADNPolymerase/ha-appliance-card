@@ -2,8 +2,8 @@
 // The lamp drawing and its CSS, loaded by the card the first time it shows one.
 export default function defineDrawing(deps) {
 // A page still running the card of an earlier release: an arrow to reload.
-if (!deps || deps.__v !== "5.6.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
-let { ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CHARGER_MODES, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FT_FLAVORS, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntTint, numberOrNull, t, thsColor, zoneColumns } = deps;
+if (!deps || deps.__v !== "5.7.0") return { draw: () => '<div class="machine" style="display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.5">\u21bb</div>', css: "" };
+let { ARC_BUTTONS, ARC_COLORS, BATTERY_LAYOUTS, CAMERA_LAYOUTS, CHARGER_MODES, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, DOOR_TRANS_S, EV_FLOW_DEFAULT, FT_FLAVORS, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, STAIR_MATERIALS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntTint, numberOrNull, t, thsColor, zoneColumns } = deps;
 // A soft shadow on the floor, blurred so it reads as the object standing on
 // the floor rather than a grey plate laid under it. footPath takes the outline
 // of the footprint itself, for an appliance drawn in three-quarter view.
@@ -237,6 +237,31 @@ ${[["24,58 36,37 48,58", 0], ["36,37 48,58 60,37", 1], ["48,58 60,37 72,58", 2],
 <path d="M61 37 C61 29 65 24.5 71 24.5 C77 24.5 81 29 81 37 Z" fill="#2b3036"/>
 <circle cx="66" cy="27" r="2.3" fill="#3a4047"/>
 <ellipse class="lp-lit" cx="71" cy="37" rx="10" ry="1.8"/>`,
+  // Small lights in the wall above the steps, each lighting its tread.
+  stair: (c) => {
+    const { W, dx, dy, t, x } = LP_STAIR;
+    const lit = lpStairLit(c);
+    let lamps = "";
+    for (const i of lit) {
+      // On the wall, halfway along the tread, before the next riser.
+      const lx = x(i) + dx / 2, ly = t(i) + dy / 2 - 11;
+      lamps += `<ellipse class="lp-halo" cx="${lx + 2}" cy="${ly + 8}" rx="11" ry="10" fill="url(#lp-sH)"/>`;
+      lamps += `<path class="lp-beam" d="M${lx - 1.8} ${ly + 4.2} L${lx + 3.4} ${ly + 4.2} L${lx + 17} ${t(i) + dy * 0.4} L${lx - 1} ${t(i) + dy * 0.4} Z" fill="url(#lp-sB)"/>`;
+      lamps += `<path d="M${lx - 2} ${ly} L${lx + 2.6} ${ly - 0.6} L${lx + 3.6} ${ly + 4.2} L${lx - 2} ${ly + 4.6} Z" fill="#2b3036"/><path d="M${lx + 2.6} ${ly - 0.6} L${lx + 4} ${ly} L${lx + 4.6} ${ly + 4} L${lx + 3.6} ${ly + 4.2} Z" fill="#454c54"/>`;
+      lamps += `<path class="lp-litS" d="M${lx - 1.6} ${ly + 4.5} L${lx + 3.4} ${ly + 4.1}" stroke-width=".9" stroke-linecap="round"/>`;
+    }
+    const pools = (i) => (lit.includes(i) ? `<ellipse class="lp-halo" cx="${x(i) + 9 + dx * 0.5}" cy="${t(i) + dy * 0.5}" rx="11" ry="3.2" fill="url(#lp-sH)"/>` : "");
+    return `<defs>${lpHalo("sH")}${lpBeam("sB")}</defs>${lpStairs(pools, c)}${lamps}`;
+  },
+  // A strip under each tread's nose, washing the riser below it and the
+  // back of the step underneath.
+  stair_under: (c) => {
+    const { W, H, dx, t, x } = LP_STAIR;
+    const under = (i) => `<rect class="lp-halo" x="${x(i)}" y="${t(i) + 1.8}" width="${W}" height="${H - 1.8}" fill="url(#lp-uS)"/>`
+      + `<path class="lp-litS" d="M${x(i) + 0.6} ${t(i) + 2.3} H${x(i) + W - 0.6}" stroke-width="1.1" stroke-linecap="round"/>`
+      + `<ellipse class="lp-halo" cx="${x(i) + W / 2 - dx * 0.2}" cy="${t(i) + H + 1.2}" rx="${W / 2 + 1}" ry="2.6" fill="url(#lp-uH)"/>`;
+    return `<defs>${lpBeam("uS")}${lpHalo("uH")}</defs>${lpStairs(under, c)}`;
+  },
   wall: () => `<defs>${lpHalo("oH")}
 <radialGradient id="lp-oG" cx=".5" cy=".55" r=".6"><stop offset="0" stop-color="#fff"/><stop offset="1" class="lp-stop"/></radialGradient></defs>
 <rect x="0" y="4" width="34" height="88" fill="#d7c6ad"/>
@@ -479,6 +504,36 @@ ${lpGrass()}
 <path d="M44.6 29 V44 M51.4 29 V44" stroke="#2b3036" stroke-width=".9"/>
 <path d="M36 29 Q48 20 60 29 Z" fill="#2b3036"/>
 <rect x="46.6" y="20.4" width="2.8" height="3" rx="1" fill="#2b3036"/>`;
+// Stairs (#144) in 3/4, as seen from below: five wooden steps climbing away
+// to the right along the wall on their left. Each riser faces us, each tread
+// is seen from above, the stairs' right side is the darker wood.
+const LP_STAIR = { N: 5, W: 30, dx: 10, dy: -5, H: 12, x: (i) => 10 + i * 10, t: (i) => 80 - i * 17 };
+function lpStairs(extra, c) {
+  const { N, W, dx, dy, H, x, t } = LP_STAIR;
+  const [tread, edge, riser, nose, grain, sideC] = STAIR_MATERIALS[(c && c.stairMaterial) || "oak"] || STAIR_MATERIALS.oak;
+  // A dark grey wall, the way step lights are usually seen.
+  let h = `<defs><linearGradient id="lp-sW" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5f5b57"/><stop offset="1" stop-color="#46423f"/></linearGradient></defs>`
+    + `<rect x="0" y="-6" width="96" height="98" fill="url(#lp-sW)"/><rect x="0" y="92" width="96" height="10" fill="#3a3734"/>`;
+  // The right side, a sawtooth down to the floor.
+  let side = `M${x(0) + W} 92 L${x(0) + W} ${t(0)}`;
+  for (let i = 0; i < N; i++) side += ` L${x(i) + W + dx} ${t(i) + dy}${i < N - 1 ? ` L${x(i + 1) + W} ${t(i + 1)}` : ""}`;
+  h += `<path class="lp-st-side" d="${side} L${x(N - 1) + W + dx} ${92 + N * dy} Z" fill="${sideC}"/>`;
+  for (let i = N - 1; i >= 0; i--) {
+    h += `<polygon points="${x(i)},${t(i)} ${x(i) + W},${t(i)} ${x(i) + W + dx},${t(i) + dy} ${x(i) + dx},${t(i) + dy}" fill="${tread}" stroke="${edge}" stroke-width=".4"/>`;
+    h += `<rect x="${x(i)}" y="${t(i)}" width="${W}" height="${H}" fill="${riser}"/><rect x="${x(i) - 0.6}" y="${t(i)}" width="${W + 0.6}" height="1.8" fill="${nose}"/>`;
+    if (grain) h += `<path d="M${x(i) + 3} ${t(i) + 5} H${x(i) + W - 4} M${x(i) + 6} ${t(i) + 8.6} H${x(i) + W - 2}" stroke="${grain}" stroke-width=".4" opacity=".7"/>`;
+    if (extra) h += extra(i);
+  }
+  // Where the stairs meet the wall.
+  h += `<path d="M${x(0)} 92 L${x(0)} ${t(0)}${Array.from({ length: N }, (_, i) => ` L${x(i) + dx} ${t(i) + dy}${i < N - 1 ? ` L${x(i + 1)} ${t(i + 1)}` : ""}`).join("")}" fill="none" stroke="rgba(0,0,0,.18)" stroke-width=".8"/>`;
+  return h;
+}
+// Which steps get a light when there are fewer lights than steps.
+function lpStairLit(c) {
+  const n = LAMP_SPOTS.includes(c.spots) ? c.spots : 3;
+  const { N } = LP_STAIR;
+  return n === 1 ? [2] : Array.from({ length: n }, (_, k) => Math.round(k * (N - 1) / (n - 1)));
+}
 // A strip of lawn for the garden lights.
 const lpGrass = () => `<path d="M0 84 Q48 80 96 84 V94 H0 Z" fill="#6f9e4a"/>
 <path d="M0 86 Q48 82.4 96 86" fill="none" stroke="#8bbd5c" stroke-width="1"/>
