@@ -534,7 +534,11 @@ function netSuggest(hass, cfg) {
   const cpu = (id) => pct(id) && /cpu|processor|processeur|prozessor/.test(words(id)) && !/user|utilisateur|system|iowait|temp|freq/.test(words(id));
   set("cpu_entity", pool.find((id) => cpu(id) && /total/.test(words(id))) || pool.find(cpu));
   set("memory_entity", pool.find((id) => pct(id) && /memory|memoire|(^|[\s_])(ram|mem)([\s_]|$)|speicher/.test(words(id)) && !/swap|echange/.test(words(id))));
-  set("volume_entity", pool.find((id) => pct(id) && /volume|pool|storage|stockage|disk_use|array/.test(words(id)) && !/memory|memoire|swap|cpu/.test(words(id))));
+  // A volume, a pool or a filesystem's use, not what is free on it (OMV
+  // gives both, #143), and a disk's own only when nothing else says it.
+  const volume = (id) => pct(id) && /volume|pool|storage|stockage|disk_use|array|file.?system|systeme.?de.?fichiers|dateisystem/.test(words(id))
+    && !/memory|memoire|swap|cpu|free|libre|frei|wear|usure/.test(words(id));
+  set("volume_entity", pool.find((id) => volume(id) && !/disk|disque/.test(words(id))) || pool.find(volume));
   const rate = (id) => sensor(id) && notDisk(id) && (attr(id).device_class === "data_rate" || NET_RATE_BITS[attr(id).unit_of_measurement] !== undefined)
     && !/read|write|lecture|ecriture|iops/.test(words(id));
   set("download_entity", pool.find((id) => rate(id) && /download|telecharg|(^|[\s_])rx|receiv|recu|ingress|(^|_)in(_|$)/.test(words(id))));
@@ -558,10 +562,14 @@ function netSuggest(hass, cfg) {
     const pick = (ids) => ids.find((id) => sensor(id) && !Number.isFinite(Number(hass.states[id].state)) && !/temp/.test(id))
       || ids.find((id) => sensor(id) && attr(id).device_class === "temperature") || ids[0];
     const lastNumber = (str) => { const m = String(str).match(/(\d+)\D*$/); return m ? parseInt(m[1], 10) : 0; };
+    // OpenMediaVault names a disk's device after its maker and model, its
+    // kernel name in brackets ("WDC WD40EFRX (data) [sda]"), or "Disk sda"
+    // (#143); a RAID array is no disk.
+    const kernel = (name) => { const m = name.match(/\[(sd[a-z]+|hd[a-z]+|vd[a-z]+|nvme\d+n\d+|mmcblk\d+)\]\s*$|^disk\s+(sd[a-z]+|hd[a-z]+|vd[a-z]+|nvme\d+n\d+|mmcblk\d+)$/); return m ? m[1] || m[2] : ""; };
     let disks = children
       .map((d) => ({ d, name: stripAccents(String(hass.devices[d].name_by_user || hass.devices[d].name || "").toLowerCase()) }))
-      .filter((x) => /(disk|disque|drive|laufwerk|festplatte|disco|dysk|hdd|ssd|bay|baie)\D*\d+/.test(x.name))
-      .sort((a, b) => lastNumber(a.name) - lastNumber(b.name))
+      .filter((x) => !/^raid\b/.test(x.name) && (/(disk|disque|drive|laufwerk|festplatte|disco|dysk|hdd|ssd|bay|baie)\D*\d+/.test(x.name) || kernel(x.name)))
+      .sort((a, b) => (kernel(a.name) && kernel(b.name) ? kernel(a.name).localeCompare(kernel(b.name)) : lastNumber(a.name) - lastNumber(b.name)))
       .map((x) => pick(ofDevice(x.d)));
     if (!disks.length) {
       const groups = new Map();

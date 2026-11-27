@@ -313,13 +313,19 @@ function netDiskState(hass, entityId, anchorDevice) {
     }
     const num = Number(s.state);
     if (Number.isFinite(num)) {
-      if (a.device_class === "data_rate" || /iops|read|write|lecture|ecriture/.test(obj)) {
+      // What a disk has read or written since it was new is no activity
+      // (OMV's data_read, #143).
+      const counter = ["total", "total_increasing"].includes(a.state_class);
+      if (!counter && (a.device_class === "data_rate" || /iops|read|write|lecture|ecriture/.test(obj))) {
         if (num > 0) busy = true;
       } else if (/error|erreur|bad_?sector|reallocat/.test(obj) && num > 0) warn = true;
       continue;
     }
     if (/temp/.test(obj)) continue;
-    if (NET_FAIL_RE.test(v)) fail = true;
+    // OMV's SMART verdicts (#143): GOOD, BAD_ATTRIBUTE_NOW, BAD_SECTOR,
+    // BAD_STATUS; a bad attribute in the past is only to watch.
+    if (/in_the_past/.test(v)) warn = true;
+    else if (NET_FAIL_RE.test(v) || /^bad_/.test(v)) fail = true;
     else if (NET_WARN_RE.test(v)) warn = true;
   }
   return fail ? "fail" : warn ? "warn" : busy ? "busy" : sleep ? "sleep" : "ok";
@@ -716,7 +722,7 @@ function robotBatteryIcon(pct, charging) {
 // rests, and sometimes it backwashes the filter into the drain or runs to
 // keep the pipes from freezing. A chlorine dosing pump is an option: its tank
 // and its long tube only show when one is given.
-const POOL_ONLY_FIELDS = ["water_temperature_entity", "air_temperature_entity", "ph_entity", "redox_entity", "pool_layout", "shower_entity", "spot_count", "spot_random", "ph_target_entity", "redox_target_entity",
+const POOL_ONLY_FIELDS = ["water_temperature_entity", "air_temperature_entity", "ph_entity", "redox_entity", "pool_layout", "shower_entity", "spot_count", "spot_random", "cover_submerged", "pool_heat_pump_entity", "ph_target_entity", "redox_target_entity",
   "filtration_time_entity", "pressure_entity", "pressure_alert", "pool_mode_entity", "chlorine_pump_entity",
   "chlorine_level_entity", "backwash_entity", "frost_entity", "pool_alert_entity"];
 const POOL_NAME_RE = /pool.?pump|swimming.?pool|(^|[^a-z])pool([^a-z]|$)|piscine|pompe.?(de.?)?piscine|oklyn|neopool|iopool|flipr|hayward|pentair|filter.?pump|(^|[^a-z])(exo|intex)([^a-z]|$)|poolstation|(^|[^a-z])pisc|schwimmbad|poolpumpe|filterpumpe|bomba.?de.?(piscina|filtra)|piscina|pompa.?(piscina|filtraz)|zwembad|zwempomp|bassengpump|poolpump|pompa.?basen|basen|baz(e|\u00e9)n|\u6cf3\u6c60|\u0431\u0430\u0441\u0441\u0435\u0439\u043d/;
@@ -764,6 +770,20 @@ function poolOn(hass, entityId) {
   if (["on", "true", "1", "yes", "open", "running", "active"].includes(v)) return true;
   const n = Number(v);
   return Number.isFinite(n) && n > 0;
+}
+
+// The pool's heat pump (HACF #237): a switch, or a climate entity on when
+// its mode is not off, running unless it says it is idle.
+function poolHeatPumpOf(hass, entityId) {
+  const s = stateObj(hass, entityId);
+  if (!s) return { on: false, run: false };
+  if (domainOf(entityId) === "climate") {
+    const on = !["off", "unavailable", "unknown"].includes(String(s.state).toLowerCase());
+    const act = String((s.attributes || {}).hvac_action || "").toLowerCase();
+    return { on, run: on && !["idle", "off"].includes(act) };
+  }
+  const on = poolOn(hass, entityId);
+  return { on, run: on };
 }
 
 // The pool's cover (HACF #217): how far it is closed, 0 to 100, and whether

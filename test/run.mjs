@@ -10214,6 +10214,52 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     check('suggestion reseau : six disques', [sug.disk5_entity, sug.disk6_entity, sug.disk7_entity].join(' '), 'sensor.nas_disk_5_status sensor.nas_disk_6_status ');
   }
 
+  // OpenMediaVault (#143): one device per disk named after its kernel name,
+  // SMART verdicts, filesystems, an update entity.
+  {
+    const T = (v) => s(v, { device_class: 'temperature', unit_of_measurement: '°C' });
+    const states = {
+      'binary_sensor.nas_reachable': s('on', { device_class: 'connectivity', friendly_name: 'OMV (nas) Reachable' }),
+      'sensor.nas_cpu_utilization': pctS(4), 'sensor.nas_memory_usage': pctS(31), 'sensor.nas_cpu_temperature': T(45),
+      'sensor.nas_memory_total': s(7800, { unit_of_measurement: 'MB' }),
+      'sensor.nas_network_rx_eth0': s(1.2, { unit_of_measurement: 'Mbps' }), 'sensor.nas_network_tx_eth0': s(0.4, { unit_of_measurement: 'Mbps' }),
+      'update.nas_omv_system_update': s('on', { installed_version: '7.4.1', latest_version: '7.4.1 (+3 packages)' }),
+      'sensor.nas_disk_sda': T(33), 'sensor.nas_disk_smart_status_sda': s('GOOD'), 'sensor.nas_disk_free_percent_sda': pctS(40),
+      'sensor.nas_disk_data_read_sda': s(12.4, { unit_of_measurement: 'TB', state_class: 'total_increasing' }),
+      'sensor.nas_disk_sdb': T(35), 'sensor.nas_disk_smart_status_sdb': s('BAD_SECTOR'),
+      'sensor.nas_disk_sdc': T(34), 'sensor.nas_disk_smart_status_sdc': s('BAD_ATTRIBUTE_IN_THE_PAST'),
+      'sensor.nas_raid_md0': s('clean'),
+      'sensor.nas_filesystem_free_percent_data': pctS(42), 'sensor.nas_filesystem_data': pctS(58),
+    };
+    const ents = {};
+    for (const id of ['binary_sensor.nas_reachable', 'sensor.nas_cpu_utilization', 'sensor.nas_memory_usage', 'sensor.nas_cpu_temperature', 'sensor.nas_memory_total',
+      'sensor.nas_network_rx_eth0', 'sensor.nas_network_tx_eth0', 'update.nas_omv_system_update']) ents[id] = { device_id: 'hub' };
+    for (const d of ['sda', 'sdb', 'sdc']) for (const id of Object.keys(states)) if (id.endsWith(`_${d}`)) ents[id] = { device_id: d };
+    ents['sensor.nas_raid_md0'] = { device_id: 'md0' };
+    ents['sensor.nas_filesystem_free_percent_data'] = { device_id: 'fs' }; ents['sensor.nas_filesystem_data'] = { device_id: 'fs' };
+    const devices = { hub: { name: 'OMV (nas)' }, sda: { name: 'WDC WD40EFRX (data) [sda]', via_device_id: 'hub' }, sdb: { name: 'Disk sdb', via_device_id: 'hub' },
+      sdc: { name: 'Seagate ST4000 [sdc]', via_device_id: 'hub' }, md0: { name: 'RAID md0 (data)', via_device_id: 'hub' }, fs: { name: 'EXT4 (data)', via_device_id: 'hub' } };
+    const ed = new Editor();
+    ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'network', state_entity: 'binary_sensor.nas_reachable' });
+    ed.hass = netHass(states, ents, devices);
+    const sug = ed.events.at(-1)?.detail?.config || {};
+    check('143 : OMV, les disques par leur nom noyau', [sug.disk1_entity, sug.disk2_entity, sug.disk3_entity].join(' '),
+      'sensor.nas_disk_smart_status_sda sensor.nas_disk_smart_status_sdb sensor.nas_disk_smart_status_sdc');
+    check('143 : OMV, le RAID n est pas un disque', sug.disk4_entity, undefined);
+    check('143 : OMV, le systeme de fichiers utilise, pas le libre', sug.volume_entity, 'sensor.nas_filesystem_data');
+    check('143 : OMV, processeur et memoire', [sug.cpu_entity, sug.memory_entity].join(' '), 'sensor.nas_cpu_utilization sensor.nas_memory_usage');
+    check('143 : OMV, la mise a jour', sug.update_entity, 'update.nas_omv_system_update');
+    check('143 : OMV, le debit', [sug.download_entity, sug.upload_entity].join(' '), 'sensor.nas_network_rx_eth0 sensor.nas_network_tx_eth0');
+    const cfg = { appliance_type: 'network', state_entity: 'binary_sensor.nas_reachable', ...sug };
+    const h = netBuild(cfg, states, ents, devices);
+    check('143 : OMV, dessine en NAS', /nt-l-nas/.test(h), true);
+    check('143 : OMV, SMART GOOD = disque bon, lecture cumulee pas une activite', leds(h)[0], 'd-ok');
+    check('143 : OMV, BAD_SECTOR = disque en panne', leds(h)[1], 'd-fail');
+    check('143 : OMV, mauvais attribut par le passe = a surveiller', leds(h)[2], 'd-warn');
+    check('143 : OMV, la ligne de mise a jour sur un NAS', /7\.4\.1\s→\s7\.4\.1\s\(\+3\spackages\)/.test(infoLine(h, 'Update')), true);
+  }
+  check('143 : editeur, mise a jour proposee sur un NAS', markup(newEditor({ state_entity: 'binary_sensor.up', appliance_type: 'network', network_layout: 'nas' })).includes('data-toggle="update_entity"'), true);
+
   // The editor: the model, then the ports of a switch or the bays of a NAS.
   const edSw = markup(newEditor({ state_entity: 'binary_sensor.up', appliance_type: 'network', network_layout: 'switch' }));
   check('editeur reseau : le modele', /data-field="network_layout"/.test(edSw), true);
@@ -10590,6 +10636,24 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('224 : editeur, inverser l hivernage', edB.includes('data-field="winter_invert"'), true);
   check('224 : editeur, spots changeants', edB.includes('data-field="spot_random"'), true);
   check('224 : editeur, pas d inversion sans interrupteur', markup(newEditor({ state_entity: 'binary_sensor.p', appliance_type: 'pool_pump' })).includes('data-field="winter_invert"'), false);
+  // HACF #237: a submerged roller, unseen; the heat pump on the far deck.
+  check('237 : enrouleur visible par defaut', /class="pb-roller"/.test(B({}, {})), true);
+  check('237 : enrouleur immerge, pas de rouleau', /class="pb-roller"/.test(B({ cover_submerged: true }, {})), false);
+  check('237 : enrouleur immerge, la fosse sous l eau', /class="pb-pit"/.test(B({ cover_submerged: true }, {})), true);
+  check('237 : pas de PAC sans entite', /class="pb-hp/.test(B({}, {})), false);
+  check('237 : PAC dessinee', /class="pb-hp"/.test(B({ pool_heat_pump_entity: 'switch.pac' }, { 'switch.pac': s('off') })), true);
+  check('237 : PAC en marche, voyant vert', /class="pb-hp pb-hp-on"[\s\S]*fill="#00e676"/.test(B({ pool_heat_pump_entity: 'switch.pac' }, { 'switch.pac': s('on') })), true);
+  check('237 : PAC en marche, le ventilateur tourne', /class="pb-hp-fan">[^]*?animateTransform/.test(B({ pool_heat_pump_entity: 'switch.pac' }, { 'switch.pac': s('on') })), true);
+  check('237 : PAC arretee, ventilateur fixe', /class="pb-hp-fan">(?:(?!<\/g>).)*animateTransform/.test(B({ pool_heat_pump_entity: 'switch.pac' }, { 'switch.pac': s('off') })), false);
+  check('237 : PAC, ligne Marche/Arret qui la commande', /data-line-toggle="switch\.pac"[^>]*title="Heat pump"/.test(B({ pool_heat_pump_entity: 'switch.pac' }, { 'switch.pac': s('off') })), true);
+  check('237 : PAC en francais', infoLine(render({ ...P, pool_layout: 'basin', language: 'fr', pool_heat_pump_entity: 'switch.pac' }, { 'binary_sensor.p': s('on'), 'switch.pac': s('on') }), 'PAC'), 'Marche');
+  check('237 : PAC climate au repos, ventilateur fixe', /class="pb-hp-fan">(?:(?!<\/g>).)*animateTransform/.test(B({ pool_heat_pump_entity: 'climate.pac' }, { 'climate.pac': s('heat', { hvac_action: 'idle' }) })), false);
+  check('237 : PAC climate en chauffe, allumee', /pb-hp-on/.test(B({ pool_heat_pump_entity: 'climate.pac' }, { 'climate.pac': s('heat', { hvac_action: 'heating' }) })), true);
+  check('237 : PAC sur la pompe classique, pas dessinee', /pb-hp/.test(render({ ...P, pool_heat_pump_entity: 'switch.pac' }, { 'binary_sensor.p': s('on'), 'switch.pac': s('on') })), false);
+  const ed237 = markup(newEditor({ state_entity: 'binary_sensor.p', appliance_type: 'pool_pump', pool_layout: 'basin' }));
+  check('237 : editeur, enrouleur immerge', ed237.includes('data-field="cover_submerged"'), true);
+  check('237 : editeur, PAC', ed237.includes('data-toggle="pool_heat_pump_entity"'), true);
+  check('237 : editeur, pas de PAC sur la pompe seule', markup(newEditor({ state_entity: 'binary_sensor.p', appliance_type: 'pool_pump' })).includes('pool_heat_pump_entity'), false);
   // HACF #226: no snow falling when asked, active wintering, the pump under the cover, UV.
   check('231 : les spots colorent le volet ferme', /class="pb-cglow"/.test(B({ cover_entity: 'cover.v', light_entity: 'switch.l' }, { 'cover.v': s('closed', { current_position: 0 }), 'switch.l': s('on') })), true);
   check('231 : volet ouvert, pas de lueur sur le volet', /pb-cglow/.test(B({ cover_entity: 'cover.v', light_entity: 'switch.l' }, { 'cover.v': s('open', { current_position: 100 }), 'switch.l': s('on') })), false);

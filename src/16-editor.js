@@ -155,8 +155,7 @@ const SECTIONS = [
     when: (c) => netLayoutOf(c, null) === "router" },
   { field: "guest_wifi_entity", types: ["network"], labelKey: "net_guest_wifi", includeDomains: ["switch", "binary_sensor", "input_boolean"],
     when: (c) => netLayoutOf(c, null) === "router" },
-  { field: "update_entity", types: ["network"], labelKey: "net_update", includeDomains: ["update", "binary_sensor"],
-    when: (c) => netLayoutOf(c, null) === "router" },
+  { field: "update_entity", types: ["network"], labelKey: "net_update", includeDomains: ["update", "binary_sensor"] },
   { field: "disk1_entity", types: ["network"], labelKey: "section_net_disk1", includeDomains: ["sensor", "binary_sensor"] },
   { field: "disk2_entity", types: ["network"], labelKey: "section_net_disk2", includeDomains: ["sensor", "binary_sensor"] },
   { field: "disk3_entity", types: ["network"], labelKey: "section_net_disk3", includeDomains: ["sensor", "binary_sensor"] },
@@ -177,6 +176,8 @@ const SECTIONS = [
   { field: "cover_entity", types: ["pool_pump"], labelKey: "section_pool_cover", includeDomains: ["cover", "binary_sensor", "sensor", "number", "input_number"] },
   { field: "uv_entity", types: ["pool_pump"], labelKey: "section_uv", includeDomains: ["sensor", "number", "input_number"] },
   { field: "shower_entity", types: ["pool_pump"], labelKey: "section_shower", includeDomains: ["valve", "switch", "binary_sensor", "input_boolean"] },
+  { field: "pool_heat_pump_entity", types: ["pool_pump"], labelKey: "section_pool_heat_pump", includeDomains: ["switch", "climate", "binary_sensor", "input_boolean", "light"],
+    when: (c) => c.pool_layout === "basin" },
   { field: "filtration_time_entity", types: ["pool_pump"], labelKey: "section_filtration_time", includeDomains: ["sensor"] },
   { field: "pressure_entity", types: ["pool_pump"], labelKey: "section_filter_pressure", includeDomains: ["sensor"], extra: (c) =>
       c._row("pool_pressure_alert", "pressure_alert", { placeholder: String(POOL_PRESSURE_ALERT) }) },
@@ -1919,7 +1920,8 @@ class ApplianceCardEditor extends HTMLElement {
         ${this._type === "pool_pump" ? this._row("section_screen_layout", "pool_layout", { type: "select", value: this._config.pool_layout || "pump",
           options: [{ value: "pump", label: t(hass, "layout_pool_pump") }, { value: "basin", label: t(hass, "layout_pool_basin") }] })
           + (this._config.pool_layout === "basin" ? this._row("pool_spots", "spot_count", { type: "range", min: 1, max: 6, step: 1, default: 3 })
-            + this._row("pool_spots_random", "spot_random", { type: "checkbox" }) : "") : ""}
+            + this._row("pool_spots_random", "spot_random", { type: "checkbox" })
+            + this._row("pool_cover_submerged", "cover_submerged", { type: "checkbox" }) : "") : ""}
         ${this._type === "water_pump" ? this._row("section_screen_layout", "pump_layout", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(PUMP_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_pump_${v}`) }))),

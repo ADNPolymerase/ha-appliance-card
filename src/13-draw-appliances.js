@@ -1145,7 +1145,9 @@ const POOL_SVG = `<svg class="pl-pp" viewBox="0 -6 96 108">
 // spots (count), light ("off", a colour, "random"), night, shower (null when
 // there is none, else open or not), pump, winter, active (active wintering:
 // no tarp nor snow, the pump still runs, HACF #226), cover (a cover entity
-// gives the position, else winter shuts it).
+// gives the position, else winter shuts it), submerged (the roller is under
+// the water at the end, unseen, HACF #237), hp (a heat pump in the far left
+// corner, away from the water, null when there is none, else { on, run }, HACF #237).
 function poolBasinSvg(b) {
   const FAR = { y: 27, x0: 32, x1: 102 }, NEAR = { y: 66, x0: 23, x1: 93 };
   const lerp = (a, c, t) => a + (c - a) * t;
@@ -1172,9 +1174,9 @@ function poolBasinSvg(b) {
     <clipPath id="pb-pool"><polygon points="${quad(at(0, 0), at(1, 0), at(1, 1), at(0, 1))}"/></clipPath>
   </defs>`;
   // Deck, in the same oblique projection: parallel sides stay parallel.
-  const L = hasShower ? -0.24 : -0.12;
-  h += `<polygon points="${quad(at(L, -0.2), at(1.13, -0.2), at(1.13, 1.22), at(L, 1.22))}" fill="url(#pb-deck)" stroke="#c9bfa8" stroke-width=".6"/>`;
-  const f0 = at(L, 1.22), f1 = at(1.13, 1.22), r0 = at(1.13, -0.2);
+  const L = hasShower ? -0.24 : -0.12, B = -0.2;
+  h += `<polygon points="${quad(at(L, B), at(1.13, B), at(1.13, 1.22), at(L, 1.22))}" fill="url(#pb-deck)" stroke="#c9bfa8" stroke-width=".6"/>`;
+  const f0 = at(L, 1.22), f1 = at(1.13, 1.22), r0 = at(1.13, B);
   h += `<polygon points="${quad(f0, f1, [f1[0], f1[1] + 4], [f0[0], f0[1] + 4])}" fill="#c2b597"/>`;
   h += `<polygon points="${quad(r0, f1, [f1[0], f1[1] + 4], [r0[0], r0[1] + 4])}" fill="#b3a585"/>`;
   // The basin as a box: tiled walls and floor seen through the water.
@@ -1213,6 +1215,9 @@ function poolBasinSvg(b) {
     const t1 = Math.min(1, t0 + slat);
     h += `<polygon points="${quad(atW(t0, 0), atW(t1, 0), atW(t1, 1), atW(t0, 1))}" fill="#e6ebee" stroke="#9fb0b9" stroke-width=".3"/><path d="M${pt(atW(t0 + (t1 - t0) * 0.35, 0))} L${pt(atW(t0 + (t1 - t0) * 0.35, 1))}" stroke="#fff" stroke-width=".6" opacity=".8"/>`;
   }
+  // A submerged roller sits in its pit under the water at the end: only the
+  // shadow of the pit shows through the water.
+  if (b.submerged) h += `<polygon class="pb-pit" points="${quad(atW(0.965, 0), atW(1, 0), atW(1, 1), atW(0.965, 1))}" fill="rgba(0,30,60,${night ? .35 : .2})"/>`;
   // Under a shut cover the pump shows as the slats heaving on the water
   // running beneath them (HACF #226), and the spots light it from beneath in
   // their colours (HACF #231).
@@ -1239,9 +1244,27 @@ function poolBasinSvg(b) {
   const roll = 3.2 + 2 * (1 - p), up = 3;
   const lift = (q) => [q[0], q[1] - up];
   const e0 = lift(at(1.0, 0.04)), e1 = lift(at(1.0, 1.03));
-  for (const s of [0.0, 1.06]) { const [x, y] = at(1.0, s); h += `<rect x="${(x - 1.6).toFixed(2)}" y="${(y - up - 0.5).toFixed(2)}" width="3.2" height="${(up + 3).toFixed(2)}" rx=".6" fill="#90a4ae"/>`; }
-  h += `<path d="M${pt(e0)} L${pt(e1)}" stroke="#607d8b" stroke-width="${(roll + 0.9).toFixed(2)}" stroke-linecap="round"/><path d="M${pt(e0)} L${pt(e1)}" stroke="#cfd8dc" stroke-width="${roll.toFixed(2)}" stroke-linecap="round"/>`;
-  h += `<path d="M${(e0[0] - roll * .2).toFixed(2)} ${(e0[1] - roll * .08).toFixed(2)} L${(e1[0] - roll * .2).toFixed(2)} ${(e1[1] - roll * .08).toFixed(2)}" stroke="#f5f7f8" stroke-width="${(roll * 0.25).toFixed(2)}" stroke-linecap="round"${b.moving ? ` stroke-dasharray="2 2"><animate attributeName="stroke-dashoffset" values="0;4" dur=".5s" repeatCount="indefinite"/></path>` : "/>"}`;
+  if (!b.submerged) {
+    for (const s of [0.0, 1.06]) { const [x, y] = at(1.0, s); h += `<rect x="${(x - 1.6).toFixed(2)}" y="${(y - up - 0.5).toFixed(2)}" width="3.2" height="${(up + 3).toFixed(2)}" rx=".6" fill="#90a4ae"/>`; }
+    h += `<path class="pb-roller" d="M${pt(e0)} L${pt(e1)}" stroke="#607d8b" stroke-width="${(roll + 0.9).toFixed(2)}" stroke-linecap="round"/><path d="M${pt(e0)} L${pt(e1)}" stroke="#cfd8dc" stroke-width="${roll.toFixed(2)}" stroke-linecap="round"/>`;
+    h += `<path d="M${(e0[0] - roll * .2).toFixed(2)} ${(e0[1] - roll * .08).toFixed(2)} L${(e1[0] - roll * .2).toFixed(2)} ${(e1[1] - roll * .08).toFixed(2)}" stroke="#f5f7f8" stroke-width="${(roll * 0.25).toFixed(2)}" stroke-linecap="round"${b.moving ? ` stroke-dasharray="2 2"><animate attributeName="stroke-dashoffset" values="0;4" dur=".5s" repeatCount="indefinite"/></path>` : "/>"}`;
+  }
+  // The heat pump in the far left corner, away from the water: its fan
+  // turns while it runs, its light is green while it is on.
+  if (b.hp) {
+    const x = 15, y = 14, w = 11, hh = 7.6, dx = 0.9, dy = -1.2, cx = x + 3.9, cy = y + hh / 2, f = (v) => v.toFixed(2);
+    h += `<g class="pb-hp${b.hp.on ? " pb-hp-on" : ""}"><ellipse cx="${f(x + w / 2 + 0.6)}" cy="${f(y + hh + 0.3)}" rx="7" ry="1" fill="rgba(0,0,0,.16)"/>`;
+    h += `<polygon points="${f(x)},${f(y)} ${f(x + w)},${f(y)} ${f(x + w + dx)},${f(y + dy)} ${f(x + dx)},${f(y + dy)}" fill="#fafafa" stroke="#b0bec5" stroke-width=".3"/>`;
+    h += `<polygon points="${f(x + w)},${f(y)} ${f(x + w + dx)},${f(y + dy)} ${f(x + w + dx)},${f(y + hh + dy)} ${f(x + w)},${f(y + hh)}" fill="#b0bec5"/>`;
+    h += `<rect x="${f(x)}" y="${f(y)}" width="${w}" height="${hh}" rx=".6" fill="#eceff1" stroke="#90a4ae" stroke-width=".4"/>`;
+    h += `<circle cx="${f(cx)}" cy="${f(cy)}" r="3.2" fill="#37474f"/>`;
+    h += `<g class="pb-hp-fan">${[0, 120, 240].map((a) => `<path d="M${f(cx)} ${f(cy)} q1.7 -.7 2.6 .6 q-1.2 1 -2.6 -.6" fill="#90a4ae" transform="rotate(${a} ${f(cx)} ${f(cy)})"/>`).join("")}${b.hp.run ? `<animateTransform attributeName="transform" type="rotate" from="0 ${f(cx)} ${f(cy)}" to="360 ${f(cx)} ${f(cy)}" dur=".9s" repeatCount="indefinite"/>` : ""}</g>`;
+    h += `<circle cx="${f(cx)}" cy="${f(cy)}" r="3.2" fill="none" stroke="#cfd8dc" stroke-width=".4"/><circle cx="${f(cx)}" cy="${f(cy)}" r="1.8" fill="none" stroke="#cfd8dc" stroke-width=".3"/><circle cx="${f(cx)}" cy="${f(cy)}" r=".5" fill="#cfd8dc"/>`;
+    for (let k = 0; k < 4; k++) h += `<path d="M${f(x + 8)} ${f(y + 3.1 + k * 1.2)} H${f(x + 10.1)}" stroke="#90a4ae" stroke-width=".4"/>`;
+    h += `<rect class="pb-hp-led" x="${f(x + 8)}" y="${f(y + 1)}" width="2.1" height="1.2" rx=".3" fill="${b.hp.on ? "#00e676" : "#607d8b"}"/>`;
+    if (tarp) h += `<path d="M${f(x - 0.3)} ${f(y + 0.1)} L${f(x + dx + 0.4)} ${f(y + dy - 0.3)} L${f(x + w + dx)} ${f(y + dy - 0.3)} L${f(x + w + 0.3)} ${f(y + 0.1)} Z" fill="#fff"/>`;
+    h += `</g>`;
+  }
   // The solar shower, on the deck at the near left.
   if (hasShower) {
     const [bx, by] = at(-0.17, 1.05);
@@ -1253,7 +1276,7 @@ function poolBasinSvg(b) {
   }
   if (tarp) {
     const a = at(1, 0.04), c = at(1, 1.03);
-    h += `<path d="M${a[0].toFixed(2)} ${(a[1] - up - 2.2).toFixed(2)} L${c[0].toFixed(2)} ${(c[1] - up - 2.2).toFixed(2)}" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".9"/>`;
+    if (!b.submerged) h += `<path d="M${a[0].toFixed(2)} ${(a[1] - up - 2.2).toFixed(2)} L${c[0].toFixed(2)} ${(c[1] - up - 2.2).toFixed(2)}" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".9"/>`;
     if (hasShower) { const [bx, by] = at(-0.17, 1.05); h += `<ellipse cx="${(bx + 8.5).toFixed(2)}" cy="${(by - 44).toFixed(2)}" rx="3.4" ry="1.3" fill="#fff"/><ellipse cx="${bx.toFixed(2)}" cy="${(by - 30.6).toFixed(2)}" rx="3" ry="1" fill="#fff"/>`; }
     for (let k = 0; k < 8; k++) {
       const x = (k * 37) % 118 + 1, d = 3 + (k % 5), y0 = -16 - (k * 13) % 30;

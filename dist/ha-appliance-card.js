@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "5.5.0";
+const CARD_VERSION = "5.6.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -189,7 +189,7 @@ const T = {
     type_cover: "Shutter, blind, pergola or awning", layout_cov_shutter: "Roller shutter", layout_cov_blind: "Roller blind", layout_cov_venetian: "Venetian blind", layout_cov_raffstore: "Exterior venetian blind", layout_cov_pergola: "Bioclimatic pergola", layout_cov_awning: "Awning", layout_cov_curtain: "Curtain", curtain_opening: "Opens", curtain_center: "From the middle", curtain_left: "To the left", curtain_right: "To the right", cov_open: "Open", cov_closed: "Closed", cov_open_at: "Open {pct} %", cov_opening: "Opening", cov_closing: "Closing", cov_deployed: "Extended", cov_retracted: "Retracted", cov_deployed_at: "Extended {pct} %", cov_deploying: "Extending", cov_retracting: "Retracting", cov_louvers_open: "Louvers open", cov_louvers_closed: "Louvers closed", cov_louvers_at: "Louvers {pct} %", cov_louvers_opening: "Opening the louvers", cov_louvers_closing: "Closing the louvers", cov_position: "Position", cov_tilt: "Slats", cov_light: "Light", cov_open_btn: "Open", cov_close_btn: "Close", cover_color: "Colour (apron, slats, frame)", fabric_color: "Fabric colour", fabric_stripes: "Striped fabric", cov_c_white: "White", cov_c_grey: "Grey", cov_c_anthracite: "Anthracite", cov_c_black: "Black", cov_c_beige: "Beige", cov_c_wood: "Wood", cov_c_brown: "Brown", cov_f_ecru: "Ecru", cov_f_white: "White", cov_f_linen: "Linen", cov_f_grey: "Grey", cov_f_anthracite: "Anthracite", cov_f_blue: "Blue", cov_f_petrol: "Petrol blue", cov_f_terracotta: "Terracotta", cov_f_green: "Green", layout_ths_co2_eink: "CO\u2082 monitor, e-ink (Aranet4)", layout_ths_co2_box: "CO\u2082 monitor, LED bar (AirGradient)", layout_ths_co2_netatmo: "Netatmo indoor station", layout_ths_co2_netatmo_module: "Netatmo additional indoor module", layout_ths_switchbot_co2: "SwitchBot Meter Pro CO\u2082", layout_ths_switchbot_pro: "SwitchBot Meter Pro", layout_ths_switchbot_meter: "SwitchBot Meter", layout_ths_switchbot_plus: "SwitchBot Meter Plus", layout_ths_switchbot_outdoor: "SwitchBot Indoor/Outdoor Meter", ths_co2: "CO\u2082", co2_good: "Air is fine", co2_ventilate: "Ventilation advised", co2_poor: "Ventilate now", co2_warning: "Orange from (ppm)", co2_alert: "Red from (ppm)", netatmo_color: "Netatmo colour", ntm_aluminium: "Aluminium", ntm_sand: "Sand", ntm_mint: "Mint", ntm_graphite: "Graphite",
     type_fingerbot: "Finger bot (Fingerbot, SwitchBot Bot)", layout_fb_plus: "Fingerbot Plus (Tuya, Adaprox, MOES)", layout_fb_switchbot: "SwitchBot Bot", layout_fb_classic: "Fingerbot, first model", fingerbot_color: "Colour", fb_ready: "Ready", fb_pressing: "Pressing", fb_held: "Held down", fb_released: "Released", fb_charging: "Charging", fb_charged: "Charged", fb_low: "Low battery", fb_press: "Press", fb_charge: "Charge", fb_mode: "Mode", fb_m_click: "Press", fb_m_switch: "Switch", fb_m_program: "Program", fb_lower: "Down position", fb_upper: "Up position", fb_sustain: "Hold time", fb_reverse: "Reversed", fb_touch: "Touch button", fb_yes: "Yes", fb_no: "No", fb_last: "Last press",
     type_valve: "Shut-off valve (Aqara T1, Tuya)", layout_vlv_aqara: "Aqara Valve Controller T1", layout_vlv_tuya: "Tuya valve controller", vlv_open: "Open", vlv_closed: "Closed", vlv_opening: "Opening", vlv_closing: "Closing", valve_handle_color: "Handle colour", vlv_h_red: "Red", vlv_h_blue: "Blue", vlv_h_yellow: "Yellow", vlv_h_black: "Black",
-    type_food_processor: "Thermomix", layout_pool_pump: "Pump and filter", layout_pool_basin: "Pool", pool_spots: "Number of spots", pool_spots_random: "Colour-changing spots", winter_invert: "Invert (on means in season, not winter)", winter_active: "Active wintering (no tarp, the pump runs)", section_uv: "UV index", section_pool_cover: "Pool cover", section_shower: "Solar shower", section_ph_target: "pH setpoint", section_redox_target: "RedOx setpoint", pool_line_cover: "Cover", pool_line_shower: "Shower", pool_cover_open: "Open", pool_cover_closed: "Closed", pool_cover_part: "{p} % open", pool_cover_opening: "Opening", pool_cover_closing: "Closing", pool_cover_tarp: "Closed, winter tarp", pool_shower_on: "Running", pool_shower_off: "Off", type_frozen_treat: "Ice cream & slush maker", ft_churning: "Churning", ft_freezing: "Freezing", ft_done: "Done", ft_ready_serve: "Ready to serve", ft_flavor: "Flavour", ft_fl_vanilla: "Vanilla", ft_fl_strawberry: "Strawberry", ft_fl_chocolate: "Chocolate", ft_fl_pistachio: "Pistachio", ft_fl_mango: "Mango", ft_fl_blue_raspberry: "Blue raspberry", type_gas_fireplace: "Gas fireplace", gf_burning: "Burning", gf_pilot_on: "Pilot on", gf_flame_height: "Flame height", gf_flame: "Flame sensor", gf_pilot: "Pilot light", gf_on: "On", gf_error: "Error", photo_label: "Your own photo", photo_upload: "Upload a photo", photo_remove: "Remove the photo", photo_hint: "Drag the photo to frame it, then put the dashed frame over the window: the cover moves inside it. Take the photo with the cover open.", photo_reset: "Frame again", photo_uploading: "Uploading\u2026", photo_error: "Couldn't load the photo", photo_add_area: "Add an area", photo_remove_area: "Remove this area", door_style_gate: "Swing gate", door_style_sliding_gate: "Sliding gate", det_gate_leaves: "Gate leaves", gate_leaves_1: "One leaf", gate_leaves_2: "Two leaves", det_gate_side: "Opens to", gate_side_left: "Left", gate_side_right: "Right", photo_hint_door: "Drag the photo to frame it, then put the dashed frame on the door, the window or the gate: it opens inside it. Take the photo shut. A garage door or a gate: take it open, it is drawn over the photo.", photo_hint_laundry: "Drag the photo to frame it, then put the dashed frame on the porthole: the drum turns inside it. Take the photo door shut, machine off.", photo_hint_screen: "Drag the photo to frame it, then put the dashed frame on the screen: the picture shows inside it. Take the photo screen off.", layout_fp_tm31: "Thermomix TM31", layout_fp_tm6: "Thermomix TM6", fp_off: "Off", fp_ready: "Ready", fp_mixing: "Mixing", fp_cooking: "Cooking",
+    type_food_processor: "Thermomix", layout_pool_pump: "Pump and filter", layout_pool_basin: "Pool", pool_spots: "Number of spots", pool_spots_random: "Colour-changing spots", winter_invert: "Invert (on means in season, not winter)", winter_active: "Active wintering (no tarp, the pump runs)", section_uv: "UV index", section_pool_cover: "Pool cover", section_shower: "Solar shower", section_ph_target: "pH setpoint", section_redox_target: "RedOx setpoint", pool_line_cover: "Cover", pool_line_shower: "Shower", pool_cover_open: "Open", pool_cover_closed: "Closed", pool_cover_part: "{p} % open", pool_cover_opening: "Opening", pool_cover_closing: "Closing", pool_cover_tarp: "Closed, winter tarp", pool_shower_on: "Running", pool_cover_submerged: "Submerged roller", section_pool_heat_pump: "Pool heat pump", pool_line_heat_pump: "Heat pump", pool_hp_on: "Running", pool_hp_off: "Off", pool_shower_off: "Off", type_frozen_treat: "Ice cream & slush maker", ft_churning: "Churning", ft_freezing: "Freezing", ft_done: "Done", ft_ready_serve: "Ready to serve", ft_flavor: "Flavour", ft_fl_vanilla: "Vanilla", ft_fl_strawberry: "Strawberry", ft_fl_chocolate: "Chocolate", ft_fl_pistachio: "Pistachio", ft_fl_mango: "Mango", ft_fl_blue_raspberry: "Blue raspberry", type_gas_fireplace: "Gas fireplace", gf_burning: "Burning", gf_pilot_on: "Pilot on", gf_flame_height: "Flame height", gf_flame: "Flame sensor", gf_pilot: "Pilot light", gf_on: "On", gf_error: "Error", photo_label: "Your own photo", photo_upload: "Upload a photo", photo_remove: "Remove the photo", photo_hint: "Drag the photo to frame it, then put the dashed frame over the window: the cover moves inside it. Take the photo with the cover open.", photo_reset: "Frame again", photo_uploading: "Uploading\u2026", photo_error: "Couldn't load the photo", photo_add_area: "Add an area", photo_remove_area: "Remove this area", door_style_gate: "Swing gate", door_style_sliding_gate: "Sliding gate", det_gate_leaves: "Gate leaves", gate_leaves_1: "One leaf", gate_leaves_2: "Two leaves", det_gate_side: "Opens to", gate_side_left: "Left", gate_side_right: "Right", photo_hint_door: "Drag the photo to frame it, then put the dashed frame on the door, the window or the gate: it opens inside it. Take the photo shut. A garage door or a gate: take it open, it is drawn over the photo.", photo_hint_laundry: "Drag the photo to frame it, then put the dashed frame on the porthole: the drum turns inside it. Take the photo door shut, machine off.", photo_hint_screen: "Drag the photo to frame it, then put the dashed frame on the screen: the picture shows inside it. Take the photo screen off.", layout_fp_tm31: "Thermomix TM31", layout_fp_tm6: "Thermomix TM6", fp_off: "Off", fp_ready: "Ready", fp_mixing: "Mixing", fp_cooking: "Cooking",
     det_tampered: "Tampered", det_sec_tamper: "Tamper",
     cam_person: "Person detected", cam_vehicle: "Vehicle detected", cam_animal: "Animal detected", cam_siren: "Siren", cam_line_spotlight: "Spotlight", cam_line_tracking: "Auto tracking", cam_v_lit: "On", cam_v_on: "On", cam_v_off: "Off", cam_sec_person: "Person detection", cam_sec_vehicle: "Vehicle detection", cam_sec_animal: "Animal detection", cam_sec_pan: "Pan position", cam_sec_tilt: "Tilt position",
     valve_fluid: "Fluid", vlv_f_water: "Water", vlv_f_gas: "Gas",
@@ -3367,7 +3367,11 @@ function netSuggest(hass, cfg) {
   const cpu = (id) => pct(id) && /cpu|processor|processeur|prozessor/.test(words(id)) && !/user|utilisateur|system|iowait|temp|freq/.test(words(id));
   set("cpu_entity", pool.find((id) => cpu(id) && /total/.test(words(id))) || pool.find(cpu));
   set("memory_entity", pool.find((id) => pct(id) && /memory|memoire|(^|[\s_])(ram|mem)([\s_]|$)|speicher/.test(words(id)) && !/swap|echange/.test(words(id))));
-  set("volume_entity", pool.find((id) => pct(id) && /volume|pool|storage|stockage|disk_use|array/.test(words(id)) && !/memory|memoire|swap|cpu/.test(words(id))));
+  // A volume, a pool or a filesystem's use, not what is free on it (OMV
+  // gives both, #143), and a disk's own only when nothing else says it.
+  const volume = (id) => pct(id) && /volume|pool|storage|stockage|disk_use|array|file.?system|systeme.?de.?fichiers|dateisystem/.test(words(id))
+    && !/memory|memoire|swap|cpu|free|libre|frei|wear|usure/.test(words(id));
+  set("volume_entity", pool.find((id) => volume(id) && !/disk|disque/.test(words(id))) || pool.find(volume));
   const rate = (id) => sensor(id) && notDisk(id) && (attr(id).device_class === "data_rate" || NET_RATE_BITS[attr(id).unit_of_measurement] !== undefined)
     && !/read|write|lecture|ecriture|iops/.test(words(id));
   set("download_entity", pool.find((id) => rate(id) && /download|telecharg|(^|[\s_])rx|receiv|recu|ingress|(^|_)in(_|$)/.test(words(id))));
@@ -3391,10 +3395,14 @@ function netSuggest(hass, cfg) {
     const pick = (ids) => ids.find((id) => sensor(id) && !Number.isFinite(Number(hass.states[id].state)) && !/temp/.test(id))
       || ids.find((id) => sensor(id) && attr(id).device_class === "temperature") || ids[0];
     const lastNumber = (str) => { const m = String(str).match(/(\d+)\D*$/); return m ? parseInt(m[1], 10) : 0; };
+    // OpenMediaVault names a disk's device after its maker and model, its
+    // kernel name in brackets ("WDC WD40EFRX (data) [sda]"), or "Disk sda"
+    // (#143); a RAID array is no disk.
+    const kernel = (name) => { const m = name.match(/\[(sd[a-z]+|hd[a-z]+|vd[a-z]+|nvme\d+n\d+|mmcblk\d+)\]\s*$|^disk\s+(sd[a-z]+|hd[a-z]+|vd[a-z]+|nvme\d+n\d+|mmcblk\d+)$/); return m ? m[1] || m[2] : ""; };
     let disks = children
       .map((d) => ({ d, name: stripAccents(String(hass.devices[d].name_by_user || hass.devices[d].name || "").toLowerCase()) }))
-      .filter((x) => /(disk|disque|drive|laufwerk|festplatte|disco|dysk|hdd|ssd|bay|baie)\D*\d+/.test(x.name))
-      .sort((a, b) => lastNumber(a.name) - lastNumber(b.name))
+      .filter((x) => !/^raid\b/.test(x.name) && (/(disk|disque|drive|laufwerk|festplatte|disco|dysk|hdd|ssd|bay|baie)\D*\d+/.test(x.name) || kernel(x.name)))
+      .sort((a, b) => (kernel(a.name) && kernel(b.name) ? kernel(a.name).localeCompare(kernel(b.name)) : lastNumber(a.name) - lastNumber(b.name)))
       .map((x) => pick(ofDevice(x.d)));
     if (!disks.length) {
       const groups = new Map();
@@ -4609,13 +4617,19 @@ function netDiskState(hass, entityId, anchorDevice) {
     }
     const num = Number(s.state);
     if (Number.isFinite(num)) {
-      if (a.device_class === "data_rate" || /iops|read|write|lecture|ecriture/.test(obj)) {
+      // What a disk has read or written since it was new is no activity
+      // (OMV's data_read, #143).
+      const counter = ["total", "total_increasing"].includes(a.state_class);
+      if (!counter && (a.device_class === "data_rate" || /iops|read|write|lecture|ecriture/.test(obj))) {
         if (num > 0) busy = true;
       } else if (/error|erreur|bad_?sector|reallocat/.test(obj) && num > 0) warn = true;
       continue;
     }
     if (/temp/.test(obj)) continue;
-    if (NET_FAIL_RE.test(v)) fail = true;
+    // OMV's SMART verdicts (#143): GOOD, BAD_ATTRIBUTE_NOW, BAD_SECTOR,
+    // BAD_STATUS; a bad attribute in the past is only to watch.
+    if (/in_the_past/.test(v)) warn = true;
+    else if (NET_FAIL_RE.test(v) || /^bad_/.test(v)) fail = true;
     else if (NET_WARN_RE.test(v)) warn = true;
   }
   return fail ? "fail" : warn ? "warn" : busy ? "busy" : sleep ? "sleep" : "ok";
@@ -5012,7 +5026,7 @@ function robotBatteryIcon(pct, charging) {
 // rests, and sometimes it backwashes the filter into the drain or runs to
 // keep the pipes from freezing. A chlorine dosing pump is an option: its tank
 // and its long tube only show when one is given.
-const POOL_ONLY_FIELDS = ["water_temperature_entity", "air_temperature_entity", "ph_entity", "redox_entity", "pool_layout", "shower_entity", "spot_count", "spot_random", "ph_target_entity", "redox_target_entity",
+const POOL_ONLY_FIELDS = ["water_temperature_entity", "air_temperature_entity", "ph_entity", "redox_entity", "pool_layout", "shower_entity", "spot_count", "spot_random", "cover_submerged", "pool_heat_pump_entity", "ph_target_entity", "redox_target_entity",
   "filtration_time_entity", "pressure_entity", "pressure_alert", "pool_mode_entity", "chlorine_pump_entity",
   "chlorine_level_entity", "backwash_entity", "frost_entity", "pool_alert_entity"];
 const POOL_NAME_RE = /pool.?pump|swimming.?pool|(^|[^a-z])pool([^a-z]|$)|piscine|pompe.?(de.?)?piscine|oklyn|neopool|iopool|flipr|hayward|pentair|filter.?pump|(^|[^a-z])(exo|intex)([^a-z]|$)|poolstation|(^|[^a-z])pisc|schwimmbad|poolpumpe|filterpumpe|bomba.?de.?(piscina|filtra)|piscina|pompa.?(piscina|filtraz)|zwembad|zwempomp|bassengpump|poolpump|pompa.?basen|basen|baz(e|\u00e9)n|\u6cf3\u6c60|\u0431\u0430\u0441\u0441\u0435\u0439\u043d/;
@@ -5060,6 +5074,20 @@ function poolOn(hass, entityId) {
   if (["on", "true", "1", "yes", "open", "running", "active"].includes(v)) return true;
   const n = Number(v);
   return Number.isFinite(n) && n > 0;
+}
+
+// The pool's heat pump (HACF #237): a switch, or a climate entity on when
+// its mode is not off, running unless it says it is idle.
+function poolHeatPumpOf(hass, entityId) {
+  const s = stateObj(hass, entityId);
+  if (!s) return { on: false, run: false };
+  if (domainOf(entityId) === "climate") {
+    const on = !["off", "unavailable", "unknown"].includes(String(s.state).toLowerCase());
+    const act = String((s.attributes || {}).hvac_action || "").toLowerCase();
+    return { on, run: on && !["idle", "off"].includes(act) };
+  }
+  const on = poolOn(hass, entityId);
+  return { on, run: on };
 }
 
 // The pool's cover (HACF #217): how far it is closed, 0 to 100, and whether
@@ -12774,8 +12802,9 @@ class ApplianceCard extends HTMLElement {
         else if (isFinite(total) && total > drawn) lit = Math.round((ports * drawn) / total);
         else lit = Math.min(drawn, Math.max(0, Math.round(ports)));
       }
-      // A router's firmware update and its guest Wi-Fi (#142).
-      const upd = layout === "router" && cfg.update_entity ? stateObj(hass, cfg.update_entity) : null;
+      // A firmware or system update (#142, OMV's #143) and a router's guest
+      // Wi-Fi.
+      const upd = cfg.update_entity ? stateObj(hass, cfg.update_entity) : null;
       const update = !!upd && String(upd.state).toLowerCase() === "on";
       if (live && update) {
         const a = upd.attributes || {};
@@ -12868,6 +12897,14 @@ class ApplianceCard extends HTMLElement {
           extraLines.push({ key: "pool_shower", icon: "mdi:shower-head", label: t(hass, "pool_line_shower"), entity: cfg.shower_entity, value: t(hass, showerOn ? "pool_shower_on" : "pool_shower_off"),
             toggle: entityUsable(hass, cfg.shower_entity) && ["switch", "input_boolean", "valve", "light"].includes(domainOf(cfg.shower_entity)) ? cfg.shower_entity : "", lit: showerOn });
         }
+        // The pool's heat pump (HACF #237), on or off from its line.
+        const hpSt = poolBasin && cfg.pool_heat_pump_entity ? stateObj(hass, cfg.pool_heat_pump_entity) : null;
+        if (hpSt && !HA_OFFLINE_STATES.includes(String(hpSt.state).toLowerCase())) {
+          const hp = poolHeatPumpOf(hass, cfg.pool_heat_pump_entity);
+          extraLines.push({ key: "pool_heat_pump", icon: "mdi:heat-pump-outline", label: t(hass, "pool_line_heat_pump"), entity: cfg.pool_heat_pump_entity,
+            value: t(hass, hp.on ? "pool_hp_on" : "pool_hp_off"), lit: hp.on,
+            toggle: entityUsable(hass, cfg.pool_heat_pump_entity) && ["switch", "input_boolean", "light"].includes(domainOf(cfg.pool_heat_pump_entity)) ? cfg.pool_heat_pump_entity : "" });
+        }
         const ft = numericEntity(hass, cfg.filtration_time_entity);
         if (ft) {
           const u = String(ft.attributes.unit_of_measurement || "h").toLowerCase();
@@ -12899,7 +12936,8 @@ class ApplianceCard extends HTMLElement {
         const sun = stateObj(hass, "sun.sun");
         pool.basin = { pos: c.pos, moving: c.moving, spots: cfg.spot_count, light: lit ? poolSpotLight(hass, cfg) : "off", night: !!sun && sun.state === "below_horizon",
           shower: cfg.shower_entity ? poolOn(hass, cfg.shower_entity) : null, pump: ["running", "frost", "backwash"].includes(mode), winter: wintered,
-          active: cfg.winter_active === true, cover: !!cfg.cover_entity };
+          active: cfg.winter_active === true, cover: !!cfg.cover_entity, submerged: cfg.cover_submerged === true,
+          hp: cfg.pool_heat_pump_entity && stateObj(hass, cfg.pool_heat_pump_entity) ? poolHeatPumpOf(hass, cfg.pool_heat_pump_entity) : null };
       }
     }
 

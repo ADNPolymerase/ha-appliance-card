@@ -3413,8 +3413,9 @@ class ApplianceCard extends HTMLElement {
         else if (isFinite(total) && total > drawn) lit = Math.round((ports * drawn) / total);
         else lit = Math.min(drawn, Math.max(0, Math.round(ports)));
       }
-      // A router's firmware update and its guest Wi-Fi (#142).
-      const upd = layout === "router" && cfg.update_entity ? stateObj(hass, cfg.update_entity) : null;
+      // A firmware or system update (#142, OMV's #143) and a router's guest
+      // Wi-Fi.
+      const upd = cfg.update_entity ? stateObj(hass, cfg.update_entity) : null;
       const update = !!upd && String(upd.state).toLowerCase() === "on";
       if (live && update) {
         const a = upd.attributes || {};
@@ -3507,6 +3508,14 @@ class ApplianceCard extends HTMLElement {
           extraLines.push({ key: "pool_shower", icon: "mdi:shower-head", label: t(hass, "pool_line_shower"), entity: cfg.shower_entity, value: t(hass, showerOn ? "pool_shower_on" : "pool_shower_off"),
             toggle: entityUsable(hass, cfg.shower_entity) && ["switch", "input_boolean", "valve", "light"].includes(domainOf(cfg.shower_entity)) ? cfg.shower_entity : "", lit: showerOn });
         }
+        // The pool's heat pump (HACF #237), on or off from its line.
+        const hpSt = poolBasin && cfg.pool_heat_pump_entity ? stateObj(hass, cfg.pool_heat_pump_entity) : null;
+        if (hpSt && !HA_OFFLINE_STATES.includes(String(hpSt.state).toLowerCase())) {
+          const hp = poolHeatPumpOf(hass, cfg.pool_heat_pump_entity);
+          extraLines.push({ key: "pool_heat_pump", icon: "mdi:heat-pump-outline", label: t(hass, "pool_line_heat_pump"), entity: cfg.pool_heat_pump_entity,
+            value: t(hass, hp.on ? "pool_hp_on" : "pool_hp_off"), lit: hp.on,
+            toggle: entityUsable(hass, cfg.pool_heat_pump_entity) && ["switch", "input_boolean", "light"].includes(domainOf(cfg.pool_heat_pump_entity)) ? cfg.pool_heat_pump_entity : "" });
+        }
         const ft = numericEntity(hass, cfg.filtration_time_entity);
         if (ft) {
           const u = String(ft.attributes.unit_of_measurement || "h").toLowerCase();
@@ -3538,7 +3547,8 @@ class ApplianceCard extends HTMLElement {
         const sun = stateObj(hass, "sun.sun");
         pool.basin = { pos: c.pos, moving: c.moving, spots: cfg.spot_count, light: lit ? poolSpotLight(hass, cfg) : "off", night: !!sun && sun.state === "below_horizon",
           shower: cfg.shower_entity ? poolOn(hass, cfg.shower_entity) : null, pump: ["running", "frost", "backwash"].includes(mode), winter: wintered,
-          active: cfg.winter_active === true, cover: !!cfg.cover_entity };
+          active: cfg.winter_active === true, cover: !!cfg.cover_entity, submerged: cfg.cover_submerged === true,
+          hp: cfg.pool_heat_pump_entity && stateObj(hass, cfg.pool_heat_pump_entity) ? poolHeatPumpOf(hass, cfg.pool_heat_pump_entity) : null };
       }
     }
 
