@@ -11772,6 +11772,9 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('144 : beton, sans veinage', /stroke="#a6774b"/.test(lamp('on', {}, { lamp_layout: 'stair', stair_material: 'concrete' })), false);
   check('144 : pas de bande de sol sous l escalier', ['stair', 'stair_under'].some((l) => lamp('on', {}, { lamp_layout: l }).includes('#3a3734')), false);
   check('144 : la premiere marche descend jusqu au bord', lamp('on', {}, { lamp_layout: 'stair' }).includes('M40 102 L40 90'), true);
+  check('243 : mur derriere l escalier par defaut', ['stair', 'stair_under'].every((l) => lamp('on', {}, { lamp_layout: l }).includes('url(#lp-sW)')), true);
+  check('243 : stair_wall false, escalier sur fond transparent', ['stair', 'stair_under'].some((l) => lamp('on', {}, { lamp_layout: l, stair_wall: false }).includes('url(#lp-sW)')), false);
+  check('243 : stair_wall false, les marches restent', lamp('on', {}, { lamp_layout: 'stair', stair_wall: false }).includes('M40 102 L40 90'), true);
   check('144 : matiere inconnue, chene', lamp('on', {}, { lamp_layout: 'stair', stair_material: 'gold' }).includes('fill="#dcb07f"'), true);
   const ed144 = markup(newEditor({ state_entity: 'light.x', appliance_type: 'lamp', lamp_layout: 'stair' }));
   check('144 : editeur, la matiere des marches', ed144.includes('data-field="stair_material"'), true);
@@ -12523,6 +12526,8 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   const b = render({ ...W, illustration_backdrop: 'state' }, st);
   check('fond etat : teinte par la couleur de l etat', /color-mix\(in srgb, var\(--info-color, #2196f3\) 7%, var\(--card-background-color/.test(b), true);
   check('fond etat : sous le dessin', /isolation: isolate/.test(b) && /z-index: -1/.test(b), true);
+  check('145 : la carte isole ses z-index (sous la barre du tableau de bord)', /ha-card \{[^}]*isolation: isolate/.test(render(W, st)), true);
+  check('145 : le dessin aussi, sans fond', /\.machine \{ position: relative; isolation: isolate/.test(render(W, st)), true);
   check('fond : none = aucun fond', /\.machine::before/.test(render({ ...W, illustration_backdrop: 'none' }, st)), false);
   check('fond etat : suit l etat (termine = vert)', /var\(--success-color, #4caf50\) 7%/.test(render({ ...W, illustration_backdrop: 'state' }, { 'sensor.w': s('end of cycle') })), true);
 }

@@ -3874,7 +3874,7 @@ class ApplianceCard extends HTMLElement {
       const motion = !!mst && ["on", "true", "1", "detected", "home"].includes(String(mst.state).trim().toLowerCase());
       if (mst) extraLines.push({ key: "lamp_motion", icon: motion ? "mdi:motion-sensor" : "mdi:motion-sensor-off", label: t(hass, "section_motion"), value: t(hass, motion ? "det_line_detected" : "det_line_clear"), entity: cfg.motion_entity, caution: motion });
       lampDraw = { mode: l.mode, rgb: l.rgb, pct: l.pct, fx: !!l.effect, layout: lpLayout, spots: lampSpotsOf(cfg, st), motion, curtain: cfg.curtain_color,
-        stairMaterial: STAIR_MATERIAL_NAMES.includes(cfg.stair_material) ? cfg.stair_material : "oak" };
+        stairMaterial: STAIR_MATERIAL_NAMES.includes(cfg.stair_material) ? cfg.stair_material : "oak", stairWall: cfg.stair_wall !== false };
     }
 
     // The HACF drawings: a pump, underfloor heating, a spa, a sauna, an
@@ -4475,7 +4475,9 @@ class ApplianceCard extends HTMLElement {
 
     const css = `
         :host { font-size: ${Math.round(16 * fontScaleOf(cfg.font_scale) * 100) / 100}px; --anim-offset: ${animOffset}s;${bodyVar} }
-        ha-card { display: block; padding: 16px; position: relative; }
+        /* isolation: the drawings' z-indexes stay inside the card, so they
+           scroll under the dashboard's toolbar like the rest of it (#145). */
+        ha-card { display: block; padding: 16px; position: relative; isolation: isolate; }
         ha-card.clear { background: none; box-shadow: none; border: none; --ha-card-border-width: 0; }
         /* The three icons along the top of a card read as one row, and two of
            them are meant to be tapped: they share one size. */
@@ -4534,7 +4536,7 @@ class ApplianceCard extends HTMLElement {
         .corner-btn.pressed { color: var(--primary-color, #03a9f4); animation-name: corner-press; animation-duration: .6s; animation-timing-function: ease-out; }
         @keyframes corner-press { 0% { transform: scale(.82); } 60% { transform: scale(1.12); } 100% { transform: scale(1); } }
         .top { display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; }
-        .machine { position: relative; width: 96px; height: 108px; margin: 0 auto 8px; zoom: ${illustrationSizeOf(cfg.illustration_size)}; }
+        .machine { position: relative; isolation: isolate; width: 96px; height: 108px; margin: 0 auto 8px; zoom: ${illustrationSizeOf(cfg.illustration_size)}; }
         /* illustration_frame: every drawing sits at the bottom of a frame of
            the full height, so a robot without its station keeps its floor
            level with one that has it, side by side (#61). */

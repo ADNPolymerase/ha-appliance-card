@@ -1053,7 +1053,7 @@ function mailboxHtml(cls, c) {
 // A lamp, read from its light entity: on or off, how bright, in what colour,
 // and whether an effect runs. A switch or a helper only says on or off, and
 // the lamp is drawn in the warm white of a bulb.
-const LAMP_ONLY_FIELDS = ["lamp_layout", "curtain_color", "stair_material", "spots", "timer_entity", "motion_entity", "light_color"];
+const LAMP_ONLY_FIELDS = ["lamp_layout", "curtain_color", "stair_material", "stair_wall", "spots", "timer_entity", "motion_entity", "light_color"];
 const LAMP_LAYOUTS = ["barrel_bar", "bulb", "bedside", "floor", "floor_tree", "torch", "pendant", "ceiling", "ceiling_panel", "ceiling_ring", "strip", "strip_cove", "strip_plinth", "strip_baseboard", "strip_slats", "spot", "spot_track", "spot_surface", "spot_updown", "panels", "desk", "wall", "stair", "stair_under", "garden_spot", "garden_tree", "flood", "flood_pir", "bollard", "string", "curtain", "icicle", "festoon", "squares"];
 const LAMP_SPOTS = [1, 2, 3, 4, 5];
 // The layouts drawn with as many spots as the light has.
@@ -1465,8 +1465,11 @@ const STAIR_MATERIAL_NAMES = Object.keys(STAIR_MATERIALS);
 function lpStairs(extra, c) {
   const { N, W, dx, dy, H, x, t } = LP_STAIR;
   const [tread, edge, riser, nose, grain, sideC] = STAIR_MATERIALS[(c && c.stairMaterial) || "oak"] || STAIR_MATERIALS.oak;
-  // A dark grey wall, the way step lights are usually seen.
-  let h = `<defs><linearGradient id="lp-sW" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5f5b57"/><stop offset="1" stop-color="#46423f"/></linearGradient></defs>`
+  // A dark grey wall, the way step lights are usually seen, unless
+  // stair_wall is off: then the stairs stand on the card's own background,
+  // like the other drawings (HACF #243).
+  let h = c && c.stairWall === false ? ""
+    : `<defs><linearGradient id="lp-sW" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5f5b57"/><stop offset="1" stop-color="#46423f"/></linearGradient></defs>`
     + `<rect x="0" y="-6" width="96" height="108" fill="url(#lp-sW)"/>`;
   // The right side, a sawtooth down to the bottom of the card (no floor band,
   // the stairs simply run out of the picture).

@@ -3,7 +3,7 @@
 export default function defineEditor(deps) {
 // A page still running the card of an earlier release, the files of this one
 // on the server: its helpers are not these, so say to reload the page.
-if (!deps || deps.__v !== "5.8.0") {
+if (!deps || deps.__v !== "5.8.1") {
   if (!customElements.get("ha-appliance-card-editor")) customElements.define("ha-appliance-card-editor", class extends HTMLElement {
     setConfig() {}
     connectedCallback() {
@@ -2066,7 +2066,7 @@ class ApplianceCardEditor extends HTMLElement {
         }) : "") + (["stair", "stair_under"].includes(lampLayoutOf(this._config, stateObj(hass, this._config.state_entity))) ? this._row("stair_material", "stair_material", {
           type: "select",
           options: STAIR_MATERIAL_NAMES.map((v) => ({ value: v, label: t(hass, `stair_mat_${v}`) })),
-        }) : "") + (lampLayoutOf(this._config, stateObj(hass, this._config.state_entity)) === "barrel_bar" ? this._row("curtain_color", "curtain_color", {
+        }) + this._row("stair_wall", "stair_wall", { type: "checkbox", defaultOn: true }) : "") + (lampLayoutOf(this._config, stateObj(hass, this._config.state_entity)) === "barrel_bar" ? this._row("curtain_color", "curtain_color", {
           type: "select",
           options: CURTAIN_COLORS.map((v) => ({ value: v, label: t(hass, `color_${v}`) })),
         }) : "") + this._row("light_color", "light_color", { type: "color", default: "#ffc878" }) + this._row("show_toggle", "show_toggle", { type: "checkbox", defaultOn: true }) : ""}
@@ -2516,7 +2516,7 @@ class ApplianceCardEditor extends HTMLElement {
           delete this._config.speed_power_3;
         }
         // Shown is the default and is not written: only false is.
-        if (["show_name", "show_state", "show_controls", "show_toggle", "show_light_button", "large_temperature", "winter_snowfall"].includes(field) && value) delete this._config[field];
+        if (["show_name", "show_state", "show_controls", "show_toggle", "show_light_button", "large_temperature", "winter_snowfall", "stair_wall"].includes(field) && value) delete this._config[field];
         // Compact is written the way it always was: true for the card without
         // its drawing, nothing at all when it is off.
         if (field === "detector_model" && value === "auto") delete this._config.detector_model;
